@@ -61,29 +61,13 @@ The hospital doesn't end at its walls. A nurse finishing at 02:00 at CHUV and a 
 
 **Why 7 (brief says 3–5):** One healthcare circuit, not 7 separate projects. Remove any node and the chain breaks. Three scales: infrastructure (nodes 1, 4), staff access (nodes 2, 3, 5, 7), patient access (nodes 2, 5, 6).
 
-## ⚠️ TODO — current priorities
+## TODOs and session logs
 
-### A03 deliverables (due today March 10 — ⚠️ INCOMPLETE)
-1. **Investigation report** — text, images, updated maps from field visit. ⚠️ [NEEDS: Andrea's field visit findings, photos, verification table]
-2. **Combined path dataset** — CSV/GeoJSON of investigated sites. ⚠️ [NEEDS: GPS coordinates from field visit, verified claims]
-3. **Networked intervention concept** — the relay-lock as strategy. 🟡 [Concept exists, needs writeup]
-4. Submit path dataset to Drive: [00-student-paths-datasets](https://drive.google.com/drive/folders/1excOP2HKgnr9jiqCYVhdgHcd3y33cdin?usp=drive_link)
+Per-person priorities, TODOs, data gaps, and session logs live in:
+- **CONTEXT_ANDREA.md** — Andrea's working context
+- **CONTEXT_HENNA.md** — Henna's working context
 
-### A03 remaining fieldwork
-5. **Friday March 13** — eastern corridor visit: CHUV, Montreux-Glion, Rennaz (3 sites)
-
-### A04 (due March 30 — midterm)
-6. **Rhino MCP prototypology** — siteless project adaptable to different sites
-7. **Midterm PPTX** — 6-screen template (see `briefs/Templates/`). Contents:
-   - Slides 1–2: A01/A02 dataset mapping + index formula + field validation + site sections
-   - Slides 3–4: MCP methodology + architectural output (3+ prototypological models, turntable animations, axonometric interpretations)
-8. **Point-cloud sections** of potential sites (A03 requirement, not yet done)
-
-### Data verification gaps (from 08-03 session)
-9. **Night worker counts unsourced** — 4,600 / 1,680 / 1,500 / 400 / 300 / 730 are load-bearing claims with no CSV source. Need: OFS employment data, hospital annual reports, or field visit interviews.
-10. **Hospital ratings** (Rennaz 2.6★, Nyon 3.4★) — not in station ratings CSV. Likely from Google directly, needs confirmation.
-11. **"Zero nocturnal transport" overstated** — real dead window is 01:00–05:00, not all night. Late-night frequency: Bussigny 9.0 tr/hr, Nyon 7.0, Montreux 10.5, Lausanne 22.0.
-12. **Renens commuter index**: JSX says 2.48×, dataset says 2.04.
+This avoids merge conflicts and keeps this file focused on shared project state.
 
 ## Visualizations — complete set
 
@@ -307,16 +291,3 @@ Always LV95 / EPSG:2056. Web maps use WGS84. Source data often WGS84 — convert
 - **"Infrastructure creates behavior"**: charge speed dictates dwell time, WiFi determines work locations, temporal accessibility shapes spatial programs
 - **Horizontal elevator** (Huang): on-demand rail, autonomous module, repurposed tracks. Teacher loves this concept.
 
-## Session log (March 2–10)
-
-| Date | Who | What happened |
-|------|-----|---------------|
-| 02-03 | Cairn Code | Scrollytelling site: 7 static maps → interactive Leaflet. Print exports (7 PNG + 7 PDF, dark bg). |
-| 02-03 | Cadence (Henna) | Karim's diary v4 — narrative anchor for A02 crit. |
-| 02-03 | — | **A02 desk crit** (13:00). Submission deadline March 3rd. |
-| 04-03 | Cairn + Cairn Code | Animation data pipeline: 4 agents (GTFS, ridership, demographics, geometry). Phase 1 QA'd. v2/v3 validated. CLAUDE.md v2 rebuilt. Agent team commands created. |
-| 08-03 | Meridian (Henna) | Built 24 candidate sites for horizontal elevator. Interactive React artifact. |
-| 08-03 | Cairn Code | Narrowed 24→6 sites. Healthcare supply chain narrative. Relay-Lock prototypology. Data verification. |
-| 09-03 | Cairn Code | Expanded to 7 sites (added Montreux-Glion). Full field visit protocol. |
-| 09-03 | Andrea + Henna | **Western corridor field visit** (Geneva North → Nyon → Morges → Crissier-Bussigny). ⚠️ [NEEDS: findings to be documented] |
-| 10-03 | Cairn Code | Migrated old repo → git. All files organized. CONTEXT.md updated. |

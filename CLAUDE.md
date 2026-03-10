@@ -7,8 +7,9 @@ Teammate: Henna Rafik. Coordination via LOCKBOARD.md.
 
 ## Current phase
 - **A01** (data collection): complete
-- **A02** (data synchronicity): final submission imminent
-- **A03**: brief not yet received — expect design intervention phase
+- **A02** (data synchronicity): complete (submitted March 3)
+- **A03** (field data): active — western field visit done, eastern visit March 13
+- **A04** (forms of sentience): assigned March 10, due March 30 (midterm)
 
 ## How this repo works
 
@@ -26,14 +27,16 @@ You're reading this now. Three more files load automatically from `.claude/rules
 | `/modeler` | 00_Workflow_v04.md (Sec 3.2), design_system/SPEC.md | rhino-modeling |
 | `/visualizer` | design_system/SPEC.md, visualizations/site/ | chart-generation, site-update |
 | `/builder` | design_system/SPEC.md, deliverables/ | site-deploy, narrative-assembly |
-| `/session-start` | CONTEXT.md, LOCKBOARD.md | session-management |
-| `/session-end` | CONTEXT.md, LOCKBOARD.md | session-management |
+| `/session-start` | CONTEXT.md, CONTEXT_ANDREA.md, CONTEXT_HENNA.md, LOCKBOARD.md | session-management |
+| `/session-end` | CONTEXT.md, CONTEXT_ANDREA.md, CONTEXT_HENNA.md, LOCKBOARD.md | session-management |
 | `/verify-data` | (target file) | data-verification |
 
 ### Layer 3: Reference (loaded on demand)
 | File | What | Updated |
 |------|------|---------|
-| CONTEXT.md | Living state, decisions, what changed | Every /session-end |
+| CONTEXT.md | Shared project state, narrative, datasets, key numbers | Every /session-end |
+| CONTEXT_ANDREA.md | Andrea's priorities, data gaps, session log | Every /session-end |
+| CONTEXT_HENNA.md | Henna's priorities, session log | Every /session-end |
 | LEARNINGS.md | Pitfalls, API gotchas, discoveries | When found |
 | LOCKBOARD.md | Who's doing what now | When focus shifts |
 | datasets/INVENTORY.md | Dataset catalog with provenance | When data changes |
