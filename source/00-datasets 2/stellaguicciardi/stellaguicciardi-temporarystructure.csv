@@ -1,0 +1,101 @@
+structure_id,structure_name,structure_type,city,location_description,lat_wgs84,lon_wgs84,E_LV95,N_LV95,season,start_date,end_date,duration_days,frequency,year_round,duration_class,category,importance_score,importance_rationale
+28,Geneva Ice Rink,Temporary Ice Rink,Geneva,Various locations,46.2105254,6.1517084,2500238,1117564,Winter,Dec,Feb,90,Annual,No,Seasonal,Winter Event,3,"Geneva Ice Rink, central city ~30k/season"
+45,Lutry Lavaux Panoramic,Wine Tourism,Lutry,Vineyards,46.5026940,6.6894250,2541760,1150240,Spring-Autumn,Apr,Oct,214,Annual,No,Seasonal,Festival,3,Lutry Lavaux Panoramic wine tourism
+47,Territet-Veytaux Lakefront,Promenade,Montreux,Lakefront,46.4228000,6.9189000,2561170,1142470,All year,Daily,Daily,365,Daily,Yes,Daily,Swim Facility,3,"Territet-Veytaux Lakefront Promenade, daily use"
+92,Sauna Mobile Nyon,Movable Sauna,Nyon,Plage des Trois Jetées,46.3764030,6.2355043,2505330,1135740,Winter,Nov,Mar,120,Annual,No,Seasonal,Winter Event,2,"Sauna Mobile Nyon, niche activity ~2k"
+93,Sauna Mobile Lausanne,Movable Sauna,Lausanne,Various beaches,46.5068281,6.6266154,2537260,1150680,Winter,Nov,Mar,120,Annual,No,Seasonal,Winter Event,3,"Sauna Mobile Lausanne, larger city ~5k"
+94,Sauna Mobile Vevey,Movable Sauna,Vevey,Lakefront,46.4623450,6.8451450,2556310,1145770,Winter,Nov,Mar,120,Annual,No,Seasonal,Winter Event,2,Sauna Mobile Vevey ~3k
+95,Sauna Mobile La Tour-de-Peilz,Movable Sauna,La Tour-de-Peilz,La Maladaire,46.4464134,6.8787873,2559350,1144180,Winter,Nov,Mar,120,Annual,No,Seasonal,Winter Event,2,Sauna Mobile La Tour-de-Peilz ~2k
+96,Patinoire de Vevey,Temporary Ice Rink,Vevey,Rue Louis-Meyer,46.4599451,6.8405555,2555620,1145450,Winter,Nov,Feb,120,Annual,No,Seasonal,Winter Event,2,Patinoire de Vevey ~10k
+97,Patinoire de Nyon,Temporary Ice Rink,Nyon,Town Center,46.3826000,6.2393000,2505200,1136380,Winter,Nov,Feb,120,Annual,No,Seasonal,Winter Event,2,Patinoire de Nyon ~10k
+98,Patinoire de Montchoisi,Outdoor Ice Rink,Lausanne,Avenue du Servan 30,46.5079060,6.6359790,2537920,1150818,Winter,Nov,Mar,120,Annual,No,Seasonal,Winter Event,3,Patinoire de Montchoisi Lausanne ~25k
+99,Patinoire des Bastions,Temporary Ice Rink,Geneva,Parc des Bastions,46.1986000,6.1425000,2499600,1116450,Winter,Nov,Feb,120,Annual,No,Seasonal,Winter Event,3,Patinoire des Bastions Geneva ~35k
+100,Patinoire de Carouge,Temporary Ice Rink,Carouge,Place Sardaigne,46.1825000,6.1383000,2499300,1114660,Winter,Nov,Mar,120,Annual,No,Seasonal,Winter Event,2,Patinoire de Carouge ~12k
+101,Patinoire de Clarens,Temporary Ice Rink,Clarens,Town Center,46.4391670,6.9000000,2559520,1144300,Winter,Nov,Mar,120,Annual,No,Seasonal,Winter Event,2,"Patinoire de Clarens, small ~8k"
+43,Bassin Terraces,Seasonal Terraces,Geneva,Port des Eaux-Vives,46.2033000,6.1590000,2500770,1116760,Summer,Apr,Oct,214,Annual,No,Seasonal,Buvette,3,"Bassin Terraces Geneva, Port des Eaux-Vives"
+50,Montreux Sunset Bar,Seasonal Bar,Montreux,Lakefront,46.4316600,6.9082750,2560300,1143470,Summer,May,Sep,153,Annual,No,Seasonal,Buvette,3,"Montreux Sunset Bar, prime lakefront location"
+53,Les Bains Payes,Seasonal Buvette,Vevey,Lakefront,46.4623450,6.8451450,2556310,1145770,Summer,May,Sep,153,Annual,No,Seasonal,Buvette,3,Les Bains Payés Vevey
+54,Club House Vevey,Seasonal Buvette,Vevey,Place du Marché,46.4595966,6.8426866,2556130,1145470,Summer,May,Sep,153,Annual,No,Seasonal,Buvette,3,"Club House Vevey, Place du Marché"
+55,Buvette de la Maladaire,Seasonal Buvette,La Tour-de-Peilz,Lakefront,46.4538000,6.8610500,2557430,1144810,Summer,May,Sep,153,Annual,No,Seasonal,Buvette,2,"Buvette de la Maladaire, local"
+60,Buvette Plage de Tannay,Seasonal Restaurant,Tannay,Plage de Tannay,46.2980000,6.1680000,2501480,1128780,Summer,May,Sep,153,Annual,No,Seasonal,Buvette,2,"Buvette Plage de Tannay, small village"
+61,Creux de Genthod,Lakeside Restaurant,Genthod,Lakefront,46.2730000,6.1560000,2500460,1126010,Summer,Apr,Oct,214,Annual,No,Seasonal,Buvette,2,"Creux de Genthod, quiet lakeside"
+73,Buvette du Port Choiseul,Seasonal Buvette,Versoix,Port Choiseul,46.2868356,6.1695519,2501670,1129490,Summer,Apr,Oct,214,Annual,No,Seasonal,Buvette,2,Buvette du Port Choiseul Versoix
+74,Buvette de Crans,Seasonal Buvette,Crans-près-Céligny,Port de Crans,46.3591007,6.2183791,2505060,1133490,Summer,Mar,Oct,245,Annual,No,Seasonal,Buvette,2,"Buvette de Crans, small port"
+75,Le Petit Bouchon,Seasonal Buvette,Prangins,Plage de Promenthoux,46.3915651,6.2555443,2507610,1137140,Summer,Apr,Sep,184,Annual,No,Seasonal,Buvette,2,Le Petit Bouchon Prangins
+76,Les Abériaux,Seasonal Restaurant,Prangins,Route de Promenthoux 6,46.3915651,6.2555443,2507610,1137140,All year,Daily,Daily,365,Daily,Yes,Annual,Buvette,2,"Les Abériaux Prangins, year-round but quiet area"
+77,Jetée de la Compagnie,Seasonal Bar,Lausanne,Jetée de la Compagnie,46.5087646,6.6164703,2536630,1150920,Summer,Apr,Oct,214,Annual,No,Seasonal,Buvette,3,"Jetée de la Compagnie Lausanne, iconic spot"
+78,Le Minimum,Seasonal Buvette,Lausanne,Jetée de la Compagnie 5,46.5083234,6.617227,2536675,1150870,Summer,Apr,Oct,214,Annual,No,Seasonal,Buvette,3,"Le Minimum Lausanne, same jetée"
+79,La Guinguette de Vidy,Seasonal Restaurant,Lausanne,Promenade de Vidy 7,46.5139020,6.5997962,2535070,1151490,Summer,May,Sep,153,Annual,No,Seasonal,Buvette,3,La Guinguette de Vidy Lausanne
+80,La Rincette,Seasonal Bar/Restaurant,Lausanne,Pyramides de Vidy,46.5121280,6.6020988,2535230,1151290,Summer,May,Sep,153,Annual,No,Seasonal,Buvette,2,"La Rincette Lausanne, Vidy pyramids area"
+81,Bar Côté Lac,Seasonal Bar,Lausanne,Quai de Belgique 4,46.5063860,6.6361903,2538140,1150650,Summer,Apr,Oct,214,Annual,No,Seasonal,Buvette,3,"Bar Côté Lac Lausanne, Quai de Belgique"
+82,Buvette de la Plage Lutry,Seasonal Buvette,Lutry,Chemin des Bains,46.5000548,6.6923138,2541800,1150280,Summer,Apr,Oct,214,Annual,No,Seasonal,Buvette,2,Buvette de la Plage Lutry
+83,Bar La Générale,Seasonal Bar,Pully,Route du Port,46.5055288,6.6613379,2540140,1150760,Summer,Apr,Oct,214,Annual,No,Seasonal,Buvette,3,Bar La Générale Pully
+84,Buvette du Laviau,Seasonal Buvette,Saint-Sulpice,Chemin du Laviau 15,46.5088659,6.5450484,2530800,1151120,Summer,May,Sep,153,Annual,No,Seasonal,Buvette,2,Buvette du Laviau Saint-Sulpice
+85,Buvette des Bains des Pâquis,Seasonal Buvette,Geneva,Quai du Mont-Blanc 30,46.2102660,6.1540910,2500390,1117570,Summer,May,Sep,153,Annual,No,Seasonal,Buvette,4,"Buvette des Bains des Pâquis, attached to iconic site ~200k"
+86,Restaurant de la Plage Eaux-Vives,Seasonal Restaurant,Geneva,Quai Gustave-Ador 75,46.2119081,6.1671600,2501000,1117750,Summer,Apr,Oct,214,Annual,No,Seasonal,Buvette,3,Restaurant de la Plage Eaux-Vives Geneva
+87,Restaurant de la Plage Nyon,Seasonal Restaurant,Nyon,Route de Genève 12,46.3768467,6.2357255,2505340,1135800,Summer,Apr,Oct,214,Annual,No,Seasonal,Buvette,3,Restaurant de la Plage Nyon
+88,Restaurant du Camping Rolle,Seasonal Restaurant,Rolle,Chemin de la Plage 4,46.4614248,6.3463563,2512010,1144900,Summer,Apr,Oct,214,Annual,No,Seasonal,Buvette,2,Restaurant du Camping Rolle
+89,Buvette du Petit-Bois,Seasonal Buvette,Tolochenaz,Promenade du Petit-Bois 31,46.5012940,6.4866320,2523330,1150550,Summer,May,Sep,153,Annual,No,Seasonal,Buvette,2,"Buvette du Petit-Bois Tolochenaz, local"
+90,La Paillote Morges,Seasonal Bar,Morges,Place de la Navigation 1,46.5058103,6.4973921,2526050,1150830,Summer,Apr,Oct,214,Annual,No,Seasonal,Buvette,3,"La Paillote Morges, lakefront bar"
+91,Buvette du Port La Tour-de-Peilz,Seasonal Bar,La Tour-de-Peilz,Rue de l'Ancien Stand,46.4515871,6.8570764,2557080,1144570,Summer,Apr,Sep,184,Annual,No,Seasonal,Buvette,2,Buvette du Port La Tour-de-Peilz
+2,Bains des Paquis Beach,Public Beach/Lido,Geneva,Quai du Mont-Blanc,46.2101014,6.1536988,2500378,1117517,Summer (peak),May 11,Sep 11,123,Annual,Yes,Seasonal,Swim Facility,5,"Bains des Pâquis, iconic Geneva ~500k/season"
+3,Baby-Plage Beach,Free Beach,Geneva,Quai Gustave Ador,46.2064619,6.1591577,2500779,1117113,Summer (peak),May,Sep,153,Annual,Yes,Seasonal,Swim Facility,4,"Baby-Plage Geneva, popular free beach ~100k"
+4,Genève-Plage Swimming Pool,Swimming Complex,Geneva,Quai de Cologny 5,46.2137244,6.1735872,2501824,1117921,Summer,May 11,Sep 11,123,Annual,No,Seasonal,Swim Facility,5,"Genève-Plage, major complex ~300k"
+5,L'Amarr Floating Beach,Temporary Beach,Geneva,Pont de la Machine,46.2055930,6.1454326,2499777,1117017,Summer,Jun,Sep,122,Annual,No,Seasonal,Swim Facility,3,"L'Amarr Floating Beach, novel attraction ~40k"
+16,Ouchy Lakefront Beach,Public Beach,Lausanne,Quai d'Ouchy,46.5068281,6.6266154,2537260,1150680,Summer,May,Sep,153,Annual,Yes,Seasonal,Swim Facility,4,Ouchy Lakefront Beach Lausanne ~120k
+17,Pully Beach,Public Beach,Pully,Place du Port,46.5108333,6.6651667,2540305,1151095,Summer,May,Sep,153,Annual,Yes,Seasonal,Swim Facility,3,Pully Beach ~40k
+18,Lutry Beach,Public Beach,Lutry,Port de Lutry,46.5033330,6.6861110,2541690,1150360,Summer,May,Sep,153,Annual,Yes,Seasonal,Swim Facility,3,Lutry Beach ~35k
+19,Cully Beach,Public Beach,Cully,Lakefront,46.4877780,6.7327780,2548530,1148810,Summer,May,Sep,153,Annual,Yes,Seasonal,Swim Facility,3,Cully Beach ~30k
+20,Montreux Riviera Beach,Public Beach,Montreux,Quais lakefront,46.4316600,6.9082750,2560300,1143470,Summer,May,Sep,153,Annual,Yes,Seasonal,Swim Facility,4,Montreux Riviera Beach ~100k
+21,Vevey Lakefront Beach,Public Beach,Vevey,Quais lakefront,46.4623450,6.8451450,2556310,1145770,Summer,May,Sep,153,Annual,Yes,Seasonal,Swim Facility,4,Vevey Lakefront Beach ~80k
+22,Clarens Beach,Public Beach,Montreux-Clarens,Lakefront,46.4391670,6.9000000,2559520,1144300,Summer,May,Sep,153,Annual,Yes,Seasonal,Swim Facility,3,Clarens Beach ~30k
+23,La Tour-de-Peilz Swimming Decks,Swimming Platforms,La Tour-de-Peilz,Lakefront,46.4538000,6.8610500,2557430,1144810,Summer,May,Sep,153,Annual,Yes,Seasonal,Swim Facility,3,La Tour-de-Peilz Swimming Decks ~35k
+24,Villeneuve Lakefront,Public Beach Area,Villeneuve,Lakefront,46.3937650,6.9266680,2561520,1138150,Summer,May,Sep,153,Annual,Yes,Seasonal,Swim Facility,3,Villeneuve Lakefront ~30k
+48,Geneva Beach Volleyball,Temporary Courts,Geneva,Baby-Plage,46.2064619,6.1591577,2500779,1117113,Summer,Jun,Aug,92,Annual,No,Seasonal,Swim Facility,2,"Geneva Beach Volleyball, seasonal niche ~8k"
+49,Lausanne Beach Volleyball,Temporary Courts,Lausanne,Vidy,46.5185000,6.5940000,2534870,1151970,Summer,Jun,Aug,92,Annual,No,Seasonal,Swim Facility,2,Lausanne Beach Volleyball ~8k
+51,Vevey Beach Platform,Swimming Platform,Vevey,Quais lakefront,46.4623450,6.8451450,2556310,1145770,Summer,May,Sep,153,Annual,No,Seasonal,Swim Facility,2,Vevey Beach Platform ~10k
+52,Dolce Riviera Decks,Swimming/Bar Platform,La Tour-de-Peilz,Quais lakefront,46.4538000,6.8610500,2557430,1144810,Summer,May,Sep,153,Annual,No,Seasonal,Swim Facility,3,Dolce Riviera Decks ~20k
+56,Ouchy Beach Platform,Swimming Platform,Lausanne,Old Port Ouchy,46.5068281,6.6266154,2537260,1150680,Summer (peak),May,Sep,153,Annual,Yes,Seasonal,Swim Facility,4,Ouchy Beach Platform Lausanne ~80k
+57,Bellerive-Plage,Swimming Complex,Lausanne,Avenue de Rhodanie,46.5140000,6.6490000,2538800,1151470,Summer,May,Sep,153,Annual,No,Seasonal,Swim Facility,4,Bellerive-Plage Lausanne ~150k
+58,Vidy-Bourget Beach,Public Beach,Lausanne,Parc Louis Bourget,46.5185000,6.5940000,2534870,1151970,Summer,May,Sep,153,Annual,Yes,Seasonal,Swim Facility,3,Vidy-Bourget Beach ~45k
+59,Pully Beach Complex,Beach & Pools,Pully,Lakefront,46.5110000,6.6650000,2540300,1151100,Summer,May,Sep,153,Annual,No,Seasonal,Swim Facility,3,Pully Beach Complex ~35k
+1,Geneva Christmas Market,Seasonal Market,Geneva,Quai du Mont-Blanc,46.2105254,6.1517084,2500238,1117564,Winter,Nov 20,Dec 24,35,Annual,No,Monthly,Winter Event,4,Geneva Christmas Market ~1M cumulative season
+6,Lausanne Christmas Market (Bô Noël),Seasonal Market,Lausanne,Place Saint-François,46.5195996,6.6329714,2537728,1152115,Winter,Nov 20,Dec 31,42,Annual,No,Monthly,Winter Event,4,Lausanne Bô Noël ~300k
+9,Montreux Christmas Market,Seasonal Market,Montreux,Lakeside Promenade,46.4316600,6.9082750,2560300,1143470,Winter,Nov 20,Dec 24,35,Annual,No,Monthly,Winter Event,5,Montreux Christmas Market ~800k+ regional draw
+10,Montreux Noël Market,Seasonal Market,Montreux,Grand-Rue,46.4321890,6.9124330,2560600,1143522,Winter,Nov 20,Dec 31,42,Annual,No,Monthly,Winter Event,4,Montreux Noël Market ~200k
+11,Vevey Christmas Market,Seasonal Market,Vevey,Grande Place,46.4595966,6.8426866,2556130,1145470,Winter,Nov 20,Dec 24,35,Annual,No,Monthly,Winter Event,3,Vevey Christmas Market ~50k
+12,Coppet Christmas Market,Seasonal Market,Coppet,Town Center,46.3164000,6.1940000,2502800,1129010,Winter,Nov 20,Dec 20,31,Annual,No,Monthly,Winter Event,2,"Coppet Christmas Market, small village ~8k"
+13,Morges Christmas Market,Seasonal Market,Morges,Place de l'Hôtel de Ville,46.5116670,6.4991670,2526280,1151170,Winter,Nov 20,Dec 24,35,Annual,No,Monthly,Winter Event,3,Morges Christmas Market ~40k
+14,Nyon Christmas Market,Seasonal Market,Nyon,Place du Château,46.3826000,6.2393000,2505200,1136380,Winter,Nov 20,Dec 24,35,Annual,No,Monthly,Winter Event,3,Nyon Christmas Market ~30k
+15,Rolle Christmas Market,Seasonal Market,Rolle,Grand-Rue,46.4566000,6.3366000,2511680,1144660,Winter,Nov 20,Dec 20,31,Annual,No,Monthly,Winter Event,2,Rolle Christmas Market ~10k
+44,Montreux Noël sur les Quais,Christmas Event,Montreux,Lakefront Quais,46.4316600,6.9082750,2560300,1143470,Winter,Dec,Dec,31,Annual,No,Monthly,Winter Event,3,Montreux Noël sur les Quais ~60k
+46,Corsier Winter Market,Small Market,Corsier-sur-Vevey,Village center,46.4730000,6.8520000,2556870,1146950,Winter,Dec,Dec,15,Annual,No,Weekly,Winter Event,1,"Corsier Winter Market, very small village ~2k"
+25,Lausanne Food Market,Weekly Market,Lausanne,Various squares,46.5195996,6.6329714,2537728,1152115,All year,Wed & Sat,Wed & Sat,365,Weekly,Yes,Annual,Weekly Market,4,"Lausanne Food Market, major city weekly ~30k/week"
+26,Vevey Market,Weekly Market,Vevey,Grande Place,46.4595966,6.8426866,2556130,1145470,All year,Tue & Sat,Tue & Sat,365,Weekly,Yes,Annual,Weekly Market,4,"Vevey Market, one of Switzerland's most famous ~25k/week"
+27,Montreux Covered Market,Permanent Market Hall,Montreux,Town Center,46.4321890,6.9124330,2560600,1143522,All year,Daily,Daily,365,Daily,Yes,Daily,Weekly Market,3,"Montreux Covered Market, permanent hall"
+63,Plainpalais Market,Weekly Market,Geneva,Plaine de Plainpalais,46.1978805,6.1406193,2499400,1116280,All year,Wed & Sat,Wed & Sat,365,Weekly,Yes,Annual,Weekly Market,4,"Plainpalais Market Geneva, very large ~40k/week"
+64,Morges Market,Weekly Market,Morges,Grand-Rue,46.5092960,6.4985637,2526200,1150970,All year,Wed & Sat,Wed & Sat,365,Weekly,Yes,Annual,Weekly Market,3,Morges Market
+65,Nyon Market,Weekly Market,Nyon,Place du Château,46.3821128,6.2400684,2505250,1136330,All year,Saturday,Saturday,365,Weekly,Yes,Annual,Weekly Market,3,Nyon Market
+7,Lausanne Summer Events,Festival Venues,Lausanne,Various lakefront locations,46.5092533,6.6273489,2537322,1150963,Summer,Jun,Aug,92,Annual,No,Seasonal,Festival,3,"Lausanne Summer Events, scattered venues"
+8,Montreux Jazz Festival - Lake Stage,Music Festival,Montreux,Lakeside Promenade,46.4316600,6.9082750,2560300,1143470,Summer,Jul 3,Jul 18,16,Annual,No,Weekly,Festival,5,Montreux Jazz ~250k visitors
+29,Vevey Printemps de la Photo,Photography Festival,Vevey,Various venues,46.4595966,6.8426866,2556130,1145470,Spring,Mar-Apr,Apr-May,45,Biennial,No,Monthly,Festival,3,Vevey Printemps de la Photo ~20k
+30,Lavaux Wine Harvest Festivals,Wine Festival,Lavaux Region,Vineyards,46.4850000,6.7400000,2549000,1148500,Autumn,Sep,Oct,61,Annual,No,Seasonal,Festival,4,Lavaux Wine Harvest Festivals ~50k
+31,Cully Jazz Festival,Music Festival,Cully,Lakefront,46.4877780,6.7327780,2548530,1148810,Spring,Apr,Apr,7,Annual,No,Weekly,Festival,3,Cully Jazz Festival ~25k
+32,Lausanne Olympic Museum Events,Cultural Events,Lausanne,Quai d'Ouchy,46.5079060,6.6359790,2537920,1150818,All year,Various,Various,365,Ongoing,Yes,Annual,Festival,4,"Lausanne Olympic Museum Events ~220k/year, ongoing"
+33,Lutry Wine Festival,Wine Festival,Lutry,Town Center,46.5026940,6.6894250,2541760,1150240,Autumn,Sep,Sep,3,Annual,No,Daily,Festival,2,"Lutry Wine Festival, very local ~5k"
+34,Riviera Classic+ Festival,Classical Music,Vevey/Montreux,Various venues,46.4459220,6.8750000,2558200,1144280,Autumn,Sep,Sep,14,Annual,No,Weekly,Festival,3,Riviera Classic+ ~15k
+35,Geneva Fête du Réveillon,New Year's Eve,Geneva,Quai Gustave-Ador,46.2075000,6.1570000,2500550,1117230,Winter,Dec 31,Jan 1,1,Annual,No,Daily,Festival,4,Geneva Fête du Réveillon ~100k
+36,Paléo Festival Nyon,Music Festival,Nyon,Asse Domain,46.3826000,6.2393000,2505200,1136380,Summer,Jul,Jul,6,Annual,No,Weekly,Festival,5,Paléo Festival Nyon ~230k visitors
+38,Morges Tulip Festival,Flower Festival,Morges,Parc de l'Indépendance,46.5116670,6.4991670,2526280,1151170,Spring,Apr,May,45,Annual,No,Monthly,Festival,4,Morges Tulip Festival ~80k
+39,Fête des Vignerons,Wine Festival,Vevey,Arena & town,46.4595966,6.8426866,2556130,1145470,Summer,Jul,Aug,20,Once per generation,No,Weekly,Festival,5,Fête des Vignerons ~355k in 2019 edition
+40,Lausanne Festival de la Cité,Theatre Festival,Lausanne,Old Town,46.5227540,6.6335580,2537780,1152463,Summer,Jul,Jul,7,Annual,No,Weekly,Festival,4,Festival de la Cité Lausanne ~100k
+41,Images Vevey,Photography Biennial,Vevey,Various locations,46.4595966,6.8426866,2556130,1145470,Autumn,Sep,Oct,30,Biennial,No,Monthly,Festival,4,Images Vevey biennial ~70k
+42,Geneva Festival,City Festival,Geneva,Various locations,46.2043907,6.1431577,2499600,1116880,Summer,Aug,Aug,10,Annual,No,Weekly,Festival,5,Geneva Festival ~500k visitors
+62,Septembre Musical Montreux,Classical Music Festival,Montreux,Various venues,46.4321890,6.9124330,2560600,1143522,Autumn,Sep,Sep,30,Annual,No,Monthly,Festival,4,Septembre Musical Montreux ~40k
+66,L'Escalade Festival,Historical Festival,Geneva,Old Town,46.2005994,6.1493021,2499700,1116650,Winter,Dec 12,Dec 14,3,Annual,No,Daily,Festival,3,L'Escalade ~30k but 3 days
+67,Geneva Lux Festival,Light Festival,Geneva,Various locations,46.2043907,6.1431577,2499600,1116880,Winter,Jan 16,Feb 1,17,Annual,No,Weekly,Festival,4,Geneva Lux Festival ~50k
+68,Rock N Orge Festival,Music Festival,Vevey,Various venues,46.4595966,6.8426866,2556130,1145470,Summer,Jul,Jul,3,Annual,No,Daily,Festival,3,Rock N Orge ~20k
+69,Festival Paillote,Music Festival,Morges,Lakefront,46.5116670,6.4991670,2526280,1151170,Summer,Jul,Jul,7,Annual,No,Weekly,Festival,3,Festival Paillote ~15k
+70,Pully Live Festival,Music Festival,Pully,Town Center,46.5108333,6.6651667,2540305,1151095,Summer,Jul,Jul,5,Annual,No,Weekly,Festival,2,Pully Live ~8k
+71,Festival Découvrire,Cultural Festival,Saint-Prex,Town Center,46.4809059,6.4586004,2522280,1147630,Summer,Jul,Jul,3,Annual,No,Daily,Festival,2,Festival Découvrire Saint-Prex ~5k
+72,Variations Musicales de Tannay,Classical Music,Tannay,Various venues,46.2980000,6.1680000,2501480,1128780,Summer,Jul,Aug,30,Annual,No,Monthly,Festival,2,Variations Musicales de Tannay ~3k

@@ -1,0 +1,50 @@
+station_name,lat_wgs84,lon_wgs84,E_LV95,N_LV95,trains_per_hour,avg_wait_min,transit_break,transit_severity,nearest_workspace_m,nearest_workspace_name,workspace_break,workspace_severity,nearest_wifi_m,connectivity_break,connectivity_severity,workspace_count,wifi_count,amenity_void,shared_mobility_count,mobility_break,break_count,composite_break_score,severity_class,WCI
+"St-Saphorin (Lavaux), gare",46.472696,6.79809,2553270.5,1146835.9,0.0,999,True,3,3220,Office Hub Vevey,True,3,3289,True,3,0,0,True,1,False,4,11,TOTAL_RUPTURE,0.0003
+Aigle,46.316856,6.96367,2565350.1,1129517.1,16.5,3.6,False,0,9454,Restaurant l'Oasis Villeneuve,True,3,9432,True,3,0,0,True,23,False,3,8,MAJOR,0.0666
+Palézieux,46.542766,6.83786,2556171.9,1154622.9,11.5,5.2,False,0,8637,Vibration Workingshare,True,3,8568,True,3,0,0,True,16,False,3,8,MAJOR,0.0464
+"Aubonne, gare",46.493844,6.39294,2523713.6,1149186.1,11.0,5.5,False,0,5895,Uluwatu House Rolle,True,3,3220,True,3,0,0,True,13,False,3,8,MAJOR,0.0436
+Bussigny,46.547597,6.551814,2535304.0,1155159.8,9.0,6.7,False,0,4192,Regus Préverenges,True,3,3349,True,3,0,0,True,31,False,3,8,MAJOR,0.0425
+Bex,46.251462,7.000653,2568048.1,1122249.7,7.5,8.0,False,0,17257,Restaurant l'Oasis Villeneuve,True,3,17208,True,3,0,0,True,19,False,3,8,MAJOR,0.0331
+St-Prex,46.482324,6.455897,2528306.5,1147905.9,4.0,15.0,False,0,4279,lykke Bar Café Boutique,True,3,2559,True,3,0,0,True,6,False,3,8,MAJOR,0.0163
+"Founex, est",46.334766,6.19494,2509268.9,1131507.5,3.5,17.1,False,0,5754,Bibliothèque Marens Nyon,True,3,2109,True,3,0,0,True,3,False,3,8,MAJOR,0.0135
+Rivaz,46.474211,6.784583,2552285.2,1147004.3,3.5,17.1,False,0,4258,Office Hub Vevey,True,3,3515,True,3,0,0,True,1,False,3,8,MAJOR,0.0128
+Denges-Echandens,46.529129,6.54049,2534477.8,1153107.4,2.0,30.0,True,1,2138,Regus Préverenges,True,2,2248,True,3,0,0,True,25,False,4,8,TOTAL_RUPTURE,0.0155
+Lancy-Bachet,46.174342,6.12934,2504483.2,1113679.2,12.5,4.8,False,0,2680,Voisins Plainpalais,True,2,2650,True,3,0,0,True,76,False,3,7,MAJOR,0.07
+"Begnins, poste",46.440225,6.247701,2513118.0,1143227.3,8.5,7.1,False,0,2767,PepperHub Gland,True,2,2767,True,3,0,0,True,8,False,3,7,MAJOR,0.033
+Puidoux,46.493838,6.76568,2550906.1,1149185.4,6.0,10.0,False,0,6137,Café culturel OZarts,True,3,1207,True,2,0,0,True,5,False,3,7,MAJOR,0.0231
+Burier,46.447889,6.877108,2559035.1,1144079.0,4.0,15.0,False,0,2066,TheWorkHub Vevey,True,2,2066,True,3,0,0,True,5,False,3,7,MAJOR,0.016
+"Perroy, Couronnette",46.463879,6.352911,2520793.4,1145856.0,3.0,20.0,False,0,1408,Uluwatu House Rolle,True,1,5604,True,3,0,0,True,0,True,4,7,TOTAL_RUPTURE,0.0107
+Mies,46.298503,6.167641,2507277.4,1127477.5,8.0,7.5,False,0,1924,Regus Versoix Station Lakeside,True,1,2141,True,3,0,0,True,3,False,3,6,MAJOR,0.0296
+Grandvaux,46.496948,6.722641,2547766.3,1149531.1,4.5,13.3,False,0,2849,Café culturel OZarts,True,2,1054,True,2,0,0,True,1,False,3,6,MAJOR,0.0164
+Renens VD,46.537046,6.57892,2537281.4,1153987.2,26.5,2.3,False,0,3312,T19 Bi Coworking,True,3,1755,True,2,0,3,False,92,False,2,5,MODERATE,0.2653
+Lancy-Pont-Rouge,46.18596,6.124929,2504161.4,1114970.4,12.0,5.0,False,0,1869,Voisins Plainpalais,True,1,1689,True,2,0,0,True,197,False,3,5,MAJOR,0.1085
+Genthod-Bellevue,46.256747,6.153947,2506278.4,1122837.1,8.0,7.5,False,0,2588,Neufdixieme,True,2,3759,True,3,1,0,False,30,False,2,5,MODERATE,0.0578
+Allaman,46.47576,6.399683,2524205.6,1147176.4,6.0,10.0,False,0,5205,Uluwatu House Rolle,True,3,1897,True,2,0,1,False,9,False,2,5,MODERATE,0.0844
+"Prangins, Les Abériaux",46.393015,6.254119,2513586.2,1137980.8,5.5,10.9,False,0,1694,ATELIER 9 Coworking Nyon,True,1,1608,True,2,0,0,True,5,False,3,5,MAJOR,0.0213
+Epesses,46.489333,6.745157,2549408.9,1148684.8,3.0,20.0,False,0,4752,Café culturel OZarts,True,3,731,True,1,0,1,False,0,True,3,5,MAJOR,0.0407
+"Vernier, Blandonnet",46.221936,6.097217,2502139.8,1118968.4,84.0,0.7,False,0,3611,Impact Hub Geneva,True,3,590,True,1,0,2,False,134,False,2,4,MODERATE,0.4647
+Tannay,46.307659,6.181097,2508259.0,1128495.0,8.0,7.5,False,0,3181,Regus Versoix Station Lakeside,True,3,732,True,1,0,1,False,3,False,2,4,MODERATE,0.1496
+Clarens,46.442736,6.895771,2560396.7,1143506.4,4.0,15.0,False,0,1140,Bibliothèque Montreux-Veytaux,False,0,1261,True,2,0,0,True,9,False,2,4,MODERATE,0.0173
+Territet,46.426381,6.922695,2562360.8,1141688.8,2.0,30.0,True,1,845,Fleurs de thé Montreux,False,0,868,True,1,0,0,True,3,False,3,4,MAJOR,0.0081
+Coppet,46.317405,6.187806,2508748.5,1129578.1,9.5,6.3,False,0,4380,Regus Versoix Station Lakeside,True,3,291,False,0,0,1,False,5,False,1,3,MINOR,0.0656
+Cully,46.488565,6.727141,2548094.6,1148599.4,9.0,6.7,False,0,3532,Café culturel OZarts,True,3,405,False,0,0,1,False,1,False,1,3,MINOR,0.0625
+Versoix,46.279741,6.165718,2507137.1,1125392.4,8.0,7.5,False,0,182,Regus Versoix Station Lakeside,False,0,3847,True,3,2,0,False,12,False,1,3,MINOR,0.171
+Rolle,46.462757,6.336387,2519587.9,1145731.4,4.5,13.3,False,0,622,Uluwatu House Rolle,False,0,6733,True,3,2,0,False,8,False,1,3,MINOR,0.0972
+Bossière,46.509753,6.699305,2546063.9,1150954.1,2.0,30.0,True,1,1139,Café culturel OZarts,False,0,1313,True,2,1,1,False,4,False,2,3,MODERATE,0.0977
+Genève-Aéroport,46.232547,6.111969,2503216.0,1120147.7,4.5,13.3,False,0,2953,Spaces Nations,True,2,90,False,0,0,4,False,26,False,1,2,MINOR,0.1297
+Lonay-Préverenges,46.523141,6.519527,2532948.5,1152441.9,4.0,15.0,False,0,571,Regus Préverenges,False,0,1442,True,2,1,0,False,15,False,1,2,MINOR,0.2385
+La Conversion,46.513087,6.678307,2544532.0,1151324.6,4.0,15.0,False,0,1196,Café culturel OZarts,False,0,1336,True,2,1,0,False,42,False,1,2,MINOR,0.0875
+Genève-Eaux-Vives,46.201461,6.166549,2507197.7,1116693.0,12.5,4.8,False,0,121,Café Express Tea Room,False,0,983,True,1,2,3,False,160,False,1,1,MINOR,0.2664
+Genève-Champel,46.192208,6.153473,2506243.8,1115664.7,12.5,4.8,False,0,828,Voisins Plainpalais,False,0,832,True,1,2,5,False,157,False,1,1,MINOR,0.2814
+Prilly-Malley,46.526697,6.602624,2539010.7,1152837.1,9.0,6.7,False,0,1164,T19 Bi Coworking,False,0,633,True,1,0,1,False,84,False,1,1,MINOR,0.2101
+Lausanne,46.516795,6.629087,2540941.3,1151736.7,28.5,2.1,False,0,89,Do It Better Coworking,False,0,35,False,0,11,8,False,111,False,0,0,CONTINUOUS,0.5536
+Genève,46.210228,6.142435,2505438.5,1117667.3,25.0,2.4,False,0,104,Impact Hub Geneva,False,0,28,False,0,13,13,False,300,False,0,0,CONTINUOUS,0.6431
+Vevey,46.463002,6.84343,2556578.2,1145758.6,20.0,3.0,False,0,86,Coworking Vevey Communaux,False,0,15,False,0,7,7,False,41,False,0,0,CONTINUOUS,0.4011
+Morges,46.511102,6.493958,2531083.2,1151104.0,16.0,3.8,False,0,425,lykke Bar Café Boutique,False,0,14,False,0,4,3,False,33,False,0,0,CONTINUOUS,0.2901
+Montreux,46.435887,6.910425,2561465.7,1142745.2,16.0,3.8,False,0,112,Coworking Montreux,False,0,10,False,0,6,4,False,22,False,0,0,CONTINUOUS,0.339
+Nyon,46.384429,6.23595,2512260.7,1137026.6,14.5,4.1,False,0,201,Café Jayko,False,0,181,False,0,4,5,False,31,False,0,0,CONTINUOUS,0.28
+Genève-Sécheron,46.222452,6.144542,2505592.3,1119025.8,8.0,7.5,False,0,271,Spaces Nations,False,0,271,False,0,1,3,False,48,False,0,0,CONTINUOUS,0.3838
+Villeneuve VD,46.398369,6.926992,2562674.3,1138575.8,8.0,7.5,False,0,272,Restaurant l'Oasis Villeneuve,False,0,466,False,0,1,1,False,18,False,0,0,CONTINUOUS,0.2238
+Gland,46.419998,6.269128,2514681.2,1140979.5,6.5,9.2,False,0,279,PepperHub Gland,False,0,279,False,0,1,2,False,20,False,0,0,CONTINUOUS,0.1241
+Lausanne-Flon,46.520798,6.63033,2541031.9,1152181.6,4.0,15.0,False,0,72,Regus Lausanne City Flon,False,0,191,False,0,7,10,False,185,False,0,0,CONTINUOUS,0.3951
+La Tour-de-Peilz,46.455457,6.859523,2557752.3,1144920.1,4.0,15.0,False,0,485,TheWorkHub Vevey,False,0,485,False,0,1,1,False,21,False,0,0,CONTINUOUS,0.3905

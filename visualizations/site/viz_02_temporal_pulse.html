@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>City101 — Temporal WCI Pulse</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;600;700&display=swap');
+
+  :root {
+    --bg: #0a0a0f;
+    --bg2: #111118;
+    --bg3: #1a1a24;
+    --text: #e8e6e1;
+    --text-dim: #8a8880;
+    --text-bright: #ffffff;
+    --accent: #c8a86e;
+    --accent-dim: #8a7548;
+    --geneva: #e74c3c;
+    --lacote: #e67e22;
+    --lausanne: #3498db;
+    --lavaux: #9b59b6;
+    --riviera: #2ecc71;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: #0a0a0f;
+    color: #e8e6e1;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .top-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    background: #111118;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    flex-shrink: 0;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .title-block h1 {
+    font-size: 20px;
+    font-family: 'Instrument Serif', serif;
+    font-weight: 400;
+    color: #fff;
+    letter-spacing: -0.3px;
+  }
+  .title-block .subtitle {
+    font-size: 12px;
+    color: #8a8880;
+  }
+
+  .time-control {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .play-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #c8a86e;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+    flex-shrink: 0;
+  }
+  .play-btn:hover { background: #a08050; }
+  .play-btn svg { fill: #fff; }
+
+  .time-slots {
+    display: flex;
+    gap: 2px;
+  }
+  .time-slot-btn {
+    padding: 6px 10px;
+    background: #0a0a0f;
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 6px;
+    color: #8a8880;
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+    line-height: 1.3;
+    white-space: nowrap;
+  }
+  .time-slot-btn.active {
+    background: #c8a86e;
+    border-color: #c8a86e;
+    color: #fff;
+  }
+  .time-slot-btn:hover:not(.active) {
+    border-color: #c8a86e;
+    color: #e8e6e1;
+  }
+  .time-slot-btn .slot-label { display: block; font-size: 10px; font-family: 'DM Sans', sans-serif; color: inherit; opacity: 0.7; }
+
+  .workable-counter {
+    font-family: 'DM Mono', monospace;
+    font-size: 18px;
+    font-weight: 700;
+    color: #fff;
+    text-align: center;
+    min-width: 120px;
+  }
+  .workable-counter .counter-label {
+    font-size: 10px;
+    color: #8a8880;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 400;
+  }
+
+  #map {
+    flex: 1;
+    z-index: 1;
+  }
+
+  .time-overlay {
+    position: absolute;
+    top: 60px;
+    right: 16px;
+    z-index: 1000;
+    background: rgba(22, 33, 62, 0.92);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 10px;
+    padding: 12px 18px;
+    text-align: right;
+    pointer-events: none;
+  }
+  .time-overlay .time-range {
+    font-family: 'DM Mono', monospace;
+    font-size: 22px;
+    font-weight: 700;
+    color: #fff;
+  }
+  .time-overlay .time-subtitle {
+    font-size: 13px;
+    color: #c8a86e;
+    margin-top: 2px;
+  }
+
+  .summary-panel {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    padding: 10px 20px;
+    background: #111118;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    flex-shrink: 0;
+    flex-wrap: wrap;
+  }
+  .summary-stat {
+    text-align: center;
+  }
+  .summary-stat .stat-value {
+    font-family: 'DM Mono', monospace;
+    font-size: 22px;
+    font-weight: 700;
+    color: #fff;
+  }
+  .summary-stat .stat-label {
+    font-size: 11px;
+    color: #8a8880;
+  }
+  .summary-stat .stat-value.green { color: #2ecc71; }
+  .summary-stat .stat-value.blue { color: #c8a86e; }
+  .summary-stat .stat-value.yellow { color: #f1c40f; }
+  .summary-stat .stat-value.red { color: #e74c3c; }
+
+  .map-tooltip .leaflet-popup-content-wrapper {
+    background: #111118 !important;
+    border: 1px solid #8a7548 !important;
+    border-radius: 8px !important;
+    color: #e8e6e1 !important;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.5) !important;
+    font-family: 'DM Sans', sans-serif !important;
+  }
+  .map-tooltip .leaflet-popup-content {
+    margin: 10px 14px !important;
+    font-size: 13px !important;
+  }
+  .map-tooltip .leaflet-popup-tip {
+    background: #111118 !important;
+    border: 1px solid #8a7548 !important;
+  }
+  .map-tooltip .station-name { font-weight: 700; color: #fff; font-size: 14px; }
+  .map-tooltip .stat-row { display: flex; justify-content: space-between; gap: 16px; margin-top: 2px; }
+  .map-tooltip .stat-label { color: #8a8880; }
+  .map-tooltip .stat-val { font-family: 'DM Mono', monospace; font-weight: 700; color: #c8a86e; text-align: right; }
+
+  .legend-box {
+    position: absolute;
+    bottom: 70px;
+    left: 12px;
+    z-index: 1000;
+    background: rgba(22, 33, 62, 0.92);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 11px;
+  }
+  .legend-box .legend-title { font-weight: 600; color: #fff; margin-bottom: 6px; }
+  .legend-row { display: flex; align-items: center; gap: 6px; margin-top: 3px; }
+  .legend-circle { border-radius: 50%; display: inline-block; }
+
+  /* override Leaflet for dark theme */
+  .leaflet-container { background: #0a0a0f; }
+  .leaflet-control-zoom a { background: #111118 !important; color: #e8e6e1 !important; border-color: rgba(255,255,255,0.06) !important; }
+  .leaflet-control-zoom a:hover { background: rgba(255,255,255,0.06) !important; }
+  .leaflet-control-attribution { background: rgba(26,26,46,0.7) !important; color: #555 !important; font-size: 9px !important; }
+  .leaflet-control-attribution a { color: #555 !important; }
+</style>
+</head>
+<body>
+<a href="index.html#explore" style="position:fixed;top:12px;left:16px;z-index:9999;font-family:'DM Sans',sans-serif;font-size:13px;color:#8a8880;text-decoration:none;padding:6px 14px;border:1px solid rgba(255,255,255,0.08);border-radius:20px;backdrop-filter:blur(12px);background:rgba(10,10,15,0.85);transition:color .2s,border-color .2s;" onmouseover="this.style.color='#c8a86e';this.style.borderColor='rgba(200,168,110,0.3)'" onmouseout="this.style.color='#8a8880';this.style.borderColor='rgba(255,255,255,0.08)'">← The Archipelago</a>
+
+<div class="top-bar">
+  <div class="title-block">
+    <h1>The Corridor Doesn't Pulse</h1>
+    <div class="subtitle">49 stations, 7 time slots — the archipelago is structural</div>
+  </div>
+
+  <div class="time-control">
+    <button class="play-btn" id="playBtn" title="Play animation">
+      <svg id="playIcon" width="14" height="14" viewBox="0 0 14 14"><polygon points="3,1 12,7 3,13"/></svg>
+    </button>
+    <div class="time-slots" id="timeSlots"></div>
+  </div>
+
+  <div class="workable-counter" id="workableCounter">
+    <div id="counterValue">14/49</div>
+    <div class="counter-label">workable</div>
+  </div>
+</div>
+
+<div id="map"></div>
+
+<div class="time-overlay" id="timeOverlay">
+  <div class="time-range" id="timeRange">07:00 – 09:00</div>
+  <div class="time-subtitle" id="timeSubtitle">AM Peak</div>
+</div>
+
+<div class="legend-box">
+  <div class="legend-title">TWCI Score</div>
+  <div class="legend-row"><span class="legend-circle" style="width:8px;height:8px;background:#e74c3c;"></span> &lt; 0.05 (broken)</div>
+  <div class="legend-row"><span class="legend-circle" style="width:10px;height:10px;background:#e67e22;"></span> 0.05 – 0.15</div>
+  <div class="legend-row"><span class="legend-circle" style="width:12px;height:12px;background:#f1c40f;"></span> 0.15 – 0.30</div>
+  <div class="legend-row"><span class="legend-circle" style="width:14px;height:14px;background:#2ecc71;"></span> &gt; 0.30 (workable)</div>
+  <div style="margin-top:6px;color:#8a8880;font-size:10px;">Workable = TWCI &gt; 0.10<br>Size = TWCI magnitude</div>
+</div>
+
+<div class="summary-panel" id="summaryPanel"></div>
+
+<script>
+// =========================================================================
+//  DATA — 49 stations, sorted by rail km from Geneva
+//  Cross-referenced from: temporal_WCI.csv + first_last_trains.csv + ga_cost_corridor.csv
+//  Fields: n=name, la=lat, lo=lon, km=rail_km, svc=service_window_hrs,
+//          ft=first_train, lt=last_train,
+//          t=twci[7], f=freq[7], ic=ic_deps[7], ws=workspaces_open[7]
+//  Slot order: early_morning, am_peak, midday, pm_peak, evening, late_night, weekend_mid
+// =========================================================================
+const S = [
+{n:"Genève",la:46.210228,lo:6.142435,km:0,svc:21.3,ft:"04:00",lt:"01:18",t:[.5297,.6732,.7224,.7331,.5315,.5083,.5605],f:[23,25,23.5,26.5,23.5,17,24],ic:[16,21,17,21,18,6,18],ws:[4,9,11,11,4,4,5]},
+{n:"Genève-Sécheron",la:46.222452,lo:6.144542,km:1.4,svc:21.0,ft:"04:03",lt:"01:03",t:[.2443,.2478,.2478,.2478,.2478,.2478,.2206],f:[7,8,8,8,8,8,8],ic:[0,0,0,0,0,0,0],ws:[1,1,1,1,1,1,0]},
+{n:"Genève-Eaux-Vives",la:46.201461,lo:6.166549,km:2.2,svc:21.2,ft:"04:04",lt:"01:17",t:[.2745,.3125,.3107,.3143,.258,.2419,.2763],f:[9.5,12.5,12,13,12.5,8,10],ic:[0,0,0,0,0,0,0],ws:[1,2,2,2,0,0,1]},
+{n:"Genève-Champel",la:46.192208,lo:6.153473,km:2.3,svc:21.1,ft:"04:07",lt:"01:13",t:[.2666,.2773,.3028,.3064,.3046,.2885,.2956],f:[9.5,12.5,12,13,12.5,8,10],ic:[0,0,0,0,0,0,0],ws:[0,0,1,1,1,1,1]},
+{n:"Lancy-Pont-Rouge",la:46.18596,lo:6.124929,km:3.2,svc:21.0,ft:"04:07",lt:"01:07",t:[.1635,.1742,.1742,.1778,.176,.1617,.1671],f:[9,12,12,13,12.5,8.5,10],ic:[0,0,0,0,0,0,0],ws:[0,0,0,0,0,0,0]},
+{n:"Genève-Aéroport",la:46.232547,lo:6.111969,km:3.6,svc:19.4,ft:"04:58",lt:"00:19",t:[.1734,.1734,.1716,.1752,.1716,.1681,.1752],f:[4.5,4.5,4,5,4,3,5],ic:[8,9,8,10,8,2,8],ws:[0,0,0,0,0,0,0]},
+{n:"Vernier, Blandonnet",la:46.221936,lo:6.097217,km:3.9,svc:20.7,ft:"04:04",lt:"00:46",t:[.4404,.5493,.4779,.5476,.4708,.3868,.4476],f:[53.5,84,64,83.5,62,38.5,55.5],ic:[0,0,0,0,0,0,0],ws:[0,0,0,0,0,0,0]},
+{n:"Lancy-Bachet",la:46.174342,lo:6.12934,km:4.3,svc:21.0,ft:"04:10",lt:"01:10",t:[.0846,.0953,.0935,.0971,.0953,.0792,.0864],f:[9.5,12.5,12,13,12.5,8,10],ic:[0,0,0,0,0,0,0],ws:[0,0,0,0,0,0,0]},
+{n:"Genthod-Bellevue",la:46.256747,lo:6.153947,km:5.5,svc:21.0,ft:"04:11",lt:"01:11",t:[.045,.0758,.0758,.0758,.0486,.0486,.0486],f:[7,8,8,8,8,8,8],ic:[0,0,0,0,0,0,0],ws:[0,1,1,1,0,0,0]},
+{n:"Versoix",la:46.279741,lo:6.165718,km:8.3,svc:21.0,ft:"04:17",lt:"01:17",t:[.0603,.0638,.0638,.0638,.0638,.0638,.0366],f:[7,8,8,8,8,8,8],ic:[0,0,0,0,0,0,0],ws:[1,1,1,1,1,1,0]},
+{n:"Mies",la:46.298503,lo:6.167641,km:10.5,svc:21.0,ft:"04:22",lt:"01:22",t:[.027,.0306,.0306,.0306,.0306,.0306,.0306],f:[7,8,8,8,8,8,8],ic:[0,0,0,0,0,0,0],ws:[0,0,0,0,0,0,0]},
+{n:"Tannay",la:46.307659,lo:6.181097,km:11.8,svc:21.0,ft:"04:24",lt:"01:24",t:[.187,.1906,.1906,.1906,.1906,.1906,.1906],f:[7,8,8,8,8,8,8],ic:[0,0,0,0,0,0,0],ws:[0,0,0,0,0,0,0]},
+{n:"Coppet",la:46.317405,lo:6.187806,km:13.0,svc:20.9,ft:"04:18",lt:"01:13",t:[.0701,.0773,.0719,.0737,.0719,.0719,.0719],f:[7.5,9.5,8,8.5,8,8,8],ic:[0,0,0,0,0,0,0],ws:[0,0,0,0,0,0,0]},
+{n:"Founex, est",la:46.334766,lo:6.19494,km:15.1,svc:19.2,ft:"05:17",lt:"00:31",t:[.0163,.0145,.0163,.0181,.0109,.0109,.0091],f:[4,3.5,4,4.5,2.5,2.5,2],ic:[0,0,0,0,0,0,0],ws:[0,0,0,0,0,0,0]},
+{n:"Nyon",la:46.384429,lo:6.23595,km:21.7,svc:20.7,ft:"04:23",lt:"01:05",t:[.1879,.2277,.2443,.2532,.217,.2009,.2134],f:[11,14.5,11.5,14,11.5,7,10.5],ic:[8,11,8,12,10,4,9],ws:[0,1,2,2,1,1,1]},
+{n:"Prangins, Les Abériaux",la:46.393015,lo:6.254119,km:23.2,svc:18.5,ft:"05:43",lt:"00:12",t:[.0176,.023,.0248,.0248,.023,.0176,.0176],f:[4,5.5,6,6,5.5,4,4],ic:[0,0,0,0,0,0,0],ws:[0,0,0,0,0,0,0]},
+{n:"Gland",la:46.419998,lo:6.269128,km:26.5,svc:20.7,ft:"04:18",lt:"01:00",t:[.1312,.1638,.1549,.1603,.1312,.1276,.1294],f:[5,6.5,4,5.5,5,4,4.5],ic:[3,4,0,3,2,0,1],ws:[0,1,1,1,0,0,0]},
+{n:"Begnins, poste",la:46.440225,lo:6.247701,km:28.2,svc:19.5,ft:"05:41",lt:"01:11",t:[.0232,.0357,.0303,.0339,.0303,.0214,.0232],f:[5,8.5,7,8,7,4.5,5],ic:[0,0,0,0,0,0,0],ws:[0,0,0,0,0,0,0]},
+{n:"Rolle",la:46.462757,lo:6.336387,km:33.4,svc:20.7,ft:"04:13",lt:"00:56",t:[.0178,.076,.0742,.0742,.0196,.0196,.0469],f:[3.5,4.5,4,4,4,4,4],ic:[0,0,0,0,0,0,0],ws:[0,2,2,2,0,0,1]},
+{n:"Perroy, Couronnette",la:46.463879,lo:6.352911,km:34.1,svc:18.1,ft:"05:39",lt:"23:43",t:[.0054,.0107,.0054,.0071,.0071,.0071,.0054],f:[1.5,3,1.5,2,2,2,1.5],ic:[0,0,0,0,0,0,0],ws:[0,0,0,0,0,0,0]},
+{n:"Allaman",la:46.47576,lo:6.399683,km:37.3,svc:20.9,ft:"04:09",lt:"01:00",t:[.1056,.1074,.1074,.1074,.1074,.1074,.1074],f:[5.5,6,6,6,6,6,6],ic:[0,0,0,0,0,0,0],ws:[0,0,0,0,0,0,0]},
+{n:"Aubonne, gare",la:46.493844,lo:6.39294,km:38.8,svc:19.0,ft:"05:23",lt:"00:23",t:[.0301,.0479,.0444,.0462,.0408,.0247,.0354],f:[6,11,10,10.5,9,4.5,7.5],ic:[0,0,0,0,0,0,0],ws:[0,0,0,0,0,0,0]},
+{n:"St-Prex",la:46.482324,lo:6.455897,km:40.6,svc:19.7,ft:"05:07",lt:"00:51",t:[.0183,.0183,.0183,.0183,.0183,.0183,.0183],f:[4,4,4,4,4,4,4],ic:[0,0,0,0,0,0,0],ws:[0,0,0,0,0,0,0]},
+{n:"Morges",la:46.511102,lo:6.493958,km:45.1,svc:21.1,ft:"04:01",lt:"01:07",t:[.229,.267,.2599,.267,.2107,.1946,.2854],f:[13,16,14,16,15.5,11,13.5],ic:[8,12,8,12,11,4,9],ws:[1,2,2,2,0,0,3]},
+{n:"Lonay-Préverenges",la:46.523141,lo:6.519527,km:47.5,svc:19.9,ft:"05:07",lt:"01:04",t:[.0516,.0516,.0516,.0516,.0516,.0516,.0243],f:[4,4,4,4,4,4,4],ic:[0,0,0,0,0,0,0],ws:[1,1,1,1,1,1,0]},
+{n:"Denges-Echandens",la:46.529129,lo:6.54049,km:49.1,svc:19.4,ft:"05:16",lt:"00:42",t:[.0238,.0238,.0238,.0238,.0238,.0238,.0238],f:[2,2,2,2,2,2,2],ic:[0,0,0,0,0,0,0],ws:[0,0,0,0,0,0,0]},
+{n:"Bussigny",la:46.547597,lo:6.551814,km:51.4,svc:20.1,ft:"04:48",lt:"00:55",t:[.0528,.0528,.0528,.0528,.0528,.0528,.0492],f:[9,9,9,9,9,9,8],ic:[0,0,0,0,0,0,0],ws:[0,0,0,0,0,0,0]},
+{n:"Renens VD",la:46.537046,lo:6.57892,km:51.9,svc:20.5,ft:"04:46",lt:"01:14",t:[.3266,.3426,.3426,.3426,.3409,.3301,.3391],f:[22,26.5,26.5,26.5,26,23,25.5],ic:[12,19,19,19,18,12,19],ws:[0,0,0,0,0,0,0]},
+{n:"Prilly-Malley",la:46.526697,lo:6.602624,km:52.3,svc:20.3,ft:"04:42",lt:"01:00",t:[.2881,.2881,.2881,.2881,.2881,.2881,.2846],f:[9,9,9,9,9,9,8],ic:[0,0,0,0,0,0,0],ws:[0,0,0,0,0,0,0]},
+{n:"Lausanne",la:46.516795,lo:6.629087,km:53.1,svc:19.9,ft:"04:38",lt:"00:34",t:[.3812,.5117,.5354,.5153,.4008,.3794,.4227],f:[22.5,28.5,27.5,29.5,28,22,26.5],ic:[16,23,21,23,22,14,21],ws:[3,7,8,7,3,3,4]},
+{n:"Lausanne-Flon",la:46.520798,lo:6.63033,km:53.5,svc:18.9,ft:"05:40",lt:"00:36",t:[.3166,.402,.4565,.4293,.3474,.3403,.3474],f:[3,4,4,4,4,2,4],ic:[0,0,0,0,0,0,0],ws:[2,5,7,6,3,3,3]},
+{n:"La Conversion",la:46.513087,lo:6.678307,km:55.8,svc:20.2,ft:"04:54",lt:"01:05",t:[.0423,.0696,.0696,.0459,.0423,.0423,.0696],f:[4,4,4,5,4,4,4],ic:[0,0,0,0,0,0,0],ws:[0,1,1,0,0,0,1]},
+{n:"Bossière",la:46.509753,lo:6.699305,km:56.9,svc:20.1,ft:"04:56",lt:"01:03",t:[.0498,.0498,.0498,.0534,.0498,.0498,.0771],f:[2,2,2,3,2,2,2],ic:[0,0,0,0,0,0,0],ws:[0,0,0,0,0,0,1]},
+{n:"Cully",la:46.488565,lo:6.727141,km:57.2,svc:20.2,ft:"05:05",lt:"01:15",t:[.071,.0728,.0728,.0728,.0728,.0728,.0692],f:[8.5,9,9,9,9,9,8],ic:[0,0,0,0,0,0,0],ws:[0,0,0,0,0,0,0]},
+{n:"Grandvaux",la:46.496948,lo:6.722641,km:57.5,svc:20.0,ft:"04:59",lt:"01:00",t:[.0132,.0167,.0149,.0185,.0149,.0149,.0149],f:[3.5,4.5,4,5,4,4,4],ic:[0,0,0,0,0,0,0],ws:[0,0,0,0,0,0,0]},
+{n:"Epesses",la:46.489333,lo:6.745157,km:58.5,svc:20.1,ft:"05:10",lt:"01:13",t:[.0507,.0507,.0507,.0507,.0507,.0507,.0471],f:[3,3,3,3,3,3,2],ic:[0,0,0,0,0,0,0],ws:[0,0,0,0,0,0,0]},
+{n:"Puidoux",la:46.493838,lo:6.76568,km:60.2,svc:19.9,ft:"05:03",lt:"00:55",t:[.0266,.0248,.0248,.0248,.0248,.0248,.0248],f:[6.5,6,6,6,6,6,6],ic:[0,0,0,0,0,0,0],ws:[0,0,0,0,0,0,0]},
+{n:"Rivaz",la:46.474211,lo:6.784583,km:60.2,svc:20.1,ft:"05:06",lt:"01:10",t:[.0114,.0132,.0114,.0114,.0114,.0114,.0078],f:[3,3.5,3,3,3,3,2],ic:[0,0,0,0,0,0,0],ws:[0,0,0,0,0,0,0]},
+{n:"St-Saphorin",la:46.472696,lo:6.79809,km:61.1,svc:0,ft:"—",lt:"—",t:[.0007,.0007,.0007,.0007,.0007,.0007,.0007],f:[0,0,0,0,0,0,0],ic:[0,0,0,0,0,0,0],ws:[0,0,0,0,0,0,0]},
+{n:"Vevey",la:46.463002,lo:6.84343,km:63.7,svc:20.1,ft:"05:01",lt:"01:04",t:[.23,.3551,.377,.3824,.2662,.2264,.3171],f:[15.5,20,18.5,20,18,14.5,17],ic:[8,8,8,8,8,8,8],ws:[1,5,6,6,2,1,4]},
+{n:"La Tour-de-Peilz",la:46.455457,lo:6.859523,km:64.5,svc:19.9,ft:"05:11",lt:"01:02",t:[.2556,.2556,.2556,.2556,.2556,.2556,.2283],f:[4,4,4,4,4,4,4],ic:[0,0,0,0,0,0,0],ws:[1,1,1,1,1,1,0]},
+{n:"Burier",la:46.447889,lo:6.877108,km:65.4,svc:19.9,ft:"05:09",lt:"01:00",t:[.0176,.0176,.0176,.0176,.0176,.0176,.0176],f:[4,4,4,4,4,4,4],ic:[0,0,0,0,0,0,0],ws:[0,0,0,0,0,0,0]},
+{n:"Clarens",la:46.442736,lo:6.895771,km:66.5,svc:19.9,ft:"05:07",lt:"00:58",t:[.0203,.0203,.0203,.0203,.0203,.0203,.0203],f:[4,4,4,4,4,4,4],ic:[0,0,0,0,0,0,0],ws:[0,0,0,0,0,0,0]},
+{n:"Villeneuve VD",la:46.398369,lo:6.926992,km:67.0,svc:19.9,ft:"04:57",lt:"00:51",t:[.0699,.1078,.1078,.1078,.1078,.0918,.1078],f:[5,8,8,8,8,3.5,8],ic:[0,0,0,0,0,0,0],ws:[0,1,1,1,1,1,1]},
+{n:"Montreux",la:46.435887,lo:6.910425,km:67.3,svc:20.2,ft:"04:43",lt:"00:56",t:[.2093,.3036,.3018,.3,.2182,.2022,.3291],f:[12.5,16,15.5,15,15,10.5,15.5],ic:[9,9,8,8,9,8,8],ws:[0,3,3,3,0,0,4]},
+{n:"Aigle",la:46.316856,lo:6.96367,km:67.4,svc:19.8,ft:"04:49",lt:"00:38",t:[.0618,.0743,.0725,.0743,.0743,.0511,.0725],f:[13,16.5,16,16.5,16.5,10,16],ic:[8,8,8,8,8,8,8],ws:[0,0,0,0,0,0,0]},
+{n:"Territet",la:46.426381,lo:6.922695,km:67.8,svc:19.9,ft:"05:01",lt:"00:56",t:[.0091,.0091,.0091,.0091,.0091,.0091,.0091],f:[2,2,2,2,2,2,2],ic:[0,0,0,0,0,0,0],ws:[0,0,0,0,0,0,0]},
+{n:"Palézieux",la:46.542766,lo:6.83786,km:68.2,svc:20.0,ft:"04:48",lt:"00:48",t:[.0482,.0517,.0499,.0535,.0499,.0464,.0464],f:[10.5,11.5,11,12,11,10,10],ic:[3,4,4,4,4,4,4],ws:[0,0,0,0,0,0,0]},
+{n:"Bex",la:46.251462,lo:7.000653,km:69.5,svc:18.9,ft:"05:04",lt:"23:56",t:[.0359,.0394,.0377,.0377,.0394,.0305,.0377],f:[6.5,7.5,7,7,7.5,5,7],ic:[5,0,0,0,0,2,0],ws:[0,0,0,0,0,0,0]},
+];
+
+const SLOTS = [
+  {key:0, label:'05–07', sub:'Early Morning', range:'05:00 – 07:00'},
+  {key:1, label:'07–09', sub:'AM Peak', range:'07:00 – 09:00'},
+  {key:2, label:'11–13', sub:'Midday', range:'11:00 – 13:00'},
+  {key:3, label:'16–18', sub:'PM Peak', range:'16:00 – 18:00'},
+  {key:4, label:'19–21', sub:'Evening', range:'19:00 – 21:00'},
+  {key:5, label:'21–23', sub:'Late Night', range:'21:00 – 23:00'},
+  {key:6, label:'Sat 11–13', sub:'Saturday Midday', range:'11:00 – 13:00'},
+];
+
+const WORKABLE_THRESHOLD = 0.10;
+let currentSlot = 1; // start at AM Peak
+let playing = false;
+let playInterval = null;
+
+// =========================================================================
+//  MAP
+// =========================================================================
+const map = L.map('map', {
+  center: [46.38, 6.55],
+  zoom: 10,
+  zoomControl: true,
+  attributionControl: true,
+});
+
+// Try Swiss topo tiles, fall back to Carto dark
+const swissTiles = L.tileLayer('https://wmts.geo.admin.ch/1.0.0/ch.swisstopo.pixelkarte-farbe/default/current/3857/{z}/{x}/{y}.jpeg', {
+  maxZoom: 18,
+  attribution: '&copy; swisstopo',
+});
+const cartoDark = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+  maxZoom: 19,
+  attribution: '&copy; OSM &copy; CARTO',
+});
+
+// Use Carto dark for better contrast with colored markers
+cartoDark.addTo(map);
+
+// Corridor polyline (stations in order)
+const polyCoords = S.map(s => [s.la, s.lo]);
+const corridorLine = L.polyline(polyCoords, {
+  color: 'rgba(255,255,255,0.15)',
+  weight: 2,
+  opacity: 0.6,
+  dashArray: '4,4',
+}).addTo(map);
+
+// =========================================================================
+//  STATION MARKERS
+// =========================================================================
+function twciColor(v) {
+  if (v < 0.05) return '#e74c3c';
+  if (v < 0.15) return '#e67e22';
+  if (v < 0.30) return '#f1c40f';
+  return '#2ecc71';
+}
+
+function twciRadius(v) {
+  return Math.max(4, v * 35);
+}
+
+const markers = S.map((s, i) => {
+  const twci = s.t[currentSlot];
+  const marker = L.circleMarker([s.la, s.lo], {
+    radius: twciRadius(twci),
+    fillColor: twciColor(twci),
+    fillOpacity: 0.85,
+    color: '#0a0a0f',
+    weight: 1.5,
+  }).addTo(map);
+
+  marker.on('mouseover', function(e) {
+    this.setStyle({color: '#ffffff', weight: 2.5});
+    const sl = currentSlot;
+    const twciVal = s.t[sl];
+    const popup = L.popup({className: 'map-tooltip', closeButton: false, offset: [0, -8]})
+      .setLatLng(e.latlng)
+      .setContent(`
+        <div class="station-name">${s.n}</div>
+        <div class="stat-row"><span class="stat-label">TWCI</span><span class="stat-val" style="color:${twciColor(twciVal)}">${twciVal.toFixed(4)}</span></div>
+        <div class="stat-row"><span class="stat-label">Trains/hr</span><span class="stat-val" style="color:#f1c40f">${s.f[sl]}</span></div>
+        <div class="stat-row"><span class="stat-label">Workspaces</span><span class="stat-val">${s.ws[sl]}</span></div>
+        <div class="stat-row"><span class="stat-label">IC deps</span><span class="stat-val">${s.ic[sl]}</span></div>
+        <div class="stat-row"><span class="stat-label">Service</span><span class="stat-val">${s.ft} – ${s.lt}</span></div>
+        <div class="stat-row"><span class="stat-label">Window</span><span class="stat-val">${s.svc > 0 ? s.svc.toFixed(1) + 'h' : 'No service'}</span></div>
+        <div class="stat-row"><span class="stat-label">km from GVA</span><span class="stat-val">${s.km.toFixed(1)}</span></div>
+      `)
+      .openOn(map);
+  });
+
+  marker.on('mouseout', function() {
+    this.setStyle({color: '#0a0a0f', weight: 1.5});
+    map.closePopup();
+  });
+
+  return marker;
+});
+
+// =========================================================================
+//  TIME SLOT BUTTONS
+// =========================================================================
+const slotsContainer = document.getElementById('timeSlots');
+SLOTS.forEach((slot, i) => {
+  const btn = document.createElement('button');
+  btn.className = 'time-slot-btn' + (i === currentSlot ? ' active' : '');
+  btn.innerHTML = `${slot.label}<span class="slot-label">${slot.sub}</span>`;
+  btn.addEventListener('click', () => setSlot(i));
+  slotsContainer.appendChild(btn);
+});
+
+function setSlot(idx) {
+  currentSlot = idx;
+
+  // Update buttons
+  document.querySelectorAll('.time-slot-btn').forEach((btn, i) => {
+    btn.classList.toggle('active', i === idx);
+  });
+
+  // Update markers
+  S.forEach((s, i) => {
+    const twci = s.t[idx];
+    markers[i].setRadius(twciRadius(twci));
+    markers[i].setStyle({
+      fillColor: twciColor(twci),
+      fillOpacity: twci < 0.01 ? 0.3 : 0.85,
+    });
+  });
+
+  // Update overlay
+  const slot = SLOTS[idx];
+  document.getElementById('timeRange').textContent = slot.range;
+  document.getElementById('timeSubtitle').textContent = slot.sub;
+
+  // Update counter
+  const workable = S.filter(s => s.t[idx] > WORKABLE_THRESHOLD).length;
+  document.getElementById('counterValue').textContent = `${workable}/49`;
+
+  // Update summary panel
+  updateSummary(idx);
+}
+
+// =========================================================================
+//  SUMMARY PANEL
+// =========================================================================
+function updateSummary(idx) {
+  const twciVals = S.map(s => s.t[idx]);
+  const workable = twciVals.filter(v => v > WORKABLE_THRESHOLD).length;
+  const avgTwci = (twciVals.reduce((a,b) => a+b, 0) / twciVals.length);
+  const totalIC = S.reduce((sum, s) => sum + s.ic[idx], 0);
+  const totalFreq = S.reduce((sum, s) => sum + s.f[idx], 0);
+  const maxTwci = S.reduce((best, s) => s.t[idx] > best.t[idx] ? s : best, S[0]);
+  const zeroService = S.filter(s => s.f[idx] === 0).length;
+
+  document.getElementById('summaryPanel').innerHTML = `
+    <div class="summary-stat">
+      <div class="stat-value green">${workable}/49</div>
+      <div class="stat-label">Workable stations</div>
+    </div>
+    <div class="summary-stat">
+      <div class="stat-value blue">${avgTwci.toFixed(3)}</div>
+      <div class="stat-label">Avg TWCI</div>
+    </div>
+    <div class="summary-stat">
+      <div class="stat-value yellow">${totalIC}</div>
+      <div class="stat-label">IC departures</div>
+    </div>
+    <div class="summary-stat">
+      <div class="stat-value">${totalFreq.toFixed(0)}</div>
+      <div class="stat-label">Total trains/hr</div>
+    </div>
+    <div class="summary-stat">
+      <div class="stat-value" style="font-size:14px;color:#2ecc71;">${maxTwci.n}</div>
+      <div class="stat-label">Highest TWCI (${maxTwci.t[idx].toFixed(3)})</div>
+    </div>
+    <div class="summary-stat">
+      <div class="stat-value red">${zeroService}</div>
+      <div class="stat-label">Zero service</div>
+    </div>
+  `;
+}
+
+// =========================================================================
+//  PLAY / PAUSE
+// =========================================================================
+const playBtn = document.getElementById('playBtn');
+const playIcon = document.getElementById('playIcon');
+
+function togglePlay() {
+  playing = !playing;
+  if (playing) {
+    playIcon.innerHTML = '<rect x="3" y="2" width="3" height="10" /><rect x="8" y="2" width="3" height="10" />';
+    playInterval = setInterval(() => {
+      const next = (currentSlot + 1) % SLOTS.length;
+      setSlot(next);
+    }, 1500);
+  } else {
+    playIcon.innerHTML = '<polygon points="3,1 12,7 3,13"/>';
+    clearInterval(playInterval);
+  }
+}
+
+playBtn.addEventListener('click', togglePlay);
+
+// =========================================================================
+//  INIT
+// =========================================================================
+setSlot(1); // AM Peak
+map.fitBounds([[46.17, 6.05], [46.56, 7.02]], {padding: [20, 20]});
+</script>
+</body>
+</html>

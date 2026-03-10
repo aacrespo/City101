@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>City101 — 24h Clock (embed)</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;600;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #0a0a0f;
+    color: #e8e6e1;
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+  }
+
+  canvas { display: block; max-width: 100%; height: auto; }
+
+  .stats {
+    display: flex;
+    gap: 40px;
+    margin-top: 16px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .stat {
+    text-align: center;
+    font-family: 'DM Mono', monospace;
+  }
+
+  .stat .num {
+    font-size: 28px;
+    font-weight: 700;
+    color: #c8a86e;
+    line-height: 1;
+  }
+
+  .stat .label {
+    font-size: 9px;
+    color: #8a8880;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+</style>
+</head>
+<body>
+
+<canvas id="clock" width="1400" height="1400"></canvas>
+
+<div class="stats">
+  <div class="stat"><div class="num">4h</div><div class="label">Dead window</div></div>
+  <div class="stat"><div class="num">17%</div><div class="label">Of the day — dark</div></div>
+  <div class="stat"><div class="num">29</div><div class="label">Stations silenced</div></div>
+  <div class="stat"><div class="num">92km</div><div class="label">Disconnected</div></div>
+</div>
+
+<script>
+const canvas = document.getElementById('clock');
+const ctx = canvas.getContext('2d');
+const W = canvas.width;
+const H = canvas.height;
+const cx = W / 2;
+const cy = H / 2;
+
+const stations = [
+  {name:"Genève",km:0,type:"major"},
+  {name:"Genève-Séch.",km:2,type:"small"},
+  {name:"Genthod-Bell.",km:6,type:"small"},
+  {name:"Versoix",km:10,type:"medium"},
+  {name:"Coppet",km:13,type:"medium"},
+  {name:"Tannay",km:15,type:"small"},
+  {name:"Mies",km:17,type:"small"},
+  {name:"Nyon",km:22,type:"medium"},
+  {name:"Gland",km:28,type:"small"},
+  {name:"Rolle",km:33,type:"medium"},
+  {name:"Allaman",km:38,type:"small"},
+  {name:"St-Prex",km:42,type:"small"},
+  {name:"Morges",km:45,type:"medium"},
+  {name:"Préverenges",km:48,type:"small"},
+  {name:"Renens VD",km:55,type:"medium"},
+  {name:"Lausanne",km:60,type:"major"},
+  {name:"Pully",km:63,type:"small"},
+  {name:"Lutry",km:66,type:"small"},
+  {name:"Villette VD",km:68,type:"small"},
+  {name:"Cully",km:70,type:"small"},
+  {name:"Epesses",km:72,type:"small"},
+  {name:"Rivaz",km:74,type:"small"},
+  {name:"St-Saphorin",km:76,type:"small"},
+  {name:"Vevey",km:80,type:"medium"},
+  {name:"La Tour-de-P.",km:82,type:"small"},
+  {name:"Montreux",km:86,type:"medium"},
+  {name:"Territet",km:88,type:"small"},
+  {name:"Veytaux-Ch.",km:89,type:"small"},
+  {name:"Villeneuve",km:92,type:"small"},
+];
+
+function getFreq(type, hour) {
+  if (hour >= 1 && hour <= 4) return 0;
+  if (hour === 0) return {major:3,medium:2,small:1}[type];
+  if (hour === 5) return {major:4,medium:2,small:1}[type];
+  if (hour === 6) return {major:10,medium:6,small:4}[type];
+  if (hour >= 7 && hour <= 8) return {major:16,medium:8,small:4}[type];
+  if (hour >= 9 && hour <= 15) return {major:12,medium:6,small:4}[type];
+  if (hour >= 16 && hour <= 18) return {major:16,medium:8,small:4}[type];
+  if (hour >= 19 && hour <= 20) return {major:10,medium:6,small:4}[type];
+  if (hour >= 21 && hour <= 22) return {major:8,medium:4,small:2}[type];
+  if (hour === 23) return {major:4,medium:2,small:1}[type];
+  return 0;
+}
+
+function freqToColor(freq) {
+  if (freq === 0) return 'rgba(255,77,42,0.06)';
+  if (freq <= 2) return 'rgba(100,60,180,0.25)';
+  if (freq <= 4) return 'rgba(80,50,160,0.5)';
+  if (freq <= 8) return 'rgba(106,63,255,0.7)';
+  if (freq <= 12) return 'rgba(106,63,255,0.9)';
+  return 'rgba(255,107,53,1)';
+}
+
+ctx.fillStyle = '#0a0a0f';
+ctx.fillRect(0, 0, W, H);
+
+const innerR = 80;
+const outerR = 620;
+const ringW = (outerR - innerR) / stations.length;
+const segAngle = (Math.PI * 2) / 24;
+
+function hourToAngle(h) {
+  return ((h / 24) * Math.PI * 2) - Math.PI / 2;
+}
+
+stations.forEach((s, si) => {
+  const r0 = innerR + si * ringW;
+  const r1 = innerR + (si + 1) * ringW;
+  for (let h = 0; h < 24; h++) {
+    const freq = getFreq(s.type, h);
+    const color = freqToColor(freq);
+    const a0 = hourToAngle(h);
+    const a1 = hourToAngle(h + 1);
+    ctx.beginPath();
+    ctx.arc(cx, cy, r1, a0, a1);
+    ctx.arc(cx, cy, r0, a1, a0, true);
+    ctx.closePath();
+    ctx.fillStyle = color;
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(10,10,15,0.6)';
+    ctx.lineWidth = 0.5;
+    ctx.stroke();
+  }
+});
+
+ctx.strokeStyle = '#c8a86e';
+ctx.lineWidth = 2;
+ctx.setLineDash([8, 6]);
+const gapA0 = hourToAngle(1);
+ctx.beginPath();
+ctx.moveTo(cx + innerR * Math.cos(gapA0), cy + innerR * Math.sin(gapA0));
+ctx.lineTo(cx + (outerR + 15) * Math.cos(gapA0), cy + (outerR + 15) * Math.sin(gapA0));
+ctx.stroke();
+const gapA1 = hourToAngle(5);
+ctx.beginPath();
+ctx.moveTo(cx + innerR * Math.cos(gapA1), cy + innerR * Math.sin(gapA1));
+ctx.lineTo(cx + (outerR + 15) * Math.cos(gapA1), cy + (outerR + 15) * Math.sin(gapA1));
+ctx.stroke();
+ctx.setLineDash([]);
+
+ctx.font = '500 14px "DM Mono", monospace';
+ctx.textAlign = 'center';
+ctx.textBaseline = 'middle';
+for (let h = 0; h < 24; h++) {
+  const a = hourToAngle(h) + segAngle / 2;
+  const labelR = outerR + 32;
+  const lx = cx + labelR * Math.cos(a);
+  const ly = cy + labelR * Math.sin(a);
+  const isGap = h >= 1 && h <= 4;
+  ctx.fillStyle = isGap ? '#c8a86e' : '#8a8880';
+  ctx.font = isGap ? '700 14px "DM Mono", monospace' : '400 13px "DM Mono", monospace';
+  ctx.fillText(`${String(h).padStart(2,'0')}`, lx, ly);
+}
+
+const labelAngle = hourToAngle(9) + segAngle / 2;
+ctx.font = '400 9px "DM Mono", monospace';
+ctx.textAlign = 'left';
+ctx.textBaseline = 'middle';
+const labelStations = stations.filter(s => s.type === 'major' || s.type === 'medium');
+labelStations.forEach(s => {
+  const si = stations.indexOf(s);
+  const r = innerR + (si + 0.5) * ringW;
+  const lx = cx + r * Math.cos(labelAngle);
+  const ly = cy + r * Math.sin(labelAngle);
+  ctx.fillStyle = s.type === 'major' ? '#e8e6e1' : '#8a8880';
+  ctx.font = s.type === 'major' ? '700 10px "DM Mono", monospace' : '400 8px "DM Mono", monospace';
+  ctx.save();
+  ctx.translate(lx, ly);
+  ctx.rotate(labelAngle);
+  ctx.fillText(s.name, 4, 0);
+  ctx.restore();
+});
+
+ctx.fillStyle = '#e8e6e1';
+ctx.font = '700 12px "DM Mono", monospace';
+ctx.textAlign = 'center';
+ctx.textBaseline = 'middle';
+ctx.fillText('GENÈVE', cx, cy - 10);
+ctx.font = '300 9px "DM Mono", monospace';
+ctx.fillStyle = '#8a8880';
+ctx.fillText('center', cx, cy + 6);
+
+const outerLabelA = hourToAngle(15) + segAngle / 2;
+ctx.save();
+ctx.translate(cx + (outerR + 8) * Math.cos(outerLabelA), cy + (outerR + 8) * Math.sin(outerLabelA));
+ctx.rotate(outerLabelA + Math.PI / 2);
+ctx.font = '400 9px "DM Mono", monospace';
+ctx.fillStyle = '#8a8880';
+ctx.textAlign = 'center';
+ctx.fillText('VILLENEUVE →', 0, 0);
+ctx.restore();
+
+const gapMidA = hourToAngle(2.5);
+const gapLabelR = innerR + (outerR - innerR) * 0.5;
+ctx.save();
+ctx.translate(cx + gapLabelR * Math.cos(gapMidA), cy + gapLabelR * Math.sin(gapMidA));
+ctx.rotate(gapMidA + Math.PI / 2);
+ctx.font = '700 16px "DM Mono", monospace';
+ctx.fillStyle = 'rgba(255,77,42,0.35)';
+ctx.textAlign = 'center';
+ctx.textBaseline = 'middle';
+ctx.letterSpacing = '6px';
+ctx.fillText('NO SERVICE', 0, 0);
+ctx.restore();
+
+ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+ctx.lineWidth = 1;
+stations.forEach((s, si) => {
+  if (s.type !== 'major') return;
+  const r = innerR + (si + 1) * ringW;
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, 0, Math.PI * 2);
+  ctx.stroke();
+});
+
+ctx.strokeStyle = 'rgba(255,255,255,0.12)';
+ctx.lineWidth = 1.5;
+ctx.beginPath();
+ctx.arc(cx, cy, innerR, 0, Math.PI * 2);
+ctx.stroke();
+ctx.beginPath();
+ctx.arc(cx, cy, outerR, 0, Math.PI * 2);
+ctx.stroke();
+</script>
+</body>
+</html>

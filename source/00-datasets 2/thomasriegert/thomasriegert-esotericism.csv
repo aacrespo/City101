@@ -1,0 +1,44 @@
+nom,adresse,lat_wgs84,lon_wgs84,E_LV95,N_LV95,type,sous_type,ville
+"Loge Liberté Lausanne","Rue du Petit-Beaulieu 1, 1004 Lausanne",46.525545,6.625820,2537970.53,1151271.10,Franc-maçonnerie,Loge maçonnique,Lausanne
+"Loge Espérance et Cordialité","Av. de Beaulieu 17, 1006 Lausanne",46.525379,6.625877,2537974.56,1151252.48,Franc-maçonnerie,Loge maçonnique,Lausanne
+"Suprême Conseil du REAA","Rue du Petit-Beaulieu 1, 1004 Lausanne",46.525545,6.625820,2537970.53,1151271.10,Franc-maçonnerie,Rite Écossais Ancien et Accepté,Lausanne
+"Grand Orient de Suisse","Pl. Chauderon, 1003 Lausanne",46.523622,6.625085,2537915.86,1151039.59,Franc-maçonnerie,Obédience maçonnique,Lausanne
+"Ordre Rose-Croix AMORC","Chem. de Grange-Bonnet 17, 1224 Chêne-Bougeries",46.196824,6.183607,2504397.35,1115404.82,Rosicrucianisme,Ordre rosicrucien,Chêne-Bougeries
+"Lectorium Rosicrucianum","Rte de Montheron 8D, 1053 Cugy",46.590937,6.646897,2539767.54,1159300.04,Rosicrucianisme,Ordre rosicrucien gnostique,Cugy
+"À Aux Arts Divinatoires","Rue du Petit-Chêne 1, 1003 Lausanne",46.519378,6.632093,2538312.39,1150598.84,Boutique ésotérique,Tarot/Cristaux/Divination,Lausanne
+"Rector Lucis","Av. de Beaulieu 5, 1004 Lausanne",46.524093,6.624951,2537906.12,1151085.29,Boutique ésotérique,Mystique/Occulte,Lausanne
+"L'Arcane 7","Rue de Berne 7, 1201 Genève",46.209140,6.144732,2501758.13,1116973.20,Boutique ésotérique,Librairie ésotérique,Genève
+"L'Emporium Alchimique","Chem. de la Milice 2, 1228 Plan-les-Ouates",46.168234,6.123458,2500254.07,1112430.47,Boutique ésotérique,Alchimie,Plan-les-Ouates
+"Minéraux Cristaux Pierres","Rue Étraz 9, 1003 Lausanne",46.519320,6.639296,2538829.82,1150607.09,Boutique ésotérique,Lithothérapie,Lausanne
+"joiedespierres.ch","Chem. de Longeraie 2B, 1052 Le Mont-sur-Lausanne",46.562646,6.631554,2538240.99,1155986.40,Boutique ésotérique,Lithothérapie,Le Mont-sur-Lausanne
+"Pacaloha","Rue des Eaux-Vives 47, 1207 Genève",46.204517,6.159018,2502729.88,1116464.83,Boutique ésotérique,Pierres/Encens/Spiritualité,Genève
+"Arte Sacra","Rue du Petit-Chêne 22, 1003 Lausanne",46.518952,6.631573,2538280.43,1150558.24,Boutique ésotérique,Objets religieux/ésotériques,Lausanne
+"Jason voyance","Chem. Massenet 23, 1228 Plan-les-Ouates",46.166760,6.136815,2501138.26,1112278.87,Voyance,Médium/Guérisseur,Plan-les-Ouates
+"Mon Avenir Voyance","Carr de Rive 2, 1207 Genève",46.200899,6.155986,2502517.42,1116055.85,Voyance,Voyance/Astrologie,Genève
+"Daphne Galia Voyance","Rte des Franchises 26, 1203 Genève",46.213284,6.119605,2499999.51,1117375.54,Voyance,Voyance/Cartomancie,Genève
+"Voyant marabout suisse","Av. de la Gare 33, 1001 Lausanne",46.516578,6.634711,2538520.56,1150294.54,Voyance,Voyance/Marabout,Lausanne
+"Voyant medium Suisse","Rue des Echelettes 2, 1004 Lausanne",46.524346,6.624287,2537859.03,1151095.02,Voyance,Voyance/Astrologie,Lausanne
+"Dana voyance","Rue du Simplon 4, 1006 Lausanne",46.515684,6.631681,2538234.77,1150201.44,Voyance,Voyance,Lausanne
+"Conscienc&sotérica","Charmilles, 1203 Genève",46.211051,6.123173,2500228.04,1117137.85,Voyance,Médium,Genève
+"Bien dire","Pass. Hamo 5, 1262 Eysins",46.381686,6.207927,2508025.67,1134001.32,Astrologie,Astrologie,Eysins
+"TerrEssenCiel","Rte de l'Etraz 7, 1239 Collex-Bossy",46.272324,6.126647,2500355.20,1123907.72,Astrologie,Astrologie/Spiritualité,Collex-Bossy
+"Om Veda Home","Rue Enning 2, 1003 Lausanne",46.519896,6.637045,2538662.70,1150604.78,Reiki,Reiki/Méditation/Régression,Lausanne
+"Flore Le Gallo","Av. des Figuiers 43, 1007 Lausanne",46.516591,6.605696,2536174.30,1150266.09,Reiki,Guérisseuse/Médium/Hypnose,Lausanne
+"Solange Soins d'Anges","Rte du Boiron 13, 1260 Nyon",46.382053,6.214874,2508462.48,1133989.98,Reiki,Reiki/LaHoChi/Magnétisme,Nyon
+"Alexandre Toullier","Rte de la Clochatte, 1018 Lausanne",46.542731,6.638575,2538815.09,1153805.07,Magnétisme,Magnétiseur,Lausanne
+"Estelle Dürr","Rue du Petit-Chêne 34, 1003 Lausanne",46.518549,6.629808,2538154.03,1150526.87,Reiki,Reiki/Médium-guérisseuse,Lausanne
+"Au Coeur De L'Energie","Rlle de la Poterne 4, 1260 Nyon",46.381557,6.241440,2510366.05,1133936.08,Magnétisme,Magnétisme/Formation,Nyon
+"Zen break Lausanne","Rue du Petit-Chêne 34, 1003 Lausanne",46.518476,6.630194,2538181.37,1150518.70,Centre holistique,Massage/Reiki/Magnétisme,Lausanne
+"UniVers l'Eveil","Chem. du Raffort 9, 1616 Attalens",46.511535,6.855926,2551260.74,1149732.93,Soins énergétiques,Constellations familiales,Attalens
+"Les Souffleuses d'Étoiles","Rue de la Tour 33, 1003 Lausanne",46.523804,6.628081,2538065.41,1151056.41,Chamanisme,Traditions ancestrales,Lausanne
+"Les Ailes de Katia","Chem. en convers 5, 1195 Bursinel",46.446390,6.306337,2515105.36,1142033.33,Centre holistique,Soins énergétiques,Bursinel
+"Terre d'Eveil","Av. de Corsier 6, 1800 Vevey",46.466979,6.844447,2550895.65,1144665.62,Centre spirituel,Yoga/Cérémonies,Vevey
+"Centre des Sources","Rue Jean-Imbert-Galloix 2, 1205 Genève",46.196942,6.145705,2501793.01,1115433.70,Centre holistique,Bien-être/Biodanza,Genève
+"saÔMa - Mélanie Leyvraz","Rte de Corseaux 4, 1804 Corsier-sur-Vevey",46.470698,6.841410,2550693.52,1145085.66,Centre holistique,Biorésonance/EFT/Hypnose,Corsier-sur-Vevey
+"Life Spirit Alchemists","Rue Fendt 1, 1201 Genève",46.210537,6.141279,2501507.51,1117103.14,Centre holistique,Qi Gong/Thérapies,Genève
+"Soins du Monde Académie","Rte de l'Etraz 8, 1267 Vich",46.425209,6.252787,2510742.44,1139097.71,Centre holistique,Rebozo/Son/Chamanisme,Vich
+"Donia Thérapies","Bd Helvétique 4, 1205 Genève",46.197036,6.149733,2502020.99,1115421.41,Centre holistique,Massages holistiques,Genève
+"Nueva Luna Yoga","Pass. Saint-François 6, 1003 Lausanne",46.520453,6.633390,2538389.94,1150710.99,Yoga,Studio yoga,Lausanne
+"Centre Vie Yoga Kundalini","Rue d'Italie 29, 1800 Vevey",46.458067,6.850025,2551279.29,1143985.77,Yoga,Kundalini Yoga,Vevey
+"Tantra Lausanne","Rue Caroline 21, 1003 Lausanne",46.521413,6.638700,2538729.61,1150822.45,Tantra,Massage tantrique,Lausanne
+"Salon Arts Divinatoires","Sent. des Bionnaires 3, 1815 Clarens",46.445902,6.893415,2554218.95,1143281.93,Événement,Salon de divination,Clarens

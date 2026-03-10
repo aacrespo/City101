@@ -1,0 +1,2092 @@
+{
+  "type": "FeatureCollection",
+  "name": "flux_energie_leman_v4",
+  "crs": {
+    "type": "name",
+    "properties": {
+      "name": "urn:ogc:def:crs:OGC:1.3:CRS84"
+    }
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            7.247986,
+            46.183
+          ],
+          [
+            7.205582,
+            46.168231
+          ],
+          [
+            7.153934,
+            46.141126
+          ],
+          [
+            7.102281,
+            46.122992
+          ],
+          [
+            7.050407,
+            46.140817
+          ],
+          [
+            6.998353,
+            46.176609
+          ],
+          [
+            6.998135,
+            46.203595
+          ],
+          [
+            6.984955,
+            46.23053
+          ],
+          [
+            6.973089,
+            46.2494
+          ]
+        ]
+      },
+      "properties": {
+        "id_flux": "F003_P16_C07",
+        "source_id": "P16",
+        "source_nom": "Bieudron/Nendaz (Grande Dixence)",
+        "destination_id": "C07",
+        "destination_nom": "CIMO Monthey (industrie chimique)",
+        "type_flux": "Réseau électrique THT (220/400kV)",
+        "energie_dominante": "electrique",
+        "flux_elec_GWh_an": 400,
+        "flux_therm_GWh_an": 0,
+        "flux_total_GWh_an": 400,
+        "description": "Bieudron → vallée Rhône → liaison directe vers industrie Monthey",
+        "nb_points": 9
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.931692,
+            46.410202
+          ],
+          [
+            6.931432,
+            46.410219
+          ],
+          [
+            6.918254,
+            46.428151
+          ],
+          [
+            6.892055,
+            46.446019
+          ],
+          [
+            6.868491,
+            46.456707
+          ]
+        ]
+      },
+      "properties": {
+        "id_flux": "F005_P01_C05",
+        "source_id": "P01",
+        "source_nom": "FMHL Veytaux I+II",
+        "destination_id": "C05",
+        "destination_nom": "Vevey – Montreux",
+        "type_flux": "Réseau électrique HT",
+        "energie_dominante": "electrique",
+        "flux_elec_GWh_an": 300,
+        "flux_therm_GWh_an": 0,
+        "flux_total_GWh_an": 300,
+        "description": "FMHL → descente vers poste Vevey (réseau local)",
+        "nb_points": 5
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.931692,
+            46.410202
+          ],
+          [
+            6.931432,
+            46.410219
+          ],
+          [
+            6.905157,
+            46.437086
+          ],
+          [
+            6.839703,
+            46.472743
+          ],
+          [
+            6.695872,
+            46.516873
+          ],
+          [
+            6.617555,
+            46.525331
+          ],
+          [
+            6.626798,
+            46.519109
+          ]
+        ]
+      },
+      "properties": {
+        "id_flux": "F006_P01_C01",
+        "source_id": "P01",
+        "source_nom": "FMHL Veytaux I+II",
+        "destination_id": "C01",
+        "destination_nom": "Lausanne (résidentiel+tertiaire)",
+        "type_flux": "Réseau électrique HT",
+        "energie_dominante": "electrique",
+        "flux_elec_GWh_an": 400,
+        "flux_therm_GWh_an": 0,
+        "flux_total_GWh_an": 400,
+        "description": "FMHL → corridor THT rive nord → poste Malley/Lausanne (SiL)",
+        "nb_points": 7
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.931692,
+            46.410202
+          ],
+          [
+            6.931432,
+            46.410219
+          ],
+          [
+            6.905157,
+            46.437086
+          ],
+          [
+            6.839703,
+            46.472743
+          ],
+          [
+            6.695872,
+            46.516873
+          ],
+          [
+            6.617555,
+            46.525331
+          ],
+          [
+            6.532848,
+            46.524688
+          ],
+          [
+            6.467851,
+            46.515155
+          ],
+          [
+            6.448389,
+            46.510489
+          ],
+          [
+            6.351491,
+            46.469119
+          ],
+          [
+            6.242428,
+            46.39605
+          ],
+          [
+            6.191461,
+            46.350517
+          ],
+          [
+            6.116263,
+            46.237204
+          ],
+          [
+            6.074988,
+            46.228616
+          ],
+          [
+            6.140182,
+            46.212317
+          ]
+        ]
+      },
+      "properties": {
+        "id_flux": "F007_P01_C02",
+        "source_id": "P01",
+        "source_nom": "FMHL Veytaux I+II",
+        "destination_id": "C02",
+        "destination_nom": "Agglomération genevoise",
+        "type_flux": "Réseau électrique HT",
+        "energie_dominante": "electrique",
+        "flux_elec_GWh_an": 300,
+        "flux_therm_GWh_an": 0,
+        "flux_total_GWh_an": 300,
+        "description": "FMHL → corridor THT rive nord → Foretaille → Genève (SIG)",
+        "nb_points": 15
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.931692,
+            46.410202
+          ],
+          [
+            6.931432,
+            46.410219
+          ],
+          [
+            6.905157,
+            46.437086
+          ],
+          [
+            6.839703,
+            46.472743
+          ],
+          [
+            6.695872,
+            46.516873
+          ],
+          [
+            6.617555,
+            46.525331
+          ],
+          [
+            6.62809,
+            46.515511
+          ]
+        ]
+      },
+      "properties": {
+        "id_flux": "F008_P01_C11",
+        "source_id": "P01",
+        "source_nom": "FMHL Veytaux I+II",
+        "destination_id": "C11",
+        "destination_nom": "Gare CFF Lausanne",
+        "type_flux": "Réseau ferroviaire CFF 16.7Hz",
+        "energie_dominante": "electrique",
+        "flux_elec_GWh_an": 15,
+        "flux_therm_GWh_an": 0,
+        "flux_total_GWh_an": 15,
+        "description": "FMHL → corridor THT → sous-station CFF Lausanne (16.7Hz)",
+        "nb_points": 7
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.931692,
+            46.410202
+          ],
+          [
+            6.931432,
+            46.410219
+          ],
+          [
+            6.905157,
+            46.437086
+          ],
+          [
+            6.839703,
+            46.472743
+          ],
+          [
+            6.695872,
+            46.516873
+          ],
+          [
+            6.617555,
+            46.525331
+          ],
+          [
+            6.532848,
+            46.524688
+          ],
+          [
+            6.467851,
+            46.515155
+          ],
+          [
+            6.448389,
+            46.510489
+          ],
+          [
+            6.351491,
+            46.469119
+          ],
+          [
+            6.242428,
+            46.39605
+          ],
+          [
+            6.234692,
+            46.383112
+          ]
+        ]
+      },
+      "properties": {
+        "id_flux": "F009_P01_C03",
+        "source_id": "P01",
+        "source_nom": "FMHL Veytaux I+II",
+        "destination_id": "C03",
+        "destination_nom": "Nyon – La Côte",
+        "type_flux": "Réseau électrique HT",
+        "energie_dominante": "electrique",
+        "flux_elec_GWh_an": 100,
+        "flux_therm_GWh_an": 0,
+        "flux_total_GWh_an": 100,
+        "description": "FMHL → corridor THT rive nord → poste Nyon (Romande Energie)",
+        "nb_points": 12
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.931692,
+            46.410202
+          ],
+          [
+            6.931432,
+            46.410219
+          ],
+          [
+            6.905157,
+            46.437086
+          ],
+          [
+            6.839703,
+            46.472743
+          ],
+          [
+            6.695872,
+            46.516873
+          ],
+          [
+            6.617555,
+            46.525331
+          ],
+          [
+            6.532848,
+            46.524688
+          ],
+          [
+            6.467851,
+            46.515155
+          ],
+          [
+            6.464,
+            46.509706
+          ]
+        ]
+      },
+      "properties": {
+        "id_flux": "F010_P01_C04",
+        "source_id": "P01",
+        "source_nom": "FMHL Veytaux I+II",
+        "destination_id": "C04",
+        "destination_nom": "Morges – Aubonne",
+        "type_flux": "Réseau électrique HT",
+        "energie_dominante": "electrique",
+        "flux_elec_GWh_an": 80,
+        "flux_therm_GWh_an": 0,
+        "flux_total_GWh_an": 80,
+        "description": "FMHL → corridor THT rive nord → poste Morges",
+        "nb_points": 9
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.931692,
+            46.410202
+          ],
+          [
+            6.931432,
+            46.410219
+          ],
+          [
+            6.905157,
+            46.437086
+          ],
+          [
+            6.839703,
+            46.472743
+          ],
+          [
+            6.695872,
+            46.516873
+          ],
+          [
+            6.617555,
+            46.525331
+          ],
+          [
+            6.532848,
+            46.524688
+          ],
+          [
+            6.467851,
+            46.515155
+          ],
+          [
+            6.448389,
+            46.510489
+          ],
+          [
+            6.351491,
+            46.469119
+          ],
+          [
+            6.339788,
+            46.461315
+          ]
+        ]
+      },
+      "properties": {
+        "id_flux": "F011_P01_C18",
+        "source_id": "P01",
+        "source_nom": "FMHL Veytaux I+II",
+        "destination_id": "C18",
+        "destination_nom": "Rolle – Gland",
+        "type_flux": "Réseau électrique HT",
+        "energie_dominante": "electrique",
+        "flux_elec_GWh_an": 50,
+        "flux_therm_GWh_an": 0,
+        "flux_total_GWh_an": 50,
+        "description": "FMHL → corridor THT rive nord → poste Rolle",
+        "nb_points": 11
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.931692,
+            46.410202
+          ],
+          [
+            6.931432,
+            46.410219
+          ],
+          [
+            6.905157,
+            46.437086
+          ],
+          [
+            6.839703,
+            46.472743
+          ],
+          [
+            6.695872,
+            46.516873
+          ],
+          [
+            6.617555,
+            46.525331
+          ],
+          [
+            6.532848,
+            46.524688
+          ],
+          [
+            6.522396,
+            46.524613
+          ]
+        ]
+      },
+      "properties": {
+        "id_flux": "F012_P01_C14",
+        "source_id": "P01",
+        "source_nom": "FMHL Veytaux I+II",
+        "destination_id": "C14",
+        "destination_nom": "Triage Renens-Denges (CFF)",
+        "type_flux": "Réseau ferroviaire CFF 16.7Hz",
+        "energie_dominante": "electrique",
+        "flux_elec_GWh_an": 10,
+        "flux_therm_GWh_an": 0,
+        "flux_total_GWh_an": 10,
+        "description": "FMHL → corridor THT → sous-station CFF Renens",
+        "nb_points": 8
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.028481,
+            46.192822
+          ],
+          [
+            6.046009,
+            46.195874
+          ],
+          [
+            6.065324,
+            46.200609
+          ],
+          [
+            6.091119,
+            46.205418
+          ],
+          [
+            6.116809,
+            46.214718
+          ],
+          [
+            6.140182,
+            46.212317
+          ]
+        ]
+      },
+      "properties": {
+        "id_flux": "F014_P04_C02",
+        "source_id": "P04",
+        "source_nom": "Centrale Verbois (Rhône)",
+        "destination_id": "C02",
+        "destination_nom": "Agglomération genevoise",
+        "type_flux": "Réseau électrique HT",
+        "energie_dominante": "electrique",
+        "flux_elec_GWh_an": 350,
+        "flux_therm_GWh_an": 0,
+        "flux_total_GWh_an": 350,
+        "description": "Verbois → rive droite Rhône → poste Foretaille/SIG → réseau genevois",
+        "nb_points": 6
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.028481,
+            46.192822
+          ],
+          [
+            6.046009,
+            46.195874
+          ],
+          [
+            6.074988,
+            46.228616
+          ],
+          [
+            6.116263,
+            46.237204
+          ],
+          [
+            6.191461,
+            46.350517
+          ],
+          [
+            6.242428,
+            46.39605
+          ],
+          [
+            6.234692,
+            46.383112
+          ]
+        ]
+      },
+      "properties": {
+        "id_flux": "F015_P04_C03",
+        "source_id": "P04",
+        "source_nom": "Centrale Verbois (Rhône)",
+        "destination_id": "C03",
+        "destination_nom": "Nyon – La Côte",
+        "type_flux": "Réseau électrique HT",
+        "energie_dominante": "electrique",
+        "flux_elec_GWh_an": 116,
+        "flux_therm_GWh_an": 0,
+        "flux_total_GWh_an": 116,
+        "description": "Verbois → poste Foretaille → corridor rive nord → Nyon (Romande Energie)",
+        "nb_points": 7
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.146284,
+            46.200916
+          ],
+          [
+            6.140182,
+            46.212317
+          ]
+        ]
+      },
+      "properties": {
+        "id_flux": "F016_P03_C02",
+        "source_id": "P03",
+        "source_nom": "Barrage Seujet (Rhône)",
+        "destination_id": "C02",
+        "destination_nom": "Agglomération genevoise",
+        "type_flux": "Réseau électrique MT/BT",
+        "energie_dominante": "electrique",
+        "flux_elec_GWh_an": 20,
+        "flux_therm_GWh_an": 0,
+        "flux_total_GWh_an": 20,
+        "description": "Seujet → injection directe réseau SIG Genève centre",
+        "nb_points": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            5.976086,
+            46.160622
+          ],
+          [
+            5.994917,
+            46.168242
+          ],
+          [
+            6.0141,
+            46.177482
+          ],
+          [
+            6.026814,
+            46.186639
+          ],
+          [
+            6.046009,
+            46.195874
+          ],
+          [
+            6.065324,
+            46.200609
+          ],
+          [
+            6.091119,
+            46.205418
+          ],
+          [
+            6.116809,
+            46.214718
+          ],
+          [
+            6.140182,
+            46.212317
+          ]
+        ]
+      },
+      "properties": {
+        "id_flux": "F017_P05_C02",
+        "source_id": "P05",
+        "source_nom": "Centrale Chancy-Pougny (Rhône)",
+        "destination_id": "C02",
+        "destination_nom": "Agglomération genevoise",
+        "type_flux": "Réseau électrique HT",
+        "energie_dominante": "electrique",
+        "flux_elec_GWh_an": 200,
+        "flux_therm_GWh_an": 0,
+        "flux_total_GWh_an": 200,
+        "description": "Chancy → remonte rive droite Rhône → réseau SIG Genève",
+        "nb_points": 9
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            5.976086,
+            46.160622
+          ],
+          [
+            5.994917,
+            46.168242
+          ],
+          [
+            6.0141,
+            46.177482
+          ],
+          [
+            6.046009,
+            46.195874
+          ],
+          [
+            6.065324,
+            46.200609
+          ],
+          [
+            6.071687,
+            46.20522
+          ]
+        ]
+      },
+      "properties": {
+        "id_flux": "F018_P05_C20",
+        "source_id": "P05",
+        "source_nom": "Centrale Chancy-Pougny (Rhône)",
+        "destination_id": "C20",
+        "destination_nom": "Data Centers Zimeysa-Meyrin",
+        "type_flux": "Réseau électrique HT",
+        "energie_dominante": "electrique",
+        "flux_elec_GWh_an": 50,
+        "flux_therm_GWh_an": 0,
+        "flux_total_GWh_an": 50,
+        "description": "Chancy → réseau SIG → sous-station Zimeysa (data centers)",
+        "nb_points": 6
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.998692,
+            46.1956
+          ],
+          [
+            6.991584,
+            46.212565
+          ],
+          [
+            6.984955,
+            46.23053
+          ],
+          [
+            6.978246,
+            46.25749
+          ],
+          [
+            6.97153,
+            46.28445
+          ],
+          [
+            6.964886,
+            46.302414
+          ],
+          [
+            6.969692,
+            46.318599
+          ]
+        ]
+      },
+      "properties": {
+        "id_flux": "F019_P02_C06",
+        "source_id": "P02",
+        "source_nom": "Centrale Lavey (Rhône)",
+        "destination_id": "C06",
+        "destination_nom": "Aigle – Villeneuve (Chablais vaudois)",
+        "type_flux": "Réseau électrique HT",
+        "energie_dominante": "electrique",
+        "flux_elec_GWh_an": 100,
+        "flux_therm_GWh_an": 0,
+        "flux_total_GWh_an": 100,
+        "description": "Lavey → remonte rive droite Rhône-Chablais → poste Aigle",
+        "nb_points": 7
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.998692,
+            46.1956
+          ],
+          [
+            6.991584,
+            46.212565
+          ],
+          [
+            6.984955,
+            46.23053
+          ],
+          [
+            6.965199,
+            46.266432
+          ],
+          [
+            6.945417,
+            46.302331
+          ],
+          [
+            6.969692,
+            46.318599
+          ],
+          [
+            6.970912,
+            46.356414
+          ],
+          [
+            6.970602,
+            46.392395
+          ],
+          [
+            6.905157,
+            46.437086
+          ],
+          [
+            6.839703,
+            46.472743
+          ],
+          [
+            6.695872,
+            46.516873
+          ],
+          [
+            6.617555,
+            46.525331
+          ],
+          [
+            6.626798,
+            46.519109
+          ]
+        ]
+      },
+      "properties": {
+        "id_flux": "F020_P02_C01",
+        "source_id": "P02",
+        "source_nom": "Centrale Lavey (Rhône)",
+        "destination_id": "C01",
+        "destination_nom": "Lausanne (résidentiel+tertiaire)",
+        "type_flux": "Réseau électrique HT",
+        "energie_dominante": "electrique",
+        "flux_elec_GWh_an": 200,
+        "flux_therm_GWh_an": 0,
+        "flux_total_GWh_an": 200,
+        "description": "Lavey → Chablais → corridor THT rive nord → Lausanne (SiL)",
+        "nb_points": 13
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.998692,
+            46.1956
+          ],
+          [
+            6.991657,
+            46.20357
+          ],
+          [
+            6.98503,
+            46.221535
+          ],
+          [
+            6.978398,
+            46.239499
+          ],
+          [
+            6.973089,
+            46.2494
+          ]
+        ]
+      },
+      "properties": {
+        "id_flux": "F021_P02_C07",
+        "source_id": "P02",
+        "source_nom": "Centrale Lavey (Rhône)",
+        "destination_id": "C07",
+        "destination_nom": "CIMO Monthey (industrie chimique)",
+        "type_flux": "Réseau électrique HT",
+        "energie_dominante": "electrique",
+        "flux_elec_GWh_an": 100,
+        "flux_therm_GWh_an": 0,
+        "flux_total_GWh_an": 100,
+        "description": "Lavey → remonte vers Monthey (liaison HT directe)",
+        "nb_points": 5
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.645097,
+            46.534109
+          ],
+          [
+            6.630587,
+            46.525424
+          ],
+          [
+            6.626798,
+            46.519109
+          ]
+        ]
+      },
+      "properties": {
+        "id_flux": "F022_P06_C01",
+        "source_id": "P06",
+        "source_nom": "UVTD TRIDEL Lausanne",
+        "destination_id": "C01",
+        "destination_nom": "Lausanne (résidentiel+tertiaire)",
+        "type_flux": "Réseau électrique MT",
+        "energie_dominante": "electrique",
+        "flux_elec_GWh_an": 150,
+        "flux_therm_GWh_an": 0,
+        "flux_total_GWh_an": 150,
+        "description": "TRIDEL → injection réseau SiL Lausanne (MT 20kV)",
+        "nb_points": 3
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.645097,
+            46.534109
+          ],
+          [
+            6.637037,
+            46.529968
+          ],
+          [
+            6.630587,
+            46.525424
+          ],
+          [
+            6.624139,
+            46.52088
+          ],
+          [
+            6.626798,
+            46.519109
+          ]
+        ]
+      },
+      "properties": {
+        "id_flux": "F023_P06_C01",
+        "source_id": "P06",
+        "source_nom": "UVTD TRIDEL Lausanne",
+        "destination_id": "C01",
+        "destination_nom": "Lausanne (résidentiel+tertiaire)",
+        "type_flux": "Réseau de chaleur CAD",
+        "energie_dominante": "thermique",
+        "flux_elec_GWh_an": 0,
+        "flux_therm_GWh_an": 200,
+        "flux_total_GWh_an": 200,
+        "description": "TRIDEL → CAD Pierre-de-Plan (réseau chaleur urbain Lausanne centre)",
+        "nb_points": 5
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.645097,
+            46.534109
+          ],
+          [
+            6.63697,
+            46.534465
+          ],
+          [
+            6.626516,
+            46.536191
+          ],
+          [
+            6.621894,
+            46.538406
+          ]
+        ]
+      },
+      "properties": {
+        "id_flux": "F024_P06_C09",
+        "source_id": "P06",
+        "source_nom": "UVTD TRIDEL Lausanne",
+        "destination_id": "C09",
+        "destination_nom": "CHUV Lausanne",
+        "type_flux": "Réseau de chaleur CAD",
+        "energie_dominante": "thermique",
+        "flux_elec_GWh_an": 0,
+        "flux_therm_GWh_an": 30,
+        "flux_total_GWh_an": 30,
+        "description": "TRIDEL → CAD Lausanne Nord → CHUV (branche hôpitalière)",
+        "nb_points": 4
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.645097,
+            46.534109
+          ],
+          [
+            6.637077,
+            46.527269
+          ],
+          [
+            6.630654,
+            46.520927
+          ],
+          [
+            6.62809,
+            46.515511
+          ]
+        ]
+      },
+      "properties": {
+        "id_flux": "F025_P06_C11",
+        "source_id": "P06",
+        "source_nom": "UVTD TRIDEL Lausanne",
+        "destination_id": "C11",
+        "destination_nom": "Gare CFF Lausanne",
+        "type_flux": "Réseau de chaleur CAD",
+        "energie_dominante": "thermique",
+        "flux_elec_GWh_an": 0,
+        "flux_therm_GWh_an": 20,
+        "flux_total_GWh_an": 20,
+        "description": "TRIDEL → CAD Lausanne → gare CFF (branche sud)",
+        "nb_points": 4
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.645097,
+            46.534109
+          ],
+          [
+            6.617528,
+            46.52713
+          ],
+          [
+            6.585003,
+            46.523292
+          ],
+          [
+            6.564198,
+            46.519508
+          ]
+        ]
+      },
+      "properties": {
+        "id_flux": "F026_P06_C08",
+        "source_id": "P06",
+        "source_nom": "UVTD TRIDEL Lausanne",
+        "destination_id": "C08",
+        "destination_nom": "EPFL Campus Ecublens",
+        "type_flux": "Réseau électrique MT",
+        "energie_dominante": "electrique",
+        "flux_elec_GWh_an": 60,
+        "flux_therm_GWh_an": 0,
+        "flux_total_GWh_an": 60,
+        "description": "TRIDEL → réseau SiL → sous-station EPFL Ecublens",
+        "nb_points": 4
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.645097,
+            46.534109
+          ],
+          [
+            6.604454,
+            46.529734
+          ],
+          [
+            6.565369,
+            46.528541
+          ],
+          [
+            6.545792,
+            46.529306
+          ]
+        ]
+      },
+      "properties": {
+        "id_flux": "F027_P06_C13",
+        "source_id": "P06",
+        "source_nom": "UVTD TRIDEL Lausanne",
+        "destination_id": "C13",
+        "destination_nom": "ZI Bussigny-Crissier",
+        "type_flux": "Réseau électrique MT",
+        "energie_dominante": "electrique",
+        "flux_elec_GWh_an": 30,
+        "flux_therm_GWh_an": 0,
+        "flux_total_GWh_an": 30,
+        "description": "TRIDEL → SiL → sous-station Bussigny ZI",
+        "nb_points": 4
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.645097,
+            46.534109
+          ],
+          [
+            6.604495,
+            46.527035
+          ],
+          [
+            6.552425,
+            46.523043
+          ],
+          [
+            6.526395,
+            46.520111
+          ]
+        ]
+      },
+      "properties": {
+        "id_flux": "F028_P06_C17",
+        "source_id": "P06",
+        "source_nom": "UVTD TRIDEL Lausanne",
+        "destination_id": "C17",
+        "destination_nom": "Renens-Prilly-Bussigny",
+        "type_flux": "Réseau électrique MT",
+        "energie_dominante": "electrique",
+        "flux_elec_GWh_an": 60,
+        "flux_therm_GWh_an": 0,
+        "flux_total_GWh_an": 60,
+        "description": "TRIDEL → réseau SiL Lausanne-Ouest → Renens-Prilly",
+        "nb_points": 4
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.645097,
+            46.534109
+          ],
+          [
+            6.656652,
+            46.525606
+          ],
+          [
+            6.682842,
+            46.516788
+          ],
+          [
+            6.715498,
+            46.508004
+          ]
+        ]
+      },
+      "properties": {
+        "id_flux": "F029_P06_C15",
+        "source_id": "P06",
+        "source_nom": "UVTD TRIDEL Lausanne",
+        "destination_id": "C15",
+        "destination_nom": "Communes littorales Léman (Pully-Lutry-Cully)",
+        "type_flux": "Réseau électrique MT",
+        "energie_dominante": "electrique",
+        "flux_elec_GWh_an": 40,
+        "flux_therm_GWh_an": 0,
+        "flux_total_GWh_an": 40,
+        "description": "TRIDEL → SiL réseau est → communes rives Léman",
+        "nb_points": 4
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.973985,
+            46.259803
+          ],
+          [
+            6.973035,
+            46.25567
+          ],
+          [
+            6.973089,
+            46.2494
+          ]
+        ]
+      },
+      "properties": {
+        "id_flux": "F030_P07_C07",
+        "source_id": "P07",
+        "source_nom": "UVTD SATOM Monthey",
+        "destination_id": "C07",
+        "destination_nom": "CIMO Monthey (industrie chimique Lonza/Syngenta)",
+        "type_flux": "Réseau vapeur industriel (Ecotube)",
+        "energie_dominante": "thermique",
+        "flux_elec_GWh_an": 0,
+        "flux_therm_GWh_an": 200,
+        "flux_total_GWh_an": 200,
+        "description": "SATOM → Ecotube (réseau vapeur souterrain 250 GWh/an) → CIMO Monthey",
+        "nb_points": 3
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.973985,
+            46.259803
+          ],
+          [
+            6.965293,
+            46.255638
+          ],
+          [
+            6.973089,
+            46.2494
+          ]
+        ]
+      },
+      "properties": {
+        "id_flux": "F031_P07_C07",
+        "source_id": "P07",
+        "source_nom": "UVTD SATOM Monthey",
+        "destination_id": "C07",
+        "destination_nom": "CIMO Monthey (industrie chimique)",
+        "type_flux": "Réseau électrique MT",
+        "energie_dominante": "electrique",
+        "flux_elec_GWh_an": 127,
+        "flux_therm_GWh_an": 0,
+        "flux_total_GWh_an": 127,
+        "description": "SATOM → injection réseau MT local → CIMO Monthey",
+        "nb_points": 3
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.973985,
+            46.259803
+          ],
+          [
+            6.969199,
+            46.253855
+          ],
+          [
+            6.965356,
+            46.248441
+          ],
+          [
+            6.965291,
+            46.252903
+          ]
+        ]
+      },
+      "properties": {
+        "id_flux": "F032_P07_C16",
+        "source_id": "P07",
+        "source_nom": "UVTD SATOM Monthey",
+        "destination_id": "C16",
+        "destination_nom": "Monthey – St-Maurice (urbain résidentiel)",
+        "type_flux": "Réseau de chaleur CAD",
+        "energie_dominante": "thermique",
+        "flux_elec_GWh_an": 0,
+        "flux_therm_GWh_an": 30,
+        "flux_total_GWh_an": 30,
+        "description": "SATOM → réseau chaleur CAD Monthey centre",
+        "nb_points": 4
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.973985,
+            46.259803
+          ],
+          [
+            6.974279,
+            46.26647
+          ],
+          [
+            6.97153,
+            46.28445
+          ],
+          [
+            6.964886,
+            46.302414
+          ],
+          [
+            6.969692,
+            46.318599
+          ]
+        ]
+      },
+      "properties": {
+        "id_flux": "F033_P07_C06",
+        "source_id": "P07",
+        "source_nom": "UVTD SATOM Monthey",
+        "destination_id": "C06",
+        "destination_nom": "Aigle – Villeneuve (Chablais vaudois)",
+        "type_flux": "Réseau de chaleur CAD",
+        "energie_dominante": "thermique",
+        "flux_elec_GWh_an": 0,
+        "flux_therm_GWh_an": 20,
+        "flux_total_GWh_an": 20,
+        "description": "SATOM → CAD extension Chablais → Aigle",
+        "nb_points": 5
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.032581,
+            46.196616
+          ],
+          [
+            6.046009,
+            46.195874
+          ],
+          [
+            6.058847,
+            46.20053
+          ],
+          [
+            6.078165,
+            46.205262
+          ],
+          [
+            6.103963,
+            46.210069
+          ],
+          [
+            6.140182,
+            46.212317
+          ]
+        ]
+      },
+      "properties": {
+        "id_flux": "F034_P08_C02",
+        "source_id": "P08",
+        "source_nom": "Usine Cheneviers (Genève)",
+        "destination_id": "C02",
+        "destination_nom": "Agglomération genevoise",
+        "type_flux": "Réseau électrique MT",
+        "energie_dominante": "electrique",
+        "flux_elec_GWh_an": 130,
+        "flux_therm_GWh_an": 0,
+        "flux_total_GWh_an": 130,
+        "description": "Cheneviers → injection réseau SIG → Genève (électricité)",
+        "nb_points": 6
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.032581,
+            46.196616
+          ],
+          [
+            6.045894,
+            46.200371
+          ],
+          [
+            6.052256,
+            46.204948
+          ],
+          [
+            6.065165,
+            46.206905
+          ],
+          [
+            6.078075,
+            46.20886
+          ],
+          [
+            6.096982,
+            46.209914
+          ]
+        ]
+      },
+      "properties": {
+        "id_flux": "F035_P08_C12",
+        "source_id": "P08",
+        "source_nom": "Usine Cheneviers (Genève)",
+        "destination_id": "C12",
+        "destination_nom": "Quartier Lignon – Vernier",
+        "type_flux": "Réseau de chaleur CAD",
+        "energie_dominante": "thermique",
+        "flux_elec_GWh_an": 0,
+        "flux_therm_GWh_an": 180,
+        "flux_total_GWh_an": 180,
+        "description": "Cheneviers → CAD historique Lignon (1er réseau CAD genevois, 1964)",
+        "nb_points": 6
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.032581,
+            46.196616
+          ],
+          [
+            6.045894,
+            46.200371
+          ],
+          [
+            6.06521,
+            46.205106
+          ],
+          [
+            6.091074,
+            46.207217
+          ],
+          [
+            6.110441,
+            46.210145
+          ],
+          [
+            6.140182,
+            46.212317
+          ]
+        ]
+      },
+      "properties": {
+        "id_flux": "F036_P08_C02",
+        "source_id": "P08",
+        "source_nom": "Usine Cheneviers (Genève)",
+        "destination_id": "C02",
+        "destination_nom": "Agglomération genevoise",
+        "type_flux": "Réseau de chaleur CAD",
+        "energie_dominante": "thermique",
+        "flux_elec_GWh_an": 0,
+        "flux_therm_GWh_an": 40,
+        "flux_total_GWh_an": 40,
+        "description": "Cheneviers → réseau CAD SIG → Genève centre",
+        "nb_points": 6
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.151491,
+            46.252014
+          ],
+          [
+            6.148562,
+            46.242075
+          ],
+          [
+            6.142294,
+            46.233007
+          ],
+          [
+            6.142509,
+            46.224012
+          ],
+          [
+            6.140182,
+            46.212317
+          ]
+        ]
+      },
+      "properties": {
+        "id_flux": "F037_P15_C02",
+        "source_id": "P15",
+        "source_nom": "GeniLac station de pompage Vengeron",
+        "destination_id": "C02",
+        "destination_nom": "Agglomération genevoise",
+        "type_flux": "Réseau de chaleur lacustre (GeniLac)",
+        "energie_dominante": "thermique",
+        "flux_elec_GWh_an": 0,
+        "flux_therm_GWh_an": 150,
+        "flux_total_GWh_an": 150,
+        "description": "GeniLac → conduite primaire → réseau CAD SIG Genève (projet structurant)",
+        "nb_points": 5
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.151491,
+            46.252014
+          ],
+          [
+            6.142187,
+            46.237504
+          ],
+          [
+            6.116591,
+            46.223712
+          ],
+          [
+            6.090896,
+            46.214412
+          ],
+          [
+            6.078052,
+            46.20976
+          ],
+          [
+            6.071687,
+            46.20522
+          ]
+        ]
+      },
+      "properties": {
+        "id_flux": "F038_P15_C20",
+        "source_id": "P15",
+        "source_nom": "GeniLac station de pompage Vengeron",
+        "destination_id": "C20",
+        "destination_nom": "Data Centers Zimeysa-Meyrin",
+        "type_flux": "Réseau de chaleur lacustre (GeniLac)",
+        "energie_dominante": "thermique",
+        "flux_elec_GWh_an": 0,
+        "flux_therm_GWh_an": 30,
+        "flux_total_GWh_an": 30,
+        "description": "GeniLac → branche Zimeysa (récupération chaleur fatale data centers)",
+        "nb_points": 6
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.151491,
+            46.252014
+          ],
+          [
+            6.141973,
+            46.246498
+          ],
+          [
+            6.129117,
+            46.241852
+          ],
+          [
+            6.116263,
+            46.237204
+          ],
+          [
+            6.108882,
+            46.231521
+          ]
+        ]
+      },
+      "properties": {
+        "id_flux": "F039_P15_C10",
+        "source_id": "P15",
+        "source_nom": "GeniLac station de pompage Vengeron",
+        "destination_id": "C10",
+        "destination_nom": "Aéroport international de Genève",
+        "type_flux": "Réseau de chaleur lacustre (GeniLac)",
+        "energie_dominante": "thermique",
+        "flux_elec_GWh_an": 0,
+        "flux_therm_GWh_an": 20,
+        "flux_total_GWh_an": 20,
+        "description": "GeniLac → extension aéroport GVA (extension réseau prévue)",
+        "nb_points": 5
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.994988,
+            46.177999
+          ],
+          [
+            6.991731,
+            46.194574
+          ],
+          [
+            6.985105,
+            46.212539
+          ],
+          [
+            6.978398,
+            46.239499
+          ],
+          [
+            6.971685,
+            46.266459
+          ],
+          [
+            6.970233,
+            46.284445
+          ],
+          [
+            6.969692,
+            46.318599
+          ]
+        ]
+      },
+      "properties": {
+        "id_flux": "F040_P13_C06",
+        "source_id": "P13",
+        "source_nom": "Géothermie AGEPP Lavey-les-Bains",
+        "destination_id": "C06",
+        "destination_nom": "Aigle – Villeneuve (Chablais vaudois)",
+        "type_flux": "Réseau géothermique basse température",
+        "energie_dominante": "mixte",
+        "flux_elec_GWh_an": 4.2,
+        "flux_therm_GWh_an": 15.5,
+        "flux_total_GWh_an": 19.7,
+        "description": "AGEPP → eau thermale basse enthalpie → réseau Aigle (conduite ~16km)",
+        "nb_points": 7
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.969994,
+            46.318205
+          ],
+          [
+            6.969692,
+            46.318599
+          ]
+        ]
+      },
+      "properties": {
+        "id_flux": "F041_P20_C06",
+        "source_id": "P20",
+        "source_nom": "CAD biomasse bois Aigle",
+        "destination_id": "C06",
+        "destination_nom": "Aigle – Villeneuve (Chablais vaudois)",
+        "type_flux": "Réseau de chaleur CAD biomasse",
+        "energie_dominante": "thermique",
+        "flux_elec_GWh_an": 0,
+        "flux_therm_GWh_an": 20,
+        "flux_total_GWh_an": 20,
+        "description": "Chaufferie bois → réseau CAD urbain Aigle",
+        "nb_points": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.969994,
+            46.318205
+          ],
+          [
+            6.971144,
+            46.329427
+          ],
+          [
+            6.977484,
+            46.347445
+          ],
+          [
+            6.983828,
+            46.365462
+          ],
+          [
+            6.999291,
+            46.381706
+          ]
+        ]
+      },
+      "properties": {
+        "id_flux": "F042_P20_C19",
+        "source_id": "P20",
+        "source_nom": "CAD biomasse bois Aigle",
+        "destination_id": "C19",
+        "destination_nom": "Villeneuve – Noville – Rennaz",
+        "type_flux": "Réseau de chaleur CAD biomasse",
+        "energie_dominante": "thermique",
+        "flux_elec_GWh_an": 0,
+        "flux_therm_GWh_an": 5,
+        "flux_total_GWh_an": 5,
+        "description": "CAD bois Aigle → extension nord vers Villeneuve-Rennaz",
+        "nb_points": 5
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.473288,
+            46.504712
+          ],
+          [
+            6.339788,
+            46.461315
+          ]
+        ]
+      },
+      "properties": {
+        "id_flux": "F045_P11_C18",
+        "source_id": "P11",
+        "source_nom": "PV La Côte (Romande Energie)",
+        "destination_id": "C18",
+        "destination_nom": "Rolle – Gland",
+        "type_flux": "Réseau électrique BT/MT",
+        "energie_dominante": "electrique",
+        "flux_elec_GWh_an": 8,
+        "flux_therm_GWh_an": 0,
+        "flux_total_GWh_an": 8,
+        "description": "Parc PV La Côte → injection réseau Romande Energie → Rolle-Gland",
+        "nb_points": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.5419,
+            46.526613
+          ],
+          [
+            6.545792,
+            46.529306
+          ]
+        ]
+      },
+      "properties": {
+        "id_flux": "F046_P18_C13",
+        "source_id": "P18",
+        "source_nom": "PV Bussigny-Crissier (toitures)",
+        "destination_id": "C13",
+        "destination_nom": "ZI Bussigny-Crissier",
+        "type_flux": "Autoconsommation solaire",
+        "energie_dominante": "electrique",
+        "flux_elec_GWh_an": 6,
+        "flux_therm_GWh_an": 0,
+        "flux_total_GWh_an": 6,
+        "description": "PV toitures entrepôts → autoconsommation ZI",
+        "nb_points": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.8661,
+            46.460006
+          ],
+          [
+            6.868491,
+            46.456707
+          ]
+        ]
+      },
+      "properties": {
+        "id_flux": "F048_P14_C05",
+        "source_id": "P14",
+        "source_nom": "Hydraulique Véveyse (aventron)",
+        "destination_id": "C05",
+        "destination_nom": "Vevey – Montreux",
+        "type_flux": "Réseau électrique BT/MT",
+        "energie_dominante": "electrique",
+        "flux_elec_GWh_an": 2.1,
+        "flux_therm_GWh_an": 0,
+        "flux_total_GWh_an": 2.1,
+        "description": "Petite hydraulique sur Véveyse → injection réseau Vevey local",
+        "nb_points": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.955896,
+            46.291599
+          ],
+          [
+            6.958396,
+            46.302387
+          ],
+          [
+            6.969692,
+            46.318599
+          ]
+        ]
+      },
+      "properties": {
+        "id_flux": "F049_P17_C06",
+        "source_id": "P17",
+        "source_nom": "Hydraulique Vouvry Canal Stockalper",
+        "destination_id": "C06",
+        "destination_nom": "Aigle – Villeneuve",
+        "type_flux": "Réseau électrique MT",
+        "energie_dominante": "electrique",
+        "flux_elec_GWh_an": 8,
+        "flux_therm_GWh_an": 0,
+        "flux_total_GWh_an": 8,
+        "description": "Vouvry → réseau local MT Chablais → Aigle",
+        "nb_points": 3
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.955896,
+            46.291599
+          ],
+          [
+            6.958595,
+            46.279898
+          ],
+          [
+            6.958714,
+            46.266405
+          ],
+          [
+            6.965317,
+            46.252903
+          ]
+        ]
+      },
+      "properties": {
+        "id_flux": "F050_P17_C16",
+        "source_id": "P17",
+        "source_nom": "Hydraulique Vouvry Canal Stockalper",
+        "destination_id": "C16",
+        "destination_nom": "Monthey – St-Maurice",
+        "type_flux": "Réseau électrique MT",
+        "energie_dominante": "electrique",
+        "flux_elec_GWh_an": 7,
+        "flux_therm_GWh_an": 0,
+        "flux_total_GWh_an": 7,
+        "description": "Vouvry → réseau MT local → Monthey-St-Maurice",
+        "nb_points": 4
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.057985,
+            46.174221
+          ],
+          [
+            6.059303,
+            46.182542
+          ],
+          [
+            6.06555,
+            46.191615
+          ],
+          [
+            6.078277,
+            46.200765
+          ],
+          [
+            6.096982,
+            46.209914
+          ]
+        ]
+      },
+      "properties": {
+        "id_flux": "F051_P12_C12",
+        "source_id": "P12",
+        "source_nom": "Méthanisation Châtillon SIG",
+        "destination_id": "C12",
+        "destination_nom": "Lignon – Vernier",
+        "type_flux": "Réseau de chaleur CAD",
+        "energie_dominante": "thermique",
+        "flux_elec_GWh_an": 0,
+        "flux_therm_GWh_an": 18,
+        "flux_total_GWh_an": 18,
+        "description": "Biogaz Châtillon → chaleur vers CAD Lignon-Vernier",
+        "nb_points": 5
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.057985,
+            46.174221
+          ],
+          [
+            6.065664,
+            46.187117
+          ],
+          [
+            6.078389,
+            46.196268
+          ],
+          [
+            6.104183,
+            46.201074
+          ],
+          [
+            6.140182,
+            46.212317
+          ]
+        ]
+      },
+      "properties": {
+        "id_flux": "F052_P12_C02",
+        "source_id": "P12",
+        "source_nom": "Méthanisation Châtillon SIG",
+        "destination_id": "C02",
+        "destination_nom": "Agglomération genevoise",
+        "type_flux": "Réseau électrique / biogaz",
+        "energie_dominante": "electrique",
+        "flux_elec_GWh_an": 2,
+        "flux_therm_GWh_an": 0,
+        "flux_total_GWh_an": 2,
+        "description": "Biogaz → injection réseau gaz SIG + cogénération → électricité réseau genevois",
+        "nb_points": 5
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.028481,
+            46.192822
+          ],
+          [
+            6.046009,
+            46.195874
+          ],
+          [
+            6.074988,
+            46.228616
+          ],
+          [
+            6.116263,
+            46.237204
+          ],
+          [
+            6.191461,
+            46.350517
+          ],
+          [
+            6.242428,
+            46.39605
+          ],
+          [
+            6.351491,
+            46.469119
+          ],
+          [
+            6.448389,
+            46.510489
+          ],
+          [
+            6.467851,
+            46.515155
+          ],
+          [
+            6.532848,
+            46.524688
+          ],
+          [
+            6.526395,
+            46.520111
+          ]
+        ]
+      },
+      "properties": {
+        "id_flux": "F053_P04_C17",
+        "source_id": "P04",
+        "source_nom": "Centrale Verbois (Rhône)",
+        "destination_id": "C17",
+        "destination_nom": "Renens-Prilly-Bussigny",
+        "type_flux": "Réseau électrique HT",
+        "energie_dominante": "electrique",
+        "flux_elec_GWh_an": 80,
+        "flux_therm_GWh_an": 0,
+        "flux_total_GWh_an": 80,
+        "description": "Verbois → corridor THT rive nord → sous-station Renens-Prilly (Romande Energie)",
+        "nb_points": 11
+      }
+    }
+  ]
+}

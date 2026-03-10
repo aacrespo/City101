@@ -1,0 +1,2049 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.143168,
+            46.210511
+          ],
+          [
+            6.143301,
+            46.210782
+          ]
+        ]
+      },
+      "properties": {
+        "from_chain": "Coop",
+        "from_name": "Cornavin Station",
+        "from_rating": 4.0,
+        "to_chain": "Migros",
+        "to_name": "Gare Cornavin",
+        "to_rating": 4.2,
+        "distance_m": 32,
+        "distance_km": 0.03,
+        "rating_diff": -0.2,
+        "winner": "migros"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.143095,
+            46.209155
+          ],
+          [
+            6.143301,
+            46.210782
+          ]
+        ]
+      },
+      "properties": {
+        "from_chain": "Coop",
+        "from_name": "Gare Mont-Blanc",
+        "from_rating": 3.7,
+        "to_chain": "Migros",
+        "to_name": "Gare Cornavin",
+        "to_rating": 4.2,
+        "distance_m": 182,
+        "distance_km": 0.18,
+        "rating_diff": -0.5,
+        "winner": "migros"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.145692,
+            46.213253
+          ],
+          [
+            6.144637,
+            46.211256
+          ]
+        ]
+      },
+      "properties": {
+        "from_chain": "Coop",
+        "from_name": "Rue de Lausanne",
+        "from_rating": 4.0,
+        "to_chain": "Migros",
+        "to_name": "Rue de Lausanne",
+        "to_rating": 4.1,
+        "distance_m": 236,
+        "distance_km": 0.24,
+        "rating_diff": -0.1,
+        "winner": "migros"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.145177,
+            46.204074
+          ],
+          [
+            6.143301,
+            46.210782
+          ]
+        ]
+      },
+      "properties": {
+        "from_chain": "Coop City",
+        "from_name": "Fusterie",
+        "from_rating": 4.3,
+        "to_chain": "Migros",
+        "to_name": "Gare Cornavin",
+        "to_rating": 4.2,
+        "distance_m": 760,
+        "distance_km": 0.76,
+        "rating_diff": 0.1,
+        "winner": "coop"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.143944,
+            46.203423
+          ],
+          [
+            6.143301,
+            46.210782
+          ]
+        ]
+      },
+      "properties": {
+        "from_chain": "Coop Pronto",
+        "from_name": "Rue de la Cité",
+        "from_rating": 3.8,
+        "to_chain": "Migros",
+        "to_name": "Gare Cornavin",
+        "to_rating": 4.2,
+        "distance_m": 820,
+        "distance_km": 0.82,
+        "rating_diff": -0.4,
+        "winner": "migros"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.142797,
+            46.196884
+          ],
+          [
+            6.142803,
+            46.19288
+          ]
+        ]
+      },
+      "properties": {
+        "from_chain": "Coop City",
+        "from_name": "Plainpalais",
+        "from_rating": 4.2,
+        "to_chain": "Migros",
+        "to_name": "Rue de Carouge",
+        "to_rating": 4.2,
+        "distance_m": 445,
+        "distance_km": 0.45,
+        "rating_diff": 0.0,
+        "winner": "tie"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.143707,
+            46.192186
+          ],
+          [
+            6.142803,
+            46.19288
+          ]
+        ]
+      },
+      "properties": {
+        "from_chain": "Coop",
+        "from_name": "Augustins",
+        "from_rating": 4.1,
+        "to_chain": "Migros",
+        "to_name": "Rue de Carouge",
+        "to_rating": 4.2,
+        "distance_m": 104,
+        "distance_km": 0.1,
+        "rating_diff": -0.1,
+        "winner": "migros"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.132325,
+            46.199774
+          ],
+          [
+            6.130622,
+            46.200789
+          ]
+        ]
+      },
+      "properties": {
+        "from_chain": "Coop",
+        "from_name": "Jonction",
+        "from_rating": 4.2,
+        "to_chain": "Migros",
+        "to_name": "Carl-Vogt / Jonction",
+        "to_rating": 4.1,
+        "distance_m": 173,
+        "distance_km": 0.17,
+        "rating_diff": 0.1,
+        "winner": "coop"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.139987,
+            46.202102
+          ],
+          [
+            6.130622,
+            46.200789
+          ]
+        ]
+      },
+      "properties": {
+        "from_chain": "Coop",
+        "from_name": "Favon",
+        "from_rating": 4.0,
+        "to_chain": "Migros",
+        "to_name": "Carl-Vogt / Jonction",
+        "to_rating": 4.1,
+        "distance_m": 735,
+        "distance_km": 0.74,
+        "rating_diff": -0.1,
+        "winner": "migros"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.139066,
+            46.20106
+          ],
+          [
+            6.130622,
+            46.200789
+          ]
+        ]
+      },
+      "properties": {
+        "from_chain": "Coop",
+        "from_name": "Cirque",
+        "from_rating": 3.9,
+        "to_chain": "Migros",
+        "to_name": "Carl-Vogt / Jonction",
+        "to_rating": 4.1,
+        "distance_m": 651,
+        "distance_km": 0.65,
+        "rating_diff": -0.2,
+        "winner": "migros"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.159896,
+            46.200586
+          ],
+          [
+            6.157697,
+            46.203835
+          ]
+        ]
+      },
+      "properties": {
+        "from_chain": "Coop",
+        "from_name": "Eaux-Vives Jargonnant",
+        "from_rating": 4.2,
+        "to_chain": "Migros",
+        "to_name": "Eaux-Vives",
+        "to_rating": 4.2,
+        "distance_m": 399,
+        "distance_km": 0.4,
+        "rating_diff": 0.0,
+        "winner": "tie"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.131161,
+            46.212406
+          ],
+          [
+            6.123338,
+            46.208339
+          ]
+        ]
+      },
+      "properties": {
+        "from_chain": "Coop",
+        "from_name": "Servette",
+        "from_rating": 4.2,
+        "to_chain": "Migros",
+        "to_name": "Charmilles",
+        "to_rating": 4.2,
+        "distance_m": 753,
+        "distance_km": 0.75,
+        "rating_diff": 0.0,
+        "winner": "tie"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.141812,
+            46.220296
+          ],
+          [
+            6.140246,
+            46.220207
+          ]
+        ]
+      },
+      "properties": {
+        "from_chain": "Coop",
+        "from_name": "Montbrillant",
+        "from_rating": 4.2,
+        "to_chain": "migrolino",
+        "to_name": "Montbrillant",
+        "to_rating": 4.3,
+        "distance_m": 121,
+        "distance_km": 0.12,
+        "rating_diff": -0.1,
+        "winner": "migros"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.152285,
+            46.194632
+          ],
+          [
+            6.152741,
+            46.193298
+          ]
+        ]
+      },
+      "properties": {
+        "from_chain": "Coop",
+        "from_name": "Champel",
+        "from_rating": 4.1,
+        "to_chain": "mio by migrolino",
+        "to_name": "Michel-Servet",
+        "to_rating": 4.2,
+        "distance_m": 152,
+        "distance_km": 0.15,
+        "rating_diff": -0.1,
+        "winner": "migros"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.201806,
+            46.192854
+          ],
+          [
+            6.196219,
+            46.195969
+          ]
+        ]
+      },
+      "properties": {
+        "from_chain": "Coop",
+        "from_name": "Thônex",
+        "from_rating": 4.3,
+        "to_chain": "Migros",
+        "to_name": "Chêne-Vert / Chêne-Bourg",
+        "to_rating": 4.1,
+        "distance_m": 552,
+        "distance_km": 0.55,
+        "rating_diff": 0.2,
+        "winner": "coop"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.143598,
+            46.185405
+          ],
+          [
+            6.141105,
+            46.183386
+          ]
+        ]
+      },
+      "properties": {
+        "from_chain": "Coop",
+        "from_name": "Carouge Cardinal Mermillod",
+        "from_rating": 4.2,
+        "to_chain": "Migros",
+        "to_name": "Carouge Marché",
+        "to_rating": 4.2,
+        "distance_m": 295,
+        "distance_km": 0.3,
+        "rating_diff": 0.0,
+        "winner": "tie"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.13648,
+            46.18905
+          ],
+          [
+            6.131811,
+            46.189675
+          ]
+        ]
+      },
+      "properties": {
+        "from_chain": "Coop",
+        "from_name": "Carouge Acacias",
+        "from_rating": 4.2,
+        "to_chain": "mio by migrolino",
+        "to_name": "Acacias",
+        "to_rating": 2.0,
+        "distance_m": 366,
+        "distance_km": 0.37,
+        "rating_diff": 2.2,
+        "winner": "coop"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.144387,
+            46.185813
+          ],
+          [
+            6.141105,
+            46.183386
+          ]
+        ]
+      },
+      "properties": {
+        "from_chain": "Coop Pronto",
+        "from_name": "Carouge Gas Station",
+        "from_rating": 3.9,
+        "to_chain": "Migros",
+        "to_name": "Carouge Marché",
+        "to_rating": 4.2,
+        "distance_m": 370,
+        "distance_km": 0.37,
+        "rating_diff": -0.3,
+        "winner": "migros"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.127687,
+            46.180037
+          ],
+          [
+            6.134388,
+            46.182442
+          ]
+        ]
+      },
+      "properties": {
+        "from_chain": "Coop",
+        "from_name": "Grand-Lancy La Praille",
+        "from_rating": 4.3,
+        "to_chain": "Migros",
+        "to_name": "Carouge La Praille",
+        "to_rating": 4.3,
+        "distance_m": 581,
+        "distance_km": 0.58,
+        "rating_diff": 0.0,
+        "winner": "tie"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.127278,
+            46.186757
+          ],
+          [
+            6.131811,
+            46.189675
+          ]
+        ]
+      },
+      "properties": {
+        "from_chain": "Coop",
+        "from_name": "Grand-Lancy Pont Rouge",
+        "from_rating": 4.8,
+        "to_chain": "mio by migrolino",
+        "to_name": "Acacias",
+        "to_rating": 2.0,
+        "distance_m": 476,
+        "distance_km": 0.48,
+        "rating_diff": 2.8,
+        "winner": "coop"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.104619,
+            46.18771
+          ],
+          [
+            6.110336,
+            46.188698
+          ]
+        ]
+      },
+      "properties": {
+        "from_chain": "Coop",
+        "from_name": "Onex",
+        "from_rating": 4.2,
+        "to_chain": "Migros",
+        "to_name": "Lancy Bossons",
+        "to_rating": 4.2,
+        "distance_m": 454,
+        "distance_km": 0.45,
+        "rating_diff": 0.0,
+        "winner": "tie"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.071297,
+            46.17439
+          ],
+          [
+            6.110336,
+            46.188698
+          ]
+        ]
+      },
+      "properties": {
+        "from_chain": "Coop",
+        "from_name": "Bernex",
+        "from_rating": 4.1,
+        "to_chain": "Migros",
+        "to_name": "Lancy Bossons",
+        "to_rating": 4.2,
+        "distance_m": 3401,
+        "distance_km": 3.4,
+        "rating_diff": -0.1,
+        "winner": "migros"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.121117,
+            46.169109
+          ],
+          [
+            6.114296,
+            46.167112
+          ]
+        ]
+      },
+      "properties": {
+        "from_chain": "Coop",
+        "from_name": "Plan-les-Ouates",
+        "from_rating": 4.0,
+        "to_chain": "Migros",
+        "to_name": "Plan-les-Ouates",
+        "to_rating": 4.1,
+        "distance_m": 570,
+        "distance_km": 0.57,
+        "rating_diff": -0.1,
+        "winner": "migros"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.082195,
+            46.232575
+          ],
+          [
+            6.082617,
+            46.232251
+          ]
+        ]
+      },
+      "properties": {
+        "from_chain": "Coop City",
+        "from_name": "Meyrin",
+        "from_rating": 4.2,
+        "to_chain": "Migros",
+        "to_name": "Meyrin",
+        "to_rating": 4.3,
+        "distance_m": 48,
+        "distance_km": 0.05,
+        "rating_diff": -0.1,
+        "winner": "migros"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.072568,
+            46.228334
+          ],
+          [
+            6.082617,
+            46.232251
+          ]
+        ]
+      },
+      "properties": {
+        "from_chain": "Coop",
+        "from_name": "Meyrin Verchère",
+        "from_rating": 4.1,
+        "to_chain": "Migros",
+        "to_name": "Meyrin",
+        "to_rating": 4.3,
+        "distance_m": 887,
+        "distance_km": 0.89,
+        "rating_diff": -0.2,
+        "winner": "migros"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.095666,
+            46.221631
+          ],
+          [
+            6.107678,
+            46.224383
+          ]
+        ]
+      },
+      "properties": {
+        "from_chain": "Coop",
+        "from_name": "Vernier Meyrin Rd",
+        "from_rating": 4.3,
+        "to_chain": "migrolino",
+        "to_name": "Meyrin Louis-Casaï",
+        "to_rating": 4.4,
+        "distance_m": 973,
+        "distance_km": 0.97,
+        "rating_diff": -0.1,
+        "winner": "migros"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.032421,
+            46.213962
+          ],
+          [
+            6.082617,
+            46.232251
+          ]
+        ]
+      },
+      "properties": {
+        "from_chain": "Coop",
+        "from_name": "Satigny",
+        "from_rating": 4.4,
+        "to_chain": "Migros",
+        "to_name": "Meyrin",
+        "to_rating": 4.3,
+        "distance_m": 4364,
+        "distance_km": 4.36,
+        "rating_diff": 0.1,
+        "winner": "coop"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.142115,
+            46.209756
+          ],
+          [
+            6.143301,
+            46.210782
+          ]
+        ]
+      },
+      "properties": {
+        "from_chain": "Coop to go",
+        "from_name": "Cornavin",
+        "from_rating": 3.5,
+        "to_chain": "Migros",
+        "to_name": "Gare Cornavin",
+        "to_rating": 4.2,
+        "distance_m": 146,
+        "distance_km": 0.15,
+        "rating_diff": -0.7,
+        "winner": "migros"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.124902,
+            46.208774
+          ],
+          [
+            6.123338,
+            46.208339
+          ]
+        ]
+      },
+      "properties": {
+        "from_chain": "Coop Pronto",
+        "from_name": "Rue de Lyon Gas Station",
+        "from_rating": 4.2,
+        "to_chain": "Migros",
+        "to_name": "Charmilles",
+        "to_rating": 4.2,
+        "distance_m": 130,
+        "distance_km": 0.13,
+        "rating_diff": 0.0,
+        "winner": "tie"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.166611,
+            46.280763
+          ],
+          [
+            6.167215,
+            46.275281
+          ]
+        ]
+      },
+      "properties": {
+        "from_chain": "Coop",
+        "from_name": "Versoix Centre",
+        "from_rating": 4.2,
+        "to_chain": "Migros",
+        "to_name": "Versoix",
+        "to_rating": 4.2,
+        "distance_m": 611,
+        "distance_km": 0.61,
+        "rating_diff": 0.0,
+        "winner": "tie"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.236883,
+            46.384983
+          ],
+          [
+            6.234429,
+            46.382579
+          ]
+        ]
+      },
+      "properties": {
+        "from_chain": "Coop Pronto",
+        "from_name": "Nyon Gare",
+        "from_rating": 4.1,
+        "to_chain": "Migros",
+        "to_name": "Nyon Moraix",
+        "to_rating": 4.2,
+        "distance_m": 327,
+        "distance_km": 0.33,
+        "rating_diff": -0.1,
+        "winner": "migros"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.228508,
+            46.387948
+          ],
+          [
+            6.220833,
+            46.388056
+          ]
+        ]
+      },
+      "properties": {
+        "from_chain": "Coop",
+        "from_name": "Nyon Levratte",
+        "from_rating": 4.1,
+        "to_chain": "Migros",
+        "to_name": "Nyon Porte de Nyon",
+        "to_rating": 4.2,
+        "distance_m": 589,
+        "distance_km": 0.59,
+        "rating_diff": -0.1,
+        "winner": "migros"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.217407,
+            46.384087
+          ],
+          [
+            6.221238,
+            46.383965
+          ]
+        ]
+      },
+      "properties": {
+        "from_chain": "Coop Pronto",
+        "from_name": "Nyon Gas Station",
+        "from_rating": 4.3,
+        "to_chain": "migrolino",
+        "to_name": "Nyon Champ-Colin",
+        "to_rating": 4.1,
+        "distance_m": 294,
+        "distance_km": 0.29,
+        "rating_diff": 0.2,
+        "winner": "coop"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.254424,
+            46.424209
+          ],
+          [
+            6.262281,
+            46.423539
+          ]
+        ]
+      },
+      "properties": {
+        "from_chain": "Coop",
+        "from_name": "Vich",
+        "from_rating": 4.1,
+        "to_chain": "Migros Partenaire",
+        "to_name": "Gland VOI",
+        "to_rating": 4.5,
+        "distance_m": 607,
+        "distance_km": 0.61,
+        "rating_diff": -0.4,
+        "winner": "migros"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.266102,
+            46.427375
+          ],
+          [
+            6.262281,
+            46.423539
+          ]
+        ]
+      },
+      "properties": {
+        "from_chain": "Coop",
+        "from_name": "Gland Eikenott",
+        "from_rating": 4.1,
+        "to_chain": "Migros Partenaire",
+        "to_name": "Gland VOI",
+        "to_rating": 4.5,
+        "distance_m": 517,
+        "distance_km": 0.52,
+        "rating_diff": -0.4,
+        "winner": "migros"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.33773,
+            46.45848
+          ],
+          [
+            6.33812,
+            46.461121
+          ]
+        ]
+      },
+      "properties": {
+        "from_chain": "Coop",
+        "from_name": "Rolle",
+        "from_rating": 4.0,
+        "to_chain": "Migros",
+        "to_name": "Rolle",
+        "to_rating": 4.2,
+        "distance_m": 295,
+        "distance_km": 0.3,
+        "rating_diff": -0.2,
+        "winner": "migros"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.400723,
+            46.476596
+          ],
+          [
+            6.42594,
+            46.473634
+          ]
+        ]
+      },
+      "properties": {
+        "from_chain": "Coop",
+        "from_name": "Allaman Littoral",
+        "from_rating": 4.2,
+        "to_chain": "Migros",
+        "to_name": "Etoy",
+        "to_rating": 4.1,
+        "distance_m": 1959,
+        "distance_km": 1.96,
+        "rating_diff": 0.1,
+        "winner": "coop"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.456726,
+            46.482378
+          ],
+          [
+            6.42594,
+            46.473634
+          ]
+        ]
+      },
+      "properties": {
+        "from_chain": "Coop",
+        "from_name": "Saint-Prex",
+        "from_rating": 4.1,
+        "to_chain": "Migros",
+        "to_name": "Etoy",
+        "to_rating": 4.1,
+        "distance_m": 2550,
+        "distance_km": 2.55,
+        "rating_diff": 0.0,
+        "winner": "tie"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.460171,
+            46.485534
+          ],
+          [
+            6.42594,
+            46.473634
+          ]
+        ]
+      },
+      "properties": {
+        "from_chain": "Coop Pronto",
+        "from_name": "Saint-Prex Gas Station",
+        "from_rating": 4.3,
+        "to_chain": "Migros",
+        "to_name": "Etoy",
+        "to_rating": 4.1,
+        "distance_m": 2936,
+        "distance_km": 2.94,
+        "rating_diff": 0.2,
+        "winner": "coop"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.494185,
+            46.511121
+          ],
+          [
+            6.49482,
+            46.509683
+          ]
+        ]
+      },
+      "properties": {
+        "from_chain": "Coop Pronto",
+        "from_name": "Morges Gare",
+        "from_rating": 3.8,
+        "to_chain": "Migros",
+        "to_name": "Morges Gare",
+        "to_rating": 4.2,
+        "distance_m": 167,
+        "distance_km": 0.17,
+        "rating_diff": -0.4,
+        "winner": "migros"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.497578,
+            46.510022
+          ],
+          [
+            6.49482,
+            46.509683
+          ]
+        ]
+      },
+      "properties": {
+        "from_chain": "Coop",
+        "from_name": "Morges Charpentiers",
+        "from_rating": 4.0,
+        "to_chain": "Migros",
+        "to_name": "Morges Gare",
+        "to_rating": 4.2,
+        "distance_m": 214,
+        "distance_km": 0.21,
+        "rating_diff": -0.2,
+        "winner": "migros"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.48551,
+            46.507246
+          ],
+          [
+            6.49482,
+            46.509683
+          ]
+        ]
+      },
+      "properties": {
+        "from_chain": "Coop",
+        "from_name": "Morges La Gottaz",
+        "from_rating": 4.0,
+        "to_chain": "Migros",
+        "to_name": "Morges Gare",
+        "to_rating": 4.2,
+        "distance_m": 762,
+        "distance_km": 0.76,
+        "rating_diff": -0.2,
+        "winner": "migros"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.503788,
+            46.515674
+          ],
+          [
+            6.512362,
+            46.517535
+          ]
+        ]
+      },
+      "properties": {
+        "from_chain": "Coop Pronto",
+        "from_name": "Morges Gas Station",
+        "from_rating": 4.2,
+        "to_chain": "migrolino",
+        "to_name": "Morges",
+        "to_rating": 4.3,
+        "distance_m": 688,
+        "distance_km": 0.69,
+        "rating_diff": -0.1,
+        "winner": "migros"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.579316,
+            46.536748
+          ],
+          [
+            6.577342,
+            46.537697
+          ]
+        ]
+      },
+      "properties": {
+        "from_chain": "Coop Pronto",
+        "from_name": "Renens Gare",
+        "from_rating": 3.6,
+        "to_chain": "Migros",
+        "to_name": "Renens Epenex",
+        "to_rating": 4.4,
+        "distance_m": 184,
+        "distance_km": 0.18,
+        "rating_diff": -0.8,
+        "winner": "migros"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.569768,
+            46.545212
+          ],
+          [
+            6.577342,
+            46.537697
+          ]
+        ]
+      },
+      "properties": {
+        "from_chain": "Coop",
+        "from_name": "Crissier Léman Centre",
+        "from_rating": 4.3,
+        "to_chain": "Migros",
+        "to_name": "Renens Epenex",
+        "to_rating": 4.4,
+        "distance_m": 1017,
+        "distance_km": 1.02,
+        "rating_diff": -0.1,
+        "winner": "migros"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.60612,
+            46.534422
+          ],
+          [
+            6.607737,
+            46.533212
+          ]
+        ]
+      },
+      "properties": {
+        "from_chain": "Coop",
+        "from_name": "Prilly Centre",
+        "from_rating": 4.2,
+        "to_chain": "Migros",
+        "to_name": "Prilly Cossonay",
+        "to_rating": 4.0,
+        "distance_m": 183,
+        "distance_km": 0.18,
+        "rating_diff": 0.2,
+        "winner": "coop"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.600821,
+            46.529595
+          ],
+          [
+            6.602786,
+            46.527185
+          ]
+        ]
+      },
+      "properties": {
+        "from_chain": "Coop",
+        "from_name": "Prilly Business Parc",
+        "from_rating": 3.9,
+        "to_chain": "Migros",
+        "to_name": "Prilly Malley",
+        "to_rating": 4.1,
+        "distance_m": 307,
+        "distance_km": 0.31,
+        "rating_diff": -0.2,
+        "winner": "migros"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.60267,
+            46.524691
+          ],
+          [
+            6.602786,
+            46.527185
+          ]
+        ]
+      },
+      "properties": {
+        "from_chain": "Coop",
+        "from_name": "Prilly Malley",
+        "from_rating": 3.9,
+        "to_chain": "Migros",
+        "to_name": "Prilly Malley",
+        "to_rating": 4.1,
+        "distance_m": 277,
+        "distance_km": 0.28,
+        "rating_diff": -0.2,
+        "winner": "migros"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.630389,
+            46.522742
+          ],
+          [
+            6.6275,
+            46.52249
+          ]
+        ]
+      },
+      "properties": {
+        "from_chain": "Coop City",
+        "from_name": "Lausanne Au Centre",
+        "from_rating": 4.1,
+        "to_chain": "Migros",
+        "to_name": "Lausanne Métropole",
+        "to_rating": 4.2,
+        "distance_m": 223,
+        "distance_km": 0.22,
+        "rating_diff": -0.1,
+        "winner": "migros"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.627905,
+            46.51722
+          ],
+          [
+            6.629819,
+            46.520749
+          ]
+        ]
+      },
+      "properties": {
+        "from_chain": "Coop Pronto",
+        "from_name": "Lausanne Gare",
+        "from_rating": 3.4,
+        "to_chain": "Migros",
+        "to_name": "Lausanne Flon Europe",
+        "to_rating": 4.1,
+        "distance_m": 419,
+        "distance_km": 0.42,
+        "rating_diff": -0.7,
+        "winner": "migros"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.626289,
+            46.523064
+          ],
+          [
+            6.6275,
+            46.52249
+          ]
+        ]
+      },
+      "properties": {
+        "from_chain": "Coop Pronto",
+        "from_name": "Lausanne Chauderon",
+        "from_rating": 3.8,
+        "to_chain": "Migros",
+        "to_name": "Lausanne Métropole",
+        "to_rating": 4.2,
+        "distance_m": 113,
+        "distance_km": 0.11,
+        "rating_diff": -0.4,
+        "winner": "migros"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.627243,
+            46.507756
+          ],
+          [
+            6.632777,
+            46.514727
+          ]
+        ]
+      },
+      "properties": {
+        "from_chain": "Coop Pronto",
+        "from_name": "Lausanne Ouchy",
+        "from_rating": 4.1,
+        "to_chain": "Migros",
+        "to_name": "Lausanne Ouchy",
+        "to_rating": 4.1,
+        "distance_m": 883,
+        "distance_km": 0.88,
+        "rating_diff": 0.0,
+        "winner": "tie"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.631604,
+            46.515313
+          ],
+          [
+            6.632777,
+            46.514727
+          ]
+        ]
+      },
+      "properties": {
+        "from_chain": "Coop",
+        "from_name": "Lausanne Grancy",
+        "from_rating": 4.1,
+        "to_chain": "Migros",
+        "to_name": "Lausanne Ouchy",
+        "to_rating": 4.1,
+        "distance_m": 111,
+        "distance_km": 0.11,
+        "rating_diff": 0.0,
+        "winner": "tie"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.637603,
+            46.520859
+          ],
+          [
+            6.629819,
+            46.520749
+          ]
+        ]
+      },
+      "properties": {
+        "from_chain": "Coop",
+        "from_name": "Lausanne Caroline",
+        "from_rating": 4.1,
+        "to_chain": "Migros",
+        "to_name": "Lausanne Flon Europe",
+        "to_rating": 4.1,
+        "distance_m": 596,
+        "distance_km": 0.6,
+        "rating_diff": 0.0,
+        "winner": "tie"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.635155,
+            46.518541
+          ],
+          [
+            6.632777,
+            46.514727
+          ]
+        ]
+      },
+      "properties": {
+        "from_chain": "Coop City",
+        "from_name": "Lausanne St. François",
+        "from_rating": 4.1,
+        "to_chain": "Migros",
+        "to_name": "Lausanne Ouchy",
+        "to_rating": 4.1,
+        "distance_m": 461,
+        "distance_km": 0.46,
+        "rating_diff": 0.0,
+        "winner": "tie"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.646652,
+            46.532883
+          ],
+          [
+            6.646785,
+            46.532934
+          ]
+        ]
+      },
+      "properties": {
+        "from_chain": "Coop",
+        "from_name": "Lausanne La Sallaz",
+        "from_rating": 4.2,
+        "to_chain": "Migros",
+        "to_name": "Lausanne Rte de Berne",
+        "to_rating": 4.1,
+        "distance_m": 12,
+        "distance_km": 0.01,
+        "rating_diff": 0.1,
+        "winner": "coop"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.6347,
+            46.530918
+          ],
+          [
+            6.646785,
+            46.532934
+          ]
+        ]
+      },
+      "properties": {
+        "from_chain": "Coop",
+        "from_name": "Lausanne Rouvraie",
+        "from_rating": 4.3,
+        "to_chain": "Migros",
+        "to_name": "Lausanne Rte de Berne",
+        "to_rating": 4.1,
+        "distance_m": 951,
+        "distance_km": 0.95,
+        "rating_diff": 0.2,
+        "winner": "coop"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.608307,
+            46.526102
+          ],
+          [
+            6.602786,
+            46.527185
+          ]
+        ]
+      },
+      "properties": {
+        "from_chain": "Coop Pronto",
+        "from_name": "Lausanne Ave Morges",
+        "from_rating": 4.3,
+        "to_chain": "Migros",
+        "to_name": "Prilly Malley",
+        "to_rating": 4.1,
+        "distance_m": 439,
+        "distance_km": 0.44,
+        "rating_diff": 0.2,
+        "winner": "coop"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.652152,
+            46.525827
+          ],
+          [
+            6.651667,
+            46.527222
+          ]
+        ]
+      },
+      "properties": {
+        "from_chain": "Coop",
+        "from_name": "Lausanne Chailly",
+        "from_rating": 3.8,
+        "to_chain": "Migros",
+        "to_name": "Lausanne Vallonnette",
+        "to_rating": 4.1,
+        "distance_m": 159,
+        "distance_km": 0.16,
+        "rating_diff": -0.3,
+        "winner": "migros"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.660396,
+            46.543732
+          ],
+          [
+            6.670927,
+            46.548481
+          ]
+        ]
+      },
+      "properties": {
+        "from_chain": "Coop",
+        "from_name": "Epalinges Croisettes",
+        "from_rating": 4.0,
+        "to_chain": "Migros",
+        "to_name": "Epalinges Croix-Blanche",
+        "to_rating": 4.1,
+        "distance_m": 963,
+        "distance_km": 0.96,
+        "rating_diff": -0.1,
+        "winner": "migros"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.658613,
+            46.510538
+          ],
+          [
+            6.659828,
+            46.511533
+          ]
+        ]
+      },
+      "properties": {
+        "from_chain": "Coop",
+        "from_name": "Pully",
+        "from_rating": 3.8,
+        "to_chain": "Migros",
+        "to_name": "Pully",
+        "to_rating": 4.2,
+        "distance_m": 145,
+        "distance_km": 0.14,
+        "rating_diff": -0.4,
+        "winner": "migros"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.688459,
+            46.505841
+          ],
+          [
+            6.676878,
+            46.513372
+          ]
+        ]
+      },
+      "properties": {
+        "from_chain": "Coop",
+        "from_name": "Lutry",
+        "from_rating": 4.1,
+        "to_chain": "Migros",
+        "to_name": "Lutry La Conversion",
+        "to_rating": 4.2,
+        "distance_m": 1219,
+        "distance_km": 1.22,
+        "rating_diff": -0.1,
+        "winner": "migros"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.695451,
+            46.501054
+          ],
+          [
+            6.676878,
+            46.513372
+          ]
+        ]
+      },
+      "properties": {
+        "from_chain": "Coop",
+        "from_name": "Lutry La Corniche",
+        "from_rating": 4.4,
+        "to_chain": "Migros",
+        "to_name": "Lutry La Conversion",
+        "to_rating": 4.2,
+        "distance_m": 1974,
+        "distance_km": 1.97,
+        "rating_diff": 0.2,
+        "winner": "coop"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.728688,
+            46.488166
+          ],
+          [
+            6.769494,
+            46.492222
+          ]
+        ]
+      },
+      "properties": {
+        "from_chain": "Coop",
+        "from_name": "Cully",
+        "from_rating": 3.8,
+        "to_chain": "Migros Partenaire",
+        "to_name": "Puidoux",
+        "to_rating": 4.3,
+        "distance_m": 3156,
+        "distance_km": 3.16,
+        "rating_diff": -0.5,
+        "winner": "migros"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.774577,
+            46.48253
+          ],
+          [
+            6.769494,
+            46.492222
+          ]
+        ]
+      },
+      "properties": {
+        "from_chain": "Coop",
+        "from_name": "Chexbres",
+        "from_rating": 4.0,
+        "to_chain": "Migros Partenaire",
+        "to_name": "Puidoux",
+        "to_rating": 4.3,
+        "distance_m": 1146,
+        "distance_km": 1.15,
+        "rating_diff": -0.3,
+        "winner": "migros"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.845039,
+            46.460365
+          ],
+          [
+            6.840278,
+            46.463643
+          ]
+        ]
+      },
+      "properties": {
+        "from_chain": "Coop",
+        "from_name": "Vevey Simplon",
+        "from_rating": 4.1,
+        "to_chain": "Migros",
+        "to_name": "Vevey Midi-Coindet",
+        "to_rating": 4.1,
+        "distance_m": 516,
+        "distance_km": 0.52,
+        "rating_diff": 0.0,
+        "winner": "tie"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.842786,
+            46.463071
+          ],
+          [
+            6.842102,
+            46.464697
+          ]
+        ]
+      },
+      "properties": {
+        "from_chain": "Coop Pronto",
+        "from_name": "Vevey Gare",
+        "from_rating": 3.9,
+        "to_chain": "Migros",
+        "to_name": "Vevey Des 2 Gares",
+        "to_rating": 4.2,
+        "distance_m": 188,
+        "distance_km": 0.19,
+        "rating_diff": -0.3,
+        "winner": "migros"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.847102,
+            46.460821
+          ],
+          [
+            6.842102,
+            46.464697
+          ]
+        ]
+      },
+      "properties": {
+        "from_chain": "Coop Pronto",
+        "from_name": "Vevey Gas Station",
+        "from_rating": 4.0,
+        "to_chain": "Migros",
+        "to_name": "Vevey Des 2 Gares",
+        "to_rating": 4.2,
+        "distance_m": 577,
+        "distance_km": 0.58,
+        "rating_diff": -0.2,
+        "winner": "migros"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.911436,
+            46.431664
+          ],
+          [
+            6.910302,
+            46.431363
+          ]
+        ]
+      },
+      "properties": {
+        "from_chain": "Coop",
+        "from_name": "Montreux",
+        "from_rating": 4.2,
+        "to_chain": "Migros",
+        "to_name": "Montreux Forum",
+        "to_rating": 4.3,
+        "distance_m": 93,
+        "distance_km": 0.09,
+        "rating_diff": -0.1,
+        "winner": "migros"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.909723,
+            46.436585
+          ],
+          [
+            6.910259,
+            46.436137
+          ]
+        ]
+      },
+      "properties": {
+        "from_chain": "Coop Pronto",
+        "from_name": "Montreux Gare",
+        "from_rating": 3.7,
+        "to_chain": "migrolino",
+        "to_name": "Montreux Gare",
+        "to_rating": 3.7,
+        "distance_m": 65,
+        "distance_km": 0.06,
+        "rating_diff": 0.0,
+        "winner": "tie"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.965106,
+            46.318993
+          ],
+          [
+            6.96491,
+            46.315774
+          ]
+        ]
+      },
+      "properties": {
+        "from_chain": "Coop",
+        "from_name": "Aigle",
+        "from_rating": 4.0,
+        "to_chain": "Migros",
+        "to_name": "Aigle Gare",
+        "to_rating": 4.2,
+        "distance_m": 358,
+        "distance_km": 0.36,
+        "rating_diff": -0.2,
+        "winner": "migros"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.96377,
+            46.316947
+          ],
+          [
+            6.96491,
+            46.315774
+          ]
+        ]
+      },
+      "properties": {
+        "from_chain": "Coop Pronto",
+        "from_name": "Aigle Gare",
+        "from_rating": 4.0,
+        "to_chain": "Migros",
+        "to_name": "Aigle Gare",
+        "to_rating": 4.2,
+        "distance_m": 157,
+        "distance_km": 0.16,
+        "rating_diff": -0.2,
+        "winner": "migros"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.925609,
+            46.39811
+          ],
+          [
+            6.921829,
+            46.39052
+          ]
+        ]
+      },
+      "properties": {
+        "from_chain": "Coop",
+        "from_name": "Villeneuve",
+        "from_rating": 4.0,
+        "to_chain": "Migros",
+        "to_name": "Noville",
+        "to_rating": 4.1,
+        "distance_m": 892,
+        "distance_km": 0.89,
+        "rating_diff": -0.1,
+        "winner": "migros"
+      }
+    }
+  ]
+}

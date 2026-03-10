@@ -1,0 +1,51 @@
+name,E_LV95,N_LV95,elevation_m,flow_role,type,capacity_or_blockage,flow_direction,description
+Jura slopes - Divonne border,2500500,1137500,550,SOURCE,Forest/hillside,High,Generates cold air (downhill),Cold air generation zone at western canton edge above Versoix-Nyon
+Geneva NW hills - Versoix,2501000,1127000,520,SOURCE,Mixed forest/agriculture,Medium,Generates cold air (downhill),Gentle hills above Geneva's northern suburbs
+Signal de Bougy plateau,2519000,1152000,630,SOURCE,Forest/vineyard,High,Generates cold air (downhill),Elevated plateau above La Côte
+Jorat forest (north Lausanne),2540000,1157000,780,SOURCE,Dense forest,Very High,Generates cold air (downhill),"Largest forest near Lausanne, prime cold air source"
+Sauvabelin forest,2538500,1154500,650,SOURCE,Forest,High,Generates cold air (downhill),Hilltop forest above Lausanne center
+Lavaux upper vineyards,2548000,1149000,580,SOURCE,Vineyard terraces,Medium-High,Generates cold air (downhill),Elevated vine terraces
+Mont Pèlerin lower slopes,2555000,1149000,700,SOURCE,Forest/meadow,High,Generates cold air (downhill),Slopes above Vevey inside canton
+Les Pléiades lower slopes,2558000,1148500,750,SOURCE,Forest/alpine meadow,Very High,Generates cold air (downhill),Above Riviera
+Rochers de Naye foothills,2563000,1145000,800,SOURCE,Alpine/forest,Very High,Generates cold air (downhill),Mountain drainage above Montreux
+Jaman/Braye slopes,2561000,1144000,700,SOURCE,Forest,High,Generates cold air (downhill),Mountain slopes above Montreux-Villeneuve
+Bois de Chênes (Nyon),2506000,1137500,480,SOURCE,Forest reserve,Medium,Generates cold air (downhill),Protected forest above Nyon
+Salève foothills (Geneva south),2498000,1112500,500,SOURCE,Forest/hillside,High,Generates cold air (downhill),Southern Geneva cold air source at canton edge
+Bois de la Bâtie,2499200,1116200,430,SOURCE,Urban forest,Low-Medium,Generates cold air (downhill),Locally significant cold air pocket
+Bois de Jussy (Geneva east),2510000,1120000,500,SOURCE,Forest,Medium,Generates cold air (downhill),"Eastern Geneva forest, cold air towards Arve"
+Coppet-Chavannes hills,2503500,1131000,480,SOURCE,Agriculture/forest,Medium,Generates cold air (downhill),Hills above La Côte western end
+Arve river valley,2500500,1114500,380,CORRIDOR,River valley,High,Channels cold air downhill,Major cold air corridor from Alps into Geneva
+Rhône valley (Geneva),2497500,1118500,375,CORRIDOR,River valley,Very High,Channels cold air downhill,Primary drainage into Geneva
+Versoix stream corridor,2503000,1128500,400,CORRIDOR,Stream valley,Medium,Channels cold air downhill,Connects hills to lake north of Geneva
+Venoge valley,2527000,1155000,420,CORRIDOR,River valley,High,Channels cold air downhill,Major corridor to Morges lakefront
+Aubonne valley,2520000,1150000,400,CORRIDOR,River valley,Medium-High,Channels cold air downhill,Valley between Bougy and lake
+Promenthouse valley,2510000,1142000,400,CORRIDOR,River valley,Medium,Channels cold air downhill,Valley to Nyon
+Flon valley (Lausanne),2537500,1152500,430,CORRIDOR,Urban stream valley,Low-Medium,Channels cold air downhill,"Historic valley, partially built over"
+Vuachère valley (Lausanne),2540500,1153000,420,CORRIDOR,Stream valley,Medium,Channels cold air downhill,Eastern Lausanne corridor from Jorat
+Veveyse valley,2556000,1147000,400,CORRIDOR,River valley,High,Channels cold air downhill,Major corridor to Vevey
+Baye de Montreux corridor,2560000,1143500,390,CORRIDOR,Stream valley,Medium,Channels cold air downhill,Mountain stream into Montreux
+Grand Canal (Villeneuve plain),2563500,1138000,375,CORRIDOR,Flat plain/canal,High,Channels cold air downhill,Cold air pooling zone
+Rail corridor Lausanne-Morges,2533000,1152000,400,CORRIDOR,Infrastructure corridor,Medium,Channels cold air downhill,Ventilation channel
+Lausanne-Ouchy slope,2537000,1151000,400,CORRIDOR,Urban slope,Low,Channels cold air downhill,"Steep slope, partial corridor"
+Lavaux slope drainage,2550000,1148000,420,CORRIDOR,Vineyard terraces,High,Channels cold air downhill,Unobstructed downslope flow
+Geneva CBD - Rive/Eaux-Vives,2501000,1117000,380,SINK,Dense urban core,Critical need,Receives cold air,Peak UHI
+Geneva - Plainpalais,2499700,1117100,382,SINK,Dense urban,Critical need,Receives cold air,Major UHI zone
+Geneva - Pâquis/Nations,2500500,1119500,378,SINK,Dense urban,High need,Receives cold air,Dense lakefront
+Vernier-Meyrin,2496500,1121000,430,SINK,Industrial/suburban,High need,Receives cold air,Limited ventilation
+Lancy-Onex-Carouge,2498500,1115500,400,SINK,Dense suburban,High need,Receives cold air,Blocks Salève air
+Nyon center,2507400,1137200,400,SINK,Town center,Medium need,Receives cold air,Moderate UHI
+Morges center,2527500,1151800,380,SINK,Town center,Medium need,Receives cold air,Receives Venoge air
+Renens-Prilly,2535000,1154000,430,SINK,Dense urban/industrial,Critical need,Receives cold air,"Peak UHI, limited corridors"
+Lausanne center,2537800,1152800,450,SINK,Dense urban core,Critical need,Receives cold air,Historic core
+Lausanne - Gare area,2537200,1152200,440,SINK,Dense urban,High need,Receives cold air,Major transit hub
+Vevey center,2555500,1144700,385,SINK,Town center,Medium-High need,Receives cold air,Rail blocks air
+Montreux center,2560800,1143900,390,SINK,Town center,Medium need,Receives cold air,Mountain air arrives via Baye
+Crissier-Bussigny commercial,2532000,1155500,440,SINK,Commercial/industrial,High need,Receives cold air,Poor ventilation
+Ecublens-Chavannes (EPFL),2533000,1153300,420,SINK,Suburban/campus,Medium need,Receives cold air,Some green infrastructure
+Geneva airport/Cointrin,2499200,1122500,430,BARRIER,Airport/infrastructure,Major blockage,Blocks cold air,Blocks Jura-Geneva cold air path
+Plan-les-Ouates industrial,2498000,1113300,420,BARRIER,Industrial zone,Significant blockage,Blocks cold air,Blocks Salève cold air
+Renens rail yard,2534500,1153500,425,BARRIER,Rail infrastructure,Moderate blockage,Blocks cold air,Partially blocks air movement
+Lausanne hillside development,2538000,1153500,480,BARRIER,Dense residential,Significant blockage,Blocks cold air,Blocks Jorat forest air
+Vevey rail corridor barrier,2555500,1145500,390,BARRIER,Rail/road,Moderate blockage,Blocks cold air,Barrier between mountain and lakefront
+La Praille commercial (Geneva),2498500,1116500,395,BARRIER,Commercial,Significant blockage,Blocks cold air,Blocks Arve valley corridor
+Malley-Sébeillon development,2535500,1152800,420,BARRIER,New development,Growing blockage,Blocks cold air,Densification in former industrial zone

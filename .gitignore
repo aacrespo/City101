@@ -1,0 +1,28 @@
+# OS files
+.DS_Store
+Thumbs.db
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.env
+.venv/
+venv/
+
+# Node (if any viz tooling)
+node_modules/
+
+# IDE
+.vscode/
+*.swp
+*.swo
+*~
+
+# Temporary / staging
+output/tmp/
+
+# Credentials — never commit these
+*.key
+*.pem
+credentials.json

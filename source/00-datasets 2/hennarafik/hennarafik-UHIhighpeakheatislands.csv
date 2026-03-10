@@ -1,0 +1,41 @@
+zone_name,lat_wgs84,lon_wgs84,E_LV95,N_LV95,UHI_category,UHI_intensity_score,description,land_use_type,population,density_per_km2,impervious_surface_pct,green_cover_pct
+Meyrin,46.232246,6.079085,2495123,1120998,HIGH,3,"Dense urban/suburban (2722/km2), high UHI.",Urban,27059,2722,60-75%,15-30%
+Vernier,46.210749,6.094616,2496280,1118588,HIGH,3,"Dense urban/suburban (4920/km2), high UHI.",Dense Urban,37837,4920,60-75%,15-30%
+Onex,46.184872,6.100487,2496684,1115704,HIGH,3,"Very dense urban (6731/km2), peak UHI.",Dense Urban,18915,6731,>75%,<15%
+Plan-les-Ouates,46.163948,6.119037,2498077,1113354,HIGH,3,"Dense urban/suburban (2083/km2), high UHI.",Urban,12186,2083,60-75%,15-30%
+Lancy,46.184908,6.119592,2498159,1115683,HIGH,3,"Very dense urban (7811/km2), peak UHI.",Dense Urban,37259,7811,>75%,<15%
+Le Grand-Saconnex,46.235789,6.119176,2498222,1121339,HIGH,3,"Dense urban/suburban (2982/km2), high UHI.",Urban,13062,2982,60-75%,15-30%
+Carouge (GE),46.181693,6.140329,2499754,1115299,HIGH,3,"Very dense urban (8329/km2), peak UHI.",Dense Urban,22488,8329,>75%,<15%
+Geneve,46.207094,6.143727,2500063,1118118,HIGH,3,"Very dense urban (11424/km2), peak UHI.",Dense Urban,209061,11424,>75%,<15%
+Chene-Bougeries,46.193578,6.18167,2502967,1116568,HIGH,3,"Dense urban/suburban (3464/km2), high UHI.",Dense Urban,14342,3464,60-75%,15-30%
+Chene-Bourg,46.197391,6.196987,2504156,1116973,HIGH,3,"Very dense urban (7483/km2), peak UHI.",Dense Urban,9578,7483,>75%,<15%
+Thonex,46.196097,6.20457,2504739,1116820,HIGH,3,"Dense urban/suburban (4400/km2), high UHI.",Dense Urban,16809,4400,60-75%,15-30%
+Nyon,46.380301,6.235209,2507418,1137258,HIGH,3,"Dense urban/suburban (2041/km2), high UHI.",Urban,23351,2041,60-75%,15-30%
+Bussigny,46.553437,6.550767,2531911,1156180,HIGH,3,"Dense urban/suburban (2418/km2), high UHI.",Urban,11632,2418,60-75%,15-30%
+Ecublens (VD),46.527612,6.560509,2532626,1153301,HIGH,3,"Dense urban/suburban (2336/km2), high UHI.",Urban,13364,2336,60-75%,15-30%
+Chavannes-pres-Renens,46.528183,6.576245,2533834,1153351,HIGH,3,"Very dense urban (5924/km2), peak UHI.",Dense Urban,9774,5924,>75%,<15%
+Renens (VD),46.535292,6.589664,2534872,1154130,HIGH,3,"Very dense urban (7302/km2), peak UHI.",Dense Urban,21541,7302,>75%,<15%
+Prilly,46.538896,6.604991,2536052,1154518,HIGH,3,"Very dense urban (5799/km2), peak UHI.",Dense Urban,12758,5799,>75%,<15%
+Lausanne,46.525234,6.636807,2538477,1152974,HIGH,3,"Dense urban/suburban (2142/km2), high UHI.",Urban,144873,2142,60-75%,15-30%
+Epalinges,46.550714,6.668494,2540936,1155782,HIGH,3,"Dense urban/suburban (2167/km2), high UHI.",Urban,9905,2167,60-75%,15-30%
+Vevey,46.451892,6.859184,2555479,1144671,HIGH,3,"Dense urban/suburban (2350/km2), high UHI.",Urban,20142,2350,60-75%,15-30%
+Montreux,46.445314,6.927967,2560759,1143903,HIGH,3,"Moderate suburb (606/km2), moderate UHI.",Residential,26955,606,30-45%,45-60%
+Geneve - Plainpalais,46.19832,6.139583,2499727,1117148,HIGH,3,"Dense core, peak UHI.",Dense Urban,0,12000,>80%,<10%
+Geneve - Paquis,46.212012,6.144984,2500169,1118663,HIGH,3,Very dense near lake.,Dense Urban,0,11000,>80%,<10%
+Geneve - Eaux-Vives,46.201017,6.155987,2500998,1117427,HIGH,3,Dense left-bank.,Dense Urban,0,10000,>75%,<15%
+Geneve - Cornavin Gare,46.210536,6.144125,2500100,1118500,HIGH,3,Station transport hub.,Transport,0,15000,>85%,<5%
+Geneve - Rive-Molard,46.202478,6.147556,2500350,1117600,HIGH,3,Retail core.,Commercial,0,13000,>85%,<5%
+Geneve - St-Jean-Charmilles,46.207643,6.127348,2498800,1118200,HIGH,3,Dense west bank.,Dense Urban,0,9000,>70%,<20%
+Geneve - Jonction,46.201452,6.136567,2499500,1117500,HIGH,3,Dense redevelopment.,Mixed,0,8000,>70%,<15%
+Lausanne - Flon,46.520908,6.628048,2537800,1152500,HIGH,3,Commercial hub.,Commercial,0,10000,>75%,<15%
+Lausanne - Cite,46.521826,6.630641,2538000,1152600,HIGH,3,Historic old town.,Historic,0,8000,>80%,<10%
+Lausanne - Gare CFF,46.51909,6.625469,2537600,1152300,HIGH,3,Station hub.,Transport,0,12000,>85%,<10%
+Lausanne - Sous-Gare,46.516383,6.624206,2537500,1152000,HIGH,3,Dense below station.,Dense Urban,0,7000,>70%,<20%
+Lausanne - Sebeillon,46.523551,6.620189,2537200,1152800,HIGH,3,Industrial transition.,Mixed,0,6000,>70%,<15%
+Vevey - Grande Place,46.464222,6.848012,2554631,1146048,HIGH,3,"Town center, dense.",Commercial,0,5000,>65%,<20%
+Montreux - Centre,46.441656,6.920727,2560200,1143500,HIGH,3,Dense town core.,Tourism,0,4000,>65%,<20%
+Crissier - Zone Commerciale,46.556525,6.577959,2534000,1156500,HIGH,3,Retail zone IKEA.,Commercial,0,0,>85%,<5%
+Renens - Malley Ind.,46.532336,6.591378,2535000,1153800,HIGH,3,Industrial zone.,Industrial,0,0,>80%,<10%
+Plan-les-Ouates - ZIMEYSA,46.158984,6.12075,2498200,1112800,HIGH,3,Industrial zone.,Industrial,0,0,>80%,<10%
+Meyrin - CERN area,46.236711,6.074786,2494800,1121500,HIGH,3,CERN research campus.,Institutional,0,0,>65%,<25%
+Bussigny - Zone Ind.,46.559043,6.554444,2532200,1156800,HIGH,3,Industrial park.,Industrial,0,0,>70%,<15%

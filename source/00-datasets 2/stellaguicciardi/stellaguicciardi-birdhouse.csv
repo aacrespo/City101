@@ -1,0 +1,474 @@
+id,source_dataset,name_fr,city,categorie_type,categorie_label,espece,lat_wgs84,lon_wgs84,E_LV95,N_LV95,location_type,notes
+LEM-001,birdhouses_lac_leman_v4,Île aux Oiseaux de Préverenges,Préverenges,ile_artificielle,Île ou radeau artificiel de nidification,Laridés & Sternes,46.5012,6.5352,2530650,1150388,lac,"Île artificielle créée par le COL en 2001-02. 249+ espèces recensées total site. Plateforme 6x6m pour Sternes ajoutée 2015, colonisée 2016. Premier site artificiel nidification Sterne pierregarin en Suisse."
+LEM-002,birdhouses_lac_leman_v4,Île Leusonna,Lausanne,ile_artificielle,Île ou radeau artificiel de nidification,Laridés & Sternes,46.5152,6.596,2535334,1151892,lac,Portée par Ville de Lausanne dans cadre projet tripartite Broye-Chamberonne (CHF ~80M total). Arc de ~260m de long à 2m de fond. Inspirée modèle Préverenges 2002. Subventionnée Canton + Confédération (CHF 18.5M). Travaux prévus sur ~10 ans à partir 2025.
+LEM-003,birdhouses_lac_leman_v4,Tour à Hirondelles – Musée du Léman,Nyon,nichoir,Nichoir / dispositif artificiel de nidification,Hirondelles & Martinets,46.3800,6.2403,2507810,1137217,urbain,"42 nichoirs sur mât. Dispositif sonore diffusant chant d'hirondelles. Installé avril 2023, Ville de Nyon / Le Projet Hirondelles La Côte / Station ornithologique suisse."
+LEM-004,birdhouses_lac_leman_v4,Nichoirs centre-ville Nyon – 3 bâtiments,Nyon,nichoir,Nichoir / dispositif artificiel de nidification,Hirondelles & Martinets,46.3826,6.2393,2507736,1137510,urbain,30 nichoirs hirondelles de fenêtre + 10 nichoirs martinets posés sur 3 immeubles du centre-ville. Programme Ville de Nyon 2023. Complément de la tour du Musée du Léman.
+LEM-005,birdhouses_lac_leman_v4,Nichoirs Versoix – Centre Sportif et domaine Ecogia,Versoix,nichoir,Nichoir / dispositif artificiel de nidification,Hirondelles & Martinets,46.2963,6.1542,2501036,1128021,urbain,Part du programme nichoirs municipaux de Versoix (150+ nichoirs total). Fabriqués par agents de voirie. GOBG partenaire.
+LEM-006,birdhouses_lac_leman_v4,Nichoirs Versoix – Port-Choiseul,Versoix,nichoir,Nichoir / dispositif artificiel de nidification,Hirondelles & Martinets,46.2877,6.1710,2502311,1127047,lac,Nichoirs sur bâtiments privés et communaux autour du port. Programme CHF 12'000 avec soutien GOBG.
+LEM-007,birdhouses_lac_leman_v4,Nichoirs Versoix – École Adrien-Lachenal,Versoix,nichoir,Nichoir / dispositif artificiel de nidification,Hirondelles & Martinets,46.2820,6.1640,2501500,1126430,urbain,Nichoirs posés sur façades et toiture de l'école. Programme municipal avec budget voirie.
+LEM-008,birdhouses_lac_leman_v4,Nichoirs Versoix – Cimetière,Versoix,nichoir,Nichoir / dispositif artificiel de nidification,Passereaux & Rapaces,46.2820,6.1629,2501677,1126425,urbain,Nichoirs installés dans arbres et bâtiments du cimetière. Programme biodiversité Versoix.
+LEM-009,birdhouses_lac_leman_v4,Maison de l'Île aux Oiseaux – COL,Préverenges,observatoire,Réserve / observatoire / centre ornithologique,Laridés & Sternes,46.5084,6.5360,2530718,1151185,naturel_terrestre,Centre pédagogique du COL inauguré mars 2022. Architecture LOCALARCHITECTURE (inspiration nid/nichoir). Webcams en direct dans nichoirs de l'île. Cabanon sur rive acquis 2016.
+LEM-010,birdhouses_lac_leman_v4,Colonie Martinets alpins – Château Saint-Maire,Lausanne,nichoir,Nichoir / dispositif artificiel de nidification,Martinet alpin,46.5248,6.6357,2538389,1152927,urbain,Travaux de restauration façades 2016-2017. 40 nichoirs aménagés par COL: 32 planches dans mâchicoulis des tourelles + 8 sur chemin de ronde. Suivi par COL.
+LEM-011,birdhouses_lac_leman_v4,Colonie Martinets alpins – Palais de Rumine,Lausanne,nichoir,Nichoir / dispositif artificiel de nidification,Martinet alpin,46.5236,6.6338,2538244,1152794,urbain,Premier bâtiment colonisé à Lausanne par les martinets alpins (années 1960). Niche dans les combles. Suivi COL.
+LEM-012,birdhouses_lac_leman_v4,Colonie Martinets alpins – Cathédrale de Lausanne,Lausanne,nichoir,Nichoir / dispositif artificiel de nidification,Martinet alpin,46.5226,6.6354,2538363,1152681,urbain,Colonie dans les hautes parties de la cathédrale gothique. Suivi COL. Non accessible pour baguage.
+LEM-013,birdhouses_lac_leman_v4,Colonie Martinets alpins – Tour de l'Ale,Lausanne,nichoir,Nichoir / dispositif artificiel de nidification,Martinet alpin,46.5240,6.6277,2537775,1152842,urbain,Tour médiévale du XIVe siècle. Colonie dans les fentes du sommet. Suivi COL.
+LEM-014,birdhouses_lac_leman_v4,Colonie Martinets alpins – Gymnase de la Cité,Lausanne,nichoir,Nichoir / dispositif artificiel de nidification,Martinet alpin,46.5229,6.6346,2538304,1152714,urbain,Ancienne Académie (1587). Colonie dans l'Ancienne Académie et bâtiment de la Mercerie. Suivi COL.
+LEM-015,birdhouses_lac_leman_v4,Colonie Martinets alpins – Église Saint-François,Lausanne,nichoir,Nichoir / dispositif artificiel de nidification,Martinet alpin,46.5197,6.6333,2538205,1152359,urbain,Seul site de baguage accessible à Lausanne (135 marches dans le clocher). 20 nichoirs dans le clocher. Colonisé depuis 1992 après rénovation. 407 jeunes bagués 1996-2021. Suivi COL annuel.
+LEM-016,birdhouses_lac_leman_v4,Colonie Martinets alpins – Ancien Évêché,Lausanne,nichoir,Nichoir / dispositif artificiel de nidification,Martinet alpin,46.5221,6.6349,2538328,1152630,urbain,Bâtiment médiéval. Colonie dans les combles. 7ème bâtiment confirmé en 2021. Suivi COL.
+LEM-017,birdhouses_lac_leman_v4,Nichoirs martinets noirs – quais Lausanne (Ouchy/Bellerive),Lausanne,nichoir,Nichoir / dispositif artificiel de nidification,Hirondelles & Martinets,46.5070,6.6360,2538394,1150948,lac,Programme COL de suivi et installation de nichoirs sur immeubles des quais lausannois. Colonie active depuis 2010. Suivi annuel.
+LEM-018,birdhouses_lac_leman_v4,Réserve Naturelle des Grangettes,Noville,observatoire,Réserve / observatoire / centre ornithologique,Oiseaux lacustres,46.3879,6.8793,2556971,1137549,naturel_terrestre,Plus grande roselière du Léman (Ramsar). Commission des Grangettes fondée 1968. Lagune des Saviez recréée 2008 (13'000m² roselière + 4'000m² lagune). 265/385 espèces suisses observées ici.
+LEM-019,birdhouses_lac_leman_v4,Tour d'observation des Grangettes,Noville,observatoire,Réserve / observatoire / centre ornithologique,Oiseaux lacustres,46.3945,6.8976,2558385,1138273,naturel_terrestre,"Tour en bois à l'entrée de la réserve des Grangettes. Vue panoramique sur roselières, lagune et lac. Accessible à pied et à vélo."
+LEM-020,birdhouses_lac_leman_v4,Plateforme de nidification Sternes – Île Préverenges,Préverenges,ile_artificielle,Île ou radeau artificiel de nidification,Laridés & Sternes,46.5012,6.5352,2530650,1150388,lac,"Plateforme 6x6m surélevée sur l'île artificielle. Colonisée par Sternes dès 2016, Mouettes dès 2019. 1er site artificiel nidification Sterne pierregarin en Suisse."
+LEM-021,birdhouses_lac_leman_v4,Observatoire ornithologique Vidy – projet EPFL,Lausanne,observatoire,Réserve / observatoire / centre ornithologique,Laridés & Sternes,46.5140,6.5940,2535179,1151760,lac,"Projet master EPFL: surélévation édicule n°16312 en observatoire ornithologique. Plan octogonal 346m² à +4.70m, rampe PMR 45m. Orienté vers future île Leusonna. Non encore construit."
+LEM-022,birdhouses_lac_leman_v4,Réserve ornithologique Rade de Genève,Genève,observatoire,Réserve / observatoire / centre ornithologique,Oiseaux lacustres,46.2050,6.1550,2500928,1117873,lac,Un des 3 sites nationalement importants pour limicoles sur rives suisses du Léman. Suivi GOBG. Site d'hivernage et de passage.
+LEM-023,birdhouses_lac_leman_v4,Zone humide Venoge–Préverenges,Préverenges,observatoire,Réserve / observatoire / centre ornithologique,Laridés & Sternes,46.5008,6.5340,2530557,1150345,naturel_terrestre,Un des 3 sites nationalement importants pour limicoles suisses du Léman. Baie = butoir migratoire printanier pour oiseaux remontant d'Afrique. Hauts-fonds exondés clés en mai-juin.
+LEM-024,birdhouses_lac_leman_v4,Marais de la Versoix – zone ornithologique,Versoix,observatoire,Réserve / observatoire / centre ornithologique,Oiseaux lacustres,46.2880,6.1710,2502235,1127079,naturel_terrestre,Zone humide avec roselières à l'embouchure de la Versoix. Site de suivi GOBG.
+LEM-025,birdhouses_lac_leman_v4,Zone humide Chamberonne – renaturation Vidy,Lausanne,observatoire,Réserve / observatoire / centre ornithologique,Oiseaux lacustres,46.5155,6.5958,2535319,1151926,naturel_terrestre,Zone stratégique coude nord du Léman. Renaturation cadre projet tripartite Broye-Chamberonne. Futur delta élargi et île Leusonna associée.
+LEM-026,birdhouses_lac_leman_v4,Zone ornithologique Petit-Lac Dully–Rolle,Rolle / Dully,observatoire,Réserve / observatoire / centre ornithologique,Oiseaux lacustres,46.4630,6.3380,2515454,1146336,naturel_terrestre,Site de mue et hivernage régulier Éider à duvet. Observé Station ornithologique suisse.
+LEM-027,birdhouses_lac_leman_v4,Le Cercle des Oiseaux – Lausanne Jardins 2024,Lausanne,observatoire,Réserve / observatoire / centre ornithologique,Laridés & Sternes,46.5045,6.6455,2539120,1150663,lac,"Installation scénographique de Lausanne Jardins 2024 (1 des 40 jardins). Perchoir circulaire géant posé sur le lac à l'embouchure de la Vuachère. Forme en rose des vents pour permettre aux oiseaux de s'orienter face au vent. Accompagné d'une île flottante pour oiseaux nageurs. Conçu avec experts ornithologues. Concepteurs: Romain Legros, Mattia Pretolani, Christophe Guberan, Julien Mercier (Lausanne) + Ellipse Architecture. Exposé 15 juin–5 oct 2024. Itinérance: Yverdon-les-Bains été 2025, puis reste de Suisse jusqu'en 2027."
+LEM-028,birdhouses_lac_leman_v4,Cercle Ornithologique de Lausanne (COL),Lausanne,observatoire,Réserve / observatoire / centre ornithologique,Divers,46.5197,6.6333,2538178,1152359,urbain,Fondateur de l'île de Préverenges (2001) et de la Maison de l'île (2022). Baguage migrateurs chaque été/automne. Installation et suivi de 7 colonies martinets alpins à Lausanne. Website: oiseau.ch
+LEM-029,birdhouses_lac_leman_v4,GOBG – Groupe Ornithologique Bassin Genevois,Genève,observatoire,Réserve / observatoire / centre ornithologique,Divers,46.2043,6.1432,2500016,1117810,urbain,Fournit nichoirs à Versoix et autres communes. Coordonne conservation martinets/hirondelles. Recensement rade de Genève. Programme cantonal Martinet noir Genève.
+LEM-030,birdhouses_lac_leman_v4,Îles Forel – Lausanne Jardins 2024,Lausanne,ile_artificielle,Île ou radeau artificiel de nidification,Oiseaux lacustres,46.508,6.668,2540851,1151035,lac,"4 petites îles flottantes posées dans le lac dans le cadre de Lausanne Jardins 2024 (thème: Entre l'eau et nous). Projet de renaturation recréant des zones humides et habitats lacustres d'origine. Nommé en hommage à François-Alphonse Forel (1841–1912, né à Morges), fondateur de la limnologie moderne. Concepteur: Ivo Stotz. Inauguration retardée par tempête au montage. Temporaire mais à vocation de biodiversité lacustre."
+LEM-031,birdhouses_lac_leman_v4,Birds&Co Léman 1 – Plateformes grèbes (rive vaudoise),La Côte (Nyon – Morges),ile_artificielle,Île ou radeau artificiel de nidification,Oiseaux lacustres,46.508,6.498,2527804,1151178,lac,"Entrée collective. Plateformes flottantes en liège portugais et cordages marins recyclés, conçues pour détourner grèbes huppés et foulques des bateaux de plaisance vers des supports de nidification dédiés. Start-up fondée par Jérémy Suchet et Jérémy Loup (EPFL/ECAL, cours 2023–2024). Co-conçues avec ornithologues. Appui de BirdLife Suisse. 6 communes équipées sur La Côte. Prix unitaire CHF 189. Produit: Léman 1. Site: birdsnco.ch"
+LEM-032,birdhouses_lac_leman_v4,Tour à hirondelles de Nyon,Nyon,nichoir,Nichoir / dispositif artificiel de nidification,Hirondelles & Martinets,46.3796,6.2403,2507808,1137176,lac,Tour à 42 nichoirs + dispositif sonore. Nichoirs sur 3 bâtiments du centre-ville: 30 hirondelles + 10 martinets. Journée Hirondelle Romande accueillie en 2023. Programme La Côte (Vaux-Lierre / Station orn. suisse).
+LEM-033,birdhouses_lac_leman_v4,Nichoirs martinets / Nyon centre-ville,Nyon,nichoir,Nichoir / dispositif artificiel de nidification,Hirondelles & Martinets,46.3830,6.2380,2507637,1137556,urbain,"30 nichoirs hirondelles + 10 nichoirs martinets sur 3 bâtiments. Programme biodiversité Ville de Nyon, en collaboration avec La Vaux-Lierre et canton Vaud."
+LEM-034,birdhouses_lac_leman_v4,La Vaux-Lierre – Centre de soins et Projet Hirondelles La Côte,Etoy,observatoire,Réserve / observatoire / centre ornithologique,Hirondelles & Martinets,46.4857,6.4102,2521035,1148779,naturel_terrestre,Centre de soins depuis 1986 (~2000 oiseaux/an). Projet Hirondelles La Côte depuis 2020: recensement et pose de nichoirs de Morges à Versoix. Financé par donateur privé. Partenaire Station orn. suisse.
+LEM-035,birdhouses_lac_leman_v4,Réserve Pointe à la Bise – radeaux sternes,Collonge-Bellerive,ile_artificielle,Île ou radeau artificiel de nidification,Laridés & Sternes,46.2444,6.1936,2503974,1122203,lac,"1er radeau en 2009. 2e radeau mars 2025. ~40 couples sternes en 2025. Réserve naturelle Pro Natura Genève, 8.8 ha (dont 2.7 ha terrestres). Tour d'observation + Centre Nature. 164 espèces observées depuis 1998. Site OROEM national."
+LEM-036,birdhouses_lac_leman_v4,Nichoirs communaux Plan-les-Ouates,Plan-les-Ouates,nichoir,Nichoir / dispositif artificiel de nidification,Hirondelles & Martinets,46.1683,6.1179,2497995,1113842,urbain,"Commune GE gère un réseau de nichoirs répartis dans 5 zones. 2/3 des nichoirs occupés annuellement. Centaines d'oisillons chaque année. Gestion communale, extension planifiée."
+LEM-037,birdhouses_lac_leman_v4,Morges – nichoirs intégrés (PACom 2025),Morges,nichoir,Nichoir / dispositif artificiel de nidification,Hirondelles & Martinets,46.5085,6.4988,2527225,1151255,urbain,"PACom 2025 impose intégration de nichoirs et hôtels à insectes dans nouvelles constructions. Toitures plates végétalisées obligatoires. Structures favorables hirondelles, martinets, chauves-souris et hérissons obligatoires. Gestion Ville de Morges."
+LEM-038,birdhouses_lac_leman_v4,Pigeonnier Église Saint-François,Lausanne,nichoir,Pigeonnier urbain de régulation,Pigeon,46.5218,6.6322,2538165,1152602,urbain,Pigeonnier municipal sur l'Église Saint-François. Ouvert aux visites. Gestion par stérilisation des œufs (remplacement par oeufs en plâtre). L'un des 3 pigeonniers officiels de la Ville de Lausanne pour réguler la population de pigeons bisets urbains.
+LEM-039,birdhouses_lac_leman_v4,Pigeonnier Tour de l'Ale,Lausanne,nichoir,Pigeonnier urbain de régulation,Pigeon,46.5241,6.6305,2538040,1152862,urbain,Pigeonnier municipal sur la Tour de l'Ale (XIVe s.). Gestion par stérilisation des oeufs. L'un des 3 pigeonniers officiels de la Ville de Lausanne.
+LEM-040,birdhouses_lac_leman_v4,Pigeonnier Parc de Mon Repos,Lausanne,nichoir,Pigeonnier urbain de régulation,Pigeon,46.5250,6.6466,2539145,1152954,urbain_parc,Pigeonnier municipal dans le Parc de Mon Repos. Gestion par stérilisation des oeufs. L'un des 3 pigeonniers officiels de la Ville de Lausanne pour régulation écologique de la population de pigeons bisets.
+LEM-041,birdhouses_lac_leman_v4,Pigeonnier EPFL – parking bâtiment SG,Ecublens,nichoir,Pigeonnier urbain de régulation,Pigeon,46.5228,6.5640,2525068,1152229,urbain,"Pigeonnier physique sur le parking du bâtiment SG (Ecole d'architecture EPFL, construit 2000). Observé in situ. Non documenté publiquement. Un mémoire de master ENAC 2018 (Braghieri/Blanc) mentionne plusieurs pigeonniers de l'arc lémanique — document consultable à la bibliothèque EPFL (cote 2018.109)."
+LAU-001,lausanne_faune_ailee,Bâtiment,Lausanne,nichoir_naturel,Nid / gîte naturel sur structure bâtie,Chauve-souris,46.538117,6.624245,2537528,1154416,Bâtiment,
+LAU-002,lausanne_faune_ailee,Bâtiment,Lausanne,nichoir_naturel,Nid / gîte naturel sur structure bâtie,Chauve-souris,46.537532,6.626678,2537714,1154349,Bâtiment,
+LAU-003,lausanne_faune_ailee,Edifice religieux,Lausanne,nichoir_naturel,Nid / gîte naturel sur structure bâtie,Chauve-souris,46.519849,6.60961,2536384,1152397,Edifice religieux,
+LAU-004,lausanne_faune_ailee,Edifice religieux,Lausanne,nichoir_naturel,Nid / gîte naturel sur structure bâtie,Chauve-souris,46.519849,6.60961,2536384,1152397,Edifice religieux,
+LAU-005,lausanne_faune_ailee,Bâtiment,Lausanne,nichoir_naturel,Nid / gîte naturel sur structure bâtie,Chauve-souris,46.51782,6.601588,2535766,1152178,Bâtiment,
+LAU-006,lausanne_faune_ailee,Bâtiment,Lausanne,nichoir_naturel,Nid / gîte naturel sur structure bâtie,Chauve-souris,46.531802,6.640699,2538783,1153701,Bâtiment,
+LAU-007,lausanne_faune_ailee,Bâtiment,Lausanne,nichoir_naturel,Nid / gîte naturel sur structure bâtie,Chauve-souris,46.520906,6.623995,2537489,1152503,Bâtiment,
+LAU-008,lausanne_faune_ailee,Bâtiment,Lausanne,nichoir_naturel,Nid / gîte naturel sur structure bâtie,Chauve-souris,46.522511,6.633315,2538206,1152674,Bâtiment,
+LAU-009,lausanne_faune_ailee,Bâtiment,Lausanne,nichoir_naturel,Nid / gîte naturel sur structure bâtie,Chauve-souris,46.53903,6.613502,2536705,1154526,Bâtiment,
+LAU-010,lausanne_faune_ailee,Bâtiment,Lausanne,nichoir_naturel,Nid / gîte naturel sur structure bâtie,Chauve-souris,46.53903,6.613502,2536705,1154526,Bâtiment,
+LAU-011,lausanne_faune_ailee,Bâtiment,Lausanne,nichoir_naturel,Nid / gîte naturel sur structure bâtie,Chauve-souris,46.53903,6.613502,2536705,1154526,Bâtiment,
+LAU-012,lausanne_faune_ailee,Bâtiment,Lausanne,nichoir_naturel,Nid / gîte naturel sur structure bâtie,Chauve-souris,46.510703,6.631406,2538046,1151363,Bâtiment,
+LAU-013,lausanne_faune_ailee,Bâtiment,Lausanne,nichoir_naturel,Nid / gîte naturel sur structure bâtie,Chauve-souris,46.519734,6.609938,2536409,1152384,Bâtiment,
+LAU-014,lausanne_faune_ailee,Bâtiment,Lausanne,nichoir_naturel,Nid / gîte naturel sur structure bâtie,Chauve-souris,46.535246,6.627755,2537794,1154094,Bâtiment,
+LAU-015,lausanne_faune_ailee,Edifice religieux,Lausanne,nichoir_naturel,Nid / gîte naturel sur structure bâtie,Chauve-souris,46.52254,6.634827,2538322,1152676,Edifice religieux,
+LAU-016,lausanne_faune_ailee,Bâtiment,Lausanne,nichoir_naturel,Nid / gîte naturel sur structure bâtie,Chauve-souris,46.511938,6.617862,2537008,1151511,Bâtiment,
+LAU-017,lausanne_faune_ailee,Bâtiment,Lausanne,nichoir_naturel,Nid / gîte naturel sur structure bâtie,Chauve-souris,46.51171,6.618635,2537067,1151485,Bâtiment,
+LAU-018,lausanne_faune_ailee,Nichoir,Lausanne,nichoir_artificiel,Nichoir artificiel,Chauve-souris,46.523256,6.645829,2539167,1152747,Nichoir,
+LAU-019,lausanne_faune_ailee,Nichoir,Lausanne,nichoir_artificiel,Nichoir artificiel,Chauve-souris,46.538539,6.637953,2538580,1154452,Nichoir,
+LAU-020,lausanne_faune_ailee,Nichoir,Lausanne,nichoir_artificiel,Nichoir artificiel,Chauve-souris,46.538539,6.637953,2538580,1154452,Nichoir,
+LAU-021,lausanne_faune_ailee,Nichoir,Lausanne,nichoir_artificiel,Nichoir artificiel,Chauve-souris,46.538534,6.638566,2538627,1154451,Nichoir,
+LAU-022,lausanne_faune_ailee,Nichoir,Lausanne,nichoir_artificiel,Nichoir artificiel,Chauve-souris,46.533523,6.65672,2540014,1153880,Nichoir,
+LAU-023,lausanne_faune_ailee,Nichoir,Lausanne,nichoir_artificiel,Nichoir artificiel,Chauve-souris,46.514067,6.62243,2537361,1151744,Nichoir,
+LAU-024,lausanne_faune_ailee,Tunnel,Lausanne,nichoir_artificiel,Nichoir artificiel (tunnel),Chauve-souris,46.512271,6.644465,2539050,1151527,Tunnel,
+LAU-025,lausanne_faune_ailee,Edifice religieux,Lausanne,nichoir_naturel,Nid / gîte naturel sur structure bâtie,Chauve-souris,46.517416,6.609126,2536344,1152127,Edifice religieux,
+LAU-026,lausanne_faune_ailee,Edifice religieux,Lausanne,nichoir_naturel,Nid / gîte naturel sur structure bâtie,Chauve-souris,46.519776,6.609546,2536379,1152389,Edifice religieux,
+LAU-027,lausanne_faune_ailee,Edifice religieux,Lausanne,nichoir_naturel,Nid / gîte naturel sur structure bâtie,Chauve-souris,46.519776,6.609546,2536379,1152389,Edifice religieux,
+LAU-028,lausanne_faune_ailee,Edifice religieux,Lausanne,nichoir_naturel,Nid / gîte naturel sur structure bâtie,Chauve-souris,46.519776,6.609546,2536379,1152389,Edifice religieux,
+LAU-029,lausanne_faune_ailee,Edifice religieux,Lausanne,nichoir_naturel,Nid / gîte naturel sur structure bâtie,Chauve-souris,46.519776,6.609546,2536379,1152389,Edifice religieux,
+LAU-030,lausanne_faune_ailee,Bâtiment,Lausanne,nichoir_naturel,Nid / gîte naturel sur structure bâtie,Chauve-souris,46.522341,6.594962,2535263,1152686,Bâtiment,
+LAU-031,lausanne_faune_ailee,Bâtiment,Lausanne,nichoir_naturel,Nid / gîte naturel sur structure bâtie,Chauve-souris,46.519329,6.651725,2539615,1152306,Bâtiment,
+LAU-032,lausanne_faune_ailee,Bâtiment,Lausanne,nichoir_naturel,Nid / gîte naturel sur structure bâtie,Chauve-souris,46.518379,6.62793,2537788,1152219,Bâtiment,
+LAU-033,lausanne_faune_ailee,Nichoir,Lausanne,nichoir_artificiel,Nichoir artificiel,Chauve-souris,46.522151,6.624472,2537527,1152641,Nichoir,
+LAU-034,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.513397,6.648553,2539365,1151649,,
+LAU-035,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.525965,6.612006,2536575,1153075,,
+LAU-036,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.525346,6.606059,2536118,1153011,,
+LAU-037,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.525267,6.606256,2536133,1153002,,
+LAU-038,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.527256,6.603997,2535962,1153225,,
+LAU-039,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.520652,6.608816,2536324,1152487,,
+LAU-040,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.520377,6.611792,2536552,1152454,,
+LAU-041,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.525082,6.606845,2536178,1152981,,
+LAU-042,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.513736,6.637941,2538551,1151695,,
+LAU-043,lausanne_faune_ailee,,Lausanne,nichoir_artificiel,Nichoir artificiel,Hirondelles & Martinets,46.51912,6.612046,2536570,1152314,,
+LAU-044,lausanne_faune_ailee,,Lausanne,nichoir_artificiel,Nichoir artificiel,Hirondelles & Martinets,46.518844,6.611294,2536512,1152284,,
+LAU-045,lausanne_faune_ailee,,Lausanne,nichoir_artificiel,Nichoir artificiel,Hirondelles & Martinets,46.51884,6.611893,2536558,1152283,,
+LAU-046,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.525012,6.607055,2536194,1152973,,
+LAU-047,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.523601,6.602385,2535834,1152820,,
+LAU-048,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.523675,6.602631,2535853,1152828,,
+LAU-049,lausanne_faune_ailee,,Lausanne,nichoir_artificiel,Nichoir artificiel,Hirondelles & Martinets,46.519447,6.608848,2536325,1152353,,
+LAU-050,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.520187,6.611586,2536536,1152433,,
+LAU-051,lausanne_faune_ailee,,Lausanne,nichoir_artificiel,Nichoir artificiel,Hirondelles & Martinets,46.507654,6.626331,2537653,1151028,,
+LAU-052,lausanne_faune_ailee,,Lausanne,nichoir_artificiel,Nichoir artificiel,Hirondelles & Martinets,46.511814,6.633201,2538185,1151485,,
+LAU-053,lausanne_faune_ailee,,Lausanne,nichoir_artificiel,Nichoir artificiel,Hirondelles & Martinets,46.541103,6.624043,2537516,1154748,,
+LAU-054,lausanne_faune_ailee,,Lausanne,nichoir_artificiel,Nichoir artificiel,Hirondelles & Martinets,46.538443,6.627069,2537745,1154450,,
+LAU-055,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.525272,6.614428,2536760,1152996,,
+LAU-056,lausanne_faune_ailee,,Lausanne,nichoir_artificiel,Nichoir artificiel,Hirondelles & Martinets,46.526588,6.616037,2536885,1153141,,
+LAU-057,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.519624,6.598641,2535542,1152381,,
+LAU-058,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.519501,6.599047,2535573,1152367,,
+LAU-059,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.519275,6.598933,2535564,1152342,,
+LAU-060,lausanne_faune_ailee,,Lausanne,nichoir_artificiel,Nichoir artificiel,Hirondelles & Martinets,46.507725,6.626239,2537646,1151036,,
+LAU-061,lausanne_faune_ailee,,Lausanne,nichoir_artificiel,Nichoir artificiel,Hirondelles & Martinets,46.540117,6.661826,2540413,1154609,,
+LAU-062,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.525095,6.614743,2536784,1152976,,
+LAU-063,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.517323,6.606274,2536125,1152119,,
+LAU-064,lausanne_faune_ailee,,Lausanne,nichoir_artificiel,Nichoir artificiel,Hirondelles & Martinets,46.515932,6.610348,2536436,1151961,,
+LAU-065,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.523791,6.60985,2536407,1152835,,
+LAU-066,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.523676,6.61023,2536436,1152822,,
+LAU-067,lausanne_faune_ailee,,Lausanne,nichoir_mixte,Nichoir artificiel + nid naturel,Hirondelles & Martinets,46.526091,6.612004,2536575,1153089,,
+LAU-068,lausanne_faune_ailee,,Lausanne,nichoir_mixte,Nichoir artificiel + nid naturel,Hirondelles & Martinets,46.526207,6.611768,2536557,1153102,,
+LAU-069,lausanne_faune_ailee,,Lausanne,nichoir_mixte,Nichoir artificiel + nid naturel,Hirondelles & Martinets,46.554705,6.694948,2542969,1156206,,
+LAU-070,lausanne_faune_ailee,,Lausanne,nichoir_mixte,Nichoir artificiel + nid naturel,Hirondelles & Martinets,46.526232,6.611598,2536544,1153105,,
+LAU-071,lausanne_faune_ailee,,Lausanne,nichoir_mixte,Nichoir artificiel + nid naturel,Hirondelles & Martinets,46.526106,6.611522,2536538,1153091,,
+LAU-072,lausanne_faune_ailee,,Lausanne,nichoir_mixte,Nichoir artificiel + nid naturel,Hirondelles & Martinets,46.526208,6.611976,2536573,1153102,,
+LAU-073,lausanne_faune_ailee,,Lausanne,nichoir_mixte,Nichoir artificiel + nid naturel,Hirondelles & Martinets,46.525962,6.611524,2536538,1153075,,
+LAU-074,lausanne_faune_ailee,,Lausanne,nichoir_artificiel,Nichoir artificiel,Hirondelles & Martinets,46.554566,6.694403,2542927,1156191,,
+LAU-075,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.559165,6.682472,2542017,1156711,,
+LAU-076,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.559012,6.682448,2542015,1156694,,
+LAU-077,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.564641,6.692882,2542821,1157312,,
+LAU-078,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.564691,6.692346,2542780,1157318,,
+LAU-079,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.554692,6.694427,2542929,1156205,,
+LAU-080,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.553766,6.694505,2542934,1156102,,
+LAU-081,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.546473,6.615253,2536848,1155352,,
+LAU-082,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.533108,6.668366,2540907,1153825,,
+LAU-083,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.523549,6.633847,2538248,1152789,,
+LAU-084,lausanne_faune_ailee,,Lausanne,nichoir_mixte,Nichoir artificiel + nid naturel,Hirondelles & Martinets,46.524795,6.635693,2538391,1152926,,
+LAU-085,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.522597,6.635347,2538362,1152682,,
+LAU-086,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.523964,6.627677,2537775,1152840,,
+LAU-087,lausanne_faune_ailee,,Lausanne,nichoir_artificiel,Nichoir artificiel,Hirondelles & Martinets,46.519704,6.633344,2538205,1152362,,
+LAU-088,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.523592,6.634824,2538323,1152793,,
+LAU-089,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.524251,6.635127,2538347,1152866,,
+LAU-090,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.522117,6.634898,2538327,1152629,,
+LAU-091,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.521456,6.635495,2538372,1152555,,
+LAU-092,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.522341,6.629604,2537921,1152658,,
+LAU-093,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.522925,6.634573,2538303,1152719,,
+LAU-094,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.521828,6.636049,2538415,1152596,,
+LAU-095,lausanne_faune_ailee,,Lausanne,nichoir_artificiel,Nichoir artificiel,Hirondelles & Martinets,46.521953,6.647451,2539290,1152601,,
+LAU-096,lausanne_faune_ailee,,Lausanne,nichoir_artificiel,Nichoir artificiel,Hirondelles & Martinets,46.521095,6.656065,2539950,1152499,,
+LAU-097,lausanne_faune_ailee,,Lausanne,nichoir_artificiel,Nichoir artificiel,Hirondelles & Martinets,46.521407,6.654262,2539812,1152535,,
+LAU-098,lausanne_faune_ailee,,Lausanne,nichoir_artificiel,Nichoir artificiel,Hirondelles & Martinets,46.521562,6.658535,2540140,1152549,,
+LAU-099,lausanne_faune_ailee,,Lausanne,nichoir_artificiel,Nichoir artificiel,Hirondelles & Martinets,46.521674,6.648667,2539383,1152569,,
+LAU-100,lausanne_faune_ailee,,Lausanne,nichoir_artificiel,Nichoir artificiel,Hirondelles & Martinets,46.519378,6.652311,2539660,1152311,,
+LAU-101,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.522227,6.649311,2539433,1152630,,
+LAU-102,lausanne_faune_ailee,,Lausanne,nichoir_artificiel,Nichoir artificiel,Hirondelles & Martinets,46.522899,6.659375,2540206,1152697,,
+LAU-103,lausanne_faune_ailee,,Lausanne,nichoir_artificiel,Nichoir artificiel,Hirondelles & Martinets,46.527896,6.657335,2540055,1153254,,
+LAU-104,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.528215,6.653929,2539794,1153292,,
+LAU-105,lausanne_faune_ailee,,Lausanne,nichoir_artificiel,Nichoir artificiel,Hirondelles & Martinets,46.524719,6.660978,2540331,1152898,,
+LAU-106,lausanne_faune_ailee,,Lausanne,nichoir_artificiel,Nichoir artificiel,Hirondelles & Martinets,46.514541,6.647507,2539286,1151777,,
+LAU-107,lausanne_faune_ailee,,Lausanne,nichoir_artificiel,Nichoir artificiel,Hirondelles & Martinets,46.523824,6.646121,2539190,1152810,,
+LAU-108,lausanne_faune_ailee,,Lausanne,nichoir_artificiel,Nichoir artificiel,Hirondelles & Martinets,46.525933,6.636341,2538442,1153052,,
+LAU-109,lausanne_faune_ailee,,Lausanne,nichoir_artificiel,Nichoir artificiel,Hirondelles & Martinets,46.522597,6.635347,2538362,1152682,,
+LAU-110,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.527615,6.614914,2536800,1153256,,
+LAU-111,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.518063,6.612726,2536621,1152196,,
+LAU-112,lausanne_faune_ailee,,Lausanne,nichoir_artificiel,Nichoir artificiel,Hirondelles & Martinets,46.525088,6.633877,2538252,1152960,,
+LAU-113,lausanne_faune_ailee,,Lausanne,nichoir_artificiel,Nichoir artificiel,Hirondelles & Martinets,46.524861,6.633554,2538227,1152935,,
+LAU-114,lausanne_faune_ailee,,Lausanne,nichoir_artificiel,Nichoir artificiel,Hirondelles & Martinets,46.524979,6.633709,2538239,1152948,,
+LAU-115,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.526142,6.612825,2536638,1153094,,
+LAU-116,lausanne_faune_ailee,,Lausanne,nichoir_artificiel,Nichoir artificiel,Hirondelles & Martinets,46.515709,6.619291,2537122,1151929,,
+LAU-117,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.525267,6.606256,2536133,1153002,,
+LAU-118,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.523398,6.601658,2535778,1152798,,
+LAU-119,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.525423,6.605433,2536070,1153020,,
+LAU-120,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.521986,6.61152,2536533,1152633,,
+LAU-121,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.523601,6.602385,2535834,1152820,,
+LAU-122,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.518327,6.613126,2536652,1152225,,
+LAU-123,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.521762,6.601853,2535791,1152616,,
+LAU-124,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.521886,6.601551,2535768,1152630,,
+LAU-125,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.521999,6.602305,2535826,1152642,,
+LAU-126,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.523734,6.604624,2536006,1152833,,
+LAU-127,lausanne_faune_ailee,,Lausanne,nichoir_mixte,Nichoir artificiel + nid naturel,Hirondelles & Martinets,46.522583,6.608291,2536286,1152702,,
+LAU-128,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.520187,6.611586,2536536,1152433,,
+LAU-129,lausanne_faune_ailee,,Lausanne,nichoir_artificiel,Nichoir artificiel,Hirondelles & Martinets,46.518844,6.611294,2536512,1152284,,
+LAU-130,lausanne_faune_ailee,,Lausanne,nichoir_artificiel,Nichoir artificiel,Hirondelles & Martinets,46.519447,6.608848,2536325,1152353,,
+LAU-131,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.517804,6.612965,2536639,1152167,,
+LAU-132,lausanne_faune_ailee,,Lausanne,nichoir_artificiel,Nichoir artificiel,Hirondelles & Martinets,46.521265,6.612677,2536621,1152552,,
+LAU-133,lausanne_faune_ailee,,Lausanne,nichoir_mixte,Nichoir artificiel + nid naturel,Hirondelles & Martinets,46.521054,6.612081,2536575,1152529,,
+LAU-134,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.521317,6.61239,2536599,1152558,,
+LAU-135,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.521097,6.611742,2536549,1152534,,
+LAU-136,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.521394,6.608114,2536271,1152570,,
+LAU-137,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.520477,6.611934,2536563,1152465,,
+LAU-138,lausanne_faune_ailee,,Lausanne,nichoir_artificiel,Nichoir artificiel,Hirondelles & Martinets,46.519775,6.611814,2536553,1152387,,
+LAU-139,lausanne_faune_ailee,,Lausanne,nichoir_artificiel,Nichoir artificiel,Hirondelles & Martinets,46.51912,6.612046,2536570,1152314,,
+LAU-140,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.520636,6.61777,2537011,1152478,,
+LAU-141,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.520639,6.61932,2537130,1152477,,
+LAU-142,lausanne_faune_ailee,,Lausanne,nichoir_artificiel,Nichoir artificiel,Hirondelles & Martinets,46.517422,6.614873,2536785,1152123,,
+LAU-143,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.519743,6.616167,2536887,1152380,,
+LAU-144,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.520732,6.617247,2536971,1152489,,
+LAU-145,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.518726,6.617382,2536979,1152266,,
+LAU-146,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.516997,6.618307,2537048,1152073,,
+LAU-147,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.517131,6.624404,2537516,1152083,,
+LAU-148,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.516349,6.624546,2537526,1151996,,
+LAU-149,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.517069,6.617081,2536954,1152082,,
+LAU-150,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.517358,6.617181,2536962,1152114,,
+LAU-151,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.516862,6.618257,2537044,1152058,,
+LAU-152,lausanne_faune_ailee,,Lausanne,nichoir_mixte,Nichoir artificiel + nid naturel,Hirondelles & Martinets,46.53278,6.653289,2539750,1153800,,
+LAU-153,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.517794,6.621553,2537298,1152159,,
+LAU-154,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.517294,6.622056,2537336,1152103,,
+LAU-155,lausanne_faune_ailee,,Lausanne,nichoir_artificiel,Nichoir artificiel,Hirondelles & Martinets,46.51521,6.618829,2537086,1151874,,
+LAU-156,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.517408,6.624126,2537495,1152114,,
+LAU-157,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.517259,6.624715,2537540,1152097,,
+LAU-158,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.517459,6.623799,2537470,1152120,,
+LAU-159,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.517329,6.624427,2537518,1152105,,
+LAU-160,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.517397,6.621415,2537287,1152115,,
+LAU-161,lausanne_faune_ailee,,Lausanne,nichoir_artificiel,Nichoir artificiel,Hirondelles & Martinets,46.517942,6.619609,2537149,1152177,,
+LAU-162,lausanne_faune_ailee,,Lausanne,nichoir_artificiel,Nichoir artificiel,Hirondelles & Martinets,46.518075,6.619385,2537132,1152192,,
+LAU-163,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.517557,6.622416,2537364,1152132,,
+LAU-164,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.517941,6.621929,2537327,1152175,,
+LAU-165,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.51757,6.621621,2537303,1152134,,
+LAU-166,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.517775,6.628916,2537863,1152151,,
+LAU-167,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.516948,6.637972,2538557,1152052,,
+LAU-168,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.517411,6.637249,2538502,1152104,,
+LAU-169,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.518594,6.626467,2537676,1152244,,
+LAU-170,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.518753,6.628589,2537839,1152260,,
+LAU-171,lausanne_faune_ailee,,Lausanne,nichoir_artificiel,Nichoir artificiel,Hirondelles & Martinets,46.521874,6.6272,2537736,1152608,,
+LAU-172,lausanne_faune_ailee,,Lausanne,nichoir_artificiel,Nichoir artificiel,Hirondelles & Martinets,46.521128,6.627354,2537747,1152525,,
+LAU-173,lausanne_faune_ailee,,Lausanne,nichoir_artificiel,Nichoir artificiel,Hirondelles & Martinets,46.520659,6.629668,2537924,1152471,,
+LAU-174,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.529538,6.61465,2536782,1153470,,
+LAU-175,lausanne_faune_ailee,,Lausanne,nichoir_artificiel,Nichoir artificiel,Hirondelles & Martinets,46.523584,6.622365,2537367,1152802,,
+LAU-176,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.5236,6.622104,2537347,1152804,,
+LAU-177,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.523616,6.621778,2537322,1152806,,
+LAU-178,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.52446,6.623994,2537493,1152898,,
+LAU-179,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.524628,6.623704,2537471,1152917,,
+LAU-180,lausanne_faune_ailee,,Lausanne,nichoir_artificiel,Nichoir artificiel,Hirondelles & Martinets,46.523568,6.622665,2537390,1152800,,
+LAU-181,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.524718,6.622439,2537374,1152928,,
+LAU-182,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.522807,6.626821,2537708,1152712,,
+LAU-183,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.516641,6.610194,2536425,1152040,,
+LAU-184,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.523235,6.630099,2537960,1152757,,
+LAU-185,lausanne_faune_ailee,,Lausanne,nichoir_artificiel,Nichoir artificiel,Hirondelles & Martinets,46.523948,6.630427,2537986,1152836,,
+LAU-186,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.523489,6.630447,2537987,1152785,,
+LAU-187,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.524378,6.630147,2537965,1152884,,
+LAU-188,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.522434,6.636405,2538443,1152663,,
+LAU-189,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.525012,6.644839,2539093,1152943,,
+LAU-190,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.519399,6.635981,2538407,1152326,,
+LAU-191,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.517773,6.638781,2538620,1152143,,
+LAU-192,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.52176,6.63274,2538161,1152591,,
+LAU-193,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.522342,6.632393,2538135,1152656,,
+LAU-194,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.521469,6.631037,2538030,1152560,,
+LAU-195,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.52144,6.630712,2538005,1152557,,
+LAU-196,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.522075,6.631406,2538059,1152627,,
+LAU-197,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.52198,6.630808,2538013,1152617,,
+LAU-198,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.522131,6.630441,2537985,1152634,,
+LAU-199,lausanne_faune_ailee,,Lausanne,nichoir_mixte,Nichoir artificiel + nid naturel,Hirondelles & Martinets,46.533199,6.613317,2536684,1153878,,
+LAU-200,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.533459,6.613182,2536674,1153907,,
+LAU-201,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.530866,6.617875,2537031,1153615,,
+LAU-202,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.526144,6.640808,2538785,1153072,,
+LAU-203,lausanne_faune_ailee,,Lausanne,nichoir_artificiel,Nichoir artificiel,Hirondelles & Martinets,46.531621,6.620262,2537215,1153697,,
+LAU-204,lausanne_faune_ailee,,Lausanne,nichoir_artificiel,Nichoir artificiel,Hirondelles & Martinets,46.512828,6.621523,2537290,1151607,,
+LAU-205,lausanne_faune_ailee,,Lausanne,nichoir_artificiel,Nichoir artificiel,Hirondelles & Martinets,46.510807,6.629489,2537899,1151376,,
+LAU-206,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.521024,6.640636,2538766,1152503,,
+LAU-207,lausanne_faune_ailee,,Lausanne,nichoir_artificiel,Nichoir artificiel,Hirondelles & Martinets,46.511814,6.633201,2538185,1151485,,
+LAU-208,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.514503,6.65117,2539567,1151770,,
+LAU-209,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.514433,6.651444,2539588,1151762,,
+LAU-210,lausanne_faune_ailee,,Lausanne,nichoir_artificiel,Nichoir artificiel,Hirondelles & Martinets,46.521121,6.645508,2539140,1152510,,
+LAU-211,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.517468,6.647934,2539322,1152102,,
+LAU-212,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.514635,6.639036,2538636,1151794,,
+LAU-213,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.516166,6.641854,2538854,1151962,,
+LAU-214,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.516738,6.646511,2539212,1152022,,
+LAU-215,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.520537,6.646938,2539249,1152444,,
+LAU-216,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.520631,6.640967,2538791,1152459,,
+LAU-217,lausanne_faune_ailee,,Lausanne,nichoir_mixte,Nichoir artificiel + nid naturel,Hirondelles & Martinets,46.508719,6.628061,2537787,1151145,,
+LAU-218,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.514529,6.64842,2539356,1151775,,
+LAU-219,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.514514,6.648824,2539387,1151773,,
+LAU-220,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.529489,6.624061,2537504,1153457,,
+LAU-221,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.511014,6.628287,2537807,1151400,,
+LAU-222,lausanne_faune_ailee,,Lausanne,nichoir_artificiel,Nichoir artificiel,Hirondelles & Martinets,46.512344,6.629271,2537884,1151547,,
+LAU-223,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.533616,6.625003,2537581,1153915,,
+LAU-224,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.517131,6.624508,2537524,1152083,,
+LAU-225,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.517218,6.624051,2537489,1152093,,
+LAU-226,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.53903,6.613515,2536706,1154526,,
+LAU-227,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.536505,6.626407,2537692,1154235,,
+LAU-228,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.540665,6.618261,2537072,1154704,,
+LAU-229,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.537812,6.619282,2537147,1154386,,
+LAU-230,lausanne_faune_ailee,,Lausanne,nichoir_mixte,Nichoir artificiel + nid naturel,Hirondelles & Martinets,46.541103,6.624043,2537516,1154748,,
+LAU-231,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.536377,6.62109,2537284,1154225,,
+LAU-232,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.517543,6.643306,2538967,1152114,,
+LAU-233,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.516104,6.644578,2539063,1151953,,
+LAU-234,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.517356,6.643479,2538980,1152093,,
+LAU-235,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.517622,6.643019,2538945,1152123,,
+LAU-236,lausanne_faune_ailee,,Lausanne,nichoir_artificiel,Nichoir artificiel,Hirondelles & Martinets,46.531827,6.626399,2537686,1153715,,
+LAU-237,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.529897,6.627001,2537730,1153500,,
+LAU-238,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.5298,6.627381,2537759,1153489,,
+LAU-239,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.530593,6.62875,2537865,1153576,,
+LAU-240,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.54071,6.64487,2539113,1154688,,
+LAU-241,lausanne_faune_ailee,,Lausanne,nichoir_artificiel,Nichoir artificiel,Hirondelles & Martinets,46.538864,6.647126,2539284,1154481,,
+LAU-242,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.525272,6.614428,2536760,1152996,,
+LAU-243,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.532234,6.616734,2536945,1153768,,
+LAU-244,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.535874,6.613784,2536723,1154175,,
+LAU-245,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.532764,6.616569,2536933,1153827,,
+LAU-246,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.535117,6.618515,2537085,1154087,,
+LAU-247,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.535133,6.618254,2537065,1154089,,
+LAU-248,lausanne_faune_ailee,,Lausanne,nichoir_artificiel,Nichoir artificiel,Hirondelles & Martinets,46.530094,6.616844,2536951,1153530,,
+LAU-249,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.512796,6.624638,2537529,1151601,,
+LAU-250,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.512568,6.624225,2537497,1151576,,
+LAU-251,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.512255,6.626888,2537701,1151539,,
+LAU-252,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.513058,6.627332,2537736,1151628,,
+LAU-253,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.52115,6.609199,2536354,1152542,,
+LAU-254,lausanne_faune_ailee,,Lausanne,nichoir_artificiel,Nichoir artificiel,Hirondelles & Martinets,46.517664,6.619691,2537155,1152146,,
+LAU-255,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.539353,6.613379,2536696,1154562,,
+LAU-256,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.539191,6.613447,2536701,1154544,,
+LAU-257,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.523865,6.641597,2538843,1152818,,
+LAU-258,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.527781,6.608029,2536272,1153280,,
+LAU-259,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.527913,6.61517,2536820,1153289,,
+LAU-260,lausanne_faune_ailee,,Lausanne,nichoir_artificiel,Nichoir artificiel,Hirondelles & Martinets,46.526588,6.616037,2536885,1153141,,
+LAU-261,lausanne_faune_ailee,,Lausanne,nichoir_artificiel,Nichoir artificiel,Hirondelles & Martinets,46.517497,6.61035,2536438,1152135,,
+LAU-262,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.523916,6.61974,2537166,1152841,,
+LAU-263,lausanne_faune_ailee,,Lausanne,nichoir_artificiel,Nichoir artificiel,Hirondelles & Martinets,46.524159,6.615996,2536879,1152871,,
+LAU-264,lausanne_faune_ailee,,Lausanne,nichoir_artificiel,Nichoir artificiel,Hirondelles & Martinets,46.525274,6.617152,2536969,1152994,,
+LAU-265,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.529623,6.627696,2537783,1153469,,
+LAU-266,lausanne_faune_ailee,,Lausanne,nichoir_mixte,Nichoir artificiel + nid naturel,Hirondelles & Martinets,46.528621,6.617245,2536980,1153366,,
+LAU-267,lausanne_faune_ailee,,Lausanne,nichoir_mixte,Nichoir artificiel + nid naturel,Hirondelles & Martinets,46.52726,6.620602,2537236,1153212,,
+LAU-268,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.521779,6.644404,2539056,1152584,,
+LAU-269,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.522123,6.644751,2539083,1152622,,
+LAU-270,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.51278,6.624847,2537545,1151599,,
+LAU-271,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.512719,6.6252,2537572,1151592,,
+LAU-272,lausanne_faune_ailee,,Lausanne,nichoir_artificiel,Nichoir artificiel,Hirondelles & Martinets,46.512027,6.620285,2537194,1151519,,
+LAU-273,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.511041,6.625707,2537609,1151405,,
+LAU-274,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.512509,6.624734,2537536,1151569,,
+LAU-275,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.512572,6.625932,2537628,1151575,,
+LAU-276,lausanne_faune_ailee,,Lausanne,nichoir_artificiel,Nichoir artificiel,Hirondelles & Martinets,46.509709,6.626913,2537700,1151256,,
+LAU-277,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.512273,6.623122,2537412,1151544,,
+LAU-278,lausanne_faune_ailee,,Lausanne,nichoir_mixte,Nichoir artificiel + nid naturel,Hirondelles & Martinets,46.515585,6.630969,2538018,1151906,,
+LAU-279,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.515455,6.630345,2537970,1151892,,
+LAU-280,lausanne_faune_ailee,,Lausanne,nichoir_artificiel,Nichoir artificiel,Hirondelles & Martinets,46.511114,6.628351,2537812,1151411,,
+LAU-281,lausanne_faune_ailee,,Lausanne,nichoir_artificiel,Nichoir artificiel,Hirondelles & Martinets,46.527007,6.631815,2538096,1153175,,
+LAU-282,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.529582,6.614558,2536775,1153475,,
+LAU-283,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.527216,6.623183,2537434,1153205,,
+LAU-284,lausanne_faune_ailee,,Lausanne,nichoir_mixte,Nichoir artificiel + nid naturel,Hirondelles & Martinets,46.512056,6.638227,2538571,1151508,,
+LAU-285,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.516333,6.627361,2537742,1151992,,
+LAU-286,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.511922,6.626958,2537706,1151502,,
+LAU-287,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.527596,6.61859,2537082,1153251,,
+LAU-288,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.514715,6.630108,2537951,1151810,,
+LAU-289,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.516382,6.625392,2537591,1151999,,
+LAU-290,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.514601,6.626696,2537689,1151800,,
+LAU-291,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.514123,6.626534,2537676,1151747,,
+LAU-292,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.514439,6.626633,2537684,1151782,,
+LAU-293,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.514285,6.62657,2537679,1151765,,
+LAU-294,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.513492,6.626296,2537657,1151677,,
+LAU-295,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.513074,6.626993,2537710,1151630,,
+LAU-296,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.512696,6.626959,2537707,1151588,,
+LAU-297,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.511876,6.630555,2537982,1151494,,
+LAU-298,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.527412,6.626713,2537705,1153224,,
+LAU-299,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.530027,6.620104,2537201,1153520,,
+LAU-300,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.528929,6.614998,2536808,1153402,,
+LAU-301,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.528356,6.616597,2536930,1153337,,
+LAU-302,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.528157,6.616443,2536918,1153315,,
+LAU-303,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.528077,6.616601,2536930,1153306,,
+LAU-304,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.52742,6.620365,2537218,1153230,,
+LAU-305,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.527656,6.619358,2537141,1153257,,
+LAU-306,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.527567,6.619528,2537154,1153247,,
+LAU-307,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.530774,6.617616,2537011,1153605,,
+LAU-308,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.533444,6.616142,2536901,1153903,,
+LAU-309,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.532644,6.616232,2536907,1153814,,
+LAU-310,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.531626,6.614735,2536791,1153702,,
+LAU-311,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.528433,6.617378,2536990,1153345,,
+LAU-312,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.528326,6.617484,2536998,1153333,,
+LAU-313,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.528055,6.618635,2537086,1153302,,
+LAU-314,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.53055,6.617698,2537017,1153580,,
+LAU-315,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.528934,6.617018,2536963,1153401,,
+LAU-316,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.528729,6.617178,2536975,1153378,,
+LAU-317,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.529328,6.616739,2536942,1153445,,
+LAU-318,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.517279,6.627477,2537752,1152097,,
+LAU-319,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.517693,6.632553,2538142,1152139,,
+LAU-320,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.525093,6.616985,2536956,1152974,,
+LAU-321,lausanne_faune_ailee,,Lausanne,nichoir_artificiel,Nichoir artificiel,Hirondelles & Martinets,46.536663,6.634787,2538335,1154246,,
+LAU-322,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.524789,6.637426,2538524,1152924,,
+LAU-323,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.525115,6.637708,2538546,1152960,,
+LAU-324,lausanne_faune_ailee,,Lausanne,nichoir_artificiel,Nichoir artificiel,Hirondelles & Martinets,46.540117,6.661826,2540413,1154609,,
+LAU-325,lausanne_faune_ailee,,Lausanne,nichoir_artificiel,Nichoir artificiel,Hirondelles & Martinets,46.528113,6.65745,2540064,1153278,,
+LAU-326,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.525095,6.614743,2536784,1152976,,
+LAU-327,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.512516,6.62446,2537515,1151570,,
+LAU-328,lausanne_faune_ailee,,Lausanne,nichoir_artificiel,Nichoir artificiel,Hirondelles & Martinets,46.525194,6.614768,2536786,1152987,,
+LAU-329,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.521891,6.659299,2540199,1152585,,
+LAU-330,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.534819,6.633563,2538239,1154042,,
+LAU-331,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.534334,6.633596,2538241,1153988,,
+LAU-332,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.525356,6.613514,2536690,1153006,,
+LAU-333,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.525378,6.614166,2536740,1153008,,
+LAU-334,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.53325,6.636819,2538487,1153865,,
+LAU-335,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.529015,6.634639,2538315,1153396,,
+LAU-336,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.529543,6.634254,2538286,1153455,,
+LAU-337,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.523789,6.615832,2536866,1152830,,
+LAU-338,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.522085,6.617839,2537018,1152639,,
+LAU-339,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.524412,6.617439,2536990,1152898,,
+LAU-340,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.527011,6.607389,2536222,1153195,,
+LAU-341,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.528812,6.631371,2538064,1153376,,
+LAU-342,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.524649,6.637963,2538565,1152908,,
+LAU-343,lausanne_faune_ailee,,Lausanne,nichoir_artificiel,Nichoir artificiel,Hirondelles & Martinets,46.522831,6.636647,2538462,1152707,,
+LAU-344,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.529573,6.656542,2539996,1153441,,
+LAU-345,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.529177,6.619413,2537147,1153426,,
+LAU-346,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.53521,6.615267,2536836,1154100,,
+LAU-347,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.527954,6.62703,2537730,1153284,,
+LAU-348,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.532221,6.657025,2540036,1153735,,
+LAU-349,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.531084,6.611967,2536578,1153644,,
+LAU-350,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.53095,6.612152,2536592,1153629,,
+LAU-351,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.528011,6.655731,2539932,1153268,,
+LAU-352,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.526098,6.645787,2539167,1153063,,
+LAU-353,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.517172,6.640406,2538744,1152075,,
+LAU-354,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.528882,6.652824,2539710,1153367,,
+LAU-355,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.522043,6.656508,2539985,1152604,,
+LAU-356,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.526214,6.646959,2539257,1153075,,
+LAU-357,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.526161,6.645865,2539173,1153070,,
+LAU-358,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.513853,6.640468,2538745,1151706,,
+LAU-359,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.523771,6.624538,2537534,1152821,,
+LAU-360,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.524249,6.628467,2537836,1152871,,
+LAU-361,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.526908,6.639363,2538675,1153158,,
+LAU-362,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.532025,6.636602,2538469,1153729,,
+LAU-363,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.523171,6.628705,2537853,1152751,,
+LAU-364,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.525347,6.641367,2538827,1152983,,
+LAU-365,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.534449,6.615813,2536877,1154015,,
+LAU-366,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.533038,6.613515,2536699,1153860,,
+LAU-367,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.524098,6.633865,2538250,1152850,,
+LAU-368,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.522801,6.634875,2538326,1152705,,
+LAU-369,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.52307,6.635992,2538412,1152734,,
+LAU-370,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.522931,6.638092,2538573,1152717,,
+LAU-371,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.523028,6.639016,2538644,1152727,,
+LAU-372,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.526146,6.647546,2539302,1153067,,
+LAU-373,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.522886,6.650839,2539551,1152702,,
+LAU-374,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.524531,6.612667,2536624,1152915,,
+LAU-375,lausanne_faune_ailee,,Lausanne,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.515796,6.613999,2536716,1151943,,
+LAU-376,lausanne_faune_ailee,,Lausanne,nichoir_artificiel,Nichoir artificiel,Hirondelles & Martinets,46.544265,6.622196,2537378,1155101,,
+LAU-377,lausanne_faune_ailee,,Lausanne,nichoir_artificiel,Nichoir artificiel,Hirondelles & Martinets,46.559329,6.699123,2543294,1156717,,
+GEN-001,birdhouses_geneve_v3,Place de Bel-Air — Martinet pâle & noir,Genève,nichoir_artificiel,Nichoir artificiel,Hirondelles & Martinets,46.2042545,6.1431019,2500008,1117805,B_batiment_urbain,1er site nidification Martinet pâle à Genève (2022). Nichoirs façades. Suivi annuel COR. Observations aussi rue Dancet et aux Délices.
+GEN-002,birdhouses_geneve_v3,Rond-Point de Rive — Martinet pâle & noir,Genève,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.2014464,6.1531697,2500780,1117480,B_batiment_urbain,2e site nidification confirmé Martinet pâle (2022). Suivi programme cantonal COR.
+GEN-003,birdhouses_geneve_v3,Grand Théâtre de Genève,Genève,nichoir_artificiel,Nichoir artificiel,Hirondelles & Martinets,46.2018267,6.1425809,2499964,1117536,B_batiment_urbain,Rénovation avec nichoirs provisoires sur échafaudages puis intégrés définitivement. Exemple canonique Motion Meissner.
+GEN-004,birdhouses_geneve_v3,Rue Saint-Léger 3 — immeuble surélévation,Genève,nichoir_artificiel,Nichoir artificiel,Hirondelles & Martinets,46.2002,6.1413,2499862,1117357,B_batiment_urbain,"Surélévation immeuble. Nids présents avant travaux, nichoirs artificiels posés en compensation par cordes. Patrick Jacot COR: 'un des 12 chantiers suivis simultanément'."
+GEN-005,birdhouses_geneve_v3,Plaine de Plainpalais / Promenade des Pins,Genève,nichoir_naturel,Nid naturel sur structure bâtie,Hirondelles & Martinets,46.1978805,6.1406193,2499805,1117100,B_batiment_urbain,"Observations prospection Martinet pâle 2022 (naturaliste GOBG). Promenade des Pins + bâtis alentours. Sites de nidification potentiels identifiés, suivi COR en cours."
+GEN-006,birdhouses_geneve_v3,Ecoquartier des Vergers — Village de nichoirs,Meyrin,nichoir_artificiel,Nichoir artificiel,Divers,46.2193,6.0904,2495970,1119546,B_batiment_urbain,70 nichoirs fabriqués et posés par habitants coopérative Equilibre (Les Funambules) avec ATNP. Financé GMO Meyrin + Association Meyrin durable. Nettoyage annuel hivernal.
+GEN-007,birdhouses_geneve_v3,Meyrin — immeubles résidentiels chantier Meissner,Meyrin,nichoir_mixte,Nichoir artificiel + nid naturel,Hirondelles & Martinets,46.2332114,6.0810071,2495272,1121105,B_batiment_urbain,Chantier arrêté après destruction involontaire de ~15 nids et ~40 œufs de Martinet noir (juin 2023). Application forcée Motion Meissner. Nichoirs compensatoires installés post-chantier.
+GEN-008,birdhouses_geneve_v3,COR — Centre Ornithologique de Réadaptation,Genthod,observatoire,Réserve / observatoire / centre ornithologique,Divers,46.2635533,6.1450431,2500267,1124394,E_centre_soins,"Centre officiel soins cantonal. 2000+ oiseaux/an dont 100-200 Martinets noirs. Gère programme cantonal: 457 sites, 61 grandes colonies (2024), 3635 nichoirs canton. Alimente couche SITG FFP_SITES_PRIORITAIRES_FAUNE."
+GEN-009,birdhouses_geneve_v3,Réserve Pro Natura — Pointe à la Bise,Collonge-Bellerive,ile_artificielle,Île ou radeau artificiel de nidification,Divers,46.2448992,6.1935137,2503971,1122260,C_reserve_naturelle,"8.8 ha, dernier roselière lacustre significatif du canton. 2 radeaux flottants Sterne pierregarin (2009+2025), ~40 couples nicheurs. 164 espèces depuis 1998. Tour observation. Site OROEM national."
+GEN-010,birdhouses_geneve_v3,SITG — Couche Sites Prioritaires Faune (infrastructure),Canton de Genève,observatoire,Réserve / observatoire / centre ornithologique,Divers,46.2059,6.143,2500003,1117988,D_infrastructure_donnees,"Couche FFP_SITES_PRIORITAIRES_FAUNE. 457 sites martinets (2024), 61 grandes colonies. Alimentée annuellement COR+OCAN. Accès via map.sitg.ge.ch (consultation). WFS: app2.ge.ch/tergeoservices. Non Open Data, partiellement restreint."
+GEN-011,birdhouses_geneve_v3,Genève (Ville) — données communales COR,Genève (Ville),nichoir_artificiel,Nichoir artificiel (données agrégées COR),Hirondelles & Martinets,46.2044,6.1432,2500016,1117821,F_donnees_communales_COR,"Ville principale. Motion Meissner active depuis 2016. Inclut Place Bel-Air, Grand-Théâtre, rue Saint-Léger, Plainpalais, Dancet, Délices, Bel-Air, Rive, Grottes, Pâquis, Jonction."
+GEN-012,birdhouses_geneve_v3,Carouge — données communales COR,Carouge,nichoir_artificiel,Nichoir artificiel (données agrégées COR),Hirondelles & Martinets,46.1847,6.1397,2499710,1115636,F_donnees_communales_COR,"Programme COR actif. Bâti dense XIXe siècle favorable. Nichoirs sur bâtiments communaux et résidentiels, suivi annuel."
+GEN-013,birdhouses_geneve_v3,Lancy — données communales COR,Lancy,nichoir_artificiel,Nichoir artificiel (données agrégées COR),Hirondelles & Martinets,46.1839,6.1224,2498373,1115569,F_donnees_communales_COR,Aux Palettes: colonie importante. Programme COR/OCAN nichoirs 2020-2024.
+GEN-014,birdhouses_geneve_v3,Onex — données communales COR,Onex,nichoir_artificiel,Nichoir artificiel (données agrégées COR),Hirondelles & Martinets,46.1847,6.1056,2497077,1115680,F_donnees_communales_COR,Bâti résidentiel dense. Programme COR/OCAN. Partenaire 1001 sites Nature en ville.
+GEN-015,birdhouses_geneve_v3,Bernex — données communales COR,Bernex,nichoir_artificiel,Nichoir artificiel (données agrégées COR),Hirondelles & Martinets,46.1782,6.0927,2496069,1114975,F_donnees_communales_COR,"Commune périurbaine, colonies documentées programme COR."
+GEN-016,birdhouses_geneve_v3,Plan-les-Ouates — données communales COR,Plan-les-Ouates,nichoir_artificiel,Nichoir artificiel (données agrégées COR),Hirondelles & Martinets,46.1612,6.1228,2498361,1113046,F_donnees_communales_COR,"Zone mixte habitat-industrie, colonies bâtiments résidentiels."
+GEN-017,birdhouses_geneve_v3,Confignon — données communales COR,Confignon,nichoir_artificiel,Nichoir artificiel (données agrégées COR),Hirondelles & Martinets,46.1716,6.0875,2495655,1114248,F_donnees_communales_COR,"Bourg historique, anfractuosités bâti ancien."
+GEN-018,birdhouses_geneve_v3,Troinex — données communales COR,Troinex,nichoir_artificiel,Nichoir artificiel (données agrégées COR),Hirondelles & Martinets,46.1558,6.1426,2499881,1112420,F_donnees_communales_COR,Mairie de Troinex partenaire 1001 sites. Nichoirs communaux posés.
+GEN-019,birdhouses_geneve_v3,Bardonnex — données communales COR,Bardonnex,nichoir_artificiel,Nichoir artificiel (données agrégées COR),Hirondelles & Martinets,46.1426,6.1169,2497871,1110986,F_donnees_communales_COR,"Rural-périurbain, sites ponctuels documentés COR."
+GEN-020,birdhouses_geneve_v3,Perly-Certoux — données communales COR,Perly-Certoux,nichoir_artificiel,Nichoir artificiel (données agrégées COR),Hirondelles & Martinets,46.1519,6.0926,2496011,1112052,F_donnees_communales_COR,Rural-périurbain.
+GEN-021,birdhouses_geneve_v3,Avully — données communales COR,Avully,nichoir_artificiel,Nichoir artificiel (données agrégées COR),Hirondelles & Martinets,46.1437,6.0327,2491367,1111221,F_donnees_communales_COR,Rural.
+GEN-022,birdhouses_geneve_v3,Chancy — données communales COR,Chancy,nichoir_artificiel,Nichoir artificiel (données agrégées COR),Hirondelles & Martinets,46.148,5.9756,2486965,1111780,F_donnees_communales_COR,"Rural, limite française. Bâti ancien favorable."
+GEN-023,birdhouses_geneve_v3,Cartigny — données communales COR,Cartigny,nichoir_artificiel,Nichoir artificiel (données agrégées COR),Hirondelles & Martinets,46.1589,6.0537,2493020,1112882,F_donnees_communales_COR,"Rural, bourg médiéval."
+GEN-024,birdhouses_geneve_v3,Avusy — données communales COR,Avusy,nichoir_artificiel,Nichoir artificiel (données agrégées COR),Hirondelles & Martinets,46.1559,6.0269,2490944,1112585,F_donnees_communales_COR,Rural.
+GEN-025,birdhouses_geneve_v3,Laconnex — données communales COR,Laconnex,nichoir_artificiel,Nichoir artificiel (données agrégées COR),Hirondelles & Martinets,46.1661,6.0406,2492022,1113700,F_donnees_communales_COR,Rural.
+GEN-026,birdhouses_geneve_v3,Aire-la-Ville — données communales COR,Aire-la-Ville,nichoir_artificiel,Nichoir artificiel (données agrégées COR),Hirondelles & Martinets,46.1894,6.0302,2491266,1116304,F_donnees_communales_COR,Village au bord du Rhône.
+GEN-027,birdhouses_geneve_v3,Soral — données communales COR,Soral,nichoir_artificiel,Nichoir artificiel (données agrégées COR),Hirondelles & Martinets,46.1738,6.0168,2490200,1114589,F_donnees_communales_COR,Rural.
+GEN-028,birdhouses_geneve_v3,Vernier — données communales COR,Vernier,nichoir_artificiel,Nichoir artificiel (données agrégées COR),Hirondelles & Martinets,46.2132,6.0816,2495279,1118880,F_donnees_communales_COR,Ecoquartier des Vergers: 70 nichoirs Promenade de l'Aubier 19-21 (ATNP/Funambules 2021). Programme COR actif.
+GEN-029,birdhouses_geneve_v3,Meyrin — données communales COR,Meyrin,nichoir_artificiel,Nichoir artificiel (données agrégées COR),Hirondelles & Martinets,46.2336,6.0783,2495064,1121151,F_donnees_communales_COR,"Chantier stoppé 2023 (15 nids, ~40 œufs). Programme COR actif. Motion Meissner nouvelles constructions."
+GEN-030,birdhouses_geneve_v3,Satigny — données communales COR,Satigny,nichoir_artificiel,Nichoir artificiel (données agrégées COR),Hirondelles & Martinets,46.2054,6.0179,2490348,1118100,F_donnees_communales_COR,"Commune viticole, sites ponctuels bâti ancien."
+GEN-031,birdhouses_geneve_v3,Russin — données communales COR,Russin,nichoir_artificiel,Nichoir artificiel (données agrégées COR),Hirondelles & Martinets,46.2023,6.0049,2489339,1117774,F_donnees_communales_COR,"Rural, viticole."
+GEN-032,birdhouses_geneve_v3,Dardagny — données communales COR,Dardagny,nichoir_artificiel,Nichoir artificiel (données agrégées COR),Hirondelles & Martinets,46.2028,5.9921,2488352,1117847,F_donnees_communales_COR,"Rural, viticole. Bourg historique."
+GEN-033,birdhouses_geneve_v3,Grand-Saconnex — données communales COR,Grand-Saconnex,nichoir_artificiel,Nichoir artificiel (données agrégées COR),Hirondelles & Martinets,46.2363,6.1265,2498787,1121388,F_donnees_communales_COR,"Programme COR actif, colonies carte 2024. Campagne du Jonc: corbeaux freux."
+GEN-034,birdhouses_geneve_v3,Pregny-Chambésy — données communales COR,Pregny-Chambésy,nichoir_artificiel,Nichoir artificiel (données agrégées COR),Hirondelles & Martinets,46.2449,6.1409,2499913,1122326,F_donnees_communales_COR,"Résidentiel aisé, nichoirs bâtiments historiques."
+GEN-035,birdhouses_geneve_v3,Versoix — données communales COR,Versoix,nichoir_artificiel,Nichoir artificiel (données agrégées COR),Hirondelles & Martinets,46.2836,6.1693,2502173,1126591,F_donnees_communales_COR,"Partenaire 1001 sites. Colonies documentées, programme COR."
+GEN-036,birdhouses_geneve_v3,Bellevue — données communales COR,Bellevue,nichoir_artificiel,Nichoir artificiel (données agrégées COR),Hirondelles & Martinets,46.2657,6.1648,2501794,1124607,F_donnees_communales_COR,"Résidentiel lacustre, bâti XIXe très favorable."
+GEN-037,birdhouses_geneve_v3,Genthod — données communales COR,Genthod,nichoir_artificiel,Nichoir artificiel (données agrégées COR),Hirondelles & Martinets,46.2636,6.145,2500264,1124399,F_donnees_communales_COR,Siège du COR. Colonies suivies in situ annuellement.
+GEN-038,birdhouses_geneve_v3,Collex-Bossy — données communales COR,Collex-Bossy,nichoir_artificiel,Nichoir artificiel (données agrégées COR),Hirondelles & Martinets,46.2731,6.127,2498894,1125478,F_donnees_communales_COR,Rural-périurbain rive droite.
+GEN-039,birdhouses_geneve_v3,Peney-le-Jorat — données communales COR,Peney-le-Jorat,nichoir_artificiel,Nichoir artificiel (données agrégées COR),Hirondelles & Martinets,46.2232,6.0007,2489057,1120102,F_donnees_communales_COR,Hameau rural associé à Satigny.
+GEN-040,birdhouses_geneve_v3,Collonge-Bellerive — données communales COR,Collonge-Bellerive,nichoir_artificiel,Nichoir artificiel (données agrégées COR),Hirondelles & Martinets,46.2449,6.1935,2503970,1122260,F_donnees_communales_COR,Pointe à la Bise: réserve Pro Natura. Résidentiel lacustre favorable.
+GEN-041,birdhouses_geneve_v3,Cologny — données communales COR,Cologny,nichoir_artificiel,Nichoir artificiel (données agrégées COR),Hirondelles & Martinets,46.2263,6.1851,2503289,1120203,F_donnees_communales_COR,"Résidentiel aisé, bâti historique. Colonies documentées COR."
+GEN-042,birdhouses_geneve_v3,Chêne-Bougeries — données communales COR,Chêne-Bougeries,nichoir_artificiel,Nichoir artificiel (données agrégées COR),Hirondelles & Martinets,46.2021,6.173,2502312,1117528,F_donnees_communales_COR,La Gradelle: importante colonie corbeaux freux. Programme COR martinets.
+GEN-043,birdhouses_geneve_v3,Chêne-Bourg — données communales COR,Chêne-Bourg,nichoir_artificiel,Nichoir artificiel (données agrégées COR),Hirondelles & Martinets,46.2001,6.1845,2503196,1117291,F_donnees_communales_COR,"Bâti dense, programme COR actif, suivi annuel."
+GEN-044,birdhouses_geneve_v3,Thônex — données communales COR,Thônex,nichoir_artificiel,Nichoir artificiel (données agrégées COR),Hirondelles & Martinets,46.1961,6.197,2504154,1116831,F_donnees_communales_COR,"Commune dense frontière franco-genevoise, programme COR."
+GEN-045,birdhouses_geneve_v3,Vandoeuvres — données communales COR,Vandoeuvres,nichoir_artificiel,Nichoir artificiel (données agrégées COR),Hirondelles & Martinets,46.212,6.2012,2504506,1118593,F_donnees_communales_COR,"Résidentiel rural, fermes et bâtisses historiques."
+GEN-046,birdhouses_geneve_v3,Choulex — données communales COR,Choulex,nichoir_artificiel,Nichoir artificiel (données agrégées COR),Hirondelles & Martinets,46.2274,6.2099,2505204,1120295,F_donnees_communales_COR,Rural-périurbain.
+GEN-047,birdhouses_geneve_v3,Presinge — données communales COR,Presinge,nichoir_artificiel,Nichoir artificiel (données agrégées COR),Hirondelles & Martinets,46.2363,6.2135,2505497,1121279,F_donnees_communales_COR,Rural.
+GEN-048,birdhouses_geneve_v3,Puplinge — données communales COR,Puplinge,nichoir_artificiel,Nichoir artificiel (données agrégées COR),Hirondelles & Martinets,46.2179,6.201,2504501,1119249,F_donnees_communales_COR,Commune partenaire 1001 sites. Nichoirs communaux posés.
+GEN-049,birdhouses_geneve_v3,Meinier — données communales COR,Meinier,nichoir_artificiel,Nichoir artificiel (données agrégées COR),Hirondelles & Martinets,46.2563,6.2273,2506596,1123486,F_donnees_communales_COR,Rural-périurbain.
+GEN-050,birdhouses_geneve_v3,Gy — données communales COR,Gy,nichoir_artificiel,Nichoir artificiel (données agrégées COR),Hirondelles & Martinets,46.2728,6.2193,2506007,1125330,F_donnees_communales_COR,Rural.
+GEN-051,birdhouses_geneve_v3,Jussy — données communales COR,Jussy,nichoir_artificiel,Nichoir artificiel (données agrégées COR),Hirondelles & Martinets,46.2557,6.2543,2508677,1123387,F_donnees_communales_COR,Rural.
+GEN-052,birdhouses_geneve_v3,Corsier — données communales COR,Corsier,nichoir_artificiel,Nichoir artificiel (données agrégées COR),Hirondelles & Martinets,46.2657,6.2245,2506396,1124534,F_donnees_communales_COR,"Résidentiel lacustre, bâti XIXe très favorable."
+GEN-053,birdhouses_geneve_v3,Hermance — données communales COR,Hermance,nichoir_artificiel,Nichoir artificiel (données agrégées COR),Hirondelles & Martinets,46.2986,6.2393,2507593,1128173,F_donnees_communales_COR,"Village médiéval, anfractuosités murs historiques."
+GEN-054,birdhouses_geneve_v3,Anières — données communales COR,Anières,nichoir_artificiel,Nichoir artificiel (données agrégées COR),Hirondelles & Martinets,46.2812,6.2279,2506685,1126253,F_donnees_communales_COR,Résidentiel lacustre rive gauche nord.
+GEN-055,birdhouses_geneve_v3,Céligny — données communales COR,Céligny,nichoir_artificiel,Nichoir artificiel (données agrégées COR),Hirondelles & Martinets,46.3567,6.198,2504513,1134681,F_donnees_communales_COR,Enclave genevoise en Vaud. Commune partenaire 1001 sites.

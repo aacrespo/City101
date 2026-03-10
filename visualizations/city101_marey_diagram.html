@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>City101 — Marey Diagram</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap');
+
+  :root {
+    --bg: #faf8f4;
+    --ink: #1a1816;
+    --dim: #a09890;
+    --accent: #d42a00;
+    --gap-bg: #fff5f2;
+    --line-ic: #d42a00;
+    --line-ir: #2050a0;
+    --line-re: #306830;
+    --line-s: #888078;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    padding: 40px;
+  }
+
+  .header {
+    max-width: 1200px;
+    margin: 0 auto 20px;
+  }
+
+  .header h1 {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 6px;
+  }
+
+  .header h2 {
+    font-weight: 300;
+    font-size: 28px;
+    color: var(--ink);
+    margin-bottom: 4px;
+  }
+
+  .header h2 em {
+    font-style: italic;
+    font-weight: 300;
+    color: var(--dim);
+  }
+
+  .header p {
+    font-size: 13px;
+    color: var(--dim);
+    max-width: 700px;
+    line-height: 1.5;
+  }
+
+  .legend {
+    max-width: 1200px;
+    margin: 0 auto 12px;
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--dim);
+  }
+
+  .legend-line {
+    width: 24px;
+    height: 0;
+    border-top: 2px solid;
+  }
+
+  .chart-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  canvas {
+    display: block;
+    width: 100%;
+    border: 1px solid rgba(0,0,0,0.08);
+  }
+
+  .footer {
+    max-width: 1200px;
+    margin: 16px auto 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--dim);
+    line-height: 1.6;
+  }
+
+  .gap-annotation {
+    max-width: 1200px;
+    margin: 12px auto 0;
+    display: flex;
+    gap: 30px;
+  }
+
+  .gap-stat {
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .gap-stat .num {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1;
+  }
+
+  .gap-stat .label {
+    font-size: 9px;
+    color: var(--dim);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>City101 — Marey Diagram</h1>
+  <h2>Geneva → Villeneuve <em>· every train, one day</em></h2>
+  <p>Each line is one train moving along the 92km corridor. Steep lines are fast (IC/IR), shallow lines are slow (S-Bahn). Where there are no lines, there are no trains.</p>
+</div>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-line" style="border-color:#d42a00; border-width:2.5px"></div> IC — Intercity</div>
+  <div class="legend-item"><div class="legend-line" style="border-color:#2050a0; border-width:2px"></div> IR — Interregio</div>
+  <div class="legend-item"><div class="legend-line" style="border-color:#306830; border-width:1.5px"></div> RE — Regional Express</div>
+  <div class="legend-item"><div class="legend-line" style="border-color:#888078; border-width:1px"></div> S-Bahn / RER</div>
+  <div class="legend-item" style="margin-left:20px; color:#d42a00; font-weight:600;">■ GAP: 01:00 – 04:59</div>
+</div>
+
+<div class="chart-container">
+  <canvas id="marey" width="2400" height="1800"></canvas>
+</div>
+
+<div class="gap-annotation">
+  <div class="gap-stat"><div class="num">4h</div><div class="label">Dead window</div></div>
+  <div class="gap-stat"><div class="num">0</div><div class="label">Trains 01:00–04:59</div></div>
+  <div class="gap-stat"><div class="num">92km</div><div class="label">Corridor disconnected</div></div>
+</div>
+
+<div class="footer">
+  After Étienne-Jules Marey (1885) & Charles Joseph Minard. Data: SBB timetable structure, weekday. Frequencies approximate.<br>
+  City101 Sentient Cities · EPFL BA6 Huang · Feb 2026
+</div>
+
+<script>
+const canvas = document.getElementById('marey');
+const ctx = canvas.getContext('2d');
+const W = canvas.width;
+const H = canvas.height;
+
+// Margins
+const ml = 80, mr = 40, mt = 20, mb = 50;
+const chartW = W - ml - mr;
+const chartH = H - mt - mb;
+
+// Stations with km from Geneva
+const stations = [
+  {name:"Genève",km:0,type:"major"},
+  {name:"Genève-Sécheron",km:2,type:"small"},
+  {name:"Genthod-Bellevue",km:6,type:"small"},
+  {name:"Versoix",km:10,type:"medium"},
+  {name:"Coppet",km:13,type:"medium"},
+  {name:"Tannay",km:15,type:"small"},
+  {name:"Mies",km:17,type:"small"},
+  {name:"Nyon",km:22,type:"medium"},
+  {name:"Gland",km:28,type:"small"},
+  {name:"Rolle",km:33,type:"medium"},
+  {name:"Allaman",km:38,type:"small"},
+  {name:"St-Prex",km:42,type:"small"},
+  {name:"Morges",km:45,type:"medium"},
+  {name:"Préverenges",km:48,type:"small"},
+  {name:"Renens VD",km:55,type:"medium"},
+  {name:"Lausanne",km:60,type:"major"},
+  {name:"Pully",km:63,type:"small"},
+  {name:"Lutry",km:66,type:"small"},
+  {name:"Villette VD",km:68,type:"small"},
+  {name:"Cully",km:70,type:"small"},
+  {name:"Epesses",km:72,type:"small"},
+  {name:"Rivaz",km:74,type:"small"},
+  {name:"St-Saphorin",km:76,type:"small"},
+  {name:"Vevey",km:80,type:"medium"},
+  {name:"La Tour-de-Peilz",km:82,type:"small"},
+  {name:"Montreux",km:86,type:"medium"},
+  {name:"Territet",km:88,type:"small"},
+  {name:"Veytaux-Chillon",km:89,type:"small"},
+  {name:"Villeneuve",km:92,type:"small"},
+];
+
+const maxKm = 92;
+
+function kmToX(km) { return ml + (km / maxKm) * chartW; }
+function timeToY(h, m) { return mt + ((h + m/60) / 24) * chartH; }
+
+// ── BACKGROUND ──
+ctx.fillStyle = '#faf8f4';
+ctx.fillRect(0, 0, W, H);
+
+// ── GAP ZONE ──
+const gapY0 = timeToY(1, 0);
+const gapY1 = timeToY(5, 0);
+ctx.fillStyle = '#fff0ec';
+ctx.fillRect(ml, gapY0, chartW, gapY1 - gapY0);
+
+// Gap border lines
+ctx.strokeStyle = '#d42a00';
+ctx.lineWidth = 1.5;
+ctx.setLineDash([6, 4]);
+ctx.beginPath();
+ctx.moveTo(ml, gapY0); ctx.lineTo(ml + chartW, gapY0);
+ctx.moveTo(ml, gapY1); ctx.lineTo(ml + chartW, gapY1);
+ctx.stroke();
+ctx.setLineDash([]);
+
+// Gap label
+ctx.save();
+ctx.translate(ml + chartW + 18, (gapY0 + gapY1) / 2);
+ctx.rotate(Math.PI / 2);
+ctx.font = '700 13px "JetBrains Mono", monospace';
+ctx.fillStyle = '#d42a00';
+ctx.globalAlpha = 0.5;
+ctx.textAlign = 'center';
+ctx.fillText('NO SERVICE', 0, 0);
+ctx.restore();
+ctx.globalAlpha = 1;
+
+// ── STATION GRID LINES (vertical) ──
+stations.forEach(s => {
+  const x = kmToX(s.km);
+  ctx.strokeStyle = s.type === 'major' ? 'rgba(0,0,0,0.12)' : 'rgba(0,0,0,0.04)';
+  ctx.lineWidth = s.type === 'major' ? 1 : 0.5;
+  ctx.beginPath();
+  ctx.moveTo(x, mt);
+  ctx.lineTo(x, mt + chartH);
+  ctx.stroke();
+});
+
+// ── HOUR GRID LINES (horizontal) ──
+for (let h = 0; h <= 24; h++) {
+  const y = timeToY(h, 0);
+  ctx.strokeStyle = h % 6 === 0 ? 'rgba(0,0,0,0.1)' : 'rgba(0,0,0,0.03)';
+  ctx.lineWidth = h % 6 === 0 ? 1 : 0.5;
+  ctx.beginPath();
+  ctx.moveTo(ml, y);
+  ctx.lineTo(ml + chartW, y);
+  ctx.stroke();
+}
+
+// ── TIME LABELS (left) ──
+ctx.font = '400 14px "JetBrains Mono", monospace';
+ctx.textAlign = 'right';
+for (let h = 0; h <= 23; h++) {
+  const y = timeToY(h, 0);
+  const isGap = h >= 1 && h <= 4;
+  ctx.fillStyle = isGap ? '#d42a00' : '#a09890';
+  ctx.font = isGap ? '700 14px "JetBrains Mono", monospace' : '400 14px "JetBrains Mono", monospace';
+  ctx.fillText(`${String(h).padStart(2,'0')}:00`, ml - 10, y + 5);
+}
+
+// ── STATION LABELS (bottom) ──
+ctx.font = '400 11px "JetBrains Mono", monospace';
+ctx.textAlign = 'left';
+stations.forEach(s => {
+  if (s.type === 'small' && !['Villeneuve','Genève-Sécheron'].includes(s.name)) return; // only label major/medium + endpoints
+  const x = kmToX(s.km);
+  ctx.save();
+  ctx.translate(x, mt + chartH + 8);
+  ctx.rotate(Math.PI / 4);
+  ctx.fillStyle = s.type === 'major' ? '#1a1816' : '#a09890';
+  ctx.font = s.type === 'major' ? '700 12px "JetBrains Mono", monospace' : '400 10px "JetBrains Mono", monospace';
+  ctx.fillText(s.name, 0, 0);
+  ctx.restore();
+});
+
+// ── GENERATE TRAIN PATHS ──
+// Train types with their characteristics
+// IC: Geneva-Lausanne ~33min, stops only at major. Lausanne-Montreux ~20min
+// IR: Geneva-Lausanne ~40min, stops at medium too
+// RE: Geneva-Lausanne ~50min, stops at most stations
+// S: local, all stops, Geneva-Lausanne ~70min
+
+function generateTrains() {
+  const trains = [];
+  
+  // Helper: create a train path with specific stops and speed
+  function addTrain(type, direction, startHour, startMin, stops, speedFactor) {
+    const path = [];
+    let currentMin = startHour * 60 + startMin;
+    
+    if (direction === 'east') {
+      for (let i = 0; i < stops.length; i++) {
+        const s = stations.find(st => st.name === stops[i]) || stations.find(st => st.name.startsWith(stops[i]));
+        if (!s) continue;
+        if (i > 0) {
+          const prev = stations.find(st => st.name === stops[i-1]) || stations.find(st => st.name.startsWith(stops[i-1]));
+          if (prev) currentMin += Math.abs(s.km - prev.km) * speedFactor;
+        }
+        path.push({ km: s.km, time: currentMin });
+      }
+    } else {
+      for (let i = 0; i < stops.length; i++) {
+        const s = stations.find(st => st.name === stops[i]) || stations.find(st => st.name.startsWith(stops[i]));
+        if (!s) continue;
+        if (i > 0) {
+          const prev = stations.find(st => st.name === stops[i-1]) || stations.find(st => st.name.startsWith(stops[i-1]));
+          if (prev) currentMin += Math.abs(s.km - prev.km) * speedFactor;
+        }
+        path.push({ km: s.km, time: currentMin });
+      }
+    }
+    
+    trains.push({ type, direction, path });
+  }
+  
+  const majorStops = ["Genève", "Lausanne", "Vevey", "Montreux", "Villeneuve"];
+  const mediumStopsE = ["Genève", "Versoix", "Coppet", "Nyon", "Rolle", "Morges", "Renens VD", "Lausanne", "Vevey", "Montreux", "Villeneuve"];
+  const mediumStopsW = [...mediumStopsE].reverse();
+  const reStopsE = ["Genève", "Versoix", "Coppet", "Nyon", "Gland", "Rolle", "Allaman", "Morges", "Renens VD", "Lausanne", "Vevey", "Montreux", "Villeneuve"];
+  const reStopsW = [...reStopsE].reverse();
+  const allStopsE = stations.map(s => s.name);
+  const allStopsW = [...allStopsE].reverse();
+  
+  // IC trains: every 60 min, 05:00 - 23:00
+  for (let h = 5; h <= 23; h++) {
+    addTrain('IC', 'east', h, 2, majorStops, 0.55);
+    addTrain('IC', 'west', h, 32, [...majorStops].reverse(), 0.55);
+  }
+  
+  // IR trains: every 30 min, 05:30 - 23:30
+  for (let h = 5; h <= 23; h++) {
+    addTrain('IR', 'east', h, 15, mediumStopsE, 0.65);
+    addTrain('IR', 'west', h, 45, mediumStopsW, 0.65);
+    if (h < 23) {
+      addTrain('IR', 'east', h, 45, mediumStopsE, 0.65);
+      addTrain('IR', 'west', h, 15, mediumStopsW, 0.65);
+    }
+  }
+  
+  // RE trains: every 60 min, 06:00 - 22:00
+  for (let h = 6; h <= 22; h++) {
+    addTrain('RE', 'east', h, 20, reStopsE, 0.78);
+    addTrain('RE', 'west', h, 50, reStopsW, 0.78);
+  }
+  
+  // S-Bahn: every 30 min, 05:30 - 00:30 (but only Geneva-Lausanne and Lausanne-Villeneuve segments)
+  const sStopsWestE = allStopsE.filter(n => {
+    const s = stations.find(st => st.name === n);
+    return s && s.km <= 60;
+  });
+  const sStopsEastE = allStopsE.filter(n => {
+    const s = stations.find(st => st.name === n);
+    return s && s.km >= 60;
+  });
+  
+  for (let h = 5; h <= 23; h++) {
+    for (let m = 0; m < 60; m += 30) {
+      if (h === 5 && m === 0) continue;
+      // West segment
+      addTrain('S', 'east', h, m, sStopsWestE, 1.1);
+      addTrain('S', 'west', h, (m + 15) % 60, [...sStopsWestE].reverse(), 1.1);
+      // East segment
+      addTrain('S', 'east', h, m + 5, sStopsEastE, 1.1);
+      addTrain('S', 'west', h, (m + 20) % 60, [...sStopsEastE].reverse(), 1.1);
+    }
+  }
+  
+  // Late night: a couple last trains
+  addTrain('IR', 'east', 0, 5, mediumStopsE.slice(0, 8), 0.65);
+  addTrain('IR', 'west', 0, 10, mediumStopsW.slice(0, 8), 0.65);
+  addTrain('S', 'east', 0, 15, sStopsWestE, 1.1);
+  addTrain('S', 'west', 0, 20, [...sStopsWestE].reverse(), 1.1);
+  
+  return trains;
+}
+
+const trains = generateTrains();
+
+// ── DRAW TRAIN PATHS ──
+const typeStyles = {
+  IC: { color: '#d42a00', width: 2.8, alpha: 0.85 },
+  IR: { color: '#2050a0', width: 2, alpha: 0.7 },
+  RE: { color: '#306830', width: 1.5, alpha: 0.55 },
+  S:  { color: '#888078', width: 0.8, alpha: 0.35 },
+};
+
+// Draw S first (bottom), then RE, IR, IC on top
+['S', 'RE', 'IR', 'IC'].forEach(type => {
+  const style = typeStyles[type];
+  trains.filter(t => t.type === type).forEach(train => {
+    if (train.path.length < 2) return;
+    
+    ctx.strokeStyle = style.color;
+    ctx.lineWidth = style.width;
+    ctx.globalAlpha = style.alpha;
+    ctx.beginPath();
+    
+    train.path.forEach((p, i) => {
+      const x = kmToX(p.km);
+      const totalH = p.time / 60;
+      if (totalH > 24.5) return; // don't draw past midnight+30
+      const y = timeToY(Math.floor(totalH), (totalH % 1) * 60);
+      
+      if (i === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    });
+    
+    ctx.stroke();
+  });
+});
+
+ctx.globalAlpha = 1;
+
+// ── AXIS FRAME ──
+ctx.strokeStyle = 'rgba(0,0,0,0.15)';
+ctx.lineWidth = 1;
+ctx.strokeRect(ml, mt, chartW, chartH);
+
+// ── DISTANCE AXIS LABEL ──
+ctx.font = '400 11px "JetBrains Mono", monospace';
+ctx.fillStyle = '#a09890';
+ctx.textAlign = 'center';
+ctx.fillText('← Geneva (0 km)', ml + 80, mt - 6);
+ctx.fillText('Villeneuve (92 km) →', ml + chartW - 100, mt - 6);
+
+</script>
+</body>
+</html>

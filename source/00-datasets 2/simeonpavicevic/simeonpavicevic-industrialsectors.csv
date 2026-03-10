@@ -1,0 +1,196 @@
+NOM_ENTREPRISE,COMMUNE,ADRESSE,lon_wgs84,lat_wgs84,E_LV95,N_LV95,CODE_NOGA,SECTEUR,ETP,INTENSITE_ENERGETIQUE,CONSO_ESTIMEE_MWh
+Nestlé SA,Vevey,Avenue Nestlé 55,6.8348,46.4674,2561130,1152610,10,Agroalimentaire biens consommation,3500,Forte,280000
+Alimentarium,Vevey,Quai Perdonnet 25,6.8433,46.4604,2561700,1151830,91,Services logistique,50,Faible,750
+ACMV Andritz Hydro,Vevey,Avenue de Rhodanie,6.8450,46.4650,2561850,1152350,28,Industrie lourde,180,Moyenne,7200
+Nespresso R&D,Vevey,Avenue Nestlé,6.8367,46.4683,2561300,1152730,10,Agroalimentaire biens consommation,320,Forte,25600
+Felli Construction,Vevey,Rue du Simplon 32,6.8517,46.4583,2562100,1151600,42,Construction artisanat,28,Moyenne,1120
+Grisoni SA,Vevey,Rue de Clos-Derrey,6.8400,46.4633,2561550,1152170,43,Construction artisanat,45,Moyenne,1800
+Menuiserie Vevey,Vevey,Rue de Lausanne,6.8383,46.4617,2561400,1151990,16,Construction artisanat,15,Moyenne,600
+Carrosserie du Léman,Vevey,Avenue Reller,6.8467,46.4600,2561950,1151790,45,Construction artisanat,18,Moyenne,720
+Garage Nestlé,Vevey,Route de Lausanne,6.8333,46.4650,2561000,1152350,45,Construction artisanat,22,Faible,330
+Imprimerie Klausfelder,Vevey,Rue du Simplon,6.8500,46.4617,2562050,1151990,18,Construction artisanat,28,Moyenne,1120
+Électricité Vevey,Vevey,Rue de Lausanne 48,6.8350,46.4633,2561150,1152170,43,Construction artisanat,16,Faible,240
+Plomberie Sanitaire,Vevey,Avenue Général-Guisan,6.8417,46.4650,2561600,1152350,43,Construction artisanat,14,Moyenne,560
+Boulangerie Haldemann,Vevey,Grande Place,6.8433,46.4617,2561700,1151990,10,Agroalimentaire biens consommation,12,Forte,960
+Boucherie Centrale,Vevey,Rue du Lac,6.8450,46.4633,2561850,1152170,10,Agroalimentaire biens consommation,10,Forte,800
+Pharmacie Léman,Vevey,Avenue Nestlé,6.8383,46.4667,2561400,1152550,47,Services logistique,8,Faible,120
+Coiffure Création,Vevey,Rue du Lac,6.8467,46.4617,2561950,1151990,96,Services logistique,6,Faible,90
+Pressing Moderne,Vevey,Avenue Reller,6.8483,46.4600,2562050,1151790,96,Services logistique,8,Moyenne,320
+Alstom Transport,Villeneuve,ZI A26,6.9267,46.3950,2569850,1145050,30,Industrie lourde,300,Moyenne,12000
+Garage Villeneuve,Villeneuve,Route de Lausanne,6.9233,46.3967,2569550,1145240,45,Construction artisanat,12,Faible,180
+Menuiserie Chablais,Villeneuve,Zone Industrielle,6.9283,46.3933,2570000,1144860,16,Construction artisanat,16,Moyenne,640
+Électricité Services,Villeneuve,Avenue Centrale,6.9250,46.3983,2569700,1145420,43,Construction artisanat,10,Faible,150
+Boulangerie du Port,Villeneuve,Route du Port,6.9217,46.3983,2569400,1145420,10,Agroalimentaire biens consommation,8,Forte,640
+Zwahlen Mayr,Aigle,Zone Les Iles,6.9683,46.3183,2573300,1136550,28,Industrie lourde,180,Moyenne,7200
+Reitzel,Aigle,Zone Les Iles,6.9717,46.3200,2573600,1136740,25,Industrie lourde,95,Moyenne,3800
+Badoux Vins,Aigle,Rue Louis-Paccoud 31,6.9667,46.3167,2573150,1136360,11,Agroalimentaire biens consommation,45,Faible,675
+Menuiserie Alpine,Aigle,Route Industrielle,6.9700,46.3217,2573450,1136930,16,Construction artisanat,24,Moyenne,960
+Carrosserie Chablais,Aigle,Zone Les Iles,6.9733,46.3233,2573750,1137110,45,Construction artisanat,18,Moyenne,720
+Garage Central Aigle,Aigle,Avenue de la Gare,6.9650,46.3150,2572950,1136170,45,Construction artisanat,16,Faible,240
+Imprimerie Aigle,Aigle,Rue du Bourg,6.9633,46.3167,2572800,1136360,18,Construction artisanat,14,Moyenne,560
+Électricité Aigle,Aigle,Zone Les Iles,6.9667,46.3200,2573150,1136740,43,Construction artisanat,20,Faible,300
+Plomberie Chauffage,Aigle,Route Industrielle,6.9717,46.3183,2573600,1136550,43,Construction artisanat,18,Moyenne,720
+Boulangerie Tradition,Aigle,Place du Marché,6.9650,46.3133,2572950,1135980,10,Agroalimentaire biens consommation,10,Forte,800
+Boucherie Fine,Aigle,Rue du Midi,6.9633,46.3150,2572800,1136170,10,Agroalimentaire biens consommation,12,Forte,960
+Métallerie Aigle,Aigle,Zone Les Iles,6.9750,46.3217,2573900,1136930,25,Industrie lourde,15,Moyenne,600
+Serrurerie Moderne,Aigle,Route du Cloître,6.9617,46.3150,2572650,1136170,25,Industrie lourde,8,Moyenne,320
+Mines de Sel,Bex,Route des Mines de Sel,7.0150,46.2533,2577000,1129300,08,Industrie lourde,85,Très forte,12750
+Électricité Services Bex,Bex,Route de la Gare,7.0117,46.2550,2576700,1129490,43,Construction artisanat,16,Faible,240
+Plomberie Sanitaire Bex,Bex,Route Industrielle,7.0133,46.2567,2576850,1129680,43,Construction artisanat,14,Moyenne,560
+Menuiserie Bex,Bex,Route de Lavey,7.0167,46.2583,2577150,1129860,16,Construction artisanat,12,Moyenne,480
+Garage Bex,Bex,Avenue de la Gare,7.0100,46.2550,2576550,1129490,45,Construction artisanat,10,Faible,150
+Boulangerie Bex,Bex,Grand-Rue,7.0083,46.2533,2576400,1129300,10,Agroalimentaire biens consommation,8,Forte,640
+Bobst Group SA,Mex,Route de Faraz 3,6.5512,46.5703,2537350,1163700,28,Industrie lourde,850,Moyenne,34000
+Bobst Mex SA,Mex,Route de Faraz 3,6.5512,46.5703,2537350,1163700,28,Industrie lourde,450,Moyenne,18000
+Bobst Restauration,Mex,Route de Faraz 3,6.5512,46.5703,2537350,1163700,56,Services logistique,35,Faible,525
+Mécanique Precision Mex,Mex,Route de Faraz,6.5528,46.5720,2537500,1163890,25,Industrie lourde,22,Moyenne,880
+Logitech,Romanel-sur-Morges,Rue du Verney,6.5583,46.5500,2538000,1161550,26,Industrie precision,450,Faible,6750
+Menuiserie Morges,Morges,Route de Lausanne,6.4967,46.5117,2532050,1157430,16,Construction artisanat,18,Moyenne,720
+Atelier Mécanique Morges,Morges,Zone Industrielle,6.4983,46.5133,2532200,1157610,25,Industrie lourde,18,Moyenne,720
+Boulangerie Haldemann,Morges,Grand-Rue,6.4983,46.5133,2532200,1157610,10,Agroalimentaire biens consommation,22,Forte,1760
+Garage Morges,Morges,Route de Lausanne,6.5000,46.5150,2532350,1157800,45,Construction artisanat,20,Faible,300
+Imprimerie Morges,Morges,Avenue de Vertou,6.4950,46.5100,2531900,1157240,18,Construction artisanat,16,Moyenne,640
+Électricité Morges,Morges,Rue de l'Industrie,6.5017,46.5133,2532500,1157610,43,Construction artisanat,14,Faible,210
+Plomberie Morges,Morges,Route de Préverenges,6.5033,46.5150,2532650,1157800,43,Construction artisanat,12,Moyenne,480
+Chiquita,Rolle,A-One Business Center,6.3333,46.4567,2522650,1150750,46,Services logistique,120,Faible,1800
+ADM,Rolle,A-One Business Center,6.3333,46.4567,2522650,1150750,10,Agroalimentaire biens consommation,95,Moyenne,3800
+Honeywell,Rolle,A-One Business Center,6.3350,46.4583,2522800,1150940,28,Industrie lourde,85,Faible,1275
+SC Johnson,Rolle,A-One Business Center,6.3367,46.4600,2522950,1151130,20,Chimie sciences vie,75,Moyenne,3000
+Garage Rolle,Rolle,Route de Genève,6.3317,46.4550,2522500,1150560,45,Construction artisanat,12,Faible,180
+Menuiserie Rolle,Rolle,Grand-Rue,6.3300,46.4533,2522350,1150370,16,Construction artisanat,10,Moyenne,400
+Philip Morris,Lausanne,Avenue de Rhodanie 50,6.6300,46.5150,2544500,1157800,12,Agroalimentaire biens consommation,850,Forte,127500
+Tetra Pak,Romont-sur-Lausanne,Route de la Chocolatière,6.5933,46.5367,2540950,1160100,28,Industrie lourde,380,Moyenne,15200
+Nespresso Production,Romont-sur-Lausanne,Avenue Nestlé,6.5950,46.5380,2541100,1160250,10,Agroalimentaire biens consommation,650,Forte,52000
+Menuiserie Paccaud,Lausanne,Rue de Genève 85,6.6333,46.5200,2544800,1158360,16,Construction artisanat,28,Moyenne,1120
+Imprimerie Vincent,Lausanne,Avenue de Morges,6.6217,46.5183,2543500,1158170,18,Construction artisanat,38,Moyenne,1520
+Garage Central Lausanne,Lausanne,Rue de la Vigie,6.6367,46.5217,2545100,1158550,45,Construction artisanat,24,Faible,360
+Électricité Lausanne,Lausanne,Avenue d'Ouchy,6.6283,46.5167,2544200,1157990,43,Construction artisanat,32,Faible,480
+Plomberie Lausanne,Lausanne,Rue du Maupas,6.6317,46.5183,2544650,1158170,43,Construction artisanat,28,Moyenne,1120
+Boulangerie Centrale,Lausanne,Place Saint-François,6.6350,46.5200,2544950,1158360,10,Agroalimentaire biens consommation,16,Forte,1280
+Boucherie Lausanne,Lausanne,Rue de Bourg,6.6367,46.5217,2545100,1158550,10,Agroalimentaire biens consommation,14,Forte,1120
+JOWA,Ecublens,Route de Vallaire,6.5633,46.5300,2538450,1159350,10,Agroalimentaire biens consommation,120,Forte,9600
+MiCarna,Ecublens,Route de Vallaire,6.5650,46.5317,2538600,1159540,10,Agroalimentaire biens consommation,95,Forte,7600
+Migros Vaud,Ecublens,Route de Vallaire,6.5667,46.5333,2538750,1159720,47,Services logistique,450,Moyenne,18000
+Thévennaz-Leduc,Ecublens,Route de Vallaire,6.5683,46.5350,2538900,1159910,46,Services logistique,85,Faible,1275
+TVM3,Ecublens,Avenue d'Epenex,6.5617,46.5283,2538300,1159160,60,Services logistique,55,Faible,825
+Garage Ecublens,Ecublens,Route de Lausanne,6.5600,46.5267,2538150,1158970,45,Construction artisanat,14,Faible,210
+Menuiserie Ecublens,Ecublens,Chemin des Croisettes,6.5583,46.5250,2538000,1158780,16,Construction artisanat,12,Moyenne,480
+SIE,Renens,Avenue des Baumettes 1,6.5817,46.5333,2540050,1159720,35,Services logistique,100,Faible,1500
+CACIB Baumettes,Renens,Avenue des Baumettes 21,6.5833,46.5350,2540200,1159910,68,Services logistique,180,Moyenne,7200
+Ateliers de Renens,Renens,Rue du Bugnon,6.5883,46.5383,2540650,1160280,68,Services logistique,95,Faible,1425
+ECAL,Renens,Avenue du Temple 5,6.5900,46.5400,2540800,1160470,85,Services logistique,280,Faible,4200
+Le Sapin,Renens,Rue du Sapin,6.5917,46.5417,2540950,1160650,68,Services logistique,45,Faible,675
+Hyperespace,Renens,Rue de Lausanne,6.5933,46.5433,2541100,1160840,68,Services logistique,38,Faible,570
+Imprimeries Réunies,Renens,Rue du Bugnon 43,6.5867,46.5367,2540500,1160100,18,Construction artisanat,65,Moyenne,2600
+IFFP,Renens,Avenue de Longemalle,6.5783,46.5317,2539750,1159540,85,Services logistique,120,Faible,1800
+Coop Vaud,Renens,Avenue du 24-Janvier,6.5850,46.5367,2540350,1160100,47,Services logistique,280,Moyenne,11200
+Garage Renens,Renens,Rue de Lausanne,6.5900,46.5383,2540800,1160280,45,Construction artisanat,18,Faible,270
+Menuiserie Renens,Renens,Avenue des Baumettes,6.5800,46.5350,2539900,1159910,16,Construction artisanat,16,Moyenne,640
+Électricité Renens,Renens,Chemin du Marronnier,6.5850,46.5333,2540350,1159720,43,Construction artisanat,22,Faible,330
+Plomberie Renens,Renens,Rue du Bugnon,6.5867,46.5350,2540500,1159910,43,Construction artisanat,18,Moyenne,720
+Boulangerie Renens,Renens,Place du Marché,6.5883,46.5367,2540650,1160100,10,Agroalimentaire biens consommation,12,Forte,960
+Boucherie Renens,Renens,Avenue du 24-Janvier,6.5833,46.5350,2540200,1159910,10,Agroalimentaire biens consommation,10,Forte,800
+Denner Lausanne,Crissier,Route de Renens,6.5683,46.5450,2538900,1161030,47,Services logistique,85,Moyenne,3400
+Marcolet Centre,Crissier,Route de Renens 1,6.5700,46.5467,2539050,1161220,47,Services logistique,320,Faible,4800
+Schenker,Crissier,Zone Arc-en-Ciel,6.5750,46.5517,2539500,1161780,49,Services logistique,180,Faible,2700
+Kuehne Nagel,Crissier,Zone Arc-en-Ciel,6.5767,46.5533,2539650,1161960,49,Services logistique,140,Faible,2100
+Garage Crissier,Crissier,Route de Renens,6.5717,46.5483,2539200,1161410,45,Construction artisanat,16,Faible,240
+Menuiserie Crissier,Crissier,Chemin de la Sallaz,6.5733,46.5500,2539350,1161600,16,Construction artisanat,14,Moyenne,560
+Électricité Crissier,Crissier,Route de Bussigny,6.5750,46.5517,2539500,1161780,43,Construction artisanat,18,Faible,270
+Plomberie Crissier,Crissier,Zone Arc-en-Ciel,6.5783,46.5533,2539750,1161960,43,Construction artisanat,16,Moyenne,640
+Boulangerie Crissier,Crissier,Centre Marcolet,6.5700,46.5467,2539050,1161220,10,Agroalimentaire biens consommation,10,Forte,800
+Camion Transport,Bussigny,Route de l'Industrie,6.5583,46.5517,2538000,1161780,49,Services logistique,55,Faible,825
+Alpnach Norm,Chavannes-près-Renens,Route de Lausanne,6.5683,46.5367,2538900,1160100,31,Construction artisanat,45,Moyenne,1800
+Electro-Matériel,Chavannes-près-Renens,Rue de Lausanne 45,6.5700,46.5383,2539050,1160280,27,Industrie precision,32,Faible,480
+Garage Chavannes,Chavannes-près-Renens,Avenue de Lonay,6.5650,46.5350,2538600,1159910,45,Construction artisanat,12,Faible,180
+Menuiserie Chavannes,Chavannes-près-Renens,Chemin de Renens,6.5667,46.5367,2538750,1160100,16,Construction artisanat,10,Moyenne,400
+Nyon Garage,Nyon,Route de Genève,6.2333,46.3833,2507950,1142750,45,Construction artisanat,32,Faible,480
+Menuiserie Junod,Nyon,Chemin des Plantaz,6.2400,46.3850,2508550,1142940,16,Construction artisanat,20,Moyenne,800
+Électricité Nyon,Nyon,Rue de la Gare,6.2367,46.3867,2508250,1143130,43,Construction artisanat,24,Faible,360
+Plomberie Nyon,Nyon,Avenue Viollier,6.2383,46.3883,2508400,1143320,43,Construction artisanat,18,Moyenne,720
+Boulangerie Nyon,Nyon,Place du Marché,6.2417,46.3900,2508700,1143500,10,Agroalimentaire biens consommation,14,Forte,1120
+Boucherie Nyon,Nyon,Rue de Rive,6.2433,46.3917,2508850,1143690,10,Agroalimentaire biens consommation,12,Forte,960
+Imprimerie Nyon,Nyon,Route de Chêne,6.2450,46.3933,2509000,1143870,18,Construction artisanat,16,Moyenne,640
+Firmenich,Satigny,Route des Jeunes 1,6.0600,46.2133,2495500,1125750,20,Chimie sciences vie,1200,Très forte,180000
+Givaudan,Vernier,Chemin de la Parfumerie 5,6.0850,46.2150,2497650,1125950,20,Chimie sciences vie,950,Très forte,142500
+SIG,Vernier,Chemin Château-Bloch,6.0933,46.2183,2498350,1126300,35,Services logistique,650,Faible,9750
+Merck Serono,Vernier,Route de Pré-Bois,6.0800,46.2217,2496950,1126680,21,Chimie sciences vie,1200,Moyenne,48000
+Plastique SA,Vernier,Zone Châtelaine,6.0900,46.2167,2498100,1126120,22,Construction artisanat,65,Forte,5200
+Emballage Moderne,Vernier,Route de Châtelaine,6.0917,46.2183,2498250,1126300,17,Construction artisanat,48,Moyenne,1920
+Garage Auto-Service,Vernier,Route de Vernier,6.0883,46.2200,2497950,1126490,45,Construction artisanat,22,Faible,330
+Boulangerie Pain d'Antan,Vernier,Place du Lignon,6.0850,46.2217,2497650,1126680,10,Agroalimentaire biens consommation,16,Forte,1280
+Boucherie Fine,Vernier,Place du Lignon,6.0850,46.2217,2497650,1126680,10,Agroalimentaire biens consommation,18,Forte,1440
+Menuiserie Vernier,Vernier,Route de Vernier,6.0867,46.2233,2497800,1126850,16,Construction artisanat,14,Moyenne,560
+Électricité Vernier,Vernier,Avenue de Châtelaine,6.0917,46.2167,2498250,1126120,43,Construction artisanat,20,Faible,300
+Plomberie Vernier,Vernier,Chemin des Palettes,6.0933,46.2200,2498350,1126490,43,Construction artisanat,18,Moyenne,720
+DuPont,Meyrin,Route de Pré-Bois,6.0817,46.2233,2497100,1126850,20,Chimie sciences vie,380,Très forte,57000
+Richemont Watchmaking,Meyrin,Route de Meyrin,6.0783,46.2300,2497100,1127650,32,Industrie precision,850,Faible,1275
+Cartier,Meyrin,Route des Acacias,6.0867,46.2267,2497650,1127230,32,Industrie precision,450,Faible,675
+Meyrin Gravure,Meyrin,Route de Meyrin 82,6.0800,46.2283,2496950,1127460,25,Industrie lourde,15,Moyenne,600
+Atelier Soudure GE,Meyrin,Zone Industrielle,6.0850,46.2300,2497650,1127650,25,Industrie lourde,12,Moyenne,480
+Garage Meyrin,Meyrin,Route de Meyrin,6.0783,46.2317,2497100,1127840,45,Construction artisanat,18,Faible,270
+Boulangerie Meyrin,Meyrin,Avenue de Feuillasse,6.0783,46.2317,2497100,1127840,10,Agroalimentaire biens consommation,16,Forte,1280
+Pressing Nettoyage,Meyrin,Route de Meyrin,6.0817,46.2317,2497100,1127840,96,Services logistique,12,Moyenne,480
+Cordonnerie Réparation,Meyrin,Centre Meyrin,6.0800,46.2300,2496950,1127650,95,Construction artisanat,5,Faible,75
+Menuiserie Meyrin,Meyrin,Chemin des Mategnin,6.0833,46.2317,2497250,1127840,16,Construction artisanat,16,Moyenne,640
+Électricité Meyrin,Meyrin,Route de Meyrin,6.0783,46.2267,2497100,1127230,43,Construction artisanat,22,Faible,330
+Plomberie Meyrin,Meyrin,Avenue de Mategnin,6.0850,46.2317,2497650,1127840,43,Construction artisanat,20,Moyenne,800
+Rolex,Plan-les-Ouates,Chemin du Pont-du-Centenaire 113,6.1105,46.1693,2499760,1121590,32,Industrie precision,3500,Faible,5250
+Patek Philippe,Plan-les-Ouates,Chemin du Pont-du-Centenaire,6.1200,46.1733,2500500,1121320,32,Industrie precision,1800,Faible,2700
+Vacheron Constantin,Plan-les-Ouates,Route de Troinex,6.1167,46.1750,2500200,1121510,32,Industrie precision,1100,Faible,1650
+Frédérique Constant,Plan-les-Ouates,Rue du Puits-Godet,6.1150,46.1783,2500050,1121880,32,Industrie precision,180,Faible,270
+Piaget,Plan-les-Ouates,Route de Chancy,6.1083,46.1717,2499650,1121130,32,Industrie precision,280,Faible,420
+Spineart,Plan-les-Ouates,ICC Bâtiment B,6.1117,46.1783,2499800,1121880,32,Industrie precision,180,Faible,2700
+Ecole d'Horlogerie,Plan-les-Ouates,Espace Tourbillon,6.1133,46.1750,2499950,1121510,85,Services logistique,80,Faible,1200
+Menuiserie Design,Plan-les-Ouates,Route de Saint-Julien,6.1183,46.1733,2500350,1121320,16,Construction artisanat,22,Moyenne,880
+Imprimerie Offset PLO,Plan-les-Ouates,Chemin des Aulx,6.1217,46.1750,2500650,1121510,18,Construction artisanat,35,Moyenne,1400
+Garage Poids Lourds,Plan-les-Ouates,Route de la Chapelle,6.1150,46.1717,2500050,1121130,45,Construction artisanat,28,Faible,420
+Métallerie PLO,Plan-les-Ouates,Rue du Gué,6.1200,46.1783,2500500,1121880,25,Industrie lourde,18,Moyenne,720
+Électricité PLO,Plan-les-Ouates,Chemin des Aulx,6.1217,46.1767,2500650,1121700,43,Construction artisanat,24,Faible,360
+Plomberie PLO,Plan-les-Ouates,Route de Saint-Julien,6.1167,46.1717,2500200,1121130,43,Construction artisanat,20,Moyenne,800
+Boulangerie PLO,Plan-les-Ouates,Rue des Bossons,6.1133,46.1733,2499950,1121320,10,Agroalimentaire biens consommation,12,Forte,960
+Cabinet Vétérinaire,Plan-les-Ouates,Route de Saint-Julien,6.1217,46.1767,2500650,1121700,75,Services logistique,15,Faible,225
+Électronique Dépannage,Carouge,Rue des Acacias,6.1383,46.1833,2502150,1122450,95,Construction artisanat,18,Faible,270
+Bijouterie Manufacture,Carouge,Rue Saint-Joseph,6.1400,46.1850,2502300,1122640,32,Industrie precision,25,Faible,375
+Atelier Textile,Carouge,Boulevard des Promenades,6.1350,46.1817,2501850,1122260,14,Construction artisanat,32,Moyenne,1280
+Garage Carouge,Carouge,Route de Saint-Julien,6.1367,46.1817,2502000,1122260,45,Construction artisanat,20,Faible,300
+Menuiserie Carouge,Carouge,Rue des Caroubiers,6.1383,46.1800,2502150,1122070,16,Construction artisanat,16,Moyenne,640
+Électricité Carouge,Carouge,Rue Jacques-Dalphin,6.1417,46.1833,2502500,1122450,43,Construction artisanat,22,Faible,330
+Plomberie Carouge,Carouge,Avenue Industrielle,6.1433,46.1850,2502650,1122640,43,Construction artisanat,18,Moyenne,720
+Boulangerie Carouge,Carouge,Place du Marché,6.1400,46.1817,2502300,1122260,10,Agroalimentaire biens consommation,14,Forte,1120
+Boucherie Carouge,Carouge,Rue Saint-Victor,6.1417,46.1833,2502500,1122450,10,Agroalimentaire biens consommation,12,Forte,960
+Clinique Physiothérapie,Carouge,Boulevard Georges-Favon,6.1417,46.1867,2502500,1122830,86,Services logistique,22,Faible,330
+Charpente Bois,Bernex,Route de Chancy,6.0900,46.1800,2498100,1122070,16,Construction artisanat,24,Moyenne,960
+Garage Bernex,Bernex,Route du Bois-des-Frères,6.0917,46.1817,2498250,1122260,45,Construction artisanat,14,Faible,210
+Menuiserie Bernex,Bernex,Chemin de la Mousse,6.0933,46.1833,2498350,1122450,16,Construction artisanat,12,Moyenne,480
+Peinture Industrielle,Lancy,Route de Chancy,6.1183,46.1883,2500350,1123200,23,Construction artisanat,45,Moyenne,1800
+Garage Lancy,Lancy,Route du Grand-Lancy,6.1200,46.1900,2500500,1123390,45,Construction artisanat,18,Faible,270
+Menuiserie Lancy,Lancy,Chemin des Palettes,6.1217,46.1917,2500650,1123570,16,Construction artisanat,16,Moyenne,640
+Électricité Lancy,Lancy,Route de Chancy,6.1183,46.1867,2500350,1122830,43,Construction artisanat,20,Faible,300
+Plomberie Lancy,Lancy,Avenue des Communes-Réunies,6.1250,46.1933,2500950,1123750,43,Construction artisanat,18,Moyenne,720
+Serrurerie Moderne,Onex,Chemin du Bac,6.1033,46.1850,2499200,1122640,25,Industrie lourde,16,Moyenne,640
+Garage Onex,Onex,Route de Chancy,6.1050,46.1867,2499350,1122830,45,Construction artisanat,14,Faible,210
+Menuiserie Onex,Onex,Place du Vélodrome,6.1067,46.1883,2499500,1123020,16,Construction artisanat,12,Moyenne,480
+Plomberie Sanitaire,Genève,Rue de la Servette,6.1433,46.2050,2502650,1124810,43,Construction artisanat,38,Moyenne,1520
+Electricité Générale,Genève,Rue du Grand-Pré,6.1517,46.2100,2503400,1125370,43,Construction artisanat,52,Faible,780
+Chauffage Ventilation,Genève,Rue de Lyon,6.1450,46.2067,2502800,1125000,43,Construction artisanat,42,Moyenne,1680
+Pharmacie Centrale,Genève,Rue du Mont-Blanc,6.1467,46.2083,2502950,1125190,47,Services logistique,18,Faible,270
+Optique Lunetterie,Genève,Rue du Rhône,6.1500,46.2050,2503250,1124810,47,Services logistique,12,Faible,180
+Laboratoire Analyse,Genève,Rue Gustave-Revilliod,6.1517,46.2117,2503400,1125560,71,Services logistique,32,Faible,480
+Garage Genève Centre,Genève,Rue de Vermont,6.1483,46.2100,2503100,1125370,45,Construction artisanat,28,Faible,420
+Menuiserie Genève,Genève,Rue de la Servette,6.1450,46.2083,2502800,1125190,16,Construction artisanat,22,Moyenne,880
+Boulangerie Genève,Genève,Rue du Marché,6.1433,46.2067,2502650,1125000,10,Agroalimentaire biens consommation,16,Forte,1280
+Boucherie Genève,Genève,Rue du Mont-Blanc,6.1467,46.2050,2502950,1124810,10,Agroalimentaire biens consommation,14,Forte,1120
+Imprimerie Genève,Genève,Rue du Stand,6.1417,46.2033,2502500,1124620,18,Construction artisanat,32,Moyenne,1280
+Coiffure Création GE,Vernier,Avenue de Châtelaine,6.0933,46.2183,2498350,1126300,96,Services logistique,8,Faible,120
+Centre Médical,Crissier,Route de Renens,6.5733,46.5483,2539350,1161410,86,Services logistique,42,Faible,630
+Crèche Les Lutins,Renens,Rue de Lausanne,6.5917,46.5433,2540950,1160840,88,Services logistique,28,Faible,420
+Giovanna SA,Clarens,Rue des Vaudrès 9,6.9050,46.4283,2567850,1139250,28,Industrie lourde,42,Moyenne,1680
+Ginox Group,Chailly-Montreux,Route de Cojonnex,6.8883,46.4367,2566300,1140190,28,Industrie lourde,35,Moyenne,1400
+Garage Montreux,Montreux,Avenue des Alpes,6.9100,46.4317,2568300,1139630,45,Construction artisanat,24,Faible,360
+Menuiserie Montreux,Montreux,Rue du Marché,6.9117,46.4333,2568450,1139810,16,Construction artisanat,18,Moyenne,720
+Électricité Montreux,Montreux,Route de Cojonnex,6.9083,46.4300,2568150,1139440,43,Construction artisanat,20,Faible,300
+Plomberie Montreux,Montreux,Avenue des Alpes,6.9133,46.4350,2568600,1140000,43,Construction artisanat,16,Moyenne,640
+Boulangerie Montreux,Montreux,Grand-Rue,6.9150,46.4367,2568750,1140190,10,Agroalimentaire biens consommation,14,Forte,1120
+Boucherie Montreux,Montreux,Place du Marché,6.9167,46.4383,2568900,1140370,10,Agroalimentaire biens consommation,12,Forte,960
+Imprimerie Montreux,Montreux,Rue Industrielle,6.9183,46.4400,2569050,1140560,18,Construction artisanat,28,Moyenne,1120

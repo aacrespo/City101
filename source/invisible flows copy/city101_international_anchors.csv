@@ -1,0 +1,16 @@
+anchor_id,short_id,name,lat_wgs84,lon_wgs84,E_LV95,N_LV95,location_type,category,scale,connectivity_cluster
+INTL_01,CERN,CERN - European Org. for Nuclear Research,46.2323,6.0552,2490856.7,1117622.5,research_institution,science_tech,global,western_end
+INTL_02,UN_Geneva,Palais des Nations (UN Geneva),46.226,6.1407,2498430.9,1117268.4,international_org,governance,global,Geneva
+INTL_03,WHO,World Health Organization,46.2323,6.1432,2498629.4,1117966.4,international_org,governance,global,Geneva
+INTL_04,ITU,International Telecommunication Union,46.2291,6.1434,2498644.2,1117611.5,international_org,governance,global,Geneva
+INTL_05,WTO,World Trade Organization,46.2285,6.1392,2498281.2,1117543.5,international_org,governance,global,Geneva
+INTL_06,ICRC,International Committee of the Red Cross,46.2283,6.1463,2498903.6,1117520.6,international_org,humanitarian,global,Geneva
+INTL_07,Equinix_GV2,Equinix GV2 Data Center,46.1943,6.1432,2498629.4,1113761.7,data_center,digital_infrastructure,global,Geneva
+INTL_08,IXP_Geneva,GIX - Geneva Internet Exchange,46.2042,6.1432,2498629.4,1114860.2,data_center,digital_infrastructure,regional,Geneva
+INTL_09,EPFL,EPFL - École Polytechnique Fédérale de Lausanne,46.5197,6.5662,2533310.5,1151924.4,university,research_education,global,Lausanne
+INTL_10,UNIL,Université de Lausanne,46.5234,6.5817,2534667.7,1152333.8,university,research_education,regional,Lausanne
+INTL_11,IMD,IMD Business School,46.5211,6.57,2533640.3,1152077.5,university,research_education,global,Lausanne
+INTL_12,IOC,International Olympic Committee,46.5211,6.6384,2539614.9,1152011.0,international_org,governance,global,Lausanne
+INTL_13,Nestle_HQ,Nestlé World Headquarters,46.4668,6.8476,2558025.5,1146160.0,corporate_hq,industry,global,Vevey
+INTL_14,PMI_HQ,Philip Morris International HQ,46.5211,6.6318,2539038.0,1152077.5,corporate_hq,industry,global,Lausanne
+INTL_15,Montreux_Jazz,Montreux Jazz Festival Foundation,46.4344,6.9115,2563574.3,1142585.1,cultural_institution,culture,regional,Montreux

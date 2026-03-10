@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>City101 — GA Cost Curve</title>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;600;700&display=swap');
+
+  :root {
+    --bg: #0a0a0f;
+    --bg2: #111118;
+    --bg3: #1a1a24;
+    --text: #e8e6e1;
+    --text-dim: #8a8880;
+    --text-bright: #ffffff;
+    --accent: #c8a86e;
+    --accent-dim: #8a7548;
+    --geneva: #e74c3c;
+    --lacote: #e67e22;
+    --lausanne: #3498db;
+    --lavaux: #9b59b6;
+    --riviera: #2ecc71;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 24px;
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 8px;
+    max-width: 900px;
+  }
+  .header h1 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 28px;
+    font-weight: 400;
+    color: var(--text-bright);
+    letter-spacing: -0.02em;
+    margin-bottom: 6px;
+  }
+  .header .subtitle {
+    font-size: 14px;
+    color: var(--text-dim);
+    font-weight: 400;
+  }
+  .header .subtitle em {
+    color: var(--accent);
+    font-style: normal;
+    font-weight: 500;
+  }
+
+  .controls {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .budget-control {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--bg2);
+    border: 1px solid rgba(200,168,110,0.1);
+    border-radius: 10px;
+    padding: 10px 18px;
+  }
+  .budget-control label {
+    font-size: 13px;
+    color: var(--text-dim);
+    white-space: nowrap;
+  }
+  .budget-control .budget-value {
+    font-family: 'DM Mono', monospace;
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--accent);
+    min-width: 80px;
+    text-align: center;
+  }
+  input[type="range"] {
+    -webkit-appearance: none;
+    width: 200px;
+    height: 6px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 3px;
+    outline: none;
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 18px;
+    height: 18px;
+    background: var(--accent);
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 0 8px rgba(200,168,110,0.4);
+  }
+
+  .toggle-btn {
+    background: var(--bg2);
+    border: 1px solid rgba(255,255,255,0.05);
+    color: var(--text-dim);
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    transition: all 0.2s;
+    user-select: none;
+  }
+  .toggle-btn.active {
+    border-color: #2ecc71;
+    color: #2ecc71;
+    background: rgba(46, 204, 113, 0.08);
+  }
+  .toggle-btn:hover {
+    border-color: var(--accent);
+  }
+
+  .chart-container {
+    background: var(--bg2);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 10px;
+    padding: 24px 28px 16px 16px;
+    position: relative;
+    width: 100%;
+    max-width: 1100px;
+  }
+
+  .budget-insight {
+    text-align: center;
+    margin-top: 12px;
+    padding: 12px 20px;
+    background: var(--bg2);
+    border: 1px solid rgba(200,168,110,0.1);
+    border-radius: 10px;
+    max-width: 1100px;
+    width: 100%;
+  }
+  .budget-insight .reach-text {
+    font-size: 15px;
+    color: var(--text);
+    line-height: 1.5;
+  }
+  .budget-insight .reach-text .station-highlight {
+    font-family: 'DM Mono', monospace;
+    font-weight: 500;
+    color: var(--accent);
+  }
+  .budget-insight .reach-text .km-highlight {
+    font-family: 'DM Mono', monospace;
+    color: #f1c40f;
+  }
+  .budget-insight .reach-text .price-highlight {
+    font-family: 'DM Mono', monospace;
+    color: #e74c3c;
+  }
+
+  .legend {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin-top: 10px;
+    flex-wrap: wrap;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--text-dim);
+    font-family: 'DM Mono', monospace;
+  }
+  .legend-line {
+    width: 24px;
+    height: 3px;
+    border-radius: 2px;
+  }
+  .legend-line.dashed {
+    background: repeating-linear-gradient(90deg, currentColor 0, currentColor 5px, transparent 5px, transparent 9px);
+    height: 2px;
+  }
+  .legend-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+
+  .tooltip {
+    position: absolute;
+    background: var(--bg3);
+    border: 1px solid var(--accent-dim);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 13px;
+    color: var(--text);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.15s;
+    white-space: nowrap;
+  }
+  .tooltip .station-name {
+    font-weight: 500;
+    color: var(--text-bright);
+    font-size: 14px;
+    margin-bottom: 4px;
+  }
+  .tooltip .stat-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    margin-top: 2px;
+  }
+  .tooltip .stat-label { color: var(--text-dim); }
+  .tooltip .stat-value {
+    font-family: 'DM Mono', monospace;
+    font-weight: 500;
+    color: var(--accent);
+  }
+  .tooltip .stat-value.halbtax { color: #2ecc71; }
+  .tooltip .stat-value.trains { color: #f1c40f; }
+
+  .footer {
+    margin-top: 14px;
+    text-align: center;
+    font-size: 11px;
+    color: var(--text-dim);
+  }
+</style>
+</head>
+<body>
+<a href="index.html#explore" style="position:fixed;top:12px;left:16px;z-index:9999;font-family:'DM Sans',sans-serif;font-size:13px;color:#8a8880;text-decoration:none;padding:6px 14px;border:1px solid rgba(255,255,255,0.08);border-radius:20px;backdrop-filter:blur(12px);background:rgba(10,10,15,0.85);transition:color .2s,border-color .2s;" onmouseover="this.style.color='#c8a86e';this.style.borderColor='rgba(200,168,110,0.3)'" onmouseout="this.style.color='#8a8880';this.style.borderColor='rgba(255,255,255,0.08)'">← The Archipelago</a>
+
+<div class="header">
+  <h1>How far is YOUR city?</h1>
+  <div class="subtitle">Single ticket price from Geneva along the City101 corridor — <em>depends on your wallet</em></div>
+</div>
+
+<div class="controls">
+  <div class="budget-control">
+    <label>Daily budget</label>
+    <input type="range" id="budgetSlider" min="3" max="30" step="0.5" value="20">
+    <div class="budget-value" id="budgetValue">CHF 20.00</div>
+  </div>
+  <button class="toggle-btn active" id="halbtaxToggle">Halbtax</button>
+</div>
+
+<div class="chart-container" id="chartContainer">
+  <div class="tooltip" id="tooltip"></div>
+</div>
+
+<div class="budget-insight" id="budgetInsight">
+  <div class="reach-text" id="reachText"></div>
+</div>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-line" style="background: #e74c3c;"></div> Full price</div>
+  <div class="legend-item"><div class="legend-line dashed" style="color: #2ecc71;"></div> Halbtax</div>
+  <div class="legend-item"><div class="legend-line dashed" style="color: #c8a86e;"></div> GA daily (CHF 10.58)</div>
+  <div class="legend-item"><div class="legend-dot" style="background: #e74c3c;"></div> Station (size = trains/hr)</div>
+</div>
+
+<div class="footer">City101 Geneva-Villeneuve corridor | EPFL BA6 Studio Huang | Data: SBB distance-based tariff (est. &plusmn;CHF 2-3)</div>
+
+<script>
+const DATA = [
+  {s:"Genève",km:0.0,full:3.6,halb:1.8,ga:10.58,tph:25.0},
+  {s:"Genève-Sécheron",km:1.4,full:3.6,halb:1.8,ga:10.58,tph:8.0},
+  {s:"Genève-Eaux-Vives",km:2.2,full:3.6,halb:1.8,ga:10.58,tph:12.5},
+  {s:"Genève-Champel",km:2.3,full:3.6,halb:1.8,ga:10.58,tph:12.5},
+  {s:"Lancy-Pont-Rouge",km:3.2,full:3.73,halb:1.86,ga:10.58,tph:12.0},
+  {s:"Genève-Aéroport",km:3.6,full:4.07,halb:2.04,ga:10.58,tph:4.5},
+  {s:"Vernier, Blandonnet",km:3.9,full:4.32,halb:2.16,ga:10.58,tph:84.0},
+  {s:"Lancy-Bachet",km:4.3,full:4.66,halb:2.33,ga:10.58,tph:12.5},
+  {s:"Genthod-Bellevue",km:5.5,full:5.61,halb:2.81,ga:10.58,tph:8.0},
+  {s:"Versoix",km:8.3,full:7.28,halb:3.64,ga:10.58,tph:8.0},
+  {s:"Mies",km:10.5,full:8.48,halb:4.24,ga:10.58,tph:8.0},
+  {s:"Tannay",km:11.8,full:9.19,halb:4.59,ga:10.58,tph:8.0},
+  {s:"Coppet",km:13.0,full:9.87,halb:4.93,ga:10.58,tph:9.5},
+  {s:"Founex, est",km:15.1,full:11.01,halb:5.5,ga:10.58,tph:3.5},
+  {s:"Nyon",km:21.7,full:13.63,halb:6.82,ga:10.58,tph:14.5},
+  {s:"Prangins, Les Abériaux",km:23.2,full:14.22,halb:7.11,ga:10.58,tph:5.5},
+  {s:"Gland",km:26.5,full:15.56,halb:7.78,ga:10.58,tph:6.5},
+  {s:"Begnins, poste",km:28.2,full:16.22,halb:8.11,ga:10.58,tph:8.5},
+  {s:"Rolle",km:33.4,full:17.79,halb:8.89,ga:10.58,tph:4.5},
+  {s:"Perroy, Couronnette",km:34.1,full:17.98,halb:8.99,ga:10.58,tph:3.0},
+  {s:"Allaman",km:37.3,full:18.77,halb:9.38,ga:10.58,tph:6.0},
+  {s:"Aubonne, gare",km:38.8,full:19.15,halb:9.57,ga:10.58,tph:11.0},
+  {s:"St-Prex",km:40.6,full:19.6,halb:9.8,ga:10.58,tph:4.0},
+  {s:"Morges",km:45.1,full:20.73,halb:10.37,ga:10.58,tph:16.0},
+  {s:"Lonay-Préverenges",km:47.5,full:21.33,halb:10.66,ga:10.58,tph:4.0},
+  {s:"Denges-Echandens",km:49.1,full:21.73,halb:10.87,ga:10.58,tph:2.0},
+  {s:"Bussigny",km:51.4,full:22.29,halb:11.14,ga:10.58,tph:9.0},
+  {s:"Renens VD",km:51.9,full:22.42,halb:11.21,ga:10.58,tph:26.5},
+  {s:"Prilly-Malley",km:52.3,full:22.54,halb:11.27,ga:10.58,tph:9.0},
+  {s:"Lausanne",km:53.1,full:22.72,halb:11.36,ga:10.58,tph:28.5},
+  {s:"Lausanne-Flon",km:53.5,full:22.82,halb:11.41,ga:10.58,tph:4.0},
+  {s:"La Conversion",km:55.8,full:23.4,halb:11.7,ga:10.58,tph:4.0},
+  {s:"Bossière",km:56.9,full:23.67,halb:11.84,ga:10.58,tph:2.0},
+  {s:"Cully",km:57.2,full:23.76,halb:11.88,ga:10.58,tph:9.0},
+  {s:"Grandvaux",km:57.5,full:23.83,halb:11.91,ga:10.58,tph:4.5},
+  {s:"Epesses",km:58.5,full:24.07,halb:12.04,ga:10.58,tph:3.0},
+  {s:"Puidoux",km:60.2,full:24.48,halb:12.24,ga:10.58,tph:6.0},
+  {s:"Rivaz",km:60.2,full:24.5,halb:12.25,ga:10.58,tph:3.5},
+  {s:"St-Saphorin",km:61.1,full:24.69,halb:12.35,ga:10.58,tph:0.0},
+  {s:"Vevey",km:63.7,full:25.27,halb:12.63,ga:10.58,tph:20.0},
+  {s:"La Tour-de-Peilz",km:64.5,full:25.44,halb:12.72,ga:10.58,tph:4.0},
+  {s:"Burier",km:65.4,full:25.64,halb:12.82,ga:10.58,tph:4.0},
+  {s:"Clarens",km:66.5,full:25.89,halb:12.95,ga:10.58,tph:4.0},
+  {s:"Villeneuve VD",km:67.0,full:25.99,halb:12.99,ga:10.58,tph:8.0},
+  {s:"Montreux",km:67.3,full:26.05,halb:13.03,ga:10.58,tph:16.0},
+  {s:"Aigle",km:67.4,full:26.09,halb:13.04,ga:10.58,tph:16.5},
+  {s:"Territet",km:67.8,full:26.16,halb:13.08,ga:10.58,tph:2.0},
+  {s:"Palézieux",km:68.2,full:26.24,halb:13.12,ga:10.58,tph:11.5},
+  {s:"Bex",km:69.5,full:26.54,halb:13.27,ga:10.58,tph:7.5},
+];
+
+// Key cities for annotation
+const KEY_CITIES = [
+  {name: "Genève", km: 0.0},
+  {name: "Nyon", km: 21.7},
+  {name: "Morges", km: 45.1},
+  {name: "Lausanne", km: 53.1},
+  {name: "Vevey", km: 63.7},
+  {name: "Montreux", km: 67.3},
+];
+
+// State
+let showHalbtax = true;
+let budget = 20;
+
+// Chart dimensions
+const container = document.getElementById('chartContainer');
+const margin = {top: 28, right: 40, bottom: 52, left: 62};
+let width, height;
+
+function getSize() {
+  const w = container.clientWidth - 48; // padding
+  width = w - margin.left - margin.right;
+  height = Math.min(460, Math.max(320, window.innerHeight * 0.45)) - margin.top - margin.bottom;
+}
+getSize();
+
+// Create SVG
+const svg = d3.select('#chartContainer')
+  .append('svg')
+  .attr('width', width + margin.left + margin.right)
+  .attr('height', height + margin.top + margin.bottom)
+  .append('g')
+  .attr('transform', `translate(${margin.left},${margin.top})`);
+
+// Scales
+const x = d3.scaleLinear().domain([0, 72]).range([0, width]);
+const y = d3.scaleLinear().domain([0, 30]).range([height, 0]);
+const rScale = d3.scaleSqrt().domain([0, 84]).range([3, 14]);
+
+// Budget zone fills
+const zones = svg.append('g').attr('class', 'zones');
+
+function drawZones() {
+  zones.selectAll('*').remove();
+  // Green zone: 0-10
+  zones.append('rect')
+    .attr('x', 0).attr('y', y(10))
+    .attr('width', width).attr('height', y(0) - y(10))
+    .attr('fill', '#2ecc71').attr('opacity', 0.04);
+  // Yellow zone: 10-20
+  zones.append('rect')
+    .attr('x', 0).attr('y', y(20))
+    .attr('width', width).attr('height', y(10) - y(20))
+    .attr('fill', '#f1c40f').attr('opacity', 0.04);
+  // Red zone: 20-30
+  zones.append('rect')
+    .attr('x', 0).attr('y', y(30))
+    .attr('width', width).attr('height', y(20) - y(30))
+    .attr('fill', '#e74c3c').attr('opacity', 0.04);
+}
+drawZones();
+
+// Grid lines
+const gridY = svg.append('g').attr('class', 'grid');
+[5, 10, 15, 20, 25].forEach(v => {
+  gridY.append('line')
+    .attr('x1', 0).attr('x2', width)
+    .attr('y1', y(v)).attr('y2', y(v))
+    .attr('stroke', 'rgba(255,255,255,0.06)').attr('stroke-width', 0.5);
+});
+[10, 20, 30, 40, 50, 60, 70].forEach(v => {
+  gridY.append('line')
+    .attr('x1', x(v)).attr('x2', x(v))
+    .attr('y1', 0).attr('y2', height)
+    .attr('stroke', 'rgba(255,255,255,0.06)').attr('stroke-width', 0.5);
+});
+
+// Axes
+const xAxis = svg.append('g')
+  .attr('transform', `translate(0,${height})`)
+  .call(d3.axisBottom(x).tickValues([0,10,20,30,40,50,60,70]).tickFormat(d => d + ' km'))
+  .attr('color', '#8a8880');
+xAxis.selectAll('text').attr('fill', '#8a8880').style('font-size', '11px').style('font-family', "'DM Mono', monospace");
+xAxis.selectAll('line').attr('stroke', 'rgba(255,255,255,0.15)');
+xAxis.select('.domain').attr('stroke', 'rgba(255,255,255,0.15)');
+
+const yAxis = svg.append('g')
+  .call(d3.axisLeft(y).tickValues([0,5,10,15,20,25,30]).tickFormat(d => 'CHF ' + d))
+  .attr('color', '#8a8880');
+yAxis.selectAll('text').attr('fill', '#8a8880').style('font-size', '11px').style('font-family', "'DM Mono', monospace");
+yAxis.selectAll('line').attr('stroke', 'rgba(255,255,255,0.15)');
+yAxis.select('.domain').attr('stroke', 'rgba(255,255,255,0.15)');
+
+// Axis labels
+svg.append('text')
+  .attr('x', width / 2).attr('y', height + 44)
+  .attr('text-anchor', 'middle')
+  .attr('fill', '#8a8880').attr('font-size', '12px')
+  .text('Distance from Geneva (km)');
+
+svg.append('text')
+  .attr('transform', 'rotate(-90)')
+  .attr('x', -height / 2).attr('y', -48)
+  .attr('text-anchor', 'middle')
+  .attr('fill', '#8a8880').attr('font-size', '12px')
+  .text('Single ticket price (CHF)');
+
+// GA daily line
+svg.append('line')
+  .attr('x1', 0).attr('x2', width)
+  .attr('y1', y(10.58)).attr('y2', y(10.58))
+  .attr('stroke', '#c8a86e').attr('stroke-width', 1.5)
+  .attr('stroke-dasharray', '8,4')
+  .attr('opacity', 0.8);
+svg.append('text')
+  .attr('x', width - 4).attr('y', y(10.58) - 6)
+  .attr('text-anchor', 'end')
+  .attr('fill', '#c8a86e').attr('font-size', '11px')
+  .attr('font-family', "'DM Mono', monospace")
+  .attr('font-weight', '700')
+  .text('GA daily CHF 10.58');
+
+// Budget line (dynamic)
+const budgetLine = svg.append('line')
+  .attr('x1', 0).attr('x2', width)
+  .attr('stroke', '#f1c40f').attr('stroke-width', 1.5)
+  .attr('stroke-dasharray', '6,3')
+  .attr('opacity', 0.6);
+
+const budgetLabel = svg.append('text')
+  .attr('x', width - 4)
+  .attr('text-anchor', 'end')
+  .attr('fill', '#f1c40f').attr('font-size', '11px')
+  .attr('font-family', "'DM Mono', monospace")
+  .attr('font-weight', '700');
+
+// Key city annotations
+KEY_CITIES.forEach((city, i) => {
+  const cx = x(city.km);
+  svg.append('line')
+    .attr('x1', cx).attr('x2', cx)
+    .attr('y1', -10).attr('y2', height)
+    .attr('stroke', 'rgba(255,255,255,0.15)').attr('stroke-width', 1)
+    .attr('stroke-dasharray', '3,3');
+  // Offset Vevey up and Montreux down to avoid overlap
+  const yOff = city.name === 'Vevey' ? -24 : city.name === 'Montreux' ? -6 : -14;
+  const anchor = city.name === 'Genève' ? 'start' : city.name === 'Montreux' ? 'end' : 'middle';
+  svg.append('text')
+    .attr('x', cx).attr('y', yOff)
+    .attr('text-anchor', anchor)
+    .attr('fill', '#8a8880').attr('font-size', '10px')
+    .attr('font-weight', '600')
+    .text(city.name);
+});
+
+// Full price line
+const fullLine = d3.line()
+  .x(d => x(d.km))
+  .y(d => y(d.full))
+  .curve(d3.curveMonotoneX);
+
+svg.append('path')
+  .datum(DATA)
+  .attr('d', fullLine)
+  .attr('fill', 'none')
+  .attr('stroke', '#e74c3c')
+  .attr('stroke-width', 2.5)
+  .attr('opacity', 0.9);
+
+// Halbtax line
+const halbtaxLine = d3.line()
+  .x(d => x(d.km))
+  .y(d => y(d.halb))
+  .curve(d3.curveMonotoneX);
+
+const halbtaxPath = svg.append('path')
+  .datum(DATA)
+  .attr('d', halbtaxLine)
+  .attr('fill', 'none')
+  .attr('stroke', '#2ecc71')
+  .attr('stroke-width', 2)
+  .attr('stroke-dasharray', '6,4')
+  .attr('opacity', 0.8);
+
+// Area between full and halbtax (savings fill)
+const savingsArea = d3.area()
+  .x(d => x(d.km))
+  .y0(d => y(d.halb))
+  .y1(d => y(d.full))
+  .curve(d3.curveMonotoneX);
+
+const savingsFill = svg.append('path')
+  .datum(DATA)
+  .attr('d', savingsArea)
+  .attr('fill', '#2ecc71')
+  .attr('opacity', 0.04);
+
+// Station dots (full price)
+const dots = svg.selectAll('.station-dot')
+  .data(DATA)
+  .enter()
+  .append('circle')
+  .attr('class', 'station-dot')
+  .attr('cx', d => x(d.km))
+  .attr('cy', d => y(d.full))
+  .attr('r', d => rScale(d.tph))
+  .attr('fill', '#e74c3c')
+  .attr('stroke', '#0a0a0f')
+  .attr('stroke-width', 1.5)
+  .attr('opacity', 0.9)
+  .style('cursor', 'pointer')
+  .style('transition', 'opacity 0.3s, fill 0.3s');
+
+// Halbtax dots
+const halbtaxDots = svg.selectAll('.halbtax-dot')
+  .data(DATA)
+  .enter()
+  .append('circle')
+  .attr('class', 'halbtax-dot')
+  .attr('cx', d => x(d.km))
+  .attr('cy', d => y(d.halb))
+  .attr('r', d => Math.max(2, rScale(d.tph) * 0.6))
+  .attr('fill', '#2ecc71')
+  .attr('stroke', '#0a0a0f')
+  .attr('stroke-width', 1)
+  .attr('opacity', 0.7)
+  .style('cursor', 'pointer')
+  .style('transition', 'opacity 0.3s');
+
+// Tooltip
+const tooltip = document.getElementById('tooltip');
+
+function showTooltip(event, d) {
+  const rect = container.getBoundingClientRect();
+  const px = event.clientX - rect.left;
+  const py = event.clientY - rect.top;
+
+  tooltip.innerHTML = `
+    <div class="station-name">${d.s}</div>
+    <div class="stat-row"><span class="stat-label">Distance</span><span class="stat-value">${d.km.toFixed(1)} km</span></div>
+    <div class="stat-row"><span class="stat-label">Full price</span><span class="stat-value">CHF ${d.full.toFixed(2)}</span></div>
+    <div class="stat-row"><span class="stat-label">Halbtax</span><span class="stat-value halbtax">CHF ${d.halb.toFixed(2)}</span></div>
+    <div class="stat-row"><span class="stat-label">Saving</span><span class="stat-value halbtax">CHF ${(d.full - d.halb).toFixed(2)}</span></div>
+    <div class="stat-row"><span class="stat-label">Trains/hr</span><span class="stat-value trains">${d.tph}</span></div>
+    <div class="stat-row"><span class="stat-label">vs GA daily</span><span class="stat-value" style="color:${d.full > d.ga ? '#e74c3c' : '#2ecc71'}">${d.full > d.ga ? '+' : ''}CHF ${(d.full - d.ga).toFixed(2)}</span></div>
+  `;
+  tooltip.style.opacity = 1;
+
+  // Position: avoid overflow
+  const tw = tooltip.offsetWidth;
+  const th = tooltip.offsetHeight;
+  let left = px + 16;
+  let top = py - th / 2;
+  if (left + tw > rect.width - 10) left = px - tw - 16;
+  if (top < 4) top = 4;
+  if (top + th > rect.height - 4) top = rect.height - th - 4;
+
+  tooltip.style.left = left + 'px';
+  tooltip.style.top = top + 'px';
+}
+
+function hideTooltip() {
+  tooltip.style.opacity = 0;
+}
+
+// Hover interactions on all dots
+svg.selectAll('.station-dot, .halbtax-dot')
+  .on('mouseenter', function(event, d) {
+    d3.select(this).attr('stroke', '#ffffff').attr('stroke-width', 2.5);
+    showTooltip(event, d);
+  })
+  .on('mousemove', function(event, d) {
+    showTooltip(event, d);
+  })
+  .on('mouseleave', function(event, d) {
+    d3.select(this).attr('stroke', '#0a0a0f').attr('stroke-width', d3.select(this).classed('halbtax-dot') ? 1 : 1.5);
+    hideTooltip();
+  });
+
+// Invisible wider hit areas for easier hovering
+svg.selectAll('.hit-area')
+  .data(DATA)
+  .enter()
+  .append('circle')
+  .attr('class', 'hit-area')
+  .attr('cx', d => x(d.km))
+  .attr('cy', d => y(d.full))
+  .attr('r', d => Math.max(12, rScale(d.tph) + 4))
+  .attr('fill', 'transparent')
+  .style('cursor', 'pointer')
+  .on('mouseenter', function(event, d) {
+    dots.filter(dd => dd === d).attr('stroke', '#ffffff').attr('stroke-width', 2.5);
+    showTooltip(event, d);
+  })
+  .on('mousemove', function(event, d) {
+    showTooltip(event, d);
+  })
+  .on('mouseleave', function(event, d) {
+    dots.filter(dd => dd === d).attr('stroke', '#0a0a0f').attr('stroke-width', 1.5);
+    hideTooltip();
+  });
+
+// Budget slider logic
+function updateBudget(val) {
+  budget = parseFloat(val);
+  document.getElementById('budgetValue').textContent = `CHF ${budget.toFixed(2)}`;
+
+  // Move budget line
+  budgetLine
+    .attr('y1', y(budget))
+    .attr('y2', y(budget));
+  // Offset label above or below to avoid GA line overlap
+  const gaY = y(10.58);
+  const budgetY = y(budget);
+  const tooClose = Math.abs(budgetY - gaY) < 18;
+  budgetLabel
+    .attr('x', 6)
+    .attr('text-anchor', 'start')
+    .attr('y', tooClose ? budgetY + 14 : budgetY - 6)
+    .text(`Budget CHF ${budget.toFixed(0)}`);
+
+  // Fade stations beyond budget
+  dots.attr('opacity', d => d.full <= budget ? 0.9 : 0.12)
+      .attr('fill', d => d.full <= budget ? '#e74c3c' : '#555');
+  halbtaxDots.attr('opacity', d => d.full <= budget ? 0.7 : 0.08);
+
+  // Find farthest reachable station
+  const reachable = DATA.filter(d => d.full <= budget);
+  const farthest = reachable.length > 0 ? reachable[reachable.length - 1] : null;
+  const unreachable = DATA.filter(d => d.full > budget);
+  const nextStation = unreachable.length > 0 ? unreachable[0] : null;
+
+  const reachText = document.getElementById('reachText');
+  if (farthest) {
+    const stationsReachable = reachable.length;
+    let extra = '';
+    // Special callouts
+    const lausanne = DATA.find(d => d.s === 'Lausanne');
+    const lausanneReachable = lausanne && lausanne.full <= budget;
+    if (budget <= 10.58) {
+      extra = ` Your budget is ${budget < 10.58 ? 'below' : 'at'} the GA daily cost of <span class="station-highlight">CHF 10.58</span>.`;
+    } else if (!lausanneReachable && farthest.km < lausanne.km) {
+      // Show "short of Lausanne" when Lausanne is out of reach
+      const gap = (lausanne.km - farthest.km).toFixed(0);
+      extra = ` That's <span class="km-highlight">${gap} km short of Lausanne</span>.`;
+    } else if (nextStation) {
+      extra = ` Next unreachable: <span class="station-highlight">${nextStation.s}</span> at <span class="price-highlight">CHF ${nextStation.full.toFixed(2)}</span>.`;
+    }
+    reachText.innerHTML = `On a <span class="price-highlight">CHF ${budget.toFixed(0)}</span> budget, your city reaches <span class="station-highlight">${farthest.s}</span> — <span class="km-highlight">${farthest.km.toFixed(0)} km</span> from Geneva. <span style="color:#8892a0">${stationsReachable}/49 stations reachable.</span>${extra}`;
+  } else {
+    reachText.innerHTML = `On a <span class="price-highlight">CHF ${budget.toFixed(0)}</span> budget, no stations are reachable.`;
+  }
+}
+
+document.getElementById('budgetSlider').addEventListener('input', function() {
+  updateBudget(this.value);
+});
+
+// Halbtax toggle
+document.getElementById('halbtaxToggle').addEventListener('click', function() {
+  showHalbtax = !showHalbtax;
+  this.classList.toggle('active', showHalbtax);
+  halbtaxPath.attr('opacity', showHalbtax ? 0.8 : 0);
+  halbtaxDots.attr('display', showHalbtax ? null : 'none');
+  savingsFill.attr('opacity', showHalbtax ? 0.04 : 0);
+});
+
+// Initialize
+updateBudget(20);
+
+// Resize
+window.addEventListener('resize', () => {
+  // Simple approach: reload
+  // For a production version, we'd redraw the SVG
+});
+</script>
+</body>
+</html>

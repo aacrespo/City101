@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>City101 — The Archipelago Effect</title>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;600;700&display=swap');
+
+  :root {
+    --bg: #0a0a0f;
+    --bg2: #111118;
+    --bg3: #1a1a24;
+    --text: #e8e6e1;
+    --text-dim: #8a8880;
+    --text-bright: #ffffff;
+    --accent: #c8a86e;
+    --accent-dim: #8a7548;
+    --geneva: #e74c3c;
+    --lacote: #e67e22;
+    --lausanne: #3498db;
+    --lavaux: #9b59b6;
+    --riviera: #2ecc71;
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{font-family:'Inter',-apple-system,sans-serif;background:#0a0a0f;color:#e8e6e1;overflow-x:hidden}
+
+  /* Hero */
+  .hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px 24px;position:relative}
+  .hero h1{font-size:clamp(32px,5vw,52px);font-weight:800;color:#fff;letter-spacing:-1px;margin-bottom:16px}
+  .hero .subtitle{font-size:clamp(15px,2vw,18px);color:#8a8880;max-width:600px;line-height:1.7;margin-bottom:48px}
+  .hero-stats{display:flex;gap:clamp(24px,5vw,56px);margin-bottom:64px}
+  .hero-stat .number{font-family:'DM Mono',monospace;font-size:clamp(36px,6vw,56px);font-weight:500;color:#c8a86e}
+  .hero-stat .label{font-size:14px;color:#8a8880;margin-top:4px}
+  .scroll-hint{position:absolute;bottom:40px;animation:bounce 2s infinite;color:#555;font-size:28px}
+  @keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(10px)}}
+
+  /* Sections */
+  .narrative-section{min-height:100vh;padding:80px 24px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+  .section-header{text-align:center;margin-bottom:32px;max-width:800px}
+  .section-number{font-family:'DM Mono',monospace;font-size:13px;color:#8a7548;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px}
+  .section-header h2{font-size:clamp(24px,3.5vw,34px);font-weight:700;color:#fff;margin-bottom:12px}
+  .section-header p{font-size:15px;color:#8a8880;line-height:1.7}
+  .viz-wrapper{width:100%;max-width:900px;margin:0 auto 32px}
+
+  .insight-card{background:#111118;border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:20px 28px;max-width:720px;text-align:center;margin:0 auto}
+  .insight-card .insight-text{font-size:15px;color:#c0c0c0;line-height:1.7}
+  .insight-card em{color:#c8a86e;font-style:normal;font-weight:600}
+  .insight-card strong{color:#fff;font-weight:700}
+
+  /* Map */
+  #corridor-map{width:100%;height:420px;border-radius:12px;border:1px solid rgba(255,255,255,0.06);overflow:hidden}
+
+  /* Comparison */
+  .comparison-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:680px;margin:0 auto 32px}
+  .comp-card{background:#111118;border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:28px 20px;text-align:center}
+  .comp-card .city-label{font-size:12px;letter-spacing:2px;text-transform:uppercase;margin-bottom:16px}
+  .comp-card .big-num{font-family:'DM Mono',monospace;font-size:clamp(32px,5vw,48px);font-weight:700;margin-bottom:4px}
+  .comp-card .detail{font-size:13px;color:#8a8880}
+  .comp-card .metric-row{margin-top:20px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.06)}
+  .comp-card .metric-label{font-size:13px;color:#8a8880;margin-bottom:4px}
+  .comp-card .metric-val{font-family:'DM Mono',monospace;font-size:clamp(20px,3vw,28px);font-weight:700}
+
+  /* Chart containers */
+  .chart-box{background:#111118;border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:20px;overflow:hidden}
+  .chart-box svg{width:100%;display:block}
+
+  /* Conclusion */
+  .conclusion{min-height:60vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:80px 24px}
+  .conclusion h2{font-size:clamp(28px,4vw,40px);font-weight:800;color:#fff;margin-bottom:12px}
+  .conclusion p{font-size:17px;color:#8a8880;max-width:600px;line-height:1.7;margin-bottom:16px}
+  .final-stats{display:flex;gap:clamp(20px,4vw,40px);margin-top:40px;flex-wrap:wrap;justify-content:center}
+  .final-stat .num{font-family:'DM Mono',monospace;font-size:clamp(24px,3vw,36px);font-weight:700}
+  .final-stat .lbl{font-size:12px;color:#8a8880;margin-top:4px}
+
+  /* Animations */
+  .fade-in{opacity:0;transform:translateY(30px);transition:opacity 0.8s ease,transform 0.8s ease}
+  .fade-in.visible{opacity:1;transform:translateY(0)}
+  .fade-in-d1{transition-delay:0.15s}
+  .fade-in-d2{transition-delay:0.3s}
+
+  /* Leaflet dark popups */
+  .leaflet-popup-content-wrapper{background:#111118!important;color:#e8e6e1!important;border:1px solid rgba(255,255,255,0.06)!important;border-radius:8px!important;box-shadow:0 4px 20px rgba(0,0,0,.4)!important}
+  .leaflet-popup-tip{background:#111118!important}
+  .leaflet-popup-content{font-family:'Inter',sans-serif!important;font-size:13px!important}
+
+  /* Legend */
+  .map-legend{display:flex;gap:16px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+  .map-legend .leg-item{display:flex;align-items:center;gap:6px;font-size:12px;color:#8a8880}
+  .map-legend .leg-dot{width:10px;height:10px;border-radius:50%}
+
+  /* D3 axis styling */
+  .axis text{fill:#8a8880;font-size:11px;font-family:'Inter',sans-serif}
+  .axis path,.axis line{stroke:rgba(255,255,255,0.06)}
+  .grid line{stroke:rgba(255,255,255,0.06);stroke-opacity:0.5}
+  .grid path{stroke:none}
+
+  .footer{text-align:center;padding:40px;color:#444;font-size:11px}
+  .spacer{height:40px}
+</style>
+</head>
+<body>
+<a href="index.html#explore" style="position:fixed;top:12px;left:16px;z-index:9999;font-family:'DM Sans',sans-serif;font-size:13px;color:#8a8880;text-decoration:none;padding:6px 14px;border:1px solid rgba(255,255,255,0.08);border-radius:20px;backdrop-filter:blur(12px);background:rgba(10,10,15,0.85);transition:color .2s,border-color .2s;" onmouseover="this.style.color='#c8a86e';this.style.borderColor='rgba(200,168,110,0.3)'" onmouseout="this.style.color='#8a8880';this.style.borderColor='rgba(255,255,255,0.08)'">← The Archipelago</a>
+
+<!-- ========== HERO ========== -->
+<section class="hero">
+  <h1>The Archipelago Effect</h1>
+  <p class="subtitle">How 49 train stations along 101 kilometers reveal Switzerland's hidden geography of working continuity</p>
+  <div class="hero-stats">
+    <div class="hero-stat"><div class="number" id="counter-stations">49</div><div class="label">stations</div></div>
+    <div class="hero-stat"><div class="number" id="counter-km">101</div><div class="label">kilometers</div></div>
+    <div class="hero-stat"><div class="number" id="counter-seg">5</div><div class="label">segments</div></div>
+  </div>
+  <div class="scroll-hint">↓</div>
+</section>
+
+<!-- ========== SECTION 1: THE CORRIDOR ========== -->
+<section class="narrative-section" id="sec-corridor">
+  <div class="section-header fade-in">
+    <div class="section-number">Chapter 1</div>
+    <h2>The Corridor</h2>
+    <p>Geneva to Villeneuve — 49 stations stretched along Lake Geneva's northern shore, through five distinct urban segments</p>
+  </div>
+  <div class="viz-wrapper fade-in fade-in-d1">
+    <div id="corridor-map"></div>
+    <div class="map-legend" id="map-legend"></div>
+  </div>
+  <div class="insight-card fade-in fade-in-d2">
+    <div class="insight-text">From <em>Geneva's</em> dense urban core through the suburban <em>La Côte</em>, past the <em>Lausanne</em> metropolitan area, into the UNESCO-listed <em>Lavaux</em> vineyards, and finally to the <em>Riviera</em>. Each segment has its own character — and its own level of service.</div>
+  </div>
+</section>
+
+<!-- ========== SECTION 2: TWO CORRIDORS ========== -->
+<section class="narrative-section" id="sec-comparison">
+  <div class="section-header fade-in">
+    <div class="section-number">Chapter 2</div>
+    <h2>Two Corridors</h2>
+    <p>Same country. Same national operator. Same rolling stock. Radically different outcomes.</p>
+  </div>
+  <div class="comparison-grid fade-in fade-in-d1">
+    <div class="comp-card" style="border-top:3px solid #3498db">
+      <div class="city-label" style="color:#3498db">Zurich S8 Lakeside</div>
+      <div class="big-num" style="color:#2ecc71">2/hr</div>
+      <div class="detail">minimum station frequency</div>
+      <div class="metric-row">
+        <div class="metric-label">Distance to weakest station</div>
+        <div class="metric-val" style="color:#2ecc71">11 km</div>
+      </div>
+    </div>
+    <div class="comp-card" style="border-top:3px solid #e74c3c">
+      <div class="city-label" style="color:#e74c3c">City101 Geneva–Villeneuve</div>
+      <div class="big-num" style="color:#e74c3c">0/hr</div>
+      <div class="detail">minimum station frequency</div>
+      <div class="metric-row">
+        <div class="metric-label">Distance to weakest station</div>
+        <div class="metric-val" style="color:#e74c3c">61 km</div>
+      </div>
+    </div>
+  </div>
+  <div class="insight-card fade-in fade-in-d2">
+    <div class="insight-text"><strong>5.5× further</strong> from the center for the same level of service failure. The minimum Zurich station (<em>Oberrieden</em>, 2/hr) sits 11 km from the hub. The equivalent City101 station (<em>Grandvaux</em>, 2/hr) is 56 km from Geneva — and <em>St-Saphorin</em> has no scheduled service at all.</div>
+  </div>
+</section>
+
+<!-- ========== SECTION 3: THE COST CURVE ========== -->
+<section class="narrative-section" id="sec-cost">
+  <div class="section-header fade-in">
+    <div class="section-number">Chapter 3</div>
+    <h2>The Price of Distance</h2>
+    <p>A GA annual pass costs CHF 3,860 — making the daily breakeven CHF 10.58. Beyond kilometer 15, every single trip costs more than the GA daily rate.</p>
+  </div>
+  <div class="viz-wrapper fade-in fade-in-d1">
+    <div class="chart-box" id="cost-chart"></div>
+  </div>
+  <div class="insight-card fade-in fade-in-d2">
+    <div class="insight-text">From <em>CHF 3.60</em> (Geneva) to <em>CHF 26.54</em> (Bex) — a <strong>7.4× price difference</strong>. The GA pass creates a binary: those who have it access the entire corridor equally; those who don't face an exponentially rising cost barrier.</div>
+  </div>
+</section>
+
+<!-- ========== SECTION 4: DIVERSITY FRACTURE ========== -->
+<section class="narrative-section" id="sec-diversity">
+  <div class="section-header fade-in">
+    <div class="section-number">Chapter 4</div>
+    <h2>The Diversity Fracture</h2>
+    <p>Where diversity disappears, so does everything else. Four independent indices tell the same story.</p>
+  </div>
+  <div class="viz-wrapper fade-in fade-in-d1">
+    <div class="chart-box" id="diversity-chart"></div>
+  </div>
+  <div class="insight-card fade-in fade-in-d2">
+    <div class="insight-text">Below Shannon diversity <em>1.0</em>: average station richness is <strong>8.8</strong> amenities. Above <em>1.0</em>: richness jumps to <strong>70.5</strong>. The Lavaux segment sits almost entirely below the threshold — a systemic diversity collapse that mirrors every other metric.</div>
+  </div>
+</section>
+
+<!-- ========== SECTION 5: TEMPORAL INVARIANCE ========== -->
+<section class="narrative-section" id="sec-temporal">
+  <div class="section-header fade-in">
+    <div class="section-number">Chapter 5</div>
+    <h2>The Hierarchy Never Changes</h2>
+    <p>Whether it's 6 AM or midnight, weekday or weekend — the same stations are always on top, and the same ones are always forgotten.</p>
+  </div>
+  <div class="viz-wrapper fade-in fade-in-d1">
+    <div class="chart-box" id="temporal-chart"></div>
+  </div>
+  <div class="insight-card fade-in fade-in-d2">
+    <div class="insight-text">The Temporal Working Continuity Index across seven time periods reveals <strong>parallel lines that never cross</strong>. Genève stays at the top, St-Saphorin stays at the bottom. The hierarchy is not a peak-hour artifact — it is <em>structural</em>.</div>
+  </div>
+</section>
+
+<!-- ========== CONCLUSION ========== -->
+<section class="conclusion">
+  <h2 class="fade-in">This is not a natural pattern.</h2>
+  <p class="fade-in fade-in-d1">It is a design choice.</p>
+  <p class="fade-in fade-in-d2" style="font-size:14px;max-width:540px">49 stations, 5 segments, one corridor. The data tells a consistent story: access to working continuity along City101 is determined not by need, but by proximity to two urban cores.</p>
+  <div class="final-stats fade-in fade-in-d2">
+    <div class="final-stat"><div class="num" style="color:#e74c3c">7.4×</div><div class="lbl">price difference</div></div>
+    <div class="final-stat"><div class="num" style="color:#e67e22">5.5×</div><div class="lbl">distance gap vs Zurich</div></div>
+    <div class="final-stat"><div class="num" style="color:#f1c40f">8×</div><div class="lbl">richness collapse</div></div>
+    <div class="final-stat"><div class="num" style="color:#2ecc71">0</div><div class="lbl">rank changes across time</div></div>
+  </div>
+</section>
+
+<div class="footer">City101 Geneva–Villeneuve Corridor Analysis · EPFL BA6 Architecture · Data: SBB, OpenStreetMap, Swiss Federal Statistics</div>
+
+<script>
+/* ═══════════════════════════════════════════════════
+   DATA
+   ═══════════════════════════════════════════════════ */
+const SEG_NAMES=["Geneva","La Côte","Lausanne","Lavaux","Riviera"];
+const SEG_COLORS=["#e74c3c","#e67e22","#3498db","#9b59b6","#2ecc71"];
+
+// All 49 stations: n=name, km=rail_km, la=lat, lo=lon, sg=segment(0-4), fr=freq, pr=price, rs=relig_shannon, ri=richness
+const S=[
+{n:"Genève",km:0,la:46.2102,lo:6.1424,sg:0,fr:25,pr:3.6,rs:1.703,ri:115},
+{n:"Genève-Sécheron",km:1.4,la:46.2225,lo:6.1445,sg:0,fr:8,pr:3.6,rs:0.956,ri:23},
+{n:"Genève-Eaux-Vives",km:2.2,la:46.2015,lo:6.1665,sg:0,fr:12.5,pr:3.6,rs:1.936,ri:59},
+{n:"Genève-Champel",km:2.3,la:46.1922,lo:6.1535,sg:0,fr:12.5,pr:3.6,rs:2.123,ri:127},
+{n:"Lancy-Pont-Rouge",km:3.2,la:46.186,lo:6.1249,sg:0,fr:12,pr:3.73,rs:1.33,ri:11},
+{n:"Genève-Aéroport",km:3.6,la:46.2325,lo:6.112,sg:0,fr:4.5,pr:4.07,rs:1.33,ri:7},
+{n:"Vernier-Blandonnet",km:3.9,la:46.2219,lo:6.0972,sg:0,fr:84,pr:4.32,rs:1.55,ri:7},
+{n:"Lancy-Bachet",km:4.3,la:46.1743,lo:6.1293,sg:0,fr:12.5,pr:4.66,rs:1.277,ri:5},
+{n:"Genthod-Bellevue",km:5.5,la:46.2567,lo:6.154,sg:0,fr:8,pr:5.61,rs:0,ri:10},
+{n:"Versoix",km:8.3,la:46.2797,lo:6.1657,sg:0,fr:8,pr:7.28,rs:0.562,ri:23},
+{n:"Mies",km:10.5,la:46.2985,lo:6.1676,sg:1,fr:8,pr:8.48,rs:0,ri:4},
+{n:"Tannay",km:11.8,la:46.3077,lo:6.1811,sg:1,fr:8,pr:9.19,rs:0,ri:3},
+{n:"Coppet",km:13,la:46.3174,lo:6.1878,sg:1,fr:9.5,pr:9.87,rs:0,ri:21},
+{n:"Founex",km:15.1,la:46.3348,lo:6.1949,sg:1,fr:3.5,pr:11.01,rs:0,ri:1},
+{n:"Nyon",km:21.7,la:46.3844,lo:6.236,sg:1,fr:14.5,pr:13.63,rs:1.54,ri:57},
+{n:"Prangins",km:23.2,la:46.393,lo:6.2541,sg:1,fr:5.5,pr:14.22,rs:0,ri:4},
+{n:"Gland",km:26.5,la:46.42,lo:6.2691,sg:1,fr:6.5,pr:15.56,rs:1.56,ri:27},
+{n:"Begnins",km:28.2,la:46.4402,lo:6.2477,sg:1,fr:8.5,pr:16.22,rs:0,ri:7},
+{n:"Rolle",km:33.4,la:46.4628,lo:6.3364,sg:1,fr:4.5,pr:17.79,rs:0.5,ri:26},
+{n:"Perroy",km:34.1,la:46.4639,lo:6.3529,sg:1,fr:3,pr:17.98,rs:0,ri:3},
+{n:"Allaman",km:37.3,la:46.4758,lo:6.3997,sg:2,fr:6,pr:18.77,rs:0,ri:4},
+{n:"Aubonne",km:38.8,la:46.4938,lo:6.3929,sg:2,fr:11,pr:19.15,rs:0.562,ri:14},
+{n:"St-Prex",km:40.6,la:46.4823,lo:6.4559,sg:2,fr:4,pr:19.6,rs:0.562,ri:13},
+{n:"Morges",km:45.1,la:46.5111,lo:6.494,sg:2,fr:16,pr:20.73,rs:1.359,ri:57},
+{n:"Lonay-Préverenges",km:47.5,la:46.5231,lo:6.5195,sg:2,fr:4,pr:21.33,rs:0.673,ri:7},
+{n:"Denges-Echandens",km:49.1,la:46.5291,lo:6.5405,sg:2,fr:2,pr:21.73,rs:0.693,ri:1},
+{n:"Bussigny",km:51.4,la:46.5476,lo:6.5518,sg:2,fr:9,pr:22.29,rs:0,ri:3},
+{n:"Renens VD",km:51.9,la:46.537,lo:6.5789,sg:2,fr:26.5,pr:22.42,rs:0.898,ri:15},
+{n:"Prilly-Malley",km:52.3,la:46.5267,lo:6.6026,sg:2,fr:9,pr:22.54,rs:1.517,ri:21},
+{n:"Lausanne",km:53.1,la:46.5168,lo:6.6291,sg:2,fr:28.5,pr:22.72,rs:1.955,ri:250},
+{n:"Lausanne-Flon",km:53.5,la:46.5208,lo:6.6303,sg:2,fr:4,pr:22.82,rs:1.943,ri:277},
+{n:"La Conversion",km:55.8,la:46.5131,lo:6.6783,sg:3,fr:4,pr:23.4,rs:0,ri:6},
+{n:"Bossière",km:56.9,la:46.5098,lo:6.6993,sg:3,fr:2,pr:23.67,rs:0,ri:1},
+{n:"Cully",km:57.2,la:46.4886,lo:6.7271,sg:3,fr:9,pr:23.76,rs:0.562,ri:20},
+{n:"Grandvaux",km:57.5,la:46.4969,lo:6.7226,sg:3,fr:4.5,pr:23.83,rs:0.562,ri:16},
+{n:"Epesses",km:58.5,la:46.4893,lo:6.7452,sg:3,fr:3,pr:24.07,rs:0,ri:6},
+{n:"Puidoux",km:60.2,la:46.4938,lo:6.7657,sg:3,fr:6,pr:24.48,rs:0,ri:4},
+{n:"Rivaz",km:60.2,la:46.4742,lo:6.7846,sg:3,fr:3.5,pr:24.5,rs:0.693,ri:2},
+{n:"St-Saphorin",km:61.1,la:46.4727,lo:6.7981,sg:3,fr:0,pr:24.69,rs:0,ri:1},
+{n:"Vevey",km:63.7,la:46.463,lo:6.8434,sg:4,fr:20,pr:25.27,rs:1.731,ri:75},
+{n:"La Tour-de-Peilz",km:64.5,la:46.4555,lo:6.8595,sg:4,fr:4,pr:25.44,rs:1.273,ri:28},
+{n:"Burier",km:65.4,la:46.4479,lo:6.8771,sg:4,fr:4,pr:25.64,rs:0.693,ri:4},
+{n:"Clarens",km:66.5,la:46.4427,lo:6.8958,sg:4,fr:4,pr:25.89,rs:1.667,ri:21},
+{n:"Villeneuve",km:67,la:46.3984,lo:6.927,sg:4,fr:8,pr:25.99,rs:0.451,ri:27},
+{n:"Montreux",km:67.3,la:46.4359,lo:6.9104,sg:4,fr:16,pr:26.05,rs:1.237,ri:54},
+{n:"Aigle",km:67.4,la:46.3169,lo:6.9637,sg:4,fr:16.5,pr:26.09,rs:0,ri:1},
+{n:"Territet",km:67.8,la:46.4264,lo:6.9227,sg:4,fr:2,pr:26.16,rs:0.637,ri:12},
+{n:"Palézieux",km:68.2,la:46.5428,lo:6.8379,sg:4,fr:11.5,pr:26.24,rs:0,ri:0},
+{n:"Bex",km:69.5,la:46.2515,lo:7.0007,sg:4,fr:7.5,pr:26.54,rs:0,ri:1}
+];
+
+// Temporal TWCI data for 6 representative stations across 7 time periods
+const TEMPORAL=[
+  {name:"Genève",color:"#e74c3c",values:[0.530,0.673,0.722,0.733,0.532,0.508,0.561]},
+  {name:"Lausanne",color:"#3498db",values:[0.381,0.512,0.535,0.515,0.401,0.379,0.423]},
+  {name:"Vevey",color:"#2ecc71",values:[0.230,0.355,0.377,0.382,0.266,0.226,0.317]},
+  {name:"Nyon",color:"#e67e22",values:[0.188,0.228,0.244,0.253,0.217,0.201,0.213]},
+  {name:"Cully",color:"#9b59b6",values:[0.071,0.073,0.073,0.073,0.073,0.073,0.069]},
+  {name:"St-Saphorin",color:"#666",values:[0.001,0.001,0.001,0.001,0.001,0.001,0.001]}
+];
+const PERIODS=["Early","AM Peak","Midday","PM Peak","Evening","Late Night","Weekend"];
+
+/* ═══════════════════════════════════════════════════
+   SCROLL OBSERVER
+   ═══════════════════════════════════════════════════ */
+const observer=new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.classList.add("visible");
+      // Trigger chart builds on first visibility
+      const id=e.target.closest(".narrative-section")?.id||e.target.closest(".conclusion")?.className;
+      if(id&&!built[id]){built[id]=true;buildSection(id)}
+    }
+  });
+},{threshold:0.15});
+
+document.querySelectorAll(".fade-in").forEach(el=>observer.observe(el));
+
+const built={};
+
+function buildSection(id){
+  if(id==="sec-corridor") buildMap();
+  if(id==="sec-cost") buildCostChart();
+  if(id==="sec-diversity") buildDiversityChart();
+  if(id==="sec-temporal") buildTemporalChart();
+}
+
+/* ═══════════════════════════════════════════════════
+   SECTION 1: CORRIDOR MAP
+   ═══════════════════════════════════════════════════ */
+function buildMap(){
+  const map=L.map("corridor-map",{scrollWheelZoom:false,zoomControl:true,attributionControl:false})
+    .fitBounds([[46.17,6.05],[46.56,7.02]]);
+  L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",{
+    maxZoom:16,subdomains:"abcd"
+  }).addTo(map);
+
+  // Stagger station appearance by segment
+  S.forEach((s,i)=>{
+    setTimeout(()=>{
+      const r=Math.max(4,Math.min(12,Math.sqrt(s.fr)*2));
+      L.circleMarker([s.la,s.lo],{
+        radius:r,fillColor:SEG_COLORS[s.sg],fillOpacity:0.85,
+        color:"#fff",weight:0.5,opacity:0.6
+      }).addTo(map).bindPopup(
+        `<strong>${s.n}</strong><br>
+         <span style="color:${SEG_COLORS[s.sg]}">${SEG_NAMES[s.sg]}</span> · km ${s.km}<br>
+         ${s.fr} trains/hr · CHF ${s.pr}`
+      );
+    },i*40);
+  });
+
+  // Legend
+  const leg=document.getElementById("map-legend");
+  SEG_NAMES.forEach((name,i)=>{
+    leg.innerHTML+=`<div class="leg-item"><div class="leg-dot" style="background:${SEG_COLORS[i]}"></div>${name}</div>`;
+  });
+}
+
+/* ═══════════════════════════════════════════════════
+   SECTION 3: COST CURVE
+   ═══════════════════════════════════════════════════ */
+function buildCostChart(){
+  const W=860,H=360,M={top:24,right:30,bottom:44,left:56};
+  const w=W-M.left-M.right,h=H-M.top-M.bottom;
+
+  const svg=d3.select("#cost-chart").append("svg")
+    .attr("viewBox",`0 0 ${W} ${H}`).attr("preserveAspectRatio","xMidYMid meet");
+  const g=svg.append("g").attr("transform",`translate(${M.left},${M.top})`);
+
+  const x=d3.scaleLinear().domain([0,72]).range([0,w]);
+  const y=d3.scaleLinear().domain([0,28]).range([h,0]);
+
+  // Grid
+  g.append("g").attr("class","grid").attr("transform",`translate(0,${h})`)
+    .call(d3.axisBottom(x).tickSize(-h).tickFormat(""));
+  g.append("g").attr("class","grid")
+    .call(d3.axisLeft(y).tickSize(-w).tickFormat(""));
+
+  // Axes
+  g.append("g").attr("class","axis").attr("transform",`translate(0,${h})`)
+    .call(d3.axisBottom(x).ticks(8).tickFormat(d=>d+" km"));
+  g.append("g").attr("class","axis")
+    .call(d3.axisLeft(y).ticks(6).tickFormat(d=>"CHF "+d));
+
+  // Area
+  const area=d3.area().x(d=>x(d.km)).y0(h).y1(d=>y(d.pr)).curve(d3.curveMonotoneX);
+  g.append("path").datum(S).attr("d",area)
+    .attr("fill","#3498db").attr("fill-opacity",0.12);
+
+  // Line
+  const line=d3.line().x(d=>x(d.km)).y(d=>y(d.pr)).curve(d3.curveMonotoneX);
+  const path=g.append("path").datum(S).attr("d",line)
+    .attr("fill","none").attr("stroke","#3498db").attr("stroke-width",2.5);
+
+  // Animate line drawing
+  const totalLen=path.node().getTotalLength();
+  path.attr("stroke-dasharray",totalLen).attr("stroke-dashoffset",totalLen)
+    .transition().duration(2000).ease(d3.easeQuadOut).attr("stroke-dashoffset",0);
+
+  // GA daily cost threshold
+  const gaY=y(10.58);
+  g.append("line").attr("x1",0).attr("x2",w).attr("y1",gaY).attr("y2",gaY)
+    .attr("stroke","#e74c3c").attr("stroke-width",1.5).attr("stroke-dasharray","6,4")
+    .attr("opacity",0).transition().delay(1500).duration(600).attr("opacity",0.8);
+
+  g.append("text").attr("x",w-4).attr("y",gaY-8).attr("text-anchor","end")
+    .attr("fill","#e74c3c").attr("font-size","11px").attr("font-family","DM Mono, monospace")
+    .text("GA daily cost: CHF 10.58")
+    .attr("opacity",0).transition().delay(1800).duration(600).attr("opacity",1);
+
+  // Dots for key stations
+  const keyStations=S.filter(s=>["Genève","Lausanne","Bex","Nyon","St-Saphorin"].includes(s.n));
+  g.selectAll(".cost-dot").data(keyStations).join("circle")
+    .attr("cx",d=>x(d.km)).attr("cy",d=>y(d.pr)).attr("r",0)
+    .attr("fill",d=>SEG_COLORS[d.sg]).attr("stroke","#fff").attr("stroke-width",1)
+    .transition().delay((_,i)=>2000+i*150).duration(400).attr("r",5);
+
+  g.selectAll(".cost-label").data(keyStations).join("text")
+    .attr("x",d=>x(d.km)).attr("y",d=>y(d.pr)-10).attr("text-anchor","middle")
+    .attr("fill","#e8e6e1").attr("font-size","10px").text(d=>d.n)
+    .attr("opacity",0).transition().delay((_,i)=>2200+i*150).duration(400).attr("opacity",1);
+}
+
+/* ═══════════════════════════════════════════════════
+   SECTION 4: DIVERSITY SCATTER
+   ═══════════════════════════════════════════════════ */
+function buildDiversityChart(){
+  const W=860,H=400,M={top:24,right:30,bottom:48,left:56};
+  const w=W-M.left-M.right,h=H-M.top-M.bottom;
+
+  const svg=d3.select("#diversity-chart").append("svg")
+    .attr("viewBox",`0 0 ${W} ${H}`).attr("preserveAspectRatio","xMidYMid meet");
+  const g=svg.append("g").attr("transform",`translate(${M.left},${M.top})`);
+
+  const x=d3.scaleLinear().domain([0,2.3]).range([0,w]);
+  const y=d3.scaleLinear().domain([0,290]).range([h,0]);
+
+  // Grid
+  g.append("g").attr("class","grid").attr("transform",`translate(0,${h})`)
+    .call(d3.axisBottom(x).tickSize(-h).tickFormat(""));
+  g.append("g").attr("class","grid")
+    .call(d3.axisLeft(y).tickSize(-w).tickFormat(""));
+
+  // Axes
+  g.append("g").attr("class","axis").attr("transform",`translate(0,${h})`)
+    .call(d3.axisBottom(x).ticks(6));
+  g.append("g").attr("class","axis")
+    .call(d3.axisLeft(y).ticks(6));
+
+  // Axis labels
+  svg.append("text").attr("x",W/2).attr("y",H-6).attr("text-anchor","middle")
+    .attr("fill","#8a8880").attr("font-size","12px").text("Religious Shannon Diversity");
+  svg.append("text").attr("transform","rotate(-90)").attr("x",-H/2).attr("y",14)
+    .attr("text-anchor","middle").attr("fill","#8a8880").attr("font-size","12px")
+    .text("Station Richness (1000m)");
+
+  // Phase transition line at Shannon = 1.0
+  const threshX=x(1.0);
+  g.append("line").attr("x1",threshX).attr("x2",threshX).attr("y1",0).attr("y2",h)
+    .attr("stroke","#f1c40f").attr("stroke-width",1.5).attr("stroke-dasharray","6,4")
+    .attr("opacity",0).transition().delay(800).duration(600).attr("opacity",0.7);
+
+  // Threshold labels
+  g.append("text").attr("x",threshX-8).attr("y",16).attr("text-anchor","end")
+    .attr("fill","#e74c3c").attr("font-size","10px").attr("font-family","DM Mono, monospace")
+    .text("avg: 8.8").attr("opacity",0).transition().delay(1200).duration(400).attr("opacity",1);
+  g.append("text").attr("x",threshX+8).attr("y",16).attr("text-anchor","start")
+    .attr("fill","#2ecc71").attr("font-size","10px").attr("font-family","DM Mono, monospace")
+    .text("avg: 70.5").attr("opacity",0).transition().delay(1200).duration(400).attr("opacity",1);
+
+  // Dots
+  g.selectAll(".div-dot").data(S).join("circle")
+    .attr("cx",d=>x(d.rs)).attr("cy",d=>y(d.ri))
+    .attr("fill",d=>SEG_COLORS[d.sg]).attr("fill-opacity",0.8)
+    .attr("stroke","#fff").attr("stroke-width",0.5).attr("stroke-opacity",0.4)
+    .attr("r",0)
+    .transition().delay((_,i)=>400+i*30).duration(400).ease(d3.easeBackOut)
+    .attr("r",5.5);
+
+  // Label outliers
+  const outliers=S.filter(s=>s.ri>100||s.n==="St-Saphorin");
+  g.selectAll(".div-label").data(outliers).join("text")
+    .attr("x",d=>x(d.rs)+8).attr("y",d=>y(d.ri)+4)
+    .attr("fill","#e8e6e1").attr("font-size","10px").text(d=>d.n)
+    .attr("opacity",0).transition().delay(2000).duration(500).attr("opacity",1);
+}
+
+/* ═══════════════════════════════════════════════════
+   SECTION 5: TEMPORAL LINES
+   ═══════════════════════════════════════════════════ */
+function buildTemporalChart(){
+  const W=860,H=380,M={top:24,right:120,bottom:48,left:56};
+  const w=W-M.left-M.right,h=H-M.top-M.bottom;
+
+  const svg=d3.select("#temporal-chart").append("svg")
+    .attr("viewBox",`0 0 ${W} ${H}`).attr("preserveAspectRatio","xMidYMid meet");
+  const g=svg.append("g").attr("transform",`translate(${M.left},${M.top})`);
+
+  const x=d3.scalePoint().domain(PERIODS).range([0,w]).padding(0.1);
+  const y=d3.scaleLinear().domain([0,0.8]).range([h,0]);
+
+  // Grid
+  g.append("g").attr("class","grid")
+    .call(d3.axisLeft(y).tickSize(-w).tickFormat(""));
+
+  // Axes
+  g.append("g").attr("class","axis").attr("transform",`translate(0,${h})`)
+    .call(d3.axisBottom(x)).selectAll("text").attr("transform","rotate(-20)").style("text-anchor","end");
+  g.append("g").attr("class","axis")
+    .call(d3.axisLeft(y).ticks(6).tickFormat(d3.format(".1f")));
+
+  // Y-axis label
+  svg.append("text").attr("transform","rotate(-90)").attr("x",-H/2).attr("y",14)
+    .attr("text-anchor","middle").attr("fill","#8a8880").attr("font-size","12px")
+    .text("TWCI (Temporal Working Continuity Index)");
+
+  // Lines
+  const line=d3.line().x((_,i)=>x(PERIODS[i])).y(d=>y(d)).curve(d3.curveMonotoneX);
+
+  TEMPORAL.forEach((station,si)=>{
+    const path=g.append("path").datum(station.values).attr("d",line)
+      .attr("fill","none").attr("stroke",station.color)
+      .attr("stroke-width",station.name==="St-Saphorin"?1.5:2.5)
+      .attr("stroke-dasharray",station.name==="St-Saphorin"?"4,3":"none");
+
+    // Animate
+    const len=path.node().getTotalLength();
+    path.attr("stroke-dasharray",len).attr("stroke-dashoffset",len)
+      .transition().delay(si*200).duration(1500).ease(d3.easeQuadOut)
+      .attr("stroke-dashoffset",0)
+      .on("end",function(){
+        if(station.name!=="St-Saphorin") d3.select(this).attr("stroke-dasharray","none");
+        else d3.select(this).attr("stroke-dasharray","4,3");
+      });
+
+    // Dots
+    station.values.forEach((v,pi)=>{
+      g.append("circle").attr("cx",x(PERIODS[pi])).attr("cy",y(v))
+        .attr("r",0).attr("fill",station.color).attr("stroke","#0a0a0f").attr("stroke-width",1.5)
+        .transition().delay(si*200+pi*100).duration(300).attr("r",3.5);
+    });
+
+    // End label
+    const lastV=station.values[6];
+    g.append("text").attr("x",w+8).attr("y",y(lastV)+4)
+      .attr("fill",station.color).attr("font-size","11px").attr("font-weight","600")
+      .text(station.name)
+      .attr("opacity",0).transition().delay(si*200+1400).duration(400).attr("opacity",1);
+  });
+}
+</script>
+</body>
+</html>

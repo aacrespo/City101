@@ -1,0 +1,4 @@
+name,place_type,canton,lat_wgs84,lon_wgs84,E_LV95,N_LV95,osm_node_id
+Matériuum – Ressourcerie Genève (La MACO),building_materials_reuse,GE,46.2041,6.1341,2497907,1198465,
+Matériuum – Ressourcerie Lausanne (Beaulieu),building_materials_reuse,VD,46.5228,6.6071,2534111,1161556,
+Promaison – Renens (kitchen / bathroom salvage),building_materials_reuse,VD,46.5270,6.5731,2531165,1162009,

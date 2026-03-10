@@ -1,0 +1,50 @@
+station_name,lat_wgs84,lon_wgs84,snapped_lat,snapped_lon,snap_distance_m,snap_quality,snap_note,distance_from_geneva_km,line_type,is_branch,branch_type
+Genève,46.210228,6.142435,46.211566,6.143143,158.4,acceptable,,0.0,standard_gauge,False,
+Genève-Champel,46.192208,6.153473,46.192159,6.143911,736.0,approximate,CEVA standard gauge (736m),0.0,standard_gauge_leman_express,True,CEVA
+Lancy-Bachet,46.174342,6.12934,46.174081,6.129708,40.6,good,CEVA line,0.0,standard_gauge_leman_express,True,CEVA junction
+Lancy-Pont-Rouge,46.18596,6.124929,46.187458,6.124892,166.6,good,CEVA line,0.0,standard_gauge_leman_express,True,CEVA
+Genève-Eaux-Vives,46.201461,6.166549,46.200064,6.166569,155.4,good,CEVA line,0.17,standard_gauge_leman_express,True,CEVA
+Genève-Sécheron,46.222452,6.144542,46.222454,6.144586,3.4,good,,1.4,standard_gauge,False,
+"Vernier, Blandonnet",46.221936,6.097217,46.221966,6.097225,3.4,non_rail_station,"Tram/bus stop, 3m to nearest rail",1.4,non_rail_station,True,Tram/bus
+Genève-Aéroport,46.232547,6.111969,46.232547,6.111969,1503.1,original_coords,"No rail within 1km (1503m), using station coords",2.57,narrow_gauge,True,Airport branch
+Genthod-Bellevue,46.256747,6.153947,46.25687,6.153894,14.2,good,,5.53,standard_gauge,False,
+Versoix,46.279741,6.165718,46.279614,6.16549,22.5,good,,8.37,standard_gauge,False,
+Mies,46.298503,6.167641,46.298392,6.16772,13.7,good,,10.67,standard_gauge,False,
+Tannay,46.307659,6.181097,46.307632,6.181116,3.3,good,,12.15,standard_gauge,False,
+Coppet,46.317405,6.187806,46.317419,6.187766,3.4,good,,13.39,standard_gauge,False,
+"Founex, est",46.334766,6.19494,46.33439,6.196779,147.3,non_rail_station,"Bus stop, 147m to nearest rail",15.43,non_rail_station,True,Bus stop
+Nyon,46.384429,6.23595,46.384589,6.235816,20.5,good,,22.0,standard_gauge,False,
+"Prangins, Les Abériaux",46.393015,6.254119,46.396373,6.245376,767.4,non_rail_station,"Bus stop, 767m to nearest rail",23.73,non_rail_station,True,Bus stop
+"Begnins, poste",46.440225,6.247701,46.423501,6.27291,2681.5,non_rail_station,"Bus stop, 2682m to nearest rail",26.09,non_rail_station,True,Bus stop
+Gland,46.419998,6.269128,46.419936,6.269188,8.3,good,,26.2,standard_gauge,False,
+Rolle,46.462757,6.336387,46.462698,6.336416,6.9,good,,32.53,standard_gauge,False,
+"Perroy, Couronnette",46.463879,6.352911,46.46806,6.350812,491.9,non_rail_station,"Bus stop, 492m to nearest rail",33.66,non_rail_station,True,Bus stop
+Allaman,46.47576,6.399683,46.475552,6.399731,23.4,good,,37.13,standard_gauge,False,
+"Aubonne, gare",46.493844,6.39294,46.475923,6.40123,2091.4,non_rail_station,"Bus stop, 2091m to nearest rail",37.29,non_rail_station,True,Bus stop
+St-Prex,46.482324,6.455897,46.48256,6.455719,29.6,good,,41.19,standard_gauge,False,
+Morges,46.511102,6.493958,46.511324,6.49382,26.9,good,,45.1,standard_gauge,False,
+Lonay-Préverenges,46.523141,6.519527,46.523093,6.519545,5.5,good,,47.75,standard_gauge,False,
+Denges-Echandens,46.529129,6.54049,46.528645,6.541024,67.6,good,,50.6,standard_gauge,False,
+Bussigny,46.547597,6.551814,46.54668,6.553096,141.4,acceptable,,52.86,standard_gauge,False,
+Renens VD,46.537046,6.57892,46.537153,6.578976,12.6,good,,54.93,standard_gauge,False,
+Prilly-Malley,46.526697,6.602624,46.527691,6.604271,167.6,acceptable,,57.31,standard_gauge,False,
+Lausanne,46.516795,6.629087,46.516831,6.629092,4.0,good,,60.0,standard_gauge,False,
+Lausanne-Flon,46.520798,6.63033,46.520802,6.630255,5.8,good,,60.05,narrow_gauge,True,LEB narrow gauge
+La Conversion,46.513087,6.678307,46.512999,6.67824,11.0,good,,64.03,standard_gauge,False,
+Bossière,46.509753,6.699305,46.509666,6.699256,10.4,good,,65.77,standard_gauge,False,
+Grandvaux,46.496948,6.722641,46.496838,6.722661,12.4,good,,68.24,standard_gauge,False,
+Cully,46.488565,6.727141,46.488524,6.727156,4.7,good,,70.32,standard_gauge,False,
+Epesses,46.489333,6.745157,46.489297,6.745144,4.2,good,,71.74,standard_gauge,False,
+Puidoux,46.493838,6.76568,46.493711,6.765803,17.0,good,,72.31,standard_gauge,False,
+Rivaz,46.474211,6.784583,46.474153,6.784592,6.5,good,,75.24,standard_gauge,False,
+"St-Saphorin (Lavaux), gare",46.472696,6.79809,46.472314,6.798028,42.8,good,,76.3,standard_gauge,False,
+Palézieux,46.542766,6.83786,46.540219,6.837378,285.6,acceptable,,77.93,narrow_gauge,True,Fribourg branch
+Vevey,46.463002,6.84343,46.46325,6.843571,29.6,good,,80.0,standard_gauge,False,
+La Tour-de-Peilz,46.455457,6.859523,46.455515,6.859562,7.1,good,,80.98,standard_gauge,False,
+Burier,46.447889,6.877108,46.447974,6.877126,9.5,good,,82.04,standard_gauge,False,
+Clarens,46.442736,6.895771,46.442833,6.895788,10.9,good,,83.06,standard_gauge,False,
+Montreux,46.435887,6.910425,46.436003,6.91062,19.8,good,,84.0,standard_gauge,False,
+Territet,46.426381,6.922695,46.426467,6.922838,14.6,good,,85.54,standard_gauge,False,
+Villeneuve VD,46.398369,6.926992,46.398371,6.927322,25.3,good,,89.0,standard_gauge,False,
+Aigle,46.316856,6.96367,46.316856,6.96367,6293.5,original_coords,"No rail within 1km (6294m), using station coords",95.0,standard_gauge,False,
+Bex,46.251462,7.000653,46.251462,7.000653,14070.4,original_coords,"No rail within 1km (14070m), using station coords",105.0,standard_gauge,False,

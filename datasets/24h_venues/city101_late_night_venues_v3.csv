@@ -1,0 +1,135 @@
+id,name,amenity_type,corridor_segment,zone,opening_hours,closes,lat_wgs84,lon_wgs84,E_LV95,N_LV95,source
+1,New Navy Bar,bar,Geneva,Geneva,"Tu-Th 09:00-01:00, Mo 17:00-01:00, Fr 09:00-02:00, Sa 17:00-02:00",past 2am,46.1997457,6.1484877,2500415.57,1117297.01,OSM/manual
+2,La Buvette de l'Ilôt 13,bar,Geneva,Geneva,"Mo 08:00-14:00, Tu-Th 08:00-14:00,16:00-23:00, Fr 08:00-14:00,16:00-24:00, Sa 16:00-24:00",past midnight,46.2118046,6.1417741,2499919.6,1118645.91,OSM/manual
+3,Marius,bar,Geneva,Geneva,Mo-Fr 17:00-01:00,past 1am,46.1913887,6.1446074,2500100.74,1116373.06,OSM/manual
+4,La Petite Reine,bar,Geneva,Geneva,"Mo-Tu 11:00-00:00, We-Th 11:00-01:00, Sa 17:00-02:00",past 2am,46.1984266,6.1411404,2499846.07,1117159.76,OSM/manual
+5,Java Club,bar,Geneva,Geneva,Th-Sa 23:00-04:00,past 3am,46.208255,6.1509808,2500623.54,1118239.65,OSM/manual
+6,Scandale,bar,Geneva,Geneva,Mo-We 11:30-23:00; Th-Fr 11:30-00:00; Sa 18:30-00:00,past midnight,46.2112116,6.1449141,2500160.8,1118575.99,OSM/manual
+7,L'Apothicaire Cocktail Club,bar,Geneva,Geneva,Tu-Sa 18:00-02:00,past 2am,46.2028383,6.1398513,2499754.71,1117651.77,OSM/manual
+8,Lady Godiva,bar,Geneva,Geneva,"Mo-Th 17:00-24:00, Fr 17:00-01:00, Sa 13:00-01:00, Su 13:00-24:00",past 1am,46.1942413,6.1409373,2499822.69,1116694.82,OSM/manual
+9,Little Barrel,bar,Geneva,Geneva,Mo-Th 17:00-01:00; Fr-Sa 19:00-02:00,past 2am,46.2041772,6.157633,2501129.47,1117777.99,OSM/manual
+10,OH NO LULU !,bar,Geneva,Geneva,"Su-Th 16:00-02:00, Fr,Sa 16:00-04:00",past 3am,46.2030434,6.1398323,2499753.62,1117674.59,OSM/manual
+11,BDG Club,bar,Geneva,Geneva,"Tu-Th 17:00-02:00, Fr,Sa 17:00-04:00, Su 07:00-02:00",past 3am,46.2095548,6.1392041,2499717.14,1118399.13,OSM/manual
+12,L'atelier Cocktail Club,bar,Geneva,Geneva,We 10:00-01:00; Tu 17:00-00:00; Th-Sa 17:00-02:00,past 2am,46.2031934,6.1584646,2501191.86,1117667.59,OSM/manual
+13,La Taverne,bar,Geneva,Geneva,Mo-Th 08:30-24:00; Fr 08:30-01:00; Sa 14:00-01:00,past 1am,46.2093259,6.140562,2499821.5,1118371.95,OSM/manual
+14,Coffee LYB,bar,Geneva,Geneva,"Mo 18:45-01:00, Tu-Th 16:45-01:00, Fr,Sa 16:00-02:00, Su 16:00-01:00",past 2am,46.2092884,6.138611,2499670.88,1118370.28,OSM/manual
+15,S'Beer bar,bar,Geneva,Geneva,Tu-Sa 10:00-00:45; Mo 16:30-24:00,past midnight,46.2436968,6.0943036,2496317.46,1122252.45,OSM/manual
+16,La Barje,bar,Geneva,Geneva,Mo-Fr 11:00-00:00; Sa 12:00-00:00; Su 12:00-23:00,past midnight,46.2047401,6.1388383,2499680.03,1117864.45,OSM/manual
+17,FMR - Funky Monkey Room,bar,Geneva,Geneva,"Mo-Fr 09:00-01:00, Sa 17:00-04:00, Su 18:00-02:00",past 3am,46.2033277,6.1357288,2499437.45,1117711.45,OSM/manual
+18,La Buvette du Bateau,bar,Geneva,Geneva,Tu-Sa 16:30-00:00; Su 11:30-15:30,past midnight,46.2049645,6.1541453,2500861.74,1117869.9,OSM/manual
+19,Le Verre à Monique,bar,Geneva,Geneva,Tu-Sa 17:00-24:00+,past midnight,46.1998652,6.1380222,2499608.06,1117323.65,OSM/manual
+20,La Jonquille,bar,Geneva,Geneva,"Tu,We 12:00-01:00, Th,Fr 12:00-02:00, Sa 17:00-02:00",past 2am,46.2029991,6.1347376,2499360.35,1117676.19,OSM/manual
+21,Le Phare,bar,Geneva,Geneva,"Mo-Th 15:00-01:00, Fr,Sa 15:00-02:00, Su 15:00-24:00",past 2am,46.2073825,6.1438914,2500074.85,1118151.69,OSM/manual
+22,Vert Bouteille,bar,Geneva,Geneva,Mo-Fr 17:00-02:00; Sa 12:00-02:00,past 2am,46.1852876,6.1423897,2499918.33,1115697.76,OSM/manual
+23,Café Métis,bar,Geneva,Geneva,"Mo 11:30-15:00,17:00-23:00; Tu 11:30-15:00,17:00-24:00; We-Th-Fr 11:30-15:00,17:00-26:00; Sa 17:00-26:00",past 2am,46.1967909,6.1382718,2499621.65,1116981.62,OSM/manual
+24,Bar du Nord,bar,Geneva,Geneva,Mo-Fr 17:00-02:00; Sa 00:00-24:00,past 2am,46.1809642,6.1404731,2499762.4,1115219.66,OSM/manual
+25,La Paillote (Geneva),bar,Geneva,Geneva,Mo-Su 07:30-00:00,past midnight,46.2116827,6.1531569,2500797.71,1118617.89,OSM/manual
+26,La Muse Gueule,bar,Geneva,Geneva,"Mo,Tu 10:00-14:30,17:00-22:30; We 10:00-14:30,17:00-23:00; Th-Sa 10:00-14:30,17:00-02:00",past 2am,46.1997638,6.1394979,2499721.76,1117310.49,OSM/manual
+27,L'Alambic (Geneva),bar,Geneva,Geneva,"Mo-Fr 10:00-24:00, Sa 15:00-02:00, Su 15:00-24:00",past 2am,46.2089361,6.1478364,2500382.13,1118319.35,OSM/manual
+28,Bar Ernest,bar,Geneva,Geneva,"Tu,We 17:00-24:00, Th 17:00-01:00, Fr,Sa 17:00-02:00",past 2am,46.200219,6.1297366,2498969.23,1117373.62,OSM/manual
+29,Nico & Co.,bar,Geneva,Geneva,Mo-Tu 17:00-00:00; We 17:00-01:00; Th-Sa 17:00-02:00; Su 17:00-23:00,past 2am,46.2047538,6.1459737,2500230.72,1117856.86,OSM/manual
+30,Floky la loutre,bar,Geneva,Geneva,"Tu,We 15:00-24:00, Th,Fr 15:00-01:00, Sa 17:00-01:00",past 1am,46.1945462,6.1433787,2500011.7,1116725.59,OSM/manual
+31,Le Derby,bar,Geneva,Geneva,"Mo-Fr 07:00-24:00, Sa,Su 09:00-24:00",past midnight,46.2139774,6.1337408,2499303.74,1118897.71,OSM/manual
+32,Luis Bar à Tapas,bar,Geneva,Geneva,"Mo-We 16:00-01:00, Th,Fr 16:00-02:00, Sa 08:00-02:00, Su 08:00-24:00",past 2am,46.2098245,6.1378248,2499611.2,1118430.88,OSM/manual
+33,Le Lagoon,bar,Geneva,Geneva,Mo-Fr 07:00-01:00,past 1am,46.2063392,6.1415958,2499895.78,1118038.66,OSM/manual
+34,Le Déclic,bar,Geneva,Geneva,"Tu-Th 17:00-01:00, Fr 17:00-04:00, Sa 21:00-04:00",past 3am,46.1951911,6.1424369,2499940.19,1116798.47,OSM/manual
+35,Mademoiselle Fifi,bar,Geneva,Geneva,"Mo-We 17:00-24:00, Th 17:00-01:00, Fr 17:00-02:00",past 2am,46.2106345,6.1389671,2499700.84,1118519.45,OSM/manual
+36,Kidouro wine & tapas,bar,Geneva,Geneva,"Mo-Th 11:00-24:00, Fr,Sa 11:00-02:00",past 2am,46.2118996,6.1459003,2500238.17,1118651.21,OSM/manual
+37,Any's bar,bar,Geneva,Geneva,"Mo, Tu 08:30-21:00; We-Fr 08:30-02:00; Sa 11:00-14:30, 17:00-02:00",past 2am,46.1921821,6.1456739,2500184.52,1116459.89,OSM/manual
+38,cosmic,bar,Geneva,Geneva,"Tu,We 17:00-01:00, Th-Sa 17:00-02:00",past 2am,46.2017921,6.1458865,2500218.56,1117527.78,OSM/manual
+39,La distillerie,bar,Geneva,Geneva,Tu-Th 17:00-24:00; Fr-Sa 18:00-26:00,past 2am,46.1967423,6.138357,2499628.13,1116976.11,OSM/manual
+40,Le Baratin (Geneva),bar,Geneva,Geneva,"Mo-Th 08:00-01:00, Fr 08:00-02:00, Sa 09:00-02:00",past 2am,46.2153069,6.1339477,2499322.17,1119045.22,OSM/manual
+41,PAV bar,bar,Geneva,Geneva,Mo-Fr 09:00-00:00,past midnight,46.1835155,6.1297717,2498940.92,1115516.98,OSM/manual
+42,Café de la Sarine,bar,Geneva,Geneva,Mo-Sa 08:00-00:00,past midnight,46.2073936,6.1435251,2500046.61,1118153.39,OSM/manual
+43,Le Bavard,bar,Geneva,Geneva,"Tu-Fr 11:00-14:30,17:00-24:00; Sa 11:00-24:00",past midnight,46.1848077,6.1422861,2499909.45,1115644.55,OSM/manual
+44,Wall Street Cafe,bar,Geneva,Geneva,"Mo-Sa 10:00-02:00, Su 17:00-02:00",past 2am,46.2072145,6.1461186,2500246.42,1118130.18,OSM/manual
+45,Le Studio Café,cafe,Geneva,Geneva,"Mo-Fr 11:00-14:00; Sa 17:00-02:00, Su 14:00-23:00",past 2am,46.1999147,6.1493302,2500480.9,1117314.72,OSM/manual
+46,Café Bar Chez Zia,cafe,Geneva,Geneva,"Su-We 10:00-01:00, Th-Sa 10:00-02:00",past 2am,46.2154703,6.1317027,2499149.25,1119066.27,OSM/manual
+47,Cosmic Café (Geneva),cafe,Geneva,Geneva,"Mo 16:00-24:00, Tu 16:00-01:00, We 16:00-01:00, Th 16:00-02:00, Fr 16:00-02:00, Sa 17:00-02:00",past 2am,46.2102969,6.1397811,2499763.03,1118480.88,OSM/manual
+48,Café du Grütli,cafe,Geneva,Geneva,Mo-Th 08:00-00:00; Fr 08:00-01:00; Sa 16:00-01:00; Su 16:00-23:00,past 1am,46.2009495,6.1415985,2499886.07,1117439.59,OSM/manual
+49,Glacier Remor,cafe,Geneva,Geneva,Mo-Su 07:00-01:00,past 1am,46.2015197,6.1400521,2499767.77,1117504.95,OSM/manual
+50,Post' Cafe,cafe,Geneva,Geneva,"Mo-Fr 06:30-02:00, Sa 10:00-02:00, Su 15:00-02:00",past 2am,46.2090242,6.1446068,2500133.08,1118333.26,OSM/manual
+51,La Courbe du Goût,cafe,Geneva,Geneva,"Mo-Fr 07:00-24:00, Sa 10:00-15:00,18:00-24:00",past midnight,46.1998875,6.1745724,2502429.07,1117279.95,OSM/manual
+52,Café du Soleil,cafe,Geneva,Geneva,"Su-Th 09:00-22:00, Sa 09:00-01:00; Fr 09:00-24:00",past 1am,46.25648,6.1100234,2497553.83,1123652.61,OSM/manual
+53,Café du Cinéma,cafe,Geneva,Geneva,"Tu 16:00-22:00, We-Fr 16:00-24:00, Sa 10:30-02:00, Su 16:00-20:00",past 2am,46.1816301,6.1411152,2499813.2,1115292.85,OSM/manual
+54,Café Gavroche,cafe,Geneva,Geneva,Mo-Th 11:00-01:00; Fr 11:00-02:00; Sa 06:00-02:00,past 2am,46.2061589,6.1397863,2499755.81,1118020.93,OSM/manual
+55,La Sixième Heure,cafe,Geneva,Geneva,Mo-Sa 11:30-24:00,past midnight,46.1965595,6.1445676,2500107.16,1116947.85,OSM/manual
+56,Restaurant Café de l'Europe,cafe,Geneva,Geneva,Mo-Su 08:00-24:00,past midnight,46.2120541,6.1301231,2499021.03,1118688.6,OSM/manual
+57,Subarashii Manga Café,cafe,Geneva,Geneva,"Tu-Th 12:00-22:00, Fr 12:00-01:00, Sa 11:00-01:00, Su 11:00-22:00",past 1am,46.2081217,6.1257207,2498674.0,1118257.19,OSM/manual
+58,Cottage Cafe,cafe,Geneva,Geneva,"Mo-Su 07:30-11:00, 12:00-14:00, 18:00-00:00",past midnight,46.2086937,6.1485136,2500433.95,1118291.55,OSM/manual
+59,Le Zoo,nightclub,Geneva,Geneva,Th-Sa 22:00-05:00,past 5am,46.2040077,6.1363484,2499486.53,1117786.23,OSM/manual
+60,Village du Soir,nightclub,Geneva,Geneva,,unknown,46.1764567,6.1274311,2498747.08,1114735.42,OSM/manual
+61,Motel Campo,nightclub,Geneva,Geneva,,unknown,46.1854019,6.1289763,2498883.01,1115727.68,OSM/manual
+62,La Gravière,nightclub,Geneva,Geneva,,unknown,46.1974647,6.1299363,2498979.53,1117067.23,OSM/manual
+63,L'Usine,nightclub,Geneva,Geneva,,unknown,46.2039652,6.1360013,2499459.66,1117781.95,OSM/manual
+64,Le Groove,nightclub,Geneva,Geneva,,unknown,46.2015686,6.1339126,2499294.03,1117518.25,OSM/manual
+65,Palais Mascotte,bar,Geneva,Geneva,"Tu, We 23:00-05:00; Th-Sa 20:00-05:00",past 5am,46.2110865,6.1464181,2500276.63,1118560.17,OSM/manual
+66,Audio Club,nightclub,Geneva,Geneva,,unknown,46.191649,6.1291457,2498907.7,1116421.83,OSM/manual
+67,Java Club (nightclub),nightclub,Geneva,Geneva,,unknown,46.2099893,6.1508932,2500619.94,1118432.53,OSM/manual
+68,Undertown,nightclub,Geneva,Geneva,,unknown,46.2323407,6.0812943,2495292.34,1121007.53,OSM/manual
+69,Weetamix,nightclub,Geneva,Geneva,,unknown,46.2139995,6.1051184,2497095.28,1118937.36,OSM/manual
+70,Le Kiss Club,nightclub,Geneva,Geneva,Mo-Sa 21:00-03:00,past 3am,46.1923703,6.2326201,2506896.41,1116373.76,OSM/manual
+71,Le Cotton Club,nightclub,Geneva,Geneva,Mo-Sa 21:00-03:00,past 3am,46.1897541,6.2350886,2507082.49,1116080.03,OSM/manual
+72,Alambic Lounge Bar,bar,Morges area,Corridor,"Mo-Th 08:00-23:45, Fr-Sa 08:00-01:00, Su 09:00-23:00",past 1am,46.5087718,6.498165,2527817.33,1151263.18,OSM/manual
+73,La Rive Lounge Bar,bar,Morges area,Corridor,"Mo-Fr 08:00-24:00, Sa 08:00-02:00, Su 09:00-24:00",past 2am,46.5088369,6.4964599,2527686.55,1151271.99,OSM/manual
+74,Le Bachibouzouk,bar,Lavaux/Riviera,Corridor,"Mo, Th 08:00-01:00; Sa 09:00-02:00; Fr 08:00-02:00; We 16:00-01:00",past 2am,46.4607894,6.8388135,2553921.0,1145672.22,OSM/manual
+75,Le Bardu Carré,bar,Lavaux/Riviera,Corridor,"Mo-Fr, Su 10:00-01:00; Sa 10:00-02:00",past 2am,46.4586303,6.8433437,2554267.18,1145429.55,OSM/manual
+76,Bar Tabac (Lausanne),bar,Lausanne,Corridor,"Mo-We 07:00-21:00, Th 07:00-01:00, Fr 07:00-02:00, Sa 09:00-02:00",past 2am,46.5180673,6.6348675,2538319.62,1152179.63,OSM/manual
+77,Qwertz,bar,Lausanne,Corridor,"Tu-Th 17:00-24:00; Fr,Sa 17:00-02:00",past 2am,46.5184655,6.6340115,2538254.39,1152224.57,OSM/manual
+78,Les Boucaniers,bar,Lausanne,Corridor,Mo 08:30-20:00;Tu-We 08:30-00:00;Th 08:30-01:00;Fr 08:30-02:00;Sa 11:00-02:00,past 2am,46.5195172,6.6382225,2538578.72,1152338.16,OSM/manual
+79,Les Gosses du Québec,bar,Lausanne,Corridor,10:00-01:00,past 1am,46.51719,6.63305,2538179.15,1152083.54,OSM/manual
+80,Le Cali,bar,Lausanne,Corridor,Su-We 11:00-00:00; Th 11:00-01:00; Fr-Sa 11:00-02:00,past 2am,46.5199259,6.6315929,2538070.47,1152388.81,OSM/manual
+81,La Parenthèse,bar,Geneva,Corridor,Th 20:00-01:00; Fr-Sa 20:00-02:00,past 2am,46.3817799,6.2388087,2507696.59,1137419.7,OSM/manual
+82,Winemoon,bar,Geneva,Corridor,Mo-Sa 16:00-24:00,past midnight,46.3829579,6.2386861,2507689.17,1137550.79,OSM/manual
+83,BowlinGland Le Sports Bar,bar,Nyon area,Corridor,"Tu,Th 15:00-24:00; We 13:00-24:00; Fr 15:00-02:00, Sa 11:00-02:00, Su 11:00-23:00",past 2am,46.4143205,6.2735522,2510423.01,1140996.34,OSM/manual
+84,WhyNot Bar (Évian),bar,Morges area,Corridor,Su-We 20:00-03:00; Th-Sa 20:00-05:00,past 5am,46.3992524,6.5810922,2534048.52,1139016.1,OSM/manual
+85,La Rincette,bar,Morges area,Corridor,11:00-24:00,past midnight,46.5120666,6.6020681,2535795.61,1151538.96,OSM/manual
+86,Le Minimum,bar,Morges area,Corridor,Mo-Su 12:00-00:00,past midnight,46.5083383,6.6170754,2536942.98,1151112.33,OSM/manual
+87,Jetée de la Compagnie,bar,Morges area,Corridor,"Mo-Sa 10:00-24:00, Su 09:00-24:00",past midnight,46.5087671,6.6163743,2536889.68,1151160.56,OSM/manual
+88,Rex Café (Vevey),bar,Lavaux/Riviera,Corridor,We 15:00-22:00; Fr 17:30-00:00; Sa 15:00-00:00,past midnight,46.4613326,6.8411866,2554103.76,1145731.21,OSM/manual
+89,Le Bordu Carré,bar,Lavaux/Riviera,Corridor,"Mo-Th, Su 11:00-23:00; Fr, Sa 11:00-00:00",past midnight,46.4584718,6.8432888,2554262.83,1145411.96,OSM/manual
+90,La Presque (Morges),bar,Morges area,Corridor,Jun-Aug Mo-Su 11:00-24:00,past midnight,46.5055018,6.4970015,2527723.66,1150900.77,OSM/manual
+91,La soliderie (Nyon),cafe,Geneva,Corridor,We-Th 09:00-22:00; Fr-Sa 09:00-00:00,past midnight,46.3848538,6.2354994,2507447.28,1137765.28,OSM/manual
+92,BREW (Vevey),cafe,Lavaux/Riviera,Corridor,"Mo-Tu 07:30-18:00, We-Th 07:30-22:00, Fr-Sa 07:30-00:00, Su 10:00-16:00",past midnight,46.4608198,6.8429098,2554235.7,1145673.19,OSM/manual
+93,KymèM Café,cafe,Lavaux/Riviera,Corridor,Mo 08:30-10:30; Tu-Sa 08:30-00:00; Su 08:30-16:00,past midnight,46.4624156,6.8441032,2554328.72,1145849.89,OSM/manual
+94,Le Café du Bois d'Amour,cafe,Lavaux/Riviera,Corridor,"Tu 07:30-22:00, We 08:00-22:00, Th 08:00-23:00, Fr 08:00-24:00, Sa 07:30-24:00",past midnight,46.460432,6.8421196,2554174.67,1145630.55,OSM/manual
+95,Cafétéria MX (EPFL),cafe,Morges area,Corridor,Mo-Fr 08:45-02:30,past 2am,46.5191968,6.5636255,2532854.23,1152363.78,OSM/manual
+96,Buvette du Pel,cafe,Lavaux/Riviera,Corridor,24/7,24h,46.4965836,6.8104099,2551771.0,1149668.28,OSM/manual
+97,Coop Pronto Genève-Cornavin,food_shop_24h,Geneva,Station,24/7,24h,46.2099,6.1422,2499948.96,1118433.67,OSM/manual
+98,Coop Pronto Lausanne-Flon,food_shop_24h,Lausanne,Station,24/7,24h,46.5197,6.6316,2538070.76,1152363.7,OSM/manual
+99,Coop Pronto Lausanne CFF,food_shop_24h,Lausanne,Station,24/7,24h,46.5168,6.6298,2537929.31,1152042.76,OSM/manual
+100,Coop Pronto Montreux CFF,food_shop_24h,Vevey,Station,24/7,24h,46.434,6.9109,2559438.55,1142654.35,OSM/manual
+101,Starbucks Geneva Cornavin,cafe,Geneva,Station,Mo-Sa 05:30-21:00; Su 06:00-21:00,before midnight,46.2107,6.1432,2500027.6,1118521.32,OSM/manual
+102,Caffè Spettacolo Lausanne,cafe,Lausanne,Station,Mo-Fr 05:00-21:00; Sa 04:00-21:00; Su 04:00-20:00,before midnight,46.5169093,6.6302928,2537967.25,1152054.52,OSM/manual
+103,Tekoe (Lausanne CFF),cafe,Lausanne,Station,Mo-Fr 05:30-21:00; Sa 06:30-20:00; Su 07:30-20:00,before midnight,46.5170397,6.6284937,2537829.34,1152070.44,OSM/manual
+104,Movida,bar,Lausanne,Lausanne,"Mo-We 11:30-14:00,18:00-00:00; Th 11:30-14:00,18:00-01:00; Fr 11:30-14:00,18:00-02:00; Sa 18:00-02:00",past 2am,46.5231277,6.625985,2537643.9,1152749.14,OSM
+105,Base Bar,bar,Lausanne,Lausanne,Mo-We 07:00-23:00; Th-Fr 07:00-00:00; Sa 17:00-00:00,past midnight,46.5228746,6.6191248,2537117.23,1152726.5,OSM
+106,Satellite (EPFL),bar,Lausanne,Lausanne,"Mo, We 07:30-22:00; Th-Fr 07:30-23:00; Tu 07:30-00:00",past midnight,46.5204587,6.567817,2533177.47,1152500.43,OSM
+107,Barberousse,bar,Lausanne,Lausanne,"Mo-Th, Su 18:00-01:00; Fr, Sa 18:00-02:00",past 2am,46.5214885,6.6281704,2537809.7,1152565.19,OSM
+108,La Datcha,bar,Lausanne,Lausanne,"Th 20:00-00:00; Fr, Sa 20:00-02:00",past 2am,46.5212521,6.6259539,2537639.35,1152540.68,OSM
+109,Trois 14,bar,Lausanne,Lausanne,"Tu-Th 16:30-00:00; Fr,Sa 16:30-01:00",past 1am,46.5267542,6.6311819,2538046.81,1153148.14,OSM
+110,Pin-Up Bar,bar,Lausanne,Lausanne,Mo-Th 15:00-00:00; Fr 15:00-01:00; Sa 16:00-02:00,past 2am,46.5213528,6.6399007,2538709.62,1152540.86,OSM
+111,Ōmi,bar,Lausanne,Lausanne,"Mo 08:30-19:00, Tu,We 08:30-24:00, Th 08:30-01:00, Fr,Sa 08:30-02:00",past 2am,46.521208,6.6321479,2538114.57,1152530.86,OSM
+112,Bulldog Bar & Resto,bar,Lausanne,Lausanne,"Mo-We 09:00-00:00; Th 09:00-01:00; Fr, Sa 09:00-02:00; Su 10:00-00:00",past 2am,46.5190617,6.6266718,2537691.91,1152296.62,OSM
+113,Meraki,bar,Lausanne,Lausanne,Mo-Tu 08:30-24:00; We-Th 08:30-01:00; Fr 08:30-02:00; Sa 11:00-02:00; Su off,past 2am,46.5243504,6.6338428,2538248.22,1152878.83,OSM
+114,Le Pointu,cafe,Lausanne,Lausanne,"Mo-We 07:00-24:00, Th 07:00-01:00, Fr 07:00-02:00, Sa 09:00-02:00, Su 10:00-15:00",past 2am,46.5233736,6.6306313,2538000.69,1152772.79,OSM
+115,Officine,bar,Lausanne,Lausanne,"Tu,We 11:00-24:00, Th 11:00-01:00, Fr,Sa 11:00-02:00",past 2am,46.5211317,6.6278756,2537786.67,1152525.77,OSM
+116,Café Louve,cafe,Lausanne,Lausanne,"Mo 09:00-17:00; Tu, We 09:00-23:45; Th 09:00-01:00; Fr, Sa 09:00-02:00",past 2am,46.5212683,6.6323482,2538130.01,1152537.41,OSM
+117,Jaja,nightclub,Lausanne,Lausanne,"Tu, We 18:00-01:00; Th 18:00-02:00; Fr, Sa 18:00-03:00",past 3am,46.5254286,6.6357906,2538398.89,1152997.15,OSM
+118,CHIC Latino club,nightclub,Lausanne,Lausanne,"Th-Sa 22:30-05:00, 09:00-18:00; Su 20:00-05:00",past 5am,46.5208509,6.631965,2538100.13,1152491.31,OSM
+119,Chauderon 18 / No Name,nightclub,Lausanne,Lausanne,Th 22:00-04:00; Fr-Sa 22:00-05:00,past 5am,46.5237518,6.6253477,2537595.72,1152819.03,OSM
+120,ABC Club,nightclub,Lausanne,Lausanne,Th-Sa 22:00-05:00,past 5am,46.5209699,6.6311501,2538037.74,1152505.19,OSM
+121,Jagger's,nightclub,Lausanne,Lausanne,"Mo-Su,PH 23:00-05:00",past 5am,46.5194677,6.6384039,2538592.63,1152332.49,OSM
+122,Les Docks,nightclub,Lausanne,Lausanne,"Th-Sa (concert venue, variable)",past midnight,46.5224003,6.6192512,2537126.38,1152673.67,OSM
+123,MAD Club,nightclub,Lausanne,Lausanne,"Fr-Sa (concert venue, variable)",past 5am,46.521885,6.6272063,2537736.18,1152610.04,OSM
+124,kerri.,nightclub,Lausanne,Lausanne,"Tu, We 17:00-00:00; Th 17:00-01:00; Fr, Sa 17:00-02:00",past 2am,46.5254426,6.6360738,2538420.64,1152998.49,OSM
+125,La Couronne d'Or,cafe,Lausanne,Lausanne,"Tu,We 08:30-24:00, Th,Fr 08:30-01:00, Sa 09:00-01:00, Su 11:00-22:00, Mo 11:00-23:00",past 1am,46.5248548,6.6335757,2538228.3,1152935.11,OSM
+126,Loxton,cafe,Lausanne,Lausanne,"Mo-Th 08:30-00:00, 09:00-18:00; Fr, Sa 08:30-01:00",past 1am,46.5210346,6.6333454,2538206.26,1152510.64,OSM
+127,Downtown Lausanne,cafe,Lausanne,Lausanne,"Th,Fr 07:30-24:00; Su 08:30-16:00; Sa 08:30-24:00; Mo 08:30-15:30; Tu,We 08:30-22:30",past midnight,46.5215056,6.6300601,2537954.72,1152565.6,OSM
+128,Chez Elle,cafe,Lausanne,Lausanne,"Mo-We 08:45-14:30,17:00-22:30; Th-Fr 08:45-14:30,17:00-24:00; Sa 09:00-24:00",past midnight,46.520518,6.6335598,2538222.12,1152453.05,OSM
+129,Sky Beach (Renens),cafe,Lausanne-West,Renens,"Mo-Th 06:00-01:00, Fr 06:00-02:00, Sa 08:00-02:00, Su 09:00-24:00",past 2am,46.5376052,6.5817054,2534264.01,1154394.66,OSM
+130,King's (Renens),cafe,Lausanne-West,Renens,"Mo-Th 06:00-01:00, Fr,Sa 06:00-02:00, Su 08:00-01:00",past 2am,46.5368397,6.5823137,2534309.74,1154309.06,OSM
+131,Rocking Chair (venue),nightclub,Vevey,Vevey,"Fr-Sa (concert venue, variable)",past midnight,46.4720078,6.8521933,2554958.21,1146911.49,OSM
+132,Décal'Quai,nightclub,Montreux,Montreux,variable (nightclub),past midnight,46.434495,6.9112144,2559463.12,1142709.21,OSM
+133,Millésime Club,nightclub,Montreux,Montreux,variable (nightclub),past midnight,46.4378624,6.9074769,2559178.41,1143085.48,OSM
+134,Rex Café,bar,Montreux,Montreux,We 15:00-22:00; Th 17:30-22:00; Fr 17:30-00:00; Sa 15:00-00:00; Su 11:30-22:00,past midnight,46.4613636,6.8408411,2554077.29,1145734.85,OSM

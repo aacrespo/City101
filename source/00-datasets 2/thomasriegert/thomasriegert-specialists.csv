@@ -1,0 +1,189 @@
+Nom,Adresse,Spécialité,lat_wgs84,lon_wgs84,E_LV95,N_LV95,Note
+"Better & Beyond","Rue du 31 Décembre 36, 1207 Genève",Psychiatrie,46.202827,6.160226799999999,2500838,1118027,5.0
+"Delos psychiatrie et psychothérapie","Rue Emile-Yung 9, 1205 Genève",Psychiatrie,46.1953957,6.1495543999999995,2500107,1117200,5.0
+"Dr. Julia King Olivier","Av. Dumas 19B, 1206 Genève",Pédopsychiatrie,46.190942799999995,6.1557758,2500747,1116876,5.0
+"Les Psy Réunis - Pécolat","Rue Pécolat 1, 1201 Genève",Psychiatrie,46.2085541,6.1455531,2499984,1118777,4.0
+"Archipel - Georges Favon","Bd Georges-Favon 26, 1204 Genève",Psychiatrie,46.2021556,6.1399595,2499531,1118058,4.9
+"Dr Laurent Cohen","Rue de l'Athénée 22, 1206 Genève",Psychiatrie,46.1955749,6.1522884,2500456,1117223,5.0
+"Cabinet Psy Sonia Ciotta","Rue du Vieux-Collège 10, 1204 Genève",Psychothérapie,46.201522499999996,6.1510289,2500381,1117981,5.0
+"Psychiatre Dr Sofia Konstantinidou","Rue Voltaire 16, 1201 Genève",Psychiatrie,46.2079696,6.1375972,2499359,1118683,
+"Les Psy Réunis - Muzy","Rue Muzy 10, 1207 Genève",Psychiatrie,46.203774499999994,6.1559745,2500775,1118228,4.4
+"Cabinet de psychiatrie de Genève","Rlle Jean-Michel Billon 3, 1205 Genève",Psychiatrie,46.1955641,6.145963999999999,2499967,1117220,
+"Dr Jaafar Jaafar","Rte de Chêne 11, 1207 Genève",Endocrinologie,46.200210399999996,6.165977799999999,2501264,1117884,4.6
+"Docteur Fouz Hammoud","Rue du Vieux-Billard 3, 1205 Genève",Endocrinologie,46.200243199999996,6.138882799999999,2499439,1117889,4.6
+"Dr Méd Comasia Raguso","Rue de la Terrassière 11, 1207 Genève",Endocrinologie,46.2009866,6.1571211,2500859,1117974,4.4
+"Dr méd. Patrick Meyer","Rue Le-Corbusier 18, 1208 Genève",Endocrinologie,46.193622500000004,6.166985899999999,2501362,1116910,4.7
+"Dr Girardin Céline","Rte de Chancy 98, 1213 Onex",Endocrinologie,46.1857889,6.1049758,2497549,1116025,5.0
+"Chatton Chambaz Isabelle","Bd des Philosophes 5, 1205 Genève",Endocrinologie,46.197669,6.143943,2499830,1117593,5.0
+"Dre Maria SANDULOVICIU","Av. de la Roseraie 76, 1205 Genève",Endocrinologie,46.1912508,6.1490651,2500096,1116942,3.8
+"Marina Portela MD","Rue Le-Corbusier 18/20, 1208 Genève",Endocrinologie,46.1936226,6.1669851,2501364,1116911,5.0
+"Daneva Tatiana","Av. Cardinal-Mermillod 5, 1227 Carouge",Endocrinologie,46.186588,6.142652,2499767,1116190,4.6
+"Cabinet Médical du Corbusier","Rue Le-Corbusier 18, 1208 Genève",Endocrinologie,46.193630999999996,6.166982,2501362,1116910,4.4
+"Dr. med. Johannes Hauser","Bd James-Fazy 3, 1201 Genève",Urologie,46.206643,6.1392466,2499472,1118562,5.0
+"Dr Matthieu MENGIN","Quai du Seujet 20, 1201 Genève",Urologie,46.205172,6.1352899999999995,2499187,1118397,5.0
+"Centre d'Urologie Générale-Beaulieu","Chem. de Beau-Soleil 12, 1206 Genève",Urologie,46.187922099999994,6.1609178,2501018,1116540,4.3
+"Dr. Salem","Chem. Rieu 18, 1208 Genève",Urologie,46.194346599999996,6.1650583999999995,2501320,1116984,5.0
+"Cabinet Urologue Dr Fabian SCHOOFS","Rte de Florissant 97, 1206 Genève",Urologie,46.1903034,6.167205999999999,2501402,1116800,5.0
+"Dr Caroline Carera Sager","Bd James-Fazy 3, 1201 Genève",Urologie,46.2066224,6.1393667,2499475,1118555,5.0
+"OVI CLINIC","Rue du Rhône 118, 1204 Genève",Urologie,46.202470899999994,6.1547259,2500668,1118113,4.9
+"Dr. Alain Bitton Cabinet","Rte de Florissant 95, 1206 Genève",Urologie,46.1905053,6.166966500000001,2501371,1116822,3.8
+"Dr Jean-Michel Rouffilange","Rue Firmin-Massot 2, 1206 Genève",Urologie,46.1961109,6.150981499999999,2500352,1117443,3.4
+"Cabinet Dr Frédéric Lador","Chem. de Beau-Soleil 2, 1206 Genève",Pneumologie,46.187201599999995,6.1601251,2500949,1116460,5.0
+"Pneumologie - Centre de la Servette","Av. De-Luserna 17, 1203 Genève",Pneumologie,46.212934499999996,6.1255273,2498562,1119779,4.0
+"Dr David Lawi","Bd Helvétique 15, 1207 Genève",Pneumologie,46.2004945,6.1537152,2500604,1117909,5.0
+"Dr méd. Grandin Stéphane","Rue de la Servette 55, 1202 Genève",Pneumologie,46.2113765,6.134119999999999,2498990,1119595,4.0
+"Medical Center De La Servette","Av. De-Luserna 17, 1203 Genève",Centre médical,46.2129306,6.125528699999999,2498564,1119769,3.5
+"Centre Pneumologie Champel","Av. de Champel 24, 1206 Genève",Pneumologie,46.1911509,6.1531825,2500479,1116929,
+"Dr Laurent Favre","Bd Helvétique 15, 1207 Genève",Pneumologie,46.2004945,6.1537152,2500604,1117909,3.4
+"Dr Igor Widikker","Rte de Florissant 4, 1206 Genève",Pneumologie,46.196569,6.153893000000001,2500545,1117297,5.0
+"Centre Médical Teomera","Rte de Ferney 194 A, 1218 Le Grand-Saconnex",Centre médical,46.234787399999995,6.124081899999999,2498391,1122620,4.4
+"Dr méd. Etienne Perrin","Chem. des Clochettes 8A, 1206 Genève",Pneumologie,46.1876548,6.158041900000001,2500880,1116407,4.5
+"Centre des Allergies et de l'Asthme","Rle du Couchant 7, 1207 Genève",Allergologie,46.200021,6.156895,2500815,1117868,3.7
+"Dr méd. Mme Avigael Benhamou Senouf","Bd des Philosophes 21, 1205 Genève",Allergologie,46.196805000000005,6.1462439,2499976,1117308,5.0
+"Sietse Hogendijk","Rle du Couchant 7, 1207 Genève",Allergologie,46.2000339,6.1569024,2500815,1117868,4.4
+"Mr. Dr méd. Christophe Deluze","Rte de Florissant 4, 1206 Genève",Allergologie,46.1966142,6.1532746,2500489,1117353,3.9
+"Dr. Yann Coattrenec","Rue de la Combe 21, 1260 Nyon",Allergologie,46.3815988,6.2361144,2507216,1137838,5.0
+"Dr PERIN MINISINI","Rue Charles-Galland 15, 1206 Genève",Allergologie,46.1978259,6.154416899999999,2500583,1117438,4.2
+"Dr. Denis Jacques","Av. d'Aïre 40, 1203 Genève",Allergologie,46.207471,6.122561,2498220,1118667,4.1
+"Dr Olivieri Juan","Rte de Loëx 3, 1213 Onex",Allergologie,46.1834244,6.0991786999999995,2497125,1115759,4.1
+"Philip Taramarcaz","Rle du Couchant 7, 1207 Genève",Allergologie,46.2000339,6.1569024,2500815,1117868,4.7
+"Dr Yann Coattrenec","Rte de Florissant 4, 1206 Genève",Allergologie,46.1965856,6.1539185,2500549,1117351,5.0
+"Laurence Favet","Rue de Chantepoulet 21, 1201 Genève",Oncologie,46.2080394,6.1432427,2499809,1118695,5.0
+"Center Du Sein - Hug","Bd de la Cluse 30, 1205 Genève",Oncologie,46.1915063,6.1467148,2499989,1116956,2.8
+"Service De Radio-Oncologie","Av. de la Roseraie 53, 1205 Genève",Radio-oncologie,46.1918815,6.1486654,2500125,1116998,5.0
+"dr mahour","Rue de Chantepoulet 25, 1201 Genève",Oncologie,46.208120799999996,6.1429173,2499800,1118704,5.0
+"Dr Mathieu Chevallier","Chem. de Beau-Soleil 20, 1206 Genève",Oncologie,46.188517,6.1618819,2501090,1116613,5.0
+"Clinique Générale Beaulieu","Chem. de Beau-Soleil 20, 1206 Genève",Clinique,46.1885171,6.1618819,2501090,1116613,4.3
+"Centre de radio-oncologie Grangettes","Rte de Chêne 110, 1224 Chêne-Bougeries",Radio-oncologie,46.1982155,6.1817386,2502894,1117715,5.0
+"Dr Alex Friedlaender","Chem. de Beau-Soleil 20, 1206 Genève",Oncologie,46.188517,6.1618819,2501090,1116613,5.0
+"HUG","Rue Gabrielle-Perret-Gentil 4, 1205 Genève",Hôpital,46.193619700000006,6.1491603,2500110,1116999,3.4
+"Dr Georgiou Georgios","La Voie-Creuse 16, 1202 Genève",Hématologie,46.219978,6.142993,2499823,1120347,5.0
+"Dr ELIAS Plastic Surgeon","Rte de Florissant 112, 1206 Genève",Chirurgie plastique,46.1904314,6.1662702,2501342,1116819,5.0
+"Dr méd. Seite Pascal","Quai Wilson 35, 1201 Genève",Chirurgie orthopédique,46.211946,6.152480000000001,2500520,1119705,4.9
+"Dr Lucas Plastic Surgery","Rue du Rhône 116, 1204 Genève",Chirurgie plastique,46.202531,6.1544783,2500652,1118118,5.0
+"Dr Anne Carecchio","Av. de la Roseraie 76 A, 1205 Genève",Proctologie,46.1916381,6.1492454,2500107,1117004,5.0
+"Dr Jean-Charles Bayol","Rue des Eaux-Vives 116, 1207 Genève",Chirurgie esthétique,46.2065652,6.1621931,2501162,1118540,5.0
+"Clinique Tobalem","Pl. du Port 1, 1204 Genève",Chirurgie esthétique,46.2037082,6.150616299999999,2500350,1118225,5.0
+"Dr Céline Thomet","Rue de la Filature 30, 1227 Carouge",Chirurgie plastique,46.1859547,6.1410545999999995,2499610,1116235,4.9
+"DR PAMPURIK","Rue Charles-Humbert 5, 1205 Genève",Chirurgie ORL,46.2000351,6.1385758,2499434,1117869,4.9
+"Clinique du lac","Rue de l'arquebuse 7-9, 1204 Genève",Clinique esthétique,46.2033357,6.1394274,2499491,1118183,4.7
+"Dr Laurent BENADIBA","Rte de Florissant 78, 1206 Genève",Chirurgie esthétique,46.192306599999995,6.163395899999999,2501180,1116878,4.8
+"Centre d'Imagerie Cornavin","Pl. de Cornavin 18, 1201 Genève",Radiologie,46.2099859,6.143935,2499848,1119397,3.8
+"Centre d'Imagerie Servette","Av. De-Luserna 17, 1203 Genève",Radiologie,46.2127658,6.1252412,2498559,1119746,4.3
+"cird","Rue de Chantepoulet 5a, 1201 Genève",Radiologie,46.207871499999996,6.144902699999999,2499917,1118684,4.0
+"Medimage","Rte de Florissant 1, 1206 Genève",Radiologie,46.1968939,6.154028299999999,2500558,1117393,4.2
+"Centre Jean-Violette","Rue Jean-Violette 3/5, 1205 Genève",Radiologie,46.194171999999995,6.144155,2499864,1117084,3.5
+"IICC Carouge","Rue Jacques-Dalphin 15, 1227 Carouge",Radiologie,46.1848338,6.1395905,2499526,1116111,4.0
+"ImageRive - Lac","Rue de Lausanne 82, 1202 Genève",Radiologie,46.2166876,6.1479899,2500076,1120186,3.8
+"CIM Dr Stefano Bianchi","Rue de la Croix-d'Or 10, 1204 Genève",Radiologie,46.202479800000006,6.1492688,2500126,1118113,3.5
+"IMB Imagerie Battikha","Pl. Camoletti 2, 1207 Genève",Radiologie,46.2032062,6.1558451,2500768,1118177,5.0
+"ImageRive","Rue de Rive 1, 1204 Genève",Radiologie,46.202628,6.150176999999999,2500292,1118130,3.4
+"Niksic Laurent","Av. de la Roseraie 76A, 1205 Genève",Néphrologie,46.1916381,6.1492454,2500107,1117004,4.5
+"Dr Marc Lévy","Av. Cardinal-Mermillod 1, 1227 Genève",Néphrologie,46.1868051,6.142583,2499767,1116289,4.0
+"Dr. Michael Zellweger","Rte de Chancy 126, 1213 Onex",Néphrologie,46.1831986,6.0993482000000006,2497130,1115734,5.0
+"Dr med. Vincent Bourquin","Avenue du Bouchet 2, 1209 Genève",Néphrologie,46.2162131,6.1201713,2498035,1120098,
+"Dr Thomas Ernandez","Avenue du Bouchet 2, 1209 Genève",Néphrologie,46.216215299999995,6.1200543,2498027,1120096,5.0
+"Dre Julie MAGNIN","Rue de Lausanne 42, 1201 Genève",Angiologie,46.213662299999996,6.1460529,2499998,1119902,5.0
+"Dr Claude Garde Angiologue","Rue Firmin-Massot 2, 1206 Genève",Angiologie,46.1962214,6.1509846999999995,2500357,1117458,1.8
+"Mr. Paul Cirafici","Rue Michel-Chauvet 3, 1206 Genève",Angiologie,46.1979008,6.1573489,2500835,1117645,4.3
+"Centre Angiologie Champel","Av. de Champel 24, 1206 Genève",Angiologie,46.191153,6.153166,2500509,1116924,
+"Dr Francesco ARTALE","Av. de Champel 24, 1206 Genève",Angiologie,46.1911531,6.1531664,2500479,1116929,3.6
+"Dr BAMMATTER","Chem. de Beau-Soleil 12, 1206 Genève",Angiologie,46.188195,6.161281,2501049,1116573,4.8
+"ASSIR FORSYTH Noémie","Av. de la Roseraie 76, 1205 Genève",Angiologie,46.191241999999995,6.149147999999999,2500083,1116930,3.8
+"Medical Center Charmilles","Rue de Lyon 87, 1203 Genève",Centre médical,46.2085501,6.1244324,2498486,1118781,3.0
+"Olivier Bongard","Pl. de Cornavin 18, 1201 Genève",Angiologie,46.2099859,6.143935,2499848,1119397,4.3
+"Vein Clinic","Av. de Champel 24, 1206 Genève",Angiologie,46.1911627,6.1531886,2500479,1116929,3.7
+"Dr. Dylan Meylan","Rue du Grand-Chêne 5, 1003 Lausanne",Psychiatrie,46.519466,6.6315816,2537950,1152839,5.0
+"Dr Aymen Lahmar","Rue des Terreaux 5, 1003 Lausanne",Psychiatrie,46.5220024,6.6284982,2537731,1153122,5.0
+"Dr William Caredda","Rue du Pont 22, 1003 Lausanne",Psychiatrie,46.5210291,6.6332828,2538083,1153013,5.0
+"Pauline Gillmann","Av. de l'Avant-Poste 4, 1005 Lausanne",Psychiatrie,46.5168507,6.6424939,2539106,1152545,
+"Dr Christian Rollini","Pass. Saint-François 12, 1003 Lausanne",Psychiatrie,46.520371999999995,6.6328184,2538059,1152939,5.0
+"Cabinet psy Nad\u00e8ge Vigand","Rue du Simplon 6, 1006 Lausanne",Psychologie,46.515773499999995,6.6314349,2537946,1152438,4.9
+"Dr Nicolas Nussbaumer","Rue de Bourg 6, 1003 Lausanne",Psychiatrie,46.5200769,6.6342031,2538156,1152910,5.0
+"Centre de psychiatrie du Flon","Rue du Port-Franc 2B, 1003 Lausanne",Psychiatrie,46.521177099999996,6.6294879,2537810,1153021,3.6
+"Cabinet PsyPépinet","Rue du Petit-Saint-Jean 4, 1003 Lausanne",Psychothérapie,46.5210966,6.6327943,2538057,1153016,5.0
+"Dr méd. Hilly Busser","Pl. Pépinet 4, 1003 Lausanne",Psychiatrie,46.521128,6.632090000000001,2538032,1153020,5.0
+"Dr méd. Crisinel Vanessa","Av. de l'Avant-Poste 4, 1005 Lausanne",Psychiatrie,46.516829,6.642475,2539104,1152542,5.0
+"DR Basti Arya","Chem. de Rovéréaz 5, 1012 Lausanne",Psychiatrie,46.527139999999996,6.651784999999999,2539784,1153690,4.8
+"Dr Telmo SILVA","Rue du Grand-Chêne 8, 1003 Lausanne",Psychiatrie,46.5198925,6.6310325,2537908,1152891,5.0
+"Dr méd. Schütz Nicolas","Av. de Rumine 31, 1005 Lausanne",Cardiologie,46.516670000000005,6.641629999999999,2539040,1152528,4.2
+"Eugène Katz","Av. Jomini 8, 1004 Lausanne",Cardiologie,46.5280819,6.6270855,2537583,1153833,4.9
+"Dr Francine Tinguely","Chem. des Croix-Rouges 14, 1007 Lausanne",Cardiologie,46.5206227,6.620908999999999,2537147,1153003,5.0
+"Dr STAUFFER","Rue du Grand-Chêne 8, 1003 Lausanne",Cardiologie,46.5198925,6.6310325,2537908,1152891,5.0
+"Dr Zaugg Longchamp","Av. de l'Avant-Poste 4, 1005 Lausanne",Cardiologie,46.516829,6.642475,2539104,1152542,4.2
+"Berger Alexandre","Av. Jomini 8, 1004 Lausanne",Cardiologie,46.528090999999996,6.627085,2537584,1153843,5.0
+"Cabinet Cardiologie Dr Owlya Reza","Chem. des Croix-Rouges 5, 1007 Lausanne",Cardiologie,46.5206473,6.621404,2537186,1153006,5.0
+"Dr Pierre Gueneau de Mussy","Av. de Beaumont 9, 1012 Lausanne",Endocrinologie,46.5228135,6.6455611,2539327,1153244,5.0
+"CHUV endocrinologie","Av. de la Sallaz 8, 1005 Lausanne",Endocrinologie,46.527964,6.642167,2539093,1153827,5.0
+"Dr Rosselet","Rue Belle-Fontaine 2, 1003 Lausanne",Endocrinologie,46.516511099999995,6.6380197999999995,2538897,1152502,4.4
+"Dr méd. Rey Alexandre","Rue Belle-Fontaine 2, 1003 Lausanne",Endocrinologie,46.516518999999995,6.637995999999999,2538895,1152503,4.5
+"Dr méd. Elowe Eglantine","Rte de Chavannes 11, 1007 Lausanne",Endocrinologie,46.518125999999995,6.600258999999999,2535354,1152686,5.0
+"Dr méd. Vuille Jean-Claude","Rue Marterey 56, 1005 Lausanne",Endocrinologie,46.521181999999996,6.639752,2538968,1152993,4.7
+"Dre Chiara FERRARIO","Chem. du Centenaire 5, 1008 Prilly",Endocrinologie,46.5345729,6.606713999999999,2535815,1154425,4.6
+"Dr A. Corcillo Vionnet","Av. de Lavaux 63, 1009 Pully",Endocrinologie,46.5111178,6.6624973999999995,2541021,1151842,5.0
+"Dr. Egli","Rte de la Corniche 1, 1066 Epalinges",Endocrinologie,46.542728100000005,6.6621166,2541012,1155294,4.8
+"Cabinet Dr. A. Flattet","Av. Victor-Ruffy 5, 1012 Lausanne",Endocrinologie,46.5246023,6.6475398,2539542,1153443,4.5
+"Centre Lémanique Urologie","Chem. de Pré-Fleuri 6, 1006 Lausanne",Urologie,46.5134226,6.629336299999999,2537975,1152121,3.8
+"Dr Florian MEID","Av. Bergières 2, 1004 Lausanne",Urologie,46.527584499999996,6.6271360999999995,2537588,1153797,5.0
+"Urolife","Av. Bergières 2, 1004 Lausanne",Urologie,46.527584499999996,6.6271360999999995,2537588,1153797,4.5
+"UroClinique - Dr. Nuno Grilo","Av. Jomini 8, 1004 Lausanne",Urologie,46.528088,6.6271022,2537584,1153853,4.7
+"Mr. Dr. Christian Gygi","Av. Jomini 8, 1004 Lausanne",Urologie,46.528112,6.627085800000001,2537584,1153856,4.0
+"Dr méd. Matieu Uffer","Rue du Midi 15, 1003 Lausanne",Urologie,46.518107,6.633698000000001,2538271,1152680,2.8
+"Clinique La Source","Ave Alexandre-Vinet 30, 1004 Lausanne",Clinique,46.527316,6.6282964,2537711,1153783,4.2
+"Dr Julien Schwartz","Rue du Midi 15, 1003 Lausanne",Urologie,46.518045199999996,6.6337190999999995,2538274,1152674,4.4
+"Mr. Dr. Vincent Merz","Chem. de Pré-Fleuri 6, 1006 Lausanne",Urologie,46.513498999999996,6.629394,2537979,1152135,5.0
+"Dr. Valentin Praz","Av. des Pâquis 29, 1110 Morges",Urologie,46.51405,6.499975999999999,2528526,1152210,4.8
+"Dr Monique Derighetti","Rue Centrale 9, 1003 Lausanne",Dermatologie,46.520991599999995,6.632911399999999,2538128,1153000,4.5
+"Maison Tóā","Voie du Chariot 6, 1003 Lausanne",Clinique esthétique,46.521070699999996,6.6291587,2537850,1153008,4.7
+"Dr Mathieu Leuenberger","Rue du Grand-Pont 8, 1003 Lausanne",Dermatologie,46.521527999999996,6.630476000000001,2537980,1153058,5.0
+"Dre Véronique Emmenegger","Av. de la Gare 2, 1003 Lausanne",Dermatologie,46.517019999999995,6.637176999999999,2538662,1152596,4.0
+"Dr Alexandra Miles","Voie du Chariot 6, 1003 Lausanne",Médecine esthétique,46.521041499999995,6.6291161,2537848,1153005,4.2
+"Dr Maya Bucher","Av. de Rumine 8, 1005 Lausanne",Dermatologie,46.5171752,6.6392773,2538913,1152569,5.0
+"Dr Daniel Perrenoud","Bd de Grancy 1, 1006 Lausanne",Dermatologie,46.5148328,6.6316823,2537952,1152307,3.3
+"Rieckhoff Letizia","Rue du Grand-Pont 8, 1003 Lausanne",Dermatologie,46.52158430000001,6.6305324,2537981,1153058,4.5
+"Dr Lapointe Anne-Karine","Av. du Théâtre 7, 1005 Lausanne",Dermatologie,46.518243999999996,6.637696999999999,2538703,1152689,4.3
+"Centre Médical Montchoisi","Chem. des Allinges 16bis, 1006 Lausanne",Centre médical,46.5096373,6.6369926999999995,2538817,1151670,4.9
+"Dr Iwanowski Patricia","Chem. des Croix-Rouges 5, 1007 Lausanne",Dermatologie,46.520564,6.621281,2537178,1152991,5.0
+"Dr Rey Bataillard Vincianne","Chem. des Croix-Rouges 5, 1007 Lausanne",Dermatologie,46.520564,6.621281,2537178,1152991,4.3
+"Dr Stefan Westermann","Av. de Rumine 26, 1005 Lausanne",Neurologie,46.5165937,6.640719,2539009,1152505,4.6
+"Cabinet de neurologie","Chem. des Croix-Rouges 2, 1007 Lausanne",Neurologie,46.521037,6.621925999999999,2537225,1153000,4.1
+"Dr Iancu Ferfoglia","Av. Bergières 2, 1004 Lausanne",Neurologie,46.527569,6.627132,2537589,1153796,5.0
+"Dr Lyat Clarys Perez","Ave Alexandre-Vinet 30, 1004 Lausanne",Neurologie,46.527254299999996,6.6288478,2537725,1153761,4.3
+"Clinique De Montchoisi","Chem. des Allinges 10, 1006 Lausanne",Clinique,46.509744,6.635653,2538590,1151679,4.5
+"Dr Christophe Henny","Av. Bergières 2, 1004 Lausanne",Neurologie,46.527561299999995,6.6271591,2537590,1153795,2.8
+"Amiia Clinique","Rue Centrale 19, 1003 Lausanne",Chirurgie,46.521045,6.6344937999999996,2538223,1153003,4.8
+"Dr Stéphane Dominguez","Av. de Béthusy 51, 1012 Lausanne",Chirurgie,46.5233962,6.6486437,2539624,1153315,4.6
+"Dr Paolo Fornaciari","Ave Alexandre-Vinet 30, 1004 Lausanne",Chirurgie orthopédique,46.5271185,6.6277892,2537672,1153742,5.0
+"Dr Matthieu JAËN","Rue Centrale 15, 1003 Lausanne",Chirurgie,46.5211067,6.6339371,2538180,1153017,4.9
+"Dr Serge Lê Huu","Av. de Montchoisi 35, 1006 Lausanne",Chirurgie plastique,46.512494499999995,6.634720499999999,2538490,1152037,5.0
+"Dr Bollmann Christof","Av. d'Ouchy 39, 1006 Lausanne",Chirurgie main,46.5119901,6.6299201,2537862,1151982,4.9
+"Dr Mercadier","Rue de la Paix 4, 1003 Lausanne",Chirurgie esthétique,46.519602299999995,6.6363379,2538399,1152845,4.9
+"Dr Sophie Nordback","Voie du Chariot 6, 1003 Lausanne",Chirurgie plastique,46.521070699999996,6.6291587,2537850,1153008,5.0
+"Dr Jérémie Gozzo","Av. d'Ouchy 35, 1006 Lausanne",Chirurgie orthopédique,46.5122882,6.630084999999999,2537921,1152015,5.0
+"Dre Laetitia Porta","Ave Alexandre-Vinet 30, 1004 Lausanne",Radio-oncologie,46.5268762,6.6281381,2537695,1153708,5.0
+"Centre coordonné oncologie CHUV","Rue du Bugnon 46, 1011 Lausanne",Oncologie,46.524770200000006,6.6436515,2539188,1153479,5.0
+"Dr Gander Marc","Av. de l'Avant-Poste 4, 1005 Lausanne",Oncologie,46.516898,6.642378,2539099,1152549,5.0
+"Dr Cochet Stéphane","Ave Alexandre-Vinet 19B, 1004 Lausanne",Radio-oncologie,46.525214999999996,6.629982,2537853,1153585,5.0
+"Centre radio-oncologie La Source","Ave Alexandre-Vinet 28, 1004 Lausanne",Radio-oncologie,46.5276577,6.6284066,2537720,1153794,5.0
+"Dr Trân-Thang Nhu-Nam","Ave Alexandre-Vinet 19B, 1004 Lausanne",Oncologie,46.525214999999996,6.629982,2537853,1153585,4.9
+"Dr Jallut Didier","Av. de l'Avant-Poste 4, 1005 Lausanne",Oncologie,46.516898,6.642378,2539099,1152549,5.0
+"Dre Aurélie Sivade","Av. de l'Avant-Poste 4, 1005 Lausanne",Oncologie,46.5168885,6.642483599999999,2539107,1152546,5.0
+"CCAC","Av. Bergières 2, 1004 Lausanne",Chimiothérapie,46.527584499999996,6.6271360999999995,2537588,1153797,4.8
+"Centre Imagerie Lausanne Gare","Av. de la Gare 15, 1003 Lausanne",Radiologie,46.516417999999994,6.63646,2538424,1152549,3.8
+"CIP Petit-Chêne","Chem. de Mornex 2, 1003 Lausanne",Radiologie,46.518357099999996,6.629603299999999,2537922,1152684,4.7
+"Imagerie du Flon","Rue de la Vigie 5, 1003 Lausanne",Radiologie,46.5217076,6.624897799999999,2537625,1153089,3.2
+"Institut Radiologie Montchoisi","Chem. des Allinges 10, 1006 Lausanne",Radiologie,46.5097884,6.6356562,2538688,1151676,5.0
+"CiD Centre imagerie","Rue du Grand-Chêne 8bis, 1003 Lausanne",Radiologie,46.51992,6.6306183999999995,2537893,1152893,4.3
+"CILE Epalinges","Rte de la Corniche 1, 1066 Epalinges",Radiologie,46.542655499999995,6.6621952,2541012,1155288,4.4
+"Institut radiologie La Source","Ave Alexandre-Vinet 30, 1004 Lausanne",Radiologie,46.527254299999996,6.6288478,2537725,1153761,4.6
+"CHUV radiologie","Rue du Bugnon 46, 1011 Lausanne",Radiologie,46.524963,6.642668,2539115,1153501,5.0
+"Medical Center La Source","Ave Alexandre-Vinet 30, 1004 Lausanne",Centre médical,46.5267128,6.6283632,2537713,1153693,3.6
+"Centre medical Epalinges","Rte de la Corniche 1, 1066 Epalinges",Centre médical,46.542663000000005,6.662093199999999,2541011,1155289,3.3
+"Dr Olfa KAROUI","Av. de la Gare 6, 1003 Lausanne",Allergologie,46.517088199999996,6.6361092,2538391,1152596,4.2
+"Yannick Perrin","Rue des Terreaux 23, 1003 Lausanne",Allergologie,46.522390099999996,6.6274036,2537670,1153139,5.0
+"Dr Langner-Viviani","Av. de Rumine 27, 1005 Lausanne",Allergologie,46.516873399999994,6.6411321999999995,2539014,1152535,4.5
+"Dr Winter Burdet Judith","Av. de Rumine 27, 1005 Lausanne",Allergologie,46.516873399999994,6.6411321999999995,2539014,1152535,
+"EHC Immuno-Allergologie","Rte Louis Favre 6a, 1024 Ecublens",Allergologie,46.5235595,6.565184299999999,2531146,1153362,2.5
+"Dr Azzi Vanessa","Rte de Cossonay 28B, 1008 Prilly",Allergologie,46.534076999999996,6.606477,2535775,1154367,5.0
+"Louis-François Debétaz","Pl. Bel-Air 2, 1003 Lausanne",Allergologie,46.522322900000006,6.6294998,2537819,1153128,4.6
+"Mr. Dr. Alain Sauty","Av. de Rumine 31, 1005 Lausanne",Pneumologie,46.516663699999995,6.6416435,2539051,1152529,5.0

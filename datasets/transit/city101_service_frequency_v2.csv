@@ -1,0 +1,50 @@
+name,station_id,lat_wgs84,lon_wgs84,departures_7to9,trains_per_hour,avg_wait_minutes,ic_ir_departures,regional_departures,metro_tram_departures,other_departures,category_breakdown,operators,sample_destinations,query_date
+"Vernier, Blandonnet",8587924,46.221936,6.097217,168,84.0,0.7,0,0,73,95,B:95; T:73,TPG,"Bernex, Vailly; Carouge GE, Tours; Grand-Saconnex, Tunnel Routier; Meyrin, CERN; Meyrin, Gravière; Petit-Lancy, Les Esserts; Thoiry, Centre commercial; Vernier, Parfumerie; Versoix, Centre sportif; ZIMEYSA, gare",2026-03-02 07:00
+Lausanne,8501120,46.516795,6.629087,57,28.5,2.1,23,34,0,0,EC:1; IC:8; IR:13; R:24; RE:8; S:2; TGV:1,SBB,Allaman; Annemasse; Basel SBB; Bex; Brig; Domodossola (I); Fribourg/Freiburg; Martigny; Rorschach; St-Maurice,2026-03-02 07:00
+Renens VD,8501118,46.537046,6.57892,53,26.5,2.2,19,34,0,0,IC:12; IR:7; R:26; RE:8,SBB,Basel SBB; Bex; Brig; Genève-Aéroport; Grandson; Le Brassus; Rorschach; St. Gallen; Vallorbe; Vevey,2026-03-02 07:00
+Genève,8501008,46.210228,6.142435,50,25.0,2.4,21,28,0,1,EC:1; IC:4; IR:15; R:20; RE:8; TER:1; TGV:1,SBB,Bellegarde-sur-Valserine; Brig; Coppet; Domodossola (I); Genève-Aéroport; La Plaine; Luzern; Martigny; Neuchâtel; St. Gallen,2026-03-02 07:00
+Vevey,8501200,46.463002,6.84343,40,20.0,2.9,8,32,0,0,IR:8; R:24; RE:8,MVR-cev; SBB,Bex; Blonay; Brig; Genève-Aéroport; Grandson; Le Brassus; Les Pléiades; Martigny; Romont FR; Vallorbe,2026-03-02 07:00
+Aigle,8501400,46.316856,6.96367,33,16.5,3.6,8,25,0,0,IR:8; R:17; RE:8,SBB; TPC,Bex; Brig; Champéry; Genève-Aéroport; Grandson; Les Diablerets; Leysin-Grand-Hôtel; Martigny; Monthey-Ville; St-Maurice,2026-03-02 07:00
+Morges,8501037,46.511102,6.493958,32,16.0,3.6,12,20,0,0,IR:12; R:12; RE:8,MBC; SBB,Allaman; Bière; Brig; Genève; Genève-Aéroport; Lausanne; Luzern; Martigny; Neuchâtel; St-Maurice,2026-03-02 07:00
+Montreux,8501300,46.435887,6.910425,32,16.0,3.8,9,20,0,3,EC:1; IR:8; PE:3; R:12; RE:8,MOB; MVR-mtgn; SBB,Bex; Brig; Chernex; Domodossola (I); Genève-Aéroport; Grandson; Interlaken Ost; Les Avants; Martigny; Zweisimmen,2026-03-02 07:00
+Nyon,8501030,46.384429,6.23595,29,14.5,4.1,11,18,0,0,IR:11; R:8; RE:10,NStCM; SBB,Brig; Etoy; Genolier; Genève; Genève-Aéroport; La Cure; Luzern; Martigny; Neuchâtel; St-Cergue,2026-03-02 07:00
+Genève-Eaux-Vives,8516273,46.201461,6.166549,25,12.5,4.8,0,25,0,0,R:17; RE:8,SBB,Annemasse; Coppet; Lancy-Pont-Rouge; Martigny; St-Maurice,2026-03-02 07:00
+Genève-Champel,8516272,46.192208,6.153473,25,12.5,4.9,0,25,0,0,R:17; RE:8,SBB,Annemasse; Coppet; Lancy-Pont-Rouge; Martigny; St-Maurice,2026-03-02 07:00
+Lancy-Bachet,8517142,46.174342,6.12934,25,12.5,4.8,0,25,0,0,R:17; RE:8,SBB,Annemasse; Coppet; Lancy-Pont-Rouge; Martigny; St-Maurice,2026-03-02 07:00
+Lancy-Pont-Rouge,8516155,46.18596,6.124929,24,12.0,4.9,0,24,0,0,R:16; RE:8,SBB,Annemasse; Coppet; Martigny; St-Maurice,2026-03-02 07:00
+Palézieux,8504014,46.542766,6.83786,23,11.5,5.2,4,19,0,0,IR:4; R:11; S:8,SBB; TPF,Fribourg/Freiburg; Genève-Aéroport; Gruyères; Lausanne; Luzern; Montbovon; Murten/Morat; Payerne; Romont FR; Vevey,2026-03-02 07:00
+"Aubonne, gare",8501870,46.493844,6.39294,22,11.0,5.1,0,0,0,22,B:22,PAG,"Allaman, gare; Etoy, collège Les Communaux; Gimel, La Vernette; Lavigny, café; Rolle, gare nord; Yens, gare",2026-03-02 07:00
+Coppet,8501023,46.317405,6.187806,19,9.5,6.1,0,19,0,0,R:8; RE:11,SBB,Annemasse; Etoy; Genève; Martigny; St-Maurice,2026-03-02 07:00
+Bussigny,8501117,46.547597,6.551814,18,9.0,6.2,0,18,0,0,R:18,SBB,Bex; Grandson; Le Brassus; St-Maurice; Vallorbe; Vevey,2026-03-02 07:00
+Prilly-Malley,8518452,46.526697,6.602624,18,9.0,7.0,0,18,0,0,R:18,SBB,Bex; Grandson; Le Brassus; St-Maurice; Vallorbe; Vevey,2026-03-02 07:00
+Cully,8501124,46.488565,6.727141,18,9.0,6.1,0,18,0,0,R:18,SBB,Bex; Grandson; Le Brassus; St-Maurice; Vallorbe; Vevey,2026-03-02 07:00
+"Begnins, poste",8501851,46.440225,6.247701,17,8.5,6.2,0,0,0,17,B:17,PAG,"Burtigny, Les Oches; Gland, gare nord; Nyon, gare; St-George, village",2026-03-02 07:00
+Genève-Sécheron,8516283,46.222452,6.144542,16,8.0,7.5,0,16,0,0,R:16,SBB,Annemasse; Coppet,2026-03-02 07:00
+Genthod-Bellevue,8501021,46.256747,6.153947,16,8.0,7.6,0,16,0,0,R:16,SBB,Annemasse; Coppet,2026-03-02 07:00
+Versoix,8501022,46.279741,6.165718,16,8.0,7.7,0,16,0,0,R:16,SBB,Annemasse; Coppet,2026-03-02 07:00
+Tannay,8501015,46.307659,6.181097,16,8.0,7.2,0,16,0,0,R:16,SBB,Annemasse; Coppet,2026-03-02 07:00
+Mies,8501014,46.298503,6.167641,16,8.0,7.1,0,16,0,0,R:16,SBB,Annemasse; Coppet,2026-03-02 07:00
+Villeneuve VD,8501303,46.398369,6.926992,16,8.0,7.5,0,16,0,0,R:8; RE:8,SBB,Annemasse; Bex; Grandson; Martigny; St-Maurice,2026-03-02 07:00
+Bex,8501402,46.251462,7.000653,15,7.5,7.2,0,15,0,0,R:7; RE:8,SBB; TPC,Annemasse; Grandson; Martigny; St-Maurice; Villars-sur-Ollon,2026-03-02 07:00
+Gland,8501031,46.419998,6.269128,13,6.5,9.9,4,9,0,0,IR:4; RE:9,SBB,Annemasse; Etoy; Genève-Aéroport; Martigny; Neuchâtel; St-Maurice,2026-03-02 07:00
+Allaman,8501035,46.47576,6.399683,12,6.0,9.7,0,12,0,0,R:4; RE:8,SBB,Annemasse; Lausanne; Martigny; St-Maurice,2026-03-02 07:00
+Puidoux,8504012,46.493838,6.76568,12,6.0,9.9,0,12,0,0,R:8; S:4,SBB,Fribourg/Freiburg; Lausanne; Payerne; Romont FR; Vevey,2026-03-02 07:00
+"Prangins, Les Abériaux",8595589,46.393015,6.254119,11,5.5,9.4,0,0,0,11,B:11,BNP; TPN,"Gland, gare nord; Nyon, gare",2026-03-02 07:00
+Genève-Aéroport,8501026,46.232547,6.111969,9,4.5,13.6,9,0,0,0,IC:2; IR:7,SBB,Brig; Luzern; Neuchâtel; St. Gallen,2026-03-02 07:00
+Rolle,8501033,46.462757,6.336387,9,4.5,13.8,0,9,0,0,RE:9,SBB,Annemasse; Etoy; Martigny; St-Maurice,2026-03-02 07:00
+Grandvaux,8504011,46.496948,6.722641,9,4.5,14.8,0,9,0,0,R:4; S:5,SBB,Fribourg/Freiburg; Lausanne; Payerne,2026-03-02 07:00
+St-Prex,8501036,46.482324,6.455897,8,4.0,14.9,0,8,0,0,R:8,SBB,Allaman; Lausanne,2026-03-02 07:00
+Lonay-Préverenges,8501048,46.523141,6.519527,8,4.0,13.0,0,8,0,0,R:8,SBB,Allaman; Lausanne,2026-03-02 07:00
+Lausanne-Flon,8501181,46.520798,6.63033,8,4.0,15.0,0,8,0,0,R:8,LEB,Bercher; Echallens,2026-03-02 07:00
+La Conversion,8504010,46.513087,6.678307,8,4.0,15.3,0,8,0,0,R:4; S:4,SBB,Fribourg/Freiburg; Lausanne; Payerne,2026-03-02 07:00
+La Tour-de-Peilz,8501201,46.455457,6.859523,8,4.0,14.9,0,8,0,0,R:8,SBB,Bex; Grandson; St-Maurice,2026-03-02 07:00
+Burier,8501202,46.447889,6.877108,8,4.0,15.6,0,8,0,0,R:8,SBB,Bex; Grandson; St-Maurice,2026-03-02 07:00
+Clarens,8501203,46.442736,6.895771,8,4.0,16.1,0,8,0,0,R:8,SBB,Bex; Grandson; St-Maurice,2026-03-02 07:00
+"Founex, est",8588666,46.334766,6.19494,7,3.5,15.0,0,0,0,7,B:7,TPN,"Coppet, gare; Nyon, gare",2026-03-02 07:00
+Rivaz,8501126,46.474211,6.784583,7,3.5,17.0,0,7,0,0,R:7,SBB,Le Brassus; St-Maurice; Vallorbe; Vevey,2026-03-02 07:00
+"Perroy, Couronnette",8570039,46.463879,6.352911,6,3.0,18.0,0,0,0,6,B:6,PAG,"Allaman, gare; Rolle, gare nord",2026-03-02 07:00
+Epesses,8501125,46.489333,6.745157,6,3.0,18.8,0,6,0,0,R:6,SBB,Le Brassus; Vallorbe; Vevey,2026-03-02 07:00
+Denges-Echandens,8501045,46.529129,6.54049,4,2.0,28.7,0,4,0,0,R:4,SBB,Allaman; Lausanne,2026-03-02 07:00
+Bossière,8504003,46.509753,6.699305,4,2.0,37.0,0,4,0,0,S:4,SBB,Fribourg/Freiburg; Lausanne,2026-03-02 07:00
+Territet,8501301,46.426381,6.922695,4,2.0,39.3,0,4,0,0,R:4,SBB,Bex; Grandson; St-Maurice,2026-03-02 07:00
+"St-Saphorin (Lavaux), gare",8510135,46.472696,6.79809,0,0.0,,0,0,0,0,,,,2026-03-02 07:00

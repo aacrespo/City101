@@ -1,0 +1,38 @@
+station_name,station_type,lat_wgs84,lon_wgs84,google_place_id,google_rating,google_review_count,transport_mode
+Lutry,train,46.5039,6.6903,ChIJu7AaNDsvjEcRl5svGw83zQA,4.6,19,rail
+Chexbres-Village,train,46.4812,6.7785,ChIJxybiRRAojEcRZzt76U0zH6g,4.7,22,rail
+Puidoux-Chexbres,train,46.4939,6.7656,ChIJu7DG6EMojEcRXektYMynUZI,4.2,19,rail
+Ouchy-Olympique,metro_m2,46.5071,6.6264,ChIJ7_WXsdovjEcRwB1aRfHehbE,4.5,181,metro
+Jordils,metro_m2,46.5097,6.6274,ChIJ7fJpKtAvjEcRfQruJQqn60c,4.6,12,metro
+Délices,metro_m2,46.512,6.628,ChIJj66Q_dEvjEcRSXBgxYAcLPA,4.5,25,metro
+Grancy,metro_m2,46.5149,6.6289,ChIJ_XLRfc0vjEcRDaYFq8gfqVY,4.2,19,metro
+Riponne-Maurice Béjart,metro_m2,46.5228,6.6326,ChIJG9VWlzEujEcRkcwJ5aaBfkM,4.0,75,metro
+Bessières,metro_m2,46.5207,6.6371,ChIJfRSoGjQujEcRzoRl_8f8izk,4.4,44,metro
+Ours,metro_m2,46.5212,6.6407,ChIJVRfB4DUujEcRD1xbk9l6O_g,4.0,23,metro
+CHUV,metro_m2,46.5265,6.6416,ChIJf1BQGTgujEcRhN0kqNUKFEw,4.3,41,metro
+Sallaz,metro_m2,46.5328,6.6462,ChIJr9kR8UAujEcR8fffdOWqVcw,4.1,49,metro
+Fourmi,metro_m2,46.5388,6.6511,ChIJDcY93msujEcRFa7pJCV6h4c,4.4,16,metro
+Vennes,metro_m2,46.5413,6.6577,ChIJDfMsYW8ujEcR5dQ95dAFR-k,4.4,19,metro
+EPFL,metro_m1,46.5222,6.566,ChIJmd6iagIxjEcR1WzI41CFCoc,4.5,38,metro
+UNIL-Mouline,metro_m1,46.525,6.579,ChIJd5GS_asxjEcRk3R-x0pVRlY,4.3,9,metro
+UNIL-Sorge,metro_m1,46.5223,6.5734,ChIJLQaydwAxjEcR3eA5q976Vic,4.7,9,metro
+Bourdonnette,metro_m1,46.5233,6.5901,ChIJT59_87MxjEcR_JZaIJPsvzc,3.6,22,metro
+Malley,metro_m1,46.5241,6.6026,ChIJqanJpM4xjEcRzVFGSlAflUg,4.4,18,metro
+Vigie,metro_m1,46.5215,6.6239,ChIJXXw78isujEcRG7Uenxt2llw,2.9,18,metro
+Chêne-Bourg,train_lex,46.1966,6.1973,ChIJ0_2f5eJvjEcRSgZji21tNBs,3.7,32,rail_leman_express
+Annemasse,train_lex,46.1993,6.2365,ChIJzQ6EjS5ujEcRfE3CZ61N5JE,3.0,309,rail_leman_express
+Genève-Jardin Anglais,cgn_boat,46.2053,6.1551,ChIJfbaBXTBljEcRd-HudmThm9w,4.6,30,boat
+Genève-Mont-Blanc,cgn_boat,46.2072,6.1482,ChIJQaFY-SVljEcRxtJjSLh9y7M,3.7,88,boat
+Nyon CGN,cgn_boat,46.3823,6.2435,ChIJDz7nVaBDjEcRlNSxsYCg_rs,4.8,12,boat
+Morges CGN,cgn_boat,46.5084,6.5005,ChIJg9T5lxU3jEcRDZ4PHhMyqU4,4.8,38,boat
+Lausanne-Ouchy CGN,cgn_boat,46.5049,6.6276,ChIJIdm23cQvjEcRoXhLUHVtg5s,4.4,654,boat
+Vevey CGN,cgn_boat,46.4573,6.8501,ChIJkSm8ucicjkcRwEuMKDxUGCs,4.6,26,boat
+Montreux CGN,cgn_boat,46.4345,6.9095,ChIJ9-Hw4RqbjkcRfV1NfS6fTw0,4.7,181,boat
+Villeneuve CGN,cgn_boat,46.3986,6.9248,ChIJU_WP-DWbjkcRw2n3SlIli_o,4.5,20,boat
+Cully CGN,cgn_boat,46.4875,6.7316,ChIJjQl95JMojEcRKMvkCE9o5_c,4.7,32,boat
+La Tour-de-Peilz CGN,cgn_boat,46.4569,6.8500,ChIJq7ujucicjkcRDy2JV-WO4CM,4.5,238,boat
+Lutry CGN,cgn_boat,46.5025,6.6870,,,,boat
+Saint-Sulpice CGN,cgn_boat,46.5090,6.5620,,,,boat
+Territet CGN,cgn_boat,46.4280,6.9230,,,,boat
+Chillon CGN,cgn_boat,46.4142,6.9275,,,,boat
+Lausanne CFF,train_hub,46.5171,6.6292,ChIJEQLzX80vjEcRLgPvAOwnkkc,4.0,1966,rail

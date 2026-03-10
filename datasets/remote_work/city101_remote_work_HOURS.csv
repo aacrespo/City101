@@ -1,0 +1,69 @@
+name,google_place_id,municipality,monday,tuesday,wednesday,thursday,friday,saturday,sunday,hours_available,open_before_8am,open_after_7pm,open_saturday,open_sunday,earliest_open,latest_close,is_24h,weekday_hours_count
+Voisins de Collex-Bossy,ChIJ7cJ4KLlljEcR9RhehjJ5fAo,Collex-Bossy,8:30 AM-5:00 PM,8:30 AM-5:00 PM,8:30 AM-5:00 PM,8:30 AM-5:00 PM,8:30 AM-5:00 PM,Closed,Closed,True,False,False,False,False,8.5,17.0,False,5
+Boréal Coffee Shop,ChIJwVsiHtZkjEcRrt7i0fNVYkM,Genève,7:00 AM-7:00 PM,7:00 AM-7:00 PM,7:00 AM-7:00 PM,7:00 AM-7:00 PM,7:00 AM-7:00 PM,8:00 AM-7:00 PM,8:00 AM-7:00 PM,True,True,False,True,True,7.0,19.0,False,5
+Impact Hub Geneva,ChIJrV27k9hkjEcR0PDCsRhdGfs,Genève,9:00 AM-6:00 PM,9:00 AM-6:00 PM,9:00 AM-6:00 PM,9:00 AM-6:00 PM,9:00 AM-6:00 PM,Closed,Closed,True,False,False,False,False,9.0,18.0,False,5
+Bibliothèque municipale de la Cité,ChIJHzEjXSlljEcR6uj5ydiPCtY,Genève,Closed,10:00 AM-7:00 PM,10:00 AM-7:00 PM,10:00 AM-7:00 PM,10:00 AM-7:00 PM,10:00 AM-5:00 PM,1:00-5:00 PM,True,False,False,True,True,10.0,19.0,False,4
+Café Ex Machina,ChIJtakUEdlCjEcR_ae20B1hspA,Nyon,8:00 AM-6:00 PM,8:00 AM-6:00 PM,8:00 AM-6:00 PM,8:00 AM-6:00 PM,8:00 AM-6:00 PM,9:00 AM-6:00 PM,9:00 AM-6:00 PM,True,False,False,True,True,8.0,18.0,False,5
+Voisins Saint-Gervais,ChIJU8HQbyhljEcRHWTLyOs9eFY,Genève,,,,,,,,False,,,,,,,,
+Signature Quartier des Banques,ChIJiy4tN25ljEcRRrnFAP3RTeU,Genève,Open 24 hours,Open 24 hours,Open 24 hours,Open 24 hours,Open 24 hours,Open 24 hours,Open 24 hours,True,True,True,True,True,0.0,24.0,True,5
+Open Space,ChIJWcyxrr1ljEcRLKYjOhlsgVY,Genève,Open 24 hours,Open 24 hours,Open 24 hours,Open 24 hours,Open 24 hours,Open 24 hours,Open 24 hours,True,True,True,True,True,0.0,24.0,True,5
+Satellite Office Genève,ChIJG7KK50lljEcR1ztcCaKcsNo,Genève,8:00 AM-6:00 PM,8:00 AM-6:00 PM,8:00 AM-6:00 PM,8:00 AM-6:00 PM,8:00 AM-6:00 PM,Closed,Closed,True,False,False,False,False,8.0,18.0,False,5
+Spaces Quai de l'Ile,ChIJz8m5UyhljEcR2nYHOxpAQiE,Genève,Open 24 hours,Open 24 hours,Open 24 hours,Open 24 hours,Open 24 hours,Open 24 hours,Open 24 hours,True,True,True,True,True,0.0,24.0,True,5
+Café Calico,ChIJVdktIklljEcRP9qqBbA5CqA,Genève,7:30 AM-6:00 PM,7:30 AM-6:00 PM,7:30 AM-6:00 PM,7:30 AM-6:00 PM,7:30 AM-6:00 PM,9:00 AM-6:00 PM,Closed,True,True,False,True,False,7.5,18.0,False,5
+Mitwit Office Genève,ChIJeyUodSlljEcRbULO_nT9-hE,Genève,8:30 AM-6:00 PM,8:30 AM-6:00 PM,8:30 AM-6:00 PM,8:30 AM-6:00 PM,8:30 AM-5:30 PM,Closed,Closed,True,False,False,False,False,8.5,18.0,False,5
+Voisins Plainpalais,ChIJoUvimdR6jEcROsdbgbHYnY0,Genève,,,,,,,,False,,,,,,,,
+Brew Society,ChIJD54zEilljEcR_sVNRcqp1OM,Genève,9:00 AM-7:00 PM,9:00 AM-7:00 PM,9:00 AM-7:00 PM,9:00 AM-8:00 PM,9:00 AM-7:00 PM,9:00 AM-6:00 PM,Closed,True,False,True,True,False,9.0,20.0,False,5
+Bibliothèque de Genève,ChIJ7d-efitljEcR72qhtiF6JRA,Genève,9:00 AM-10:00 PM,9:00 AM-10:00 PM,9:00 AM-10:00 PM,9:00 AM-10:00 PM,9:00 AM-10:00 PM,9:00 AM-5:00 PM,Closed,True,False,True,True,False,9.0,22.0,False,5
+Signature Rhone,ChIJ7RBBmAJljEcRz1kGDoK4kfQ,Genève,Open 24 hours,Open 24 hours,Open 24 hours,Open 24 hours,Open 24 hours,Open 24 hours,Open 24 hours,True,True,True,True,True,0.0,24.0,True,5
+Pages & Sips,ChIJhcpRhO5ljEcRMQr5rXM2fIs,Genève,8:00 AM-6:00 PM,8:00 AM-6:00 PM,8:00 AM-6:00 PM,8:00 AM-7:00 PM,8:00 AM-7:00 PM,8:30 AM-7:00 PM,9:00 AM-6:00 PM,True,False,False,True,True,8.0,19.0,False,5
+Spaces Nations,ChIJC0IBpc9ljEcRFHgYykYd5VQ,Genève,Open 24 hours,Open 24 hours,Open 24 hours,Open 24 hours,Open 24 hours,Open 24 hours,Open 24 hours,True,True,True,True,True,0.0,24.0,True,5
+Vicky's Coffee,ChIJ8-_0UTdljEcRwW_2seA7A4M,Genève,8:00 AM-6:00 PM,8:00 AM-6:00 PM,8:00 AM-6:00 PM,8:00 AM-6:00 PM,8:00 AM-6:00 PM,Closed,Closed,True,False,False,False,False,8.0,18.0,False,5
+Regus Versoix Station Lakeside,ChIJe9qWFXtmjEcRlvPhInEKfNM,Versoix,Open 24 hours,Open 24 hours,Open 24 hours,Open 24 hours,Open 24 hours,Open 24 hours,Open 24 hours,True,True,True,True,True,0.0,24.0,True,5
+Café Express Tea Room,ChIJT-CGE4dljEcR1xAKXaeDV2c,Genève,6:30 AM-7:00 PM,6:30 AM-7:00 PM,6:30 AM-7:00 PM,6:30 AM-7:00 PM,6:30 AM-7:00 PM,9:00 AM-5:00 PM,Closed,True,True,False,True,False,6.5,19.0,False,5
+Neufdixieme,ChIJDxTkU3dmjEcRnwbEH0yZ6bI,Versoix,,,,,,,,False,,,,,,,,
+Bibliothèque Marens Nyon,ChIJnVtNCH9DjEcRF-PlTfn7eHo,Nyon,,,,,,,,False,,,,,,,,
+Café Jayko,ChIJB68498RDjEcRCM9FQuKbaZI,Nyon,9:00 AM-10:00 PM,9:00 AM-10:00 PM,9:00 AM-10:00 PM,9:00 AM-12:00 AM,9:00 AM-12:00 AM,4:30 PM-12:00 AM,Closed,True,False,True,True,False,9.0,24.0,False,5
+ATELIER 9 Coworking Nyon,ChIJ414lnjxDjEcRo48LBF7Jkuc,Nyon,"9:00 AM-12:00 PM, 1:00-6:00 PM","9:00 AM-12:00 PM, 1:00-6:00 PM","9:00 AM-12:00 PM, 1:00-6:00 PM","9:00 AM-12:00 PM, 1:00-6:00 PM",Closed,Closed,Closed,True,False,False,False,False,9.0,18.0,False,4
+PepperHub Gland,ChIJd2d9GORFjEcRhsKCpbiGG0E,Gland,8:30 AM-5:30 PM,8:30 AM-5:30 PM,8:30 AM-5:30 PM,8:30 AM-5:30 PM,8:30 AM-5:30 PM,Closed,Closed,True,False,False,False,False,8.5,17.5,False,5
+Ichibani Coworking Rolle,ChIJyRiYfs1FjEcR6oJ_LaiDLng,Rolle,8:30 AM-5:00 PM,8:30 AM-5:00 PM,8:30 AM-5:00 PM,8:30 AM-5:00 PM,8:30 AM-5:00 PM,Closed,Closed,True,False,False,False,False,8.5,17.0,False,5
+Uluwatu House Rolle,ChIJH6j8cSxHjEcRq73vxsAG3gg,Rolle,8:00 AM-5:30 PM,8:00 AM-5:30 PM,8:00 AM-5:30 PM,8:00 AM-5:30 PM,8:00 AM-5:30 PM,8:00 AM-6:00 PM,9:00 AM-4:00 PM,True,False,False,True,True,8.0,18.0,False,5
+lykke Bar Café Boutique,ChIJPyiwYRQ3jEcRe1cb06Cnpkc,Morges,Closed,9:00 AM-6:00 PM,9:00 AM-6:00 PM,9:00 AM-9:00 PM,9:00 AM-9:00 PM,8:00 AM-6:00 PM,Closed,True,False,True,True,False,8.0,21.0,False,4
+Bibliothèque publique de Morges,ChIJVfTpsxU3jEcRLfBO5934hFQ,Morges,2:00-6:00 PM,2:00-6:00 PM,"10:00 AM-12:00 PM, 2:00-7:00 PM",2:00-6:00 PM,2:00-6:00 PM,10:00 AM-1:00 PM,Closed,True,False,False,True,False,10.0,19.0,False,5
+KO-LAB,ChIJTeHOXqA3jEcRlrqMEJTEu24,Morges,Closed,8:00 AM-3:00 PM,8:00 AM-3:00 PM,8:00 AM-3:00 PM,8:00 AM-3:00 PM,9:00 AM-4:00 PM,Closed,True,False,False,True,False,8.0,16.0,False,4
+Society Coworking Morges,ChIJSdbNoyI3jEcRJGN0uU4dRew,Morges,8:00 AM-5:00 PM,8:00 AM-5:00 PM,8:00 AM-5:00 PM,8:00 AM-5:00 PM,8:00 AM-5:00 PM,Closed,Closed,True,False,False,False,False,8.0,17.0,False,5
+Regus Préverenges,ChIJo5RsOwQ3jEcRiHyxF1sx-sw,Préverenges,Open 24 hours,Open 24 hours,Open 24 hours,Open 24 hours,Open 24 hours,Open 24 hours,Open 24 hours,True,True,True,True,True,0.0,24.0,True,5
+T19 Bi Coworking,ChIJT-lT_9QxjEcRj_lNjpJrUrA,Lausanne,Open 24 hours,Open 24 hours,Open 24 hours,Open 24 hours,Open 24 hours,Open 24 hours,Open 24 hours,True,True,True,True,True,0.0,24.0,True,5
+Bibliothèques de Lausanne Chauderon,ChIJ636Jsy4ujEcRK8usuSXm37w,Lausanne,12:00-7:00 PM,12:00-7:00 PM,12:00-7:00 PM,12:00-7:00 PM,12:00-7:00 PM,11:00 AM-5:00 PM,Closed,True,False,False,True,False,11.0,19.0,False,5
+Gotham Lausanne Flon,ChIJddLJOIUvjEcRFgm5skN3PZ4,Lausanne,8:00 AM-6:00 PM,8:00 AM-6:00 PM,8:00 AM-6:00 PM,8:00 AM-6:00 PM,8:00 AM-6:00 PM,Closed,Closed,True,False,False,False,False,8.0,18.0,False,5
+Ça Passe Crème,ChIJwwgZAj8vjEcRpBWp4kUVYBg,Lausanne,Closed,8:00 AM-2:30 PM,8:00 AM-2:30 PM,8:00 AM-2:30 PM,8:00 AM-2:30 PM,10:00 AM-5:00 PM,10:00 AM-4:00 PM,True,False,False,True,True,8.0,17.0,False,4
+Impact Hub Lausanne,ChIJezs83SgujEcRC45AdS3zOuY,Lausanne,9:00 AM-6:00 PM,9:00 AM-6:00 PM,9:00 AM-6:00 PM,9:00 AM-6:00 PM,9:00 AM-6:00 PM,Closed,Closed,True,False,False,False,False,9.0,18.0,False,5
+Regus Lausanne Main Station,ChIJsayjABsvjEcRBAvyPmvMP8Q,Lausanne,Open 24 hours,Open 24 hours,Open 24 hours,Open 24 hours,Open 24 hours,Open 24 hours,Open 24 hours,True,True,True,True,True,0.0,24.0,True,5
+Do It Better Coworking,ChIJuYtj2zEujEcR_RF5RvTXAlU,Lausanne,Open 24 hours,Open 24 hours,Open 24 hours,Open 24 hours,Open 24 hours,Open 24 hours,Open 24 hours,True,True,True,True,True,0.0,24.0,True,5
+Powerhouse,ChIJFc489oIvjEcRjhoGZ-Vs07w,Lausanne,9:00 AM-5:00 PM,9:00 AM-5:00 PM,9:00 AM-5:00 PM,9:00 AM-5:00 PM,9:00 AM-5:00 PM,Closed,Closed,True,False,False,False,False,9.0,17.0,False,5
+Bel-Air Coffee,ChIJ9bwfJxgvjEcRIuMse2sNH1s,Lausanne,8:00 AM-4:00 PM,8:00 AM-4:00 PM,8:00 AM-4:00 PM,8:00 AM-4:00 PM,8:00 AM-4:00 PM,9:00 AM-5:00 PM,9:00 AM-5:00 PM,True,False,False,True,True,8.0,17.0,False,5
+Regus Lausanne City Flon,ChIJVZRplC0ujEcR4Q4bgkJ47U4,Lausanne,Open 24 hours,Open 24 hours,Open 24 hours,Open 24 hours,Open 24 hours,Open 24 hours,Open 24 hours,True,True,True,True,True,0.0,24.0,True,5
+Bold Coffee,ChIJ1UDumHYvjEcRDmoo7h698gA,Lausanne,"8:30 AM-12:00 PM, 1:00-4:00 PM","8:30 AM-12:00 PM, 1:00-4:00 PM","8:30 AM-12:00 PM, 1:00-4:00 PM","8:30 AM-12:00 PM, 1:00-4:00 PM","8:30 AM-12:00 PM, 1:00-4:00 PM",10:00 AM-4:00 PM,10:00 AM-4:00 PM,True,False,False,True,True,8.5,16.0,False,5
+Ordinary Man Coffee,ChIJvRD1ClIvjEcR3bBROcHlxnA,Lausanne,7:30 AM-5:00 PM,7:30 AM-5:00 PM,7:30 AM-5:00 PM,7:30 AM-5:00 PM,7:30 AM-5:00 PM,9:00 AM-5:00 PM,9:00 AM-4:00 PM,True,True,False,True,True,7.5,17.0,False,5
+Coffee Shop Sleepy Bear,ChIJFaJJA80vjEcRtg9rWGE_mXg,Lausanne,7:00 AM-4:00 PM,7:00 AM-4:00 PM,7:00 AM-4:00 PM,7:00 AM-4:00 PM,7:00 AM-4:00 PM,9:00 AM-4:30 PM,9:00 AM-4:30 PM,True,True,False,True,True,7.0,16.5,False,5
+Gotham Lausanne Gare,ChIJl1qTxcwvjEcRPRGD7etwhGQ,Lausanne,8:00 AM-6:00 PM,8:00 AM-6:00 PM,8:00 AM-6:00 PM,8:00 AM-6:00 PM,8:00 AM-6:00 PM,Closed,Closed,True,False,False,False,False,8.0,18.0,False,5
+Coworking de la Madeleine,ChIJnW3ONdMvjEcRXqweqW0o5x8,Lausanne,Open 24 hours,Open 24 hours,Open 24 hours,Open 24 hours,Open 24 hours,Open 24 hours,Open 24 hours,True,True,True,True,True,0.0,24.0,True,5
+BCU Lausanne (Unithèque),ChIJL1blCDEujEcRrSTuhxnJ9oM,Lausanne,8:00 AM-10:00 PM,8:00 AM-10:00 PM,8:00 AM-10:00 PM,8:00 AM-10:00 PM,8:00 AM-10:00 PM,8:00 AM-5:00 PM,Closed,True,False,True,True,False,8.0,22.0,False,5
+Tchalo Work Lounge,ChIJJ50NWTMvjEcRSfU36Z6L4Ds,Lausanne,8:30 AM-5:30 PM,8:30 AM-5:30 PM,8:30 AM-5:30 PM,8:30 AM-5:30 PM,8:30 AM-5:30 PM,Closed,Closed,True,False,False,False,False,8.5,17.5,False,5
+Pully-coworking,ChIJJR7T5LEvjEcRYy1YiJ7EgsA,Pully,,,,,,,,False,,,,,,,,
+Rush Coffee Lutry,ChIJR_jphREvjEcRNcdZF3kgx9E,Lutry,8:00 AM-1:30 PM,8:00 AM-1:30 PM,8:00 AM-1:30 PM,8:00 AM-1:30 PM,8:00 AM-1:30 PM,9:00 AM-1:00 PM,Closed,True,False,False,True,False,8.0,13.5,False,5
+Café culturel OZarts,ChIJhTRpzTwvjEcRksk435OHcyU,Lutry,"8:00 AM-12:00 PM, 2:00-6:00 PM","8:00 AM-12:00 PM, 2:00-6:00 PM","8:00 AM-12:00 PM, 2:00-6:00 PM","8:00 AM-12:00 PM, 2:00-6:00 PM","8:00 AM-12:00 PM, 2:00-6:00 PM",9:00 AM-1:00 PM,Closed,True,False,False,True,False,8.0,18.0,False,5
+Office Hub Vevey,ChIJ4Y_JouqdjkcRH8REkm13snE,Vevey,8:00 AM-6:00 PM,8:00 AM-6:00 PM,8:00 AM-6:00 PM,8:00 AM-6:00 PM,8:00 AM-6:00 PM,Closed,Closed,True,False,False,False,False,8.0,18.0,False,5
+Vibration Workingshare,ChIJBXcsQgWdjkcRFZqeXD5gwZM,Vevey,Open 24 hours,Open 24 hours,Open 24 hours,Open 24 hours,Open 24 hours,Open 24 hours,Open 24 hours,True,True,True,True,True,0.0,24.0,True,5
+Café La Belle Epoque,ChIJAyO7d-SdjkcRBY7ISxzhEMU,Vevey,7:00 AM-9:00 PM,7:00 AM-9:00 PM,7:00 AM-9:00 PM,7:00 AM-10:00 PM,7:00 AM-10:00 PM,7:30 AM-10:00 PM,Closed,True,True,True,True,False,7.0,22.0,False,5
+Eleven Coffee Vevey,ChIJz14rZ2-djkcRDBbgdkq5OP4,Vevey,7:30 AM-5:00 PM,7:30 AM-5:00 PM,7:30 AM-5:00 PM,7:30 AM-5:00 PM,7:30 AM-5:00 PM,8:00 AM-5:00 PM,Closed,True,True,False,True,False,7.5,17.0,False,5
+TheWorkHub Vevey,ChIJ83KY6dScjkcRMdR7ZYSysY4,Vevey,Open 24 hours,Open 24 hours,Open 24 hours,Open 24 hours,Open 24 hours,Open 24 hours,Open 24 hours,True,True,True,True,True,0.0,24.0,True,5
+Bibliothèque municipale Vevey,ChIJJ-ncy8-cjkcRBDyZE5XY4fM,Vevey,10:00 AM-6:00 PM,10:00 AM-6:00 PM,10:00 AM-6:00 PM,10:00 AM-6:00 PM,10:00 AM-6:00 PM,10:00 AM-2:00 PM,Closed,True,False,False,True,False,10.0,18.0,False,5
+En Vogue Vevey,ChIJM2Cc8D-djkcRfPj7sUK7-5M,Vevey,Closed,10:00 AM-8:00 PM,10:00 AM-8:00 PM,10:00 AM-8:00 PM,10:00 AM-7:00 PM,10:00 AM-4:00 PM,10:00 AM-4:00 PM,True,False,True,True,True,10.0,20.0,False,4
+Bibliothèque Montreux-Veytaux,ChIJnVTWRBqbjkcRgIM4jKdVA3U,Montreux,"10:00 AM-12:00 PM, 2:00-6:00 PM","10:00 AM-12:00 PM, 2:00-6:00 PM",2:00-6:00 PM,"10:00 AM-12:00 PM, 2:00-6:00 PM","10:00 AM-12:00 PM, 2:00-6:00 PM",9:00 AM-12:00 PM,Closed,True,False,False,True,False,9.0,18.0,False,5
+Coworking Montreux,ChIJYeZJMRebjkcRxXJ1EwX43j4,Montreux,8:00 AM-6:00 PM,8:00 AM-6:00 PM,8:00 AM-6:00 PM,8:00 AM-6:00 PM,8:00 AM-6:00 PM,Closed,Closed,True,False,False,False,False,8.0,18.0,False,5
+Sleepy Bear Coffee Montreux,ChIJcY6nOAKbjkcRCbLUM2IT6Ms,Montreux,8:00 AM-5:00 PM,8:00 AM-5:00 PM,8:00 AM-5:00 PM,8:00 AM-5:00 PM,8:00 AM-5:00 PM,9:00 AM-4:30 PM,9:00 AM-4:30 PM,True,False,False,True,True,8.0,17.0,False,5
+C+ Montreux,ChIJF_MVAZebjkcRMF-xFZRwvds,Montreux,Closed,8:00 AM-6:00 PM,8:00 AM-6:00 PM,8:00 AM-6:00 PM,8:00 AM-6:00 PM,9:00 AM-6:00 PM,9:00 AM-6:00 PM,True,False,False,True,True,8.0,18.0,False,4
+Coworking Vevey Communaux,ChIJ2Xxg3TKdjkcR2PWzjx-4z9M,Vevey,8:00 AM-7:00 PM,8:00 AM-7:00 PM,8:00 AM-7:00 PM,8:00 AM-7:00 PM,8:00 AM-7:00 PM,Closed,Closed,True,False,False,False,False,8.0,19.0,False,5
+Five Coworking Montreux,ChIJnRc4ckybjkcR9FdqA42RNtI,Montreux,8:00 AM-5:00 PM,8:00 AM-5:00 PM,8:00 AM-5:00 PM,8:00 AM-5:00 PM,8:00 AM-5:00 PM,Closed,Closed,True,False,False,False,False,8.0,17.0,False,5
+Fleurs de thé Montreux,ChIJd_rnAq6bjkcRSOxTaLHBpW8,Montreux,Closed,Closed,11:00 AM-6:00 PM,11:00 AM-6:00 PM,11:00 AM-6:00 PM,11:00 AM-5:00 PM,11:00 AM-5:00 PM,True,False,False,True,True,11.0,18.0,False,3
+Restaurant l'Oasis Villeneuve,ChIJbRsHyTuajkcRy2b0RfsyspI,Villeneuve,8:00 AM-11:00 PM,8:00 AM-11:00 PM,8:00 AM-11:00 PM,8:00 AM-11:00 PM,8:00 AM-11:00 PM,8:00 AM-11:00 PM,8:00 AM-11:00 PM,True,False,True,True,True,8.0,23.0,False,5

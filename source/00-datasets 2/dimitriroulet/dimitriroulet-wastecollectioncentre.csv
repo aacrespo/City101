@@ -1,0 +1,31 @@
+Nom,Type,Commune,Canton,Adresse,lat_wgs84,lon_wgs84,Horaires,Téléphone,Notes,Communes_desservies
+ESREC Châtillon,Déchetterie cantonale,Bernex,GE,"Route de Chancy 52, 1233 Bernex",46.1833,6.0833,"Lu-Ve: 08h00-19h00, Sa: 08h00-17h00, Di: 09h00-13h00",+41 22 420 17 70,Accès avec Pass ESREC dès 01.02.2026,Toutes communes GE
+ESREC La Praille,Déchetterie cantonale,Carouge,GE,"Chemin des Sports 5, 1227 Carouge",46.1833,6.1394,"Lu-Ve: 08h00-19h00, Sa: 08h00-17h00, Di: 09h00-13h00",+41 22 420 17 70,Accès avec Pass ESREC dès 01.02.2026,Toutes communes GE
+ESREC Les Chânats,Déchetterie cantonale,Bellevue,GE,"Route de Lausanne 298, 1293 Bellevue",46.2667,6.1500,"Lu-Ve: 08h00-19h00, Sa: 08h00-17h00, Di: 09h00-13h00",+41 22 420 17 70,Accès avec Pass ESREC dès 01.02.2026,Versoix Bellevue Pregny-Chambésy Genthod Genève Cologny Corsier Collonge-Bellerive Anières Hermance
+Malley Entreprises,Déchetterie,Lausanne-Renens,VD,"Chemin de l'Usine-à-Gaz 20, 1020 Renens",46.5367,6.5880,Lu-Ve: 08h00-11h45 et 13h00-16h30,0800 804 806,Pesage - Réservé entreprises,Renens Lausanne
+Malley Ménages,Déchetterie,Lausanne-Renens,VD,"Chemin de l'Usine-à-Gaz 20, 1020 Renens",46.5367,6.5880,"Lu-Ve: 08h00-18h00, Sa: 08h00-17h00",0800 804 806,Réservé ménages privés,Renens Lausanne
+Bourdonnette,Déchetterie,Lausanne,VD,"Chemin de la Bourdonnette, 1018 Lausanne",46.5300,6.6200,"Lu: 17h00-19h00, Me: 17h00-19h00, Sa: 09h00-13h00",0800 804 806,Accès avec carte,Lausanne
+Perraudettaz,Déchetterie,Lausanne,VD,"Avenue de la Perraudettaz, 1009 Pully",46.5108,6.6622,"Ma: 09h00-13h00, Me-Je: 15h00-19h00, Ve: 09h00-13h00, Sa: 08h00-15h00",0800 804 806,Accès avec carte,Lausanne
+Vallon,Déchetterie,Lausanne,VD,"Rue du Vallon 26, 1005 Lausanne",46.5267,6.6378,"Lu: 09h00-13h00, Me: 12h00-19h00, Sa: 09h00-13h00",0800 804 806,Accès avec carte,Lausanne
+Vélodrome,Déchetterie,Lausanne,VD,"Avenue du Vélodrome, 1000 Lausanne",46.5350,6.6250,"Ma: 15h00-19h00, Je: 09h00-13h00, Sa: 09h00-13h00",0800 804 806,Accès avec carte,Lausanne
+Vevey,Déchetterie,Vevey,VD,"Avenue Reller 5, 1800 Vevey",46.4608,6.8433,"Ma-Je: 09h00-12h00 et 14h00-18h00, Me: 09h00-19h00, Sa: 09h00-16h00",+41 21 925 52 53,Accès avec carte,Vevey
+La Tour-de-Peilz,Déchetterie,La Tour-de-Peilz,VD,"Avenue de la Perrausaz, 1814 La Tour-de-Peilz",46.4533,6.8583,"Lu-Me-Ve: 13h30-18h00, Sa: 08h00-12h00 et 13h30-17h00",+41 79 405 06 75,Déchetterie La Faraz,La Tour-de-Peilz
+Corsier-sur-Vevey,Déchetterie intercommunale,Corsier-sur-Vevey,VD,"Fenil en Praz-Libon, 1804 Corsier-sur-Vevey",46.4667,6.8500,"Me: 14h00-18h00, Sa: 09h00-12h00",,Intercommunale,Chardonne Corsier-sur-Vevey St-Légier
+Montreux,Déchetterie,Montreux,VD,"13bis Route des Châtaigniers, 1820 Montreux",46.4312,6.9106,"Ma-Je-Ve: 09h00-12h00 et 14h00-18h00, Me: 09h00-19h00, Sa: 09h00-16h00",,Accès avec carte,Montreux
+Nyon,Déchetterie,Nyon,VD,"Route de Champ-Colin, 1260 Nyon",46.3826,6.2391,"Lu-Ve: 08h00-18h30, Sa: 08h00-17h00",,Accès avec carte magnétique,Nyon
+Gland,Déchetterie,Gland,VD,"En Vertelin 3, 1196 Gland",46.4197,6.2733,"Ma: 13h30-18h00, Me: 09h00-12h00 et 13h30-17h00, Je: 09h00-12h00 et 13h30-18h00, Ve: 13h30-17h00, Sa: 09h00-16h00",+41 22 354 82 82,Accès avec carte barrière,Gland
+Rolle,Déchetterie,Rolle,VD,"Chemin de Prévonloup, 1180 Rolle",46.4583,6.3350,"Ma: 13h30-18h00, Me-Je: 09h00-12h00 et 13h30-18h00, Ve: 13h30-17h00, Sa: 09h00-16h00",+41 79 839 65 49,Accessible Gilly,Rolle Gilly
+Morges,Déchetterie,Morges,VD,"Chemin du Grand-Pré, 1110 Morges",46.5108,6.4994,"Lu-Ve: 13h45-18h00, Sa: 08h00-12h00",,Réservé habitants Morges,Morges
+Aubonne,Déchetterie,Aubonne,VD,"Chemin de Ballens, 1170 Aubonne",46.4906,6.3861,"Ma-Me: 15h00-18h00, Sa: 09h00-13h00",,Accès avec carte,Aubonne
+Prangins,Déchetterie,Prangins,VD,"Route de Promenthoux, 1197 Prangins",46.4022,6.2506,"Ma: 13h30-18h00, Me: 09h00-12h00 et 13h30-17h00, Je: 09h00-12h00 et 13h30-18h00, Ve: 13h30-17h00, Sa: 09h00-16h00",,Réservé habitants,Prangins
+Villars-sous-Yens,Déchetterie intercommunale,Villars-sous-Yens,VD,"Route de Morges, 1168 Villars-sous-Yens",46.5417,6.4333,"Lu-Me: 15h30-19h00 (été), 15h30-17h00 (hiver), Sa: 08h30-13h30",,Intercommunale,Villars-sous-Yens Lussy-sur-Morges
+Pully,Déchetterie,Pully,VD,"Chemin du Levant 159A, 1009 Pully",46.5108,6.6622,"Me: 14h00-18h00, Sa: 09h00-13h00",0800 804 806,Accès déchetteries Lausanne,Pully
+Prilly,Déchetterie,Prilly,VD,"Chemin de Florency 1, 1008 Prilly",46.5367,6.6086,"Me: 14h00-18h00, Sa: 09h00-12h00",,Réservé habitants Prilly,Prilly
+Ecublens,Déchetterie,Ecublens,VD,"Chemin de Crochy, 1024 Ecublens",46.5289,6.5611,"Me: 15h00-18h00, Sa: 09h00-12h00",,Réservé habitants Ecublens,Ecublens
+Cheseaux,Déchetterie intercommunale,Cheseaux-sur-Lausanne,VD,"Route cantonale, 1033 Cheseaux",46.5667,6.6000,"Me: 14h00-18h00, Sa: 09h00-12h00",,Intercommunale,Cheseaux Bournens Sullens
+Aigle,Déchetterie,Aigle,VD,"Route de Fontanney, 1860 Aigle",46.3167,6.9667,"Me: 14h00-18h00, Sa: 09h00-12h00",,Réservé habitants Aigle,Aigle
+Bex,Déchetterie,Bex,VD,"Route de Malatrait, 1880 Bex",46.2500,7.0167,"Me: 14h00-17h00, Sa: 09h00-11h00",,Réservé habitants Bex,Bex
+Villeneuve,Déchetterie,Villeneuve,VD,"Route de Chabrey, 1844 Villeneuve",46.3958,6.9267,"Me: 14h00-17h00, Sa: 09h00-11h30",,Réservé habitants Villeneuve,Villeneuve
+Yverdon,Déchetterie,Yverdon-les-Bains,VD,"Rue des Uttins 2, 1400 Yverdon",46.7783,6.6408,"Me: 13h30-18h00, Sa: 08h30-12h00",,Réservé habitants Yverdon,Yverdon-les-Bains
+Forel,Déchetterie,Forel-Lavaux,VD,"Route de Vevey 11, 1072 Forel",46.5167,6.7167,"Me: 14h00-18h00, Ve: 09h00-11h30 (artisans)",,Réservé habitants,Forel-Lavaux
+Monthey,Déchetterie,Monthey,VS,"Route de Finges, 1870 Monthey",46.2556,6.9583,"Me: 14h00-17h00, Sa: 09h00-11h30",,Réservé habitants Monthey,Monthey

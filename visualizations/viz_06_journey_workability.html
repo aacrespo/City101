@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>City101 — Journey Workability Explorer</title>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: #1a1a2e;
+    color: #e0e0e0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 24px 24px 48px;
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 16px;
+    max-width: 900px;
+  }
+  .header h1 { font-size: 26px; font-weight: 700; color: #ffffff; letter-spacing: -0.5px; margin-bottom: 6px; }
+  .header .subtitle { font-size: 14px; color: #8892a0; }
+  .header .subtitle em { color: #3498db; font-style: normal; font-weight: 600; }
+
+  .main {
+    display: flex;
+    gap: 20px;
+    width: 100%;
+    max-width: 1200px;
+    align-items: flex-start;
+  }
+
+  .matrix-panel {
+    background: #16213e;
+    border: 1px solid #2a2a4a;
+    border-radius: 12px;
+    padding: 16px;
+    overflow-x: auto;
+    flex: 1;
+  }
+
+  .detail-panel {
+    width: 300px;
+    min-width: 300px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .legend-bar {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    margin: 12px 0;
+    flex-wrap: wrap;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: #c0c0c0;
+  }
+  .legend-swatch {
+    width: 16px;
+    height: 16px;
+    border-radius: 3px;
+  }
+
+  .stats-card, .detail-card {
+    background: #16213e;
+    border: 1px solid #2a2a4a;
+    border-radius: 12px;
+    padding: 16px;
+  }
+  .stats-card h3, .detail-card h3 {
+    font-size: 13px;
+    font-weight: 600;
+    color: #ffffff;
+    margin-bottom: 10px;
+  }
+
+  .stat-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+    border-bottom: 1px solid #1e2d4a;
+    font-size: 12px;
+  }
+  .stat-row:last-child { border-bottom: none; }
+  .stat-label { color: #8892a0; }
+  .stat-value { font-family: 'Space Mono', monospace; font-weight: 700; color: #e0e0e0; }
+  .stat-bar {
+    height: 6px;
+    border-radius: 3px;
+    margin-top: 4px;
+  }
+
+  .detail-prompt {
+    color: #555;
+    font-size: 12px;
+    text-align: center;
+    padding: 20px 0;
+    line-height: 1.6;
+  }
+
+  .detail-info {
+    display: none;
+  }
+  .detail-info.active { display: block; }
+
+  .detail-pair {
+    font-size: 16px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 4px;
+  }
+  .detail-pair .arrow { color: #3498db; margin: 0 6px; }
+  .detail-class {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+  .detail-metrics {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .detail-metric {
+    background: #0f1729;
+    border-radius: 8px;
+    padding: 10px;
+    text-align: center;
+  }
+  .detail-metric .val {
+    font-family: 'Space Mono', monospace;
+    font-size: 20px;
+    font-weight: 700;
+    color: #fff;
+  }
+  .detail-metric .lbl {
+    font-size: 10px;
+    color: #8892a0;
+    margin-top: 2px;
+  }
+
+  .callout {
+    background: #16213e;
+    border: 1px solid #2a2a4a;
+    border-left: 3px solid #e74c3c;
+    border-radius: 0 12px 12px 0;
+    padding: 14px 16px;
+    font-size: 12px;
+    color: #8892a0;
+    line-height: 1.6;
+    max-width: 1200px;
+    width: 100%;
+    margin-top: 16px;
+  }
+  .callout strong { color: #e0e0e0; }
+  .callout em { color: #e74c3c; font-style: normal; font-weight: 600; }
+
+  .matrix-cell { cursor: pointer; transition: opacity 0.15s; }
+  .matrix-cell:hover { opacity: 0.8; stroke: #fff; stroke-width: 1.5; }
+  .matrix-cell.selected { stroke: #fff; stroke-width: 2; }
+
+  .axis-label { font-family: 'Inter', sans-serif; font-size: 10px; fill: #8892a0; }
+  .axis-label.highlight { fill: #ffffff; font-weight: 600; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Journey Workability Explorer</h1>
+  <p class="subtitle"><em>85%</em> of connections are not workable. The corridor has two faces: IC express = office, S-Bahn regional = fragmented.</p>
+</div>
+
+<div class="main">
+  <div class="matrix-panel">
+    <div id="matrix"></div>
+    <div class="legend-bar">
+      <div class="legend-item"><div class="legend-swatch" style="background:#2ecc71"></div>Prime</div>
+      <div class="legend-item"><div class="legend-swatch" style="background:#f1c40f"></div>Workable</div>
+      <div class="legend-item"><div class="legend-swatch" style="background:#e67e22"></div>Marginal</div>
+      <div class="legend-item"><div class="legend-swatch" style="background:#e74c3c"></div>Not Workable</div>
+      <div class="legend-item"><div class="legend-swatch" style="background:#0f1729; border:1px solid #2a2a4a"></div>No data</div>
+    </div>
+  </div>
+
+  <div class="detail-panel">
+    <div class="stats-card">
+      <h3>Corridor Summary</h3>
+      <div class="stat-row">
+        <span class="stat-label">Total OD pairs</span>
+        <span class="stat-value">35</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label" style="color:#2ecc71">Prime</span>
+        <span class="stat-value">8</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label" style="color:#f1c40f">Workable</span>
+        <span class="stat-value">5</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label" style="color:#e67e22">Marginal</span>
+        <span class="stat-value">18</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label" style="color:#e74c3c">Not Workable</span>
+        <span class="stat-value">4</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Prime + Workable</span>
+        <span class="stat-value" style="color:#2ecc71">37%</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Key insight</span>
+        <span class="stat-value" style="font-size:10px;color:#e74c3c">Short hops = unworkable</span>
+      </div>
+    </div>
+
+    <div class="detail-card">
+      <h3>Connection Detail</h3>
+      <div class="detail-prompt" id="detail-prompt">
+        Click a colored cell<br>to see connection details
+      </div>
+      <div class="detail-info" id="detail-info">
+        <div class="detail-pair" id="detail-pair"></div>
+        <div id="detail-class-badge"></div>
+        <div class="detail-metrics" id="detail-metrics"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="callout">
+  <strong>The two-corridor paradox:</strong> All <em>Prime</em> connections are long-distance IC/IR trains (Geneva–Lausanne, Lausanne–Montreux).
+  Short-hop S-Bahn connections — even between adjacent stations — are <em>never prime</em>.
+  The same tracks carry two fundamentally different experiences: a workable linear city for IC passengers, and fragmented villages for everyone else.
+</div>
+
+<script>
+// ─── STATIONS (25, sorted by corridor km) ───
+const STATIONS = [
+  {n:"Genève",s:"GVA",km:0,seg:"Geneva"},
+  {n:"Genève-Sécheron",s:"G-Séch",km:1.4,seg:"Geneva"},
+  {n:"Genève-Eaux-Vives",s:"G-EV",km:2.2,seg:"Geneva"},
+  {n:"Genève-Champel",s:"G-Champ",km:2.3,seg:"Geneva"},
+  {n:"Lancy-Pont-Rouge",s:"L-PR",km:3.2,seg:"Geneva"},
+  {n:"Genève-Aéroport",s:"GVA-Air",km:3.6,seg:"Geneva"},
+  {n:"Lancy-Bachet",s:"L-Bach",km:4.3,seg:"Geneva"},
+  {n:"Versoix",s:"Versoix",km:8.3,seg:"Geneva"},
+  {n:"Coppet",s:"Coppet",km:13,seg:"La Côte"},
+  {n:"Nyon",s:"Nyon",km:21.7,seg:"La Côte"},
+  {n:"Gland",s:"Gland",km:26.5,seg:"La Côte"},
+  {n:"Rolle",s:"Rolle",km:33.4,seg:"La Côte"},
+  {n:"Allaman",s:"Allaman",km:37.3,seg:"Lausanne"},
+  {n:"Morges",s:"Morges",km:45.1,seg:"Lausanne"},
+  {n:"Bussigny",s:"Bussigny",km:51.4,seg:"Lausanne"},
+  {n:"Renens VD",s:"Renens",km:51.9,seg:"Lausanne"},
+  {n:"Lausanne",s:"Lausanne",km:53.1,seg:"Lausanne"},
+  {n:"Cully",s:"Cully",km:57.2,seg:"Lavaux"},
+  {n:"Puidoux",s:"Puidoux",km:60.2,seg:"Lavaux"},
+  {n:"Vevey",s:"Vevey",km:63.7,seg:"Riviera"},
+  {n:"La Tour-de-Peilz",s:"LT-Peilz",km:64.5,seg:"Riviera"},
+  {n:"Villeneuve VD",s:"Villeneuve",km:67,seg:"Riviera"},
+  {n:"Montreux",s:"Montreux",km:67.3,seg:"Riviera"},
+  {n:"Aigle",s:"Aigle",km:67.4,seg:"Riviera"},
+  {n:"Territet",s:"Territet",km:67.8,seg:"Riviera"},
+];
+
+const SEG_COLORS = {"Geneva":"#e74c3c","La Côte":"#e67e22","Lausanne":"#3498db","Lavaux":"#9b59b6","Riviera":"#2ecc71"};
+
+// class: 0=PRIME, 1=WORKABLE, 2=MARGINAL, 3=NOT_WORKABLE
+const CLASS_COLORS = ["#2ecc71","#f1c40f","#e67e22","#e74c3c"];
+const CLASS_NAMES = ["Prime","Workable","Marginal","Not Workable"];
+
+// ─── OD PAIRS (35, best workability per pair) ───
+// f=from, t=to, c=class(0-3), d=avg_duration_min, cf=max_comfort(1-4)
+const OD = [
+  {f:"Allaman",t:"Morges",c:2,d:6.5,cf:2},
+  {f:"Bussigny",t:"Renens VD",c:3,d:3.5,cf:1},
+  {f:"Coppet",t:"Nyon",c:2,d:14.6,cf:2},
+  {f:"Cully",t:"Vevey",c:2,d:9.1,cf:1},
+  {f:"Genève",t:"Genève-Aéroport",c:1,d:7.5,cf:4},
+  {f:"Genève",t:"Lausanne",c:0,d:45.2,cf:4},
+  {f:"Genève",t:"Morges",c:0,d:34.5,cf:3},
+  {f:"Genève",t:"Nyon",c:0,d:15.2,cf:3},
+  {f:"Genève-Aéroport",t:"Genève-Champel",c:2,d:31.3,cf:1},
+  {f:"Genève-Champel",t:"Genève-Eaux-Vives",c:3,d:2.7,cf:2},
+  {f:"Genève-Eaux-Vives",t:"Lancy-Bachet",c:3,d:6.0,cf:2},
+  {f:"Genève-Sécheron",t:"Versoix",c:2,d:14.0,cf:1},
+  {f:"Gland",t:"Rolle",c:2,d:12.3,cf:2},
+  {f:"La Tour-de-Peilz",t:"Montreux",c:1,d:11.6,cf:2},
+  {f:"Lancy-Bachet",t:"Lancy-Pont-Rouge",c:2,d:3.6,cf:2},
+  {f:"Lancy-Pont-Rouge",t:"Genève-Sécheron",c:2,d:11.0,cf:1},
+  {f:"Lausanne",t:"Montreux",c:0,d:20.9,cf:4},
+  {f:"Lausanne",t:"Puidoux",c:2,d:15.0,cf:1},
+  {f:"Lausanne",t:"Vevey",c:1,d:16.0,cf:3},
+  {f:"Montreux",t:"Aigle",c:1,d:11.1,cf:3},
+  {f:"Montreux",t:"Lausanne",c:0,d:21.7,cf:4},
+  {f:"Montreux",t:"Territet",c:2,d:10.2,cf:1},
+  {f:"Morges",t:"Bussigny",c:2,d:23.7,cf:3},
+  {f:"Morges",t:"Lausanne",c:0,d:13.4,cf:3},
+  {f:"Nyon",t:"Genève",c:0,d:15.6,cf:3},
+  {f:"Nyon",t:"Gland",c:2,d:9.0,cf:2},
+  {f:"Puidoux",t:"Cully",c:2,d:33.9,cf:1},
+  {f:"Renens VD",t:"Lausanne",c:3,d:5.8,cf:4},
+  {f:"Rolle",t:"Allaman",c:1,d:9.3,cf:2},
+  {f:"Territet",t:"Villeneuve VD",c:2,d:7.7,cf:1},
+  {f:"Versoix",t:"Coppet",c:2,d:9.0,cf:1},
+  {f:"Vevey",t:"La Tour-de-Peilz",c:2,d:8.1,cf:1},
+  {f:"Vevey",t:"Lausanne",c:0,d:16.8,cf:3},
+  {f:"Vevey",t:"Montreux",c:2,d:6.5,cf:3},
+  {f:"Villeneuve VD",t:"Aigle",c:2,d:7.6,cf:2},
+];
+
+// ─── BUILD INDEX ───
+const nameToIdx = {};
+STATIONS.forEach((s, i) => nameToIdx[s.n] = i);
+
+const matrix = {};
+OD.forEach(p => {
+  const fi = nameToIdx[p.f], ti = nameToIdx[p.t];
+  if (fi !== undefined && ti !== undefined) {
+    matrix[fi + "," + ti] = p;
+  }
+});
+
+// ─── D3 MATRIX ───
+const N = STATIONS.length;
+const CELL = 26;
+const MARGIN = { top: 120, left: 130, right: 10, bottom: 10 };
+const W = MARGIN.left + N * CELL + MARGIN.right;
+const H = MARGIN.top + N * CELL + MARGIN.bottom;
+
+const svg = d3.select("#matrix")
+  .append("svg")
+  .attr("width", W)
+  .attr("height", H);
+
+// Column labels (rotated)
+STATIONS.forEach((s, i) => {
+  svg.append("text")
+    .attr("class", "axis-label col-label")
+    .attr("data-idx", i)
+    .attr("x", 0).attr("y", 0)
+    .attr("transform", `translate(${MARGIN.left + i * CELL + CELL/2}, ${MARGIN.top - 8}) rotate(-55)`)
+    .attr("text-anchor", "start")
+    .text(s.s);
+});
+
+// Row labels
+STATIONS.forEach((s, i) => {
+  svg.append("text")
+    .attr("class", "axis-label row-label")
+    .attr("data-idx", i)
+    .attr("x", MARGIN.left - 8)
+    .attr("y", MARGIN.top + i * CELL + CELL/2 + 3)
+    .attr("text-anchor", "end")
+    .text(s.s);
+});
+
+// Segment color indicators on rows
+STATIONS.forEach((s, i) => {
+  svg.append("rect")
+    .attr("x", MARGIN.left - 4)
+    .attr("y", MARGIN.top + i * CELL + 4)
+    .attr("width", 3)
+    .attr("height", CELL - 8)
+    .attr("rx", 1.5)
+    .attr("fill", SEG_COLORS[s.seg]);
+});
+
+// Grid cells
+let selectedCell = null;
+
+for (let r = 0; r < N; r++) {
+  for (let c = 0; c < N; c++) {
+    const key = r + "," + c;
+    const pair = matrix[key];
+    const x = MARGIN.left + c * CELL;
+    const y = MARGIN.top + r * CELL;
+
+    const rect = svg.append("rect")
+      .attr("class", "matrix-cell")
+      .attr("x", x + 1)
+      .attr("y", y + 1)
+      .attr("width", CELL - 2)
+      .attr("height", CELL - 2)
+      .attr("rx", 3)
+      .attr("fill", pair ? CLASS_COLORS[pair.c] : "#0f1729")
+      .attr("stroke", r === c ? "#2a2a4a" : "none")
+      .attr("stroke-width", r === c ? 1 : 0)
+      .attr("data-r", r)
+      .attr("data-c", c);
+
+    if (pair) {
+      rect.on("click", () => selectCell(r, c, pair));
+    }
+
+    // Diagonal marker
+    if (r === c) {
+      svg.append("circle")
+        .attr("cx", x + CELL/2)
+        .attr("cy", y + CELL/2)
+        .attr("r", 2)
+        .attr("fill", "#2a2a4a")
+        .style("pointer-events", "none");
+    }
+  }
+}
+
+function selectCell(r, c, pair) {
+  // Clear previous
+  svg.selectAll(".matrix-cell").classed("selected", false);
+  svg.selectAll(".axis-label").classed("highlight", false);
+
+  // Highlight cell
+  svg.selectAll(`.matrix-cell[data-r="${r}"][data-c="${c}"]`).classed("selected", true);
+
+  // Highlight labels
+  svg.selectAll(`.row-label[data-idx="${r}"]`).classed("highlight", true);
+  svg.selectAll(`.col-label[data-idx="${c}"]`).classed("highlight", true);
+
+  // Update detail panel
+  const prompt = document.getElementById("detail-prompt");
+  const info = document.getElementById("detail-info");
+  prompt.style.display = "none";
+  info.classList.add("active");
+
+  document.getElementById("detail-pair").innerHTML =
+    `${STATIONS[r].n} <span class="arrow">→</span> ${STATIONS[c].n}`;
+
+  const badge = document.getElementById("detail-class-badge");
+  badge.innerHTML = `<span class="detail-class" style="background:${CLASS_COLORS[pair.c]}; color:${pair.c < 2 ? '#000' : '#fff'}">${CLASS_NAMES[pair.c]}</span>`;
+
+  const comfortStars = "★".repeat(pair.cf) + "☆".repeat(4 - pair.cf);
+
+  document.getElementById("detail-metrics").innerHTML = `
+    <div class="detail-metric">
+      <div class="val">${pair.d.toFixed(0)}<span style="font-size:12px">min</span></div>
+      <div class="lbl">Avg Duration</div>
+    </div>
+    <div class="detail-metric">
+      <div class="val" style="font-size:16px">${comfortStars}</div>
+      <div class="lbl">Best Comfort</div>
+    </div>
+    <div class="detail-metric">
+      <div class="val">${STATIONS[r].km.toFixed(0)}<span style="font-size:11px">km</span></div>
+      <div class="lbl">Origin km</div>
+    </div>
+    <div class="detail-metric">
+      <div class="val">${Math.abs(STATIONS[c].km - STATIONS[r].km).toFixed(0)}<span style="font-size:11px">km</span></div>
+      <div class="lbl">Distance</div>
+    </div>
+  `;
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+lat_wgs84,lon_wgs84,Name,Address,City,Rating,Facility_Type,Place_ID
+46.2553675,6.1333457,Cantonal Recovery Area ESREC,"Chem. des Chanâts, 1293 Bellevue",Geneva,4.2,Recycling Center,ChIJOWL9mkBkjEcR55luDUyTfZM
+46.1793921,6.139749,Emmaüs Genève,"Rte de Drize 5, 1227 Carouge",Geneva,4.1,Recycling & Thrift,ChIJhSwXJd56jEcRpCC-ElqAIuE
+46.1694825,6.1269743,La Recyclerie Caritas,"Chem. de la Milice 19, 1228 Plan-les-Ouates",Geneva,3.9,Recycling Store,ChIJ8aiTswR7jEcRIT55u7GC-8w
+46.513560299999995,6.6491742,Swiss Valorisation,"Chem. de Bonne-Espérance 35, 1006 Lausanne",Lausanne,N/A,E-waste Recycling,ChIJvyTE0qmn22ARbXU0JyRkYvk
+46.5150807,6.653740900000001,Déchèterie de la Perraudettaz,"Déchèterie de la Perraudettaz, 1005 Lausanne",Lausanne,4.6,Waste Disposal Center,ChIJq6raJK0vjEcR-49FkLiP_9Y
+46.5287687,6.6030085000000005,La Bonne Combine,"Rte de Renens 4, 1008 Prilly",Lausanne,4.0,Repair & Recycling,ChIJga28A8YxjEcRHYo4lqV6veI
+46.504132399999996,6.4849678,Recyclage Express,"Av. de Riond-Bosson 12, 1110 Morges",Morges,4.9,Recycling Service,ChIJbf2UfJYxjEcR4sPDRjahT4M
+46.4525868,6.897147299999999,Déchetterie Montreux,"Rte des Châtaigniers 13bis, 1816 Montreux",Montreux,4.7,Waste Disposal Center,ChIJUUyJqUibjkcRpNtrZuCUeEY
+46.189354099999996,6.1311732999999995,MediaMarkt Carouge,"Rte des Acacias 43, 1227 Carouge",Geneva,3.9,Electronics Store (accepts e-waste),ChIJi7TZXC97jEcRnviLIMq_C5w
+Various,Various,Interdiscount locations,Various locations across region,Multiple,Various,Electronics Stores (accept e-waste),Multiple
+Various,Various,Fust locations,Various locations across region,Multiple,Various,Electronics Stores (accept e-waste),Multiple
+Various,Various,MANOR stores,Various locations across region,Multiple,Various,Department Stores (accept e-waste),Multiple
+Various,Various,Coop City stores,Various locations across region,Multiple,Various,Department Stores (accept e-waste),Multiple

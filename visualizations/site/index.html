@@ -1,0 +1,1328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Archipelago — City101</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;600;700&display=swap');
+
+  :root {
+    --bg: #0a0a0f;
+    --bg2: #111118;
+    --bg3: #1a1a24;
+    --text: #e8e6e1;
+    --text-dim: #8a8880;
+    --text-bright: #ffffff;
+    --accent: #c8a86e;
+    --accent-dim: #8a7548;
+    --red: #e74c3c;
+    --orange: #e67e22;
+    --blue: #3498db;
+    --purple: #9b59b6;
+    --green: #2ecc71;
+    --yellow: #f1c40f;
+    --geneva: #e74c3c;
+    --lacote: #e67e22;
+    --lausanne: #3498db;
+    --lavaux: #9b59b6;
+    --riviera: #2ecc71;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 17px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ---- NAV ---- */
+  .site-nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 48px;
+    background: rgba(10,10,15,0.88);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    display: flex;
+    align-items: center;
+    padding: 0 2rem;
+    z-index: 1000;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+  .nav-title {
+    font-family: 'Instrument Serif', serif;
+    font-size: 1rem;
+    color: var(--text-bright);
+    white-space: nowrap;
+    margin-right: 1.5rem;
+  }
+  .nav-chapters {
+    display: flex;
+    gap: 0.15rem;
+    margin: 0 auto;
+  }
+  .nav-dot {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--text-dim);
+    text-decoration: none;
+    padding: 0.35rem 0.5rem;
+    border-radius: 4px;
+    transition: color 0.3s, background 0.3s;
+  }
+  .nav-dot:hover { color: var(--text); }
+  .nav-dot.active {
+    color: var(--accent);
+    background: rgba(200,168,110,0.1);
+  }
+  .nav-explore {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--accent-dim);
+    text-decoration: none;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-left: 1.5rem;
+    white-space: nowrap;
+  }
+  .nav-explore:hover { color: var(--accent); }
+
+  /* ---- HERO ---- */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 4rem 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -50%; left: -50%;
+    width: 200%; height: 200%;
+    background: radial-gradient(ellipse at 30% 50%, rgba(200,168,110,0.04) 0%, transparent 60%),
+                radial-gradient(ellipse at 70% 30%, rgba(52,152,219,0.03) 0%, transparent 50%);
+    animation: drift 30s ease-in-out infinite alternate;
+  }
+  @keyframes drift {
+    0% { transform: translate(0, 0) rotate(0deg); }
+    100% { transform: translate(-3%, 2%) rotate(1deg); }
+  }
+  .hero h1 {
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(3.5rem, 8vw, 7rem);
+    font-weight: 400;
+    color: var(--text-bright);
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+    position: relative;
+    z-index: 1;
+    opacity: 0;
+    animation: fadeUp 1.2s ease forwards 0.3s;
+  }
+  .hero .subtitle {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.85rem;
+    color: var(--text-dim);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-top: 1.5rem;
+    position: relative;
+    z-index: 1;
+    opacity: 0;
+    animation: fadeUp 1.2s ease forwards 0.7s;
+  }
+  .hero .big-number {
+    font-family: 'DM Mono', monospace;
+    font-size: clamp(1rem, 2.5vw, 1.3rem);
+    color: var(--accent);
+    margin-top: 3rem;
+    position: relative;
+    z-index: 1;
+    opacity: 0;
+    animation: fadeUp 1.2s ease forwards 1.1s;
+  }
+  .scroll-hint {
+    position: absolute;
+    bottom: 3rem;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--text-dim);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    opacity: 0;
+    animation: fadeUp 1.2s ease forwards 1.5s, pulse 2s ease-in-out infinite 2.5s;
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 0.8; }
+  }
+
+  /* ---- CHAPTERS ---- */
+  .chapter {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 8rem 2rem;
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+    scroll-margin-top: 64px;
+  }
+  .chapter.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .chapter-number {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--accent-dim);
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+  .chapter h2 {
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(2rem, 4.5vw, 3.2rem);
+    font-weight: 400;
+    color: var(--text-bright);
+    line-height: 1.15;
+    margin-bottom: 2rem;
+    letter-spacing: -0.01em;
+  }
+  .chapter p { margin-bottom: 1.4rem; color: var(--text); }
+  .chapter p.dim { color: var(--text-dim); font-size: 0.92rem; }
+
+  /* ---- STAT CALLOUTS ---- */
+  .stat-row {
+    display: flex;
+    gap: 1.5rem;
+    margin: 2.5rem 0;
+    flex-wrap: wrap;
+  }
+  .stat-card {
+    flex: 1;
+    min-width: 180px;
+    background: var(--bg2);
+    border: 1px solid rgba(200,168,110,0.1);
+    border-radius: 8px;
+    padding: 1.5rem;
+    text-align: center;
+  }
+  .stat-card .value {
+    font-family: 'DM Mono', monospace;
+    font-size: 2.2rem;
+    font-weight: 500;
+    color: var(--accent);
+    line-height: 1;
+  }
+  .stat-card .label {
+    font-size: 0.78rem;
+    color: var(--text-dim);
+    margin-top: 0.5rem;
+    line-height: 1.3;
+  }
+
+  /* ---- CHART CONTAINERS ---- */
+  .chart-wrap {
+    background: var(--bg2);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 10px;
+    padding: 2rem 1.5rem 1.5rem;
+    margin: 2.5rem 0;
+    overflow-x: auto;
+  }
+  .chart-wrap .chart-title {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--text-dim);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+  .chart-wrap svg text { font-family: 'DM Mono', monospace; }
+
+  /* ---- PULL QUOTE ---- */
+  .pull-quote {
+    border-left: 2px solid var(--accent);
+    padding: 1.5rem 0 1.5rem 2rem;
+    margin: 3rem 0;
+    font-family: 'Instrument Serif', serif;
+    font-size: 1.5rem;
+    font-style: italic;
+    color: var(--text-bright);
+    line-height: 1.4;
+  }
+
+  /* ---- COMPARISON CARDS ---- */
+  .compare-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin: 2.5rem 0;
+  }
+  .compare-card {
+    background: var(--bg2);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 8px;
+    padding: 1.8rem;
+  }
+  .compare-card h4 {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--text-dim);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+  .compare-card .metric {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    font-size: 0.88rem;
+  }
+  .compare-card .metric:last-child { border-bottom: none; }
+  .compare-card .metric .val {
+    font-family: 'DM Mono', monospace;
+    font-weight: 500;
+  }
+
+  /* ---- PROPOSITION SECTION ---- */
+  .timeline-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin: 3rem 0;
+  }
+  .time-card {
+    background: var(--bg2);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 8px;
+    padding: 1.5rem 1.2rem;
+    text-align: center;
+    transition: border-color 0.3s ease, transform 0.3s ease;
+  }
+  .time-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-4px);
+  }
+  .time-card .hours {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    margin-bottom: 0.6rem;
+  }
+  .time-card .program {
+    font-family: 'Instrument Serif', serif;
+    font-size: 1.2rem;
+    color: var(--text-bright);
+    margin-bottom: 0.5rem;
+  }
+  .time-card .desc {
+    font-size: 0.78rem;
+    color: var(--text-dim);
+    line-height: 1.4;
+  }
+
+  /* ---- MAP IMAGES ---- */
+  .map-image-wrap {
+    margin: 2.5rem 0;
+    background: var(--bg2);
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.05);
+    cursor: pointer;
+    transition: border-color 0.3s ease;
+  }
+  .map-image-wrap:hover { border-color: rgba(200,168,110,0.2); }
+  .map-image-wrap img {
+    width: 100%;
+    display: block;
+    min-height: 120px;
+    object-fit: contain;
+    background: var(--bg2);
+  }
+  .map-caption {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--text-dim);
+    padding: 0.8rem 1.5rem;
+    letter-spacing: 0.1em;
+  }
+
+  /* ---- IFRAME CONTAINERS ---- */
+  .iframe-wrap {
+    margin: 2.5rem 0;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.05);
+    background: var(--bg2);
+  }
+  .iframe-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--text-dim);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 1rem 1.5rem 0;
+  }
+  .iframe-wrap iframe {
+    width: 100%;
+    border: none;
+    display: block;
+  }
+
+  /* ---- LEAFLET MAP ---- */
+  #corridor-map {
+    height: 500px;
+    border-radius: 10px;
+    margin: 2.5rem 0;
+    border: 1px solid rgba(255,255,255,0.05);
+  }
+  .leaflet-popup-content-wrapper {
+    background: #1a1a24;
+    color: #e8e6e1;
+    border-radius: 8px;
+    box-shadow: 0 3px 14px rgba(0,0,0,0.4);
+  }
+  .leaflet-popup-tip { background: #1a1a24; }
+  .leaflet-popup-content {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    line-height: 1.6;
+    margin: 10px 14px;
+  }
+  .leaflet-popup-content strong { color: #c8a86e; font-weight: 500; }
+  .leaflet-popup-close-button { color: #8a8880 !important; }
+  .leaflet-control-layers {
+    background: rgba(26,26,36,0.95) !important;
+    color: #e8e6e1 !important;
+    border: 1px solid rgba(255,255,255,0.06) !important;
+    border-radius: 8px !important;
+  }
+  .leaflet-control-layers-selector { accent-color: #c8a86e; }
+  .leaflet-control-attribution {
+    background: rgba(10,10,15,0.7) !important;
+    color: #8a8880 !important;
+    font-size: 0.6rem !important;
+  }
+  .leaflet-control-attribution a { color: #c8a86e !important; }
+
+  /* ---- LIGHTBOX ---- */
+  .lightbox-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.92);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    cursor: zoom-out;
+  }
+  .lightbox-overlay.active {
+    opacity: 1;
+    pointer-events: all;
+  }
+  .lightbox-overlay img {
+    max-width: 92%;
+    max-height: 92%;
+    border-radius: 8px;
+    box-shadow: 0 0 60px rgba(0,0,0,0.5);
+  }
+
+  /* ---- DIVIDER ---- */
+  .divider {
+    width: 40px;
+    height: 1px;
+    background: var(--accent-dim);
+    margin: 0 auto;
+  }
+
+  /* ---- COLOPHON ---- */
+  .colophon {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 4rem 2rem 6rem;
+    text-align: center;
+    border-top: 1px solid rgba(255,255,255,0.05);
+  }
+  .colophon p {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--text-dim);
+    line-height: 1.8;
+  }
+
+  /* ---- VIZ GRID ---- */
+  .viz-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1rem;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  .viz-link {
+    display: flex;
+    flex-direction: column;
+    background: var(--bg2);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 8px;
+    padding: 1.3rem;
+    text-decoration: none;
+    transition: border-color 0.3s ease, transform 0.3s ease;
+  }
+  .viz-link:hover {
+    border-color: var(--accent);
+    transform: translateY(-3px);
+  }
+  .viz-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--accent-dim);
+    letter-spacing: 0.15em;
+    margin-bottom: 0.4rem;
+  }
+  .viz-title {
+    font-family: 'Instrument Serif', serif;
+    font-size: 1.15rem;
+    color: var(--text-bright);
+    margin-bottom: 0.3rem;
+  }
+  .viz-desc {
+    font-size: 0.78rem;
+    color: var(--text-dim);
+    line-height: 1.3;
+  }
+
+  /* ---- RESPONSIVE ---- */
+  @media (max-width: 700px) {
+    .compare-row { grid-template-columns: 1fr; }
+    .timeline-grid { grid-template-columns: 1fr 1fr; }
+    .stat-row { flex-direction: column; }
+    .chapter { padding: 5rem 1.5rem; }
+    .site-nav { padding: 0 1rem; }
+    .nav-dot { padding: 0.3rem 0.35rem; font-size: 0.6rem; }
+    .nav-title { font-size: 0.85rem; }
+    #corridor-map { height: 380px; }
+    .iframe-wrap iframe { height: 450px; }
+  }
+  @media (max-width: 480px) {
+    .timeline-grid { grid-template-columns: 1fr; }
+    .nav-chapters { gap: 0; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ==================== NAV ==================== -->
+<nav class="site-nav">
+  <div class="nav-title">The Archipelago</div>
+  <div class="nav-chapters">
+    <a href="#ch1" class="nav-dot">01</a>
+    <a href="#ch2" class="nav-dot">02</a>
+    <a href="#ch3" class="nav-dot">03</a>
+    <a href="#ch4" class="nav-dot">04</a>
+    <a href="#ch5" class="nav-dot">05</a>
+    <a href="#ch6" class="nav-dot">06</a>
+    <a href="#ch7" class="nav-dot">07</a>
+    <a href="#ch8" class="nav-dot">08</a>
+    <a href="#ch9" class="nav-dot">09</a>
+    <a href="#ch10" class="nav-dot">10</a>
+  </div>
+  <a href="#explore" class="nav-explore">Explore</a>
+</nav>
+
+<!-- ==================== HERO ==================== -->
+<section class="hero">
+  <h1>The Archipelago</h1>
+  <div class="subtitle">101 kilometers of lake · 49 stations · one question</div>
+  <div class="big-number">Does this rail line make a city?</div>
+  <div class="scroll-hint">↓ scroll</div>
+</section>
+
+<!-- ==================== CH 1: THE QUESTION ==================== -->
+<section class="chapter" id="ch1">
+  <div class="chapter-number">01 — The Question</div>
+  <h2>A million people live along this lake. But they don't live in a city.</h2>
+  <p>The Geneva–Villeneuve corridor stretches 101 kilometers along Lac Léman, connecting a million inhabitants across a continuous lakefront rail line. Xavier Comtesse, Jeffrey Huang, and Adam Cohen proposed it functions as a <em>linear city</em> — one urban entity without government, without boundary, without name. They also said: <strong>we sorely lack indicators.</strong></p>
+  <p>So we tested it. Not by asking whether people <em>live</em> along the line — they do, with one of the highest retention rates in Switzerland. But by asking something more demanding: can this rail line sustain continuous human activity across the full 24-hour cycle?</p>
+  <p>During operating hours: can a knowledge worker maintain an unbroken work session while moving through the corridor? During the gap hours — roughly 1:00 to 5:00 AM, when trains stop — what happens to the people who still need the line?</p>
+  <p>If the line holds, it's a city. If it breaks, the question becomes spatial: <em>where</em>, <em>when</em>, and <em>for whom</em>?</p>
+</section>
+
+<div class="divider"></div>
+
+<!-- ==================== CH 2: THE INDEX ==================== -->
+<section class="chapter" id="ch2">
+  <div class="chapter-number">02 — The Index</div>
+  <h2>Measuring continuity across five dimensions</h2>
+  <p>We constructed a <strong>Working Continuity Index</strong> — a composite metric that measures, at each of the corridor's 49 train stations, whether the infrastructure for sustained activity exists. Five dimensions, each normalized 0–1: transit frequency, workspace availability, connectivity infrastructure, temporal coverage, and mobility options.</p>
+
+  <div class="stat-row">
+    <div class="stat-card"><div class="value">49</div><div class="label">stations profiled</div></div>
+    <div class="stat-card"><div class="value">32</div><div class="label">datasets cross-referenced</div></div>
+    <div class="stat-card"><div class="value">8k+</div><div class="label">data points collected</div></div>
+    <div class="stat-card"><div class="value">7</div><div class="label">time slots analyzed</div></div>
+  </div>
+
+  <p>Every piece of infrastructure knows its neighbors — every workspace knows its nearest train station, its noise level, its grocery access. The data is relational, not flat.</p>
+  <p class="dim">Sources include 194 EV charging stations (53 attributes), 68 remote work locations with opening hours and reviews, 81 WiFi hotspots, 3,218 cell towers, 2,062 shared mobility stations, 618 analyzed train connections, 134 late-night venues, first/last train times for all 49 stations, and 2,093 data points from 33 classmate datasets integrated into a station-level cross-reference matrix.</p>
+
+  <div class="map-image-wrap" onclick="openLightbox(this.querySelector('img').src)">
+    <img src="maps/map7_synchronicity.png" alt="Map: Data Synchronicity — all datasets overlaid across the 101 km corridor" loading="lazy">
+    <div class="map-caption">Data Synchronicity — 32 datasets across 49 stations</div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ==================== CH 3: THE FRACTURE ==================== -->
+<section class="chapter" id="ch3">
+  <div class="chapter-number">03 — The Fracture</div>
+  <h2>A 2,000× variation in continuity across a single rail line</h2>
+  <p>The WCI ranges from <strong>0.64 in Geneva</strong> to <strong>0.0003 at St-Saphorin</strong>. Of 49 stations, only 11 maintain full working continuity — 22%. Three structural gaps rupture the line into islands.</p>
+
+  <div class="chart-wrap">
+    <div class="chart-title">Working Continuity Index — 49 stations, Geneva → Villeneuve</div>
+    <div id="wci-chart"></div>
+  </div>
+
+  <p>The corridor is not a gradient. It is binary: Lausanne-Flon counts 277 amenity features within one kilometer. Palézieux counts zero. Three fracture zones: Nyon–Gland (19.3 km), Gland–Morges (20 km), and the Lavaux Fracture (17.5 km between Lutry and Vevey), where UNESCO protection creates an infrastructure void.</p>
+
+  <div class="map-image-wrap" onclick="openLightbox(this.querySelector('img').src)">
+    <img src="maps/map1_wci.png" alt="Map: Working Continuity Index — spatial distribution across 49 stations" loading="lazy">
+    <div class="map-caption">WCI spatial distribution — Geneva to Villeneuve</div>
+  </div>
+
+  <div class="map-image-wrap" onclick="openLightbox(this.querySelector('img').src)">
+    <img src="maps/map3_lavaux.png" alt="Map: The Lavaux Fracture — 17.5 km infrastructure void under UNESCO protection" loading="lazy">
+    <div class="map-caption">The Lavaux Fracture — 17.5 km between Lutry and Vevey</div>
+  </div>
+
+  <div class="pull-quote">The corridor is not a city. It is an archipelago.</div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ==================== CH 4: TWO CORRIDORS ==================== -->
+<section class="chapter" id="ch4">
+  <div class="chapter-number">04 — Two Corridors, One Track</div>
+  <h2>The service category — not the infrastructure — determines your city</h2>
+  <p>An IC passenger traveling Geneva–Lausanne gets onboard WiFi, fold-down tables, a quiet car. Forty minutes of unbroken productivity. An S-Bahn passenger on the same rails gets doors every ninety seconds, no WiFi, standing room.</p>
+
+  <div class="chart-wrap">
+    <div class="chart-title">618 train connections analyzed by workability class</div>
+    <div id="workability-chart"></div>
+  </div>
+
+  <p>Of 618 analyzed connections: 15% are PRIME for working. 85% are NOT WORKABLE. Every Prime connection is a long-distance IC or IR train. Short-hop S-Bahn is never Prime. The service category — not the infrastructure — determines whether you're in a city or between cities.</p>
+
+  <p>The Marey diagram below makes this visible: steep diagonal lines are fast IC trains (40 minutes Geneva–Montreux). Shallow lines are slow S-Bahn. Where there are no lines, there are no trains.</p>
+
+  <div class="map-image-wrap" onclick="openLightbox(this.querySelector('img').src)">
+    <img src="maps/map6_transit.png" alt="Map: Train service categories and workability across the corridor" loading="lazy">
+    <div class="map-caption">Transit workability — IC vs S-Bahn service quality</div>
+  </div>
+
+  <div class="iframe-wrap">
+    <div class="iframe-label">Marey Diagram — Train paths through space and time</div>
+    <iframe src="city101_marey_diagram.html" loading="lazy" title="Marey Diagram" style="height:650px;"></iframe>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ==================== CH 5: THE PRICE ==================== -->
+<section class="chapter" id="ch5">
+  <div class="chapter-number">05 — The Price of the Line</div>
+  <h2>On a CHF 20 budget, your city ends 12 km short of Lausanne</h2>
+  <p>The corridor costs different amounts depending on who you are. A GA annual travelcard — amortized to roughly CHF 10.50 per day — collapses the entire 101 km into one city at zero marginal cost. A full-price ticket to Lausanne costs CHF 23. On a CHF 20 daily budget, the city ends at St-Prex: 41 km from Geneva.</p>
+
+  <div class="chart-wrap">
+    <div class="chart-title">Cost to reach each station from Geneva — Full price vs. GA daily threshold</div>
+    <div id="cost-chart"></div>
+  </div>
+
+  <p>Short hops suffer a <strong>6× per-kilometer penalty</strong> compared to the full run — precisely the connections that would make the corridor function as one city. And roughly 160,000 cross-border workers in Geneva and Vaud — more people than the population of Lausanne — cannot purchase a GA, cannot access Halbtax, and vanish from the corridor at 18:00. Ghost citizens.</p>
+</section>
+
+<div class="divider"></div>
+
+<!-- ==================== CH 6: THE CLOCK ==================== -->
+<section class="chapter" id="ch6">
+  <div class="chapter-number">06 — The Clock</div>
+  <h2>The breaks don't heal with time</h2>
+  <p>We expected the corridor to breathe — wide during rush hour, narrow at midnight. Instead, we found the most counterintuitive result of the entire analysis: <strong>the archipelago is structurally invariant.</strong></p>
+
+  <div class="chart-wrap">
+    <div class="chart-title">Workable stations across the day — 7 time slots</div>
+    <div id="temporal-chart"></div>
+  </div>
+
+  <p>14 stations at peak. 13 at 11 PM. The three structural gaps persist at every hour. IC trains halve at night (128 → 72), but the geography of the archipelago doesn't change. Interventions can't rely on "it works during rush hour." The deficit is permanent.</p>
+
+  <div class="stat-row">
+    <div class="stat-card"><div class="value">21.3h</div><div class="label">Geneva's service window</div></div>
+    <div class="stat-card"><div class="value">0h</div><div class="label">St-Saphorin's service window</div></div>
+    <div class="stat-card"><div class="value">4h</div><div class="label">Gap hours (1–5 AM)</div></div>
+  </div>
+
+  <div class="chart-wrap">
+    <div class="chart-title">Service window per station — hours of rail service, Geneva → Villeneuve</div>
+    <div id="service-chart"></div>
+  </div>
+
+  <p>Service windows range from <strong>21.3 hours</strong> (Geneva) to <strong>zero</strong> (St-Saphorin). Between roughly 1:00 and 5:00 AM, the rail line dies entirely. But the people it serves don't disappear. Hospital shift workers finish at 2 AM. Geneva airport staff start at 4 AM. The gap hours reveal who the corridor's "city" promise excludes.</p>
+
+  <div class="iframe-wrap">
+    <div class="iframe-label">Clock Diagram — 24-hour service continuity</div>
+    <iframe src="city101_clock_diagram.html" loading="lazy" title="Clock Diagram" style="height:600px;"></iframe>
+  </div>
+
+  <div class="iframe-wrap">
+    <div class="iframe-label">Space-Time Grid — 29 stations × 24 hours</div>
+    <iframe src="city101_spacetime_diagram.html" loading="lazy" title="Space-Time Diagram" style="height:600px;"></iframe>
+  </div>
+
+  <div class="map-image-wrap" onclick="openLightbox(this.querySelector('img').src)">
+    <img src="maps/map4_geneva.png" alt="Map: Geneva — The Western Anchor, WCI 0.64, 13 workspaces, densest shared mobility" loading="lazy">
+    <div class="map-caption">Geneva: The Western Anchor — densest infrastructure pole</div>
+  </div>
+
+  <div class="map-image-wrap" onclick="openLightbox(this.querySelector('img').src)">
+    <img src="maps/map5_lausanne.png" alt="Map: Lausanne — The University Cluster, WCI 0.55, EPFL/UNIL campus effect" loading="lazy">
+    <div class="map-caption">Lausanne: The University Cluster — EPFL/UNIL campus effect</div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ==================== CH 7: DIVERSITY ==================== -->
+<section class="chapter" id="ch7">
+  <div class="chapter-number">07 — The Phase Transition</div>
+  <h2>Diversity predicts the city 3.6× better than frequency</h2>
+  <p>Following Comtesse's formula — diversity × accessibility × time = urban vitality — we tested four independent Shannon entropy indices: religious diversity, modal transport diversity, cuisine variety, economic category diversity. All four converge — correlations between r = 0.63 and r = 0.71.</p>
+
+  <div class="chart-wrap">
+    <div class="chart-title">Shannon diversity vs. station richness (amenities within 1 km)</div>
+    <div id="diversity-chart"></div>
+  </div>
+
+  <p>There is a <strong>phase transition at Shannon ≈ 1.0.</strong> Below it, average station richness is 8.8 amenities. Above it, 70.5 — an <strong>8× jump</strong>. The Lavaux Fracture scores zero on all four indices. It isn't just a transit gap. It's a systemic diversity collapse.</p>
+  <p>The frequency-amenity paradox: stations with low frequency <em>need</em> amenities most — a 30-minute wait needs a café, a power outlet, shelter. But no one opens a café next to a 2-train-per-hour station. Infrastructure follows frequency, not need. The intervention sites are exactly where the market refuses to go.</p>
+
+  <div class="map-image-wrap" onclick="openLightbox(this.querySelector('img').src)">
+    <img src="maps/map2_remote_work.png" alt="Map: Remote work locations along the corridor — 68 coworking spaces, cafés, and libraries" loading="lazy">
+    <div class="map-caption">Remote work infrastructure — 68 locations across the corridor</div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ==================== CH 8: ZURICH ==================== -->
+<section class="chapter" id="ch8">
+  <div class="chapter-number">08 — The Proof</div>
+  <h2>Same country, same operator — radically different outcomes</h2>
+  <p>Zurich's radial S-Bahn provides the structural control. Same national operator. Same rolling stock. But the topology produces fundamentally different distributions.</p>
+
+  <div class="compare-row">
+    <div class="compare-card">
+      <h4>City101 — Linear</h4>
+      <div class="metric"><span>Frequency range</span><span class="val" style="color:var(--red)">42×</span></div>
+      <div class="metric"><span>Worst station</span><span class="val" style="color:var(--red)">0 trains/hr</span></div>
+      <div class="metric"><span>At 74 km from center</span><span class="val" style="color:var(--red)">dead</span></div>
+      <div class="metric"><span>≥ 4 trains/hr</span><span class="val">45%</span></div>
+      <div class="metric"><span>Length</span><span class="val">101 km</span></div>
+    </div>
+    <div class="compare-card">
+      <h4>Zurich S8 — Radial</h4>
+      <div class="metric"><span>Frequency range</span><span class="val" style="color:var(--green)">12×</span></div>
+      <div class="metric"><span>Worst station</span><span class="val" style="color:var(--green)">2 trains/hr</span></div>
+      <div class="metric"><span>At 11 km from center</span><span class="val" style="color:var(--green)">served</span></div>
+      <div class="metric"><span>≥ 4 trains/hr</span><span class="val">83%</span></div>
+      <div class="metric"><span>Length</span><span class="val">32 km</span></div>
+    </div>
+  </div>
+
+  <p>The radial topology doesn't just raise the floor — it compresses the entire distribution toward a usable minimum. The linear corridor amplifies every variation that a radial network absorbs.</p>
+
+  <div class="pull-quote">A linear city must construct the continuity that a radial city inherits from geometry.</div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ==================== CH 9: THE DARK HOURS ==================== -->
+<section class="chapter" id="ch9">
+  <div class="chapter-number">09 — The Dark Hours</div>
+  <h2>134 late-night venues. 76 of them in Geneva.</h2>
+  <p>The temporal analysis proves the daytime archipelago is permanent. But between 1:00 and 5:00 AM, the situation is worse — the rail line doesn't just fail to be a city. It stops existing.</p>
+
+  <div class="chart-wrap">
+    <div class="chart-title">Late-night venues by corridor segment (open past midnight)</div>
+    <div id="nightlife-chart"></div>
+  </div>
+
+  <p>Of 134 late-night venues: 76 in Geneva, 34 in Lausanne. Between the two poles: 24 venues across 60 kilometers. Stranded at Cully at 1 AM, the nearest open anything is 20 km east or 15 km west.</p>
+  <p>The gap hours don't reveal an inconvenience. They reveal a population. Night-shift nurses. Airport staff. Hotel night reception. Industrial zone workers. Bakery production lines launching at 3 AM. The corridor's "city" promise is a daytime-only promise — and even then, as the WCI shows, it's broken.</p>
+
+  <div id="corridor-map"></div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ==================== CH 10: THE PROPOSITION ==================== -->
+<section class="chapter" id="ch10">
+  <div class="chapter-number">10 — The Proposition</div>
+  <h2>What if the rail line itself were the architecture?</h2>
+  <p>The corridor's rail spine runs through every break point. It connects every gap. The infrastructure exists — but it operates as a commuter pipeline, designed for a single user profile.</p>
+  <p>What if the rail line functioned as <strong>24-hour living infrastructure</strong> — not just transit, but workspace, shelter, service, lifeline?</p>
+  <p>An adaptive rail-mounted module — the <em>"horizontal elevator"</em> — transforms its program across the 24-hour cycle:</p>
+
+  <div class="timeline-grid">
+    <div class="time-card">
+      <div class="hours">06 – 09</div>
+      <div class="program">Work Pod</div>
+      <div class="desc">Sound-isolated, WiFi-enabled workspace. Deploys at break-point stations where 30-minute waits are currently dead time.</div>
+    </div>
+    <div class="time-card">
+      <div class="hours">09 – 18</div>
+      <div class="program">Mobile Office</div>
+      <div class="desc">Slow shuttles across structural gaps — Nyon↔Gland, the Lavaux Fracture. IC-quality short-hop connections.</div>
+    </div>
+    <div class="time-card">
+      <div class="hours">18 – 01</div>
+      <div class="program">Social Module</div>
+      <div class="desc">Café car. Introduces program where diversity is below Shannon 1.0 — the difference that triggers the phase transition.</div>
+    </div>
+    <div class="time-card">
+      <div class="hours">01 – 05</div>
+      <div class="program">Lifeline</div>
+      <div class="desc">Emergency shuttle + rest shelter. Connects hospitals, airport, industrial zones during the dead window.</div>
+    </div>
+  </div>
+
+  <p>Each program state answers a specific finding. The module introduces multiple programs simultaneously — crossing the Shannon 1.0 threshold. The fractal principle says: design one module, prove the system for all 38 break points.</p>
+
+  <div class="pull-quote">The data says the linear city doesn't exist. The architecture asks: can we build it?</div>
+</section>
+
+<!-- ==================== EXPLORE ==================== -->
+<section class="chapter" id="explore" style="text-align: center; scroll-margin-top: 64px;">
+  <div class="chapter-number">Explore the Data</div>
+  <h2>10 interactive visualizations</h2>
+  <p class="dim" style="margin-bottom: 2.5rem;">Each finding is backed by an interactive tool. Click to explore the underlying data.</p>
+  <div class="viz-grid">
+    <a href="viz_01_ga_cost.html" class="viz-link">
+      <span class="viz-num">01</span>
+      <span class="viz-title">GA Cost Curve</span>
+      <span class="viz-desc">How ticket type reshapes the corridor</span>
+    </a>
+    <a href="viz_02_temporal_pulse.html" class="viz-link">
+      <span class="viz-num">02</span>
+      <span class="viz-title">Temporal Pulse</span>
+      <span class="viz-desc">7 time slots · the city that barely breathes</span>
+    </a>
+    <a href="viz_03_diversity.html" class="viz-link">
+      <span class="viz-num">03</span>
+      <span class="viz-title">Diversity Indices</span>
+      <span class="viz-desc">4 Shannon indices · the phase transition at 1.0</span>
+    </a>
+    <a href="viz_04_zurich.html" class="viz-link">
+      <span class="viz-num">04</span>
+      <span class="viz-title">Zurich Comparison</span>
+      <span class="viz-desc">Linear vs radial · same country, different city</span>
+    </a>
+    <a href="viz_05_station_explorer.html" class="viz-link">
+      <span class="viz-num">05</span>
+      <span class="viz-title">Station Explorer</span>
+      <span class="viz-desc">49 stations × 8 radar dimensions</span>
+    </a>
+    <a href="viz_06_journey_workability.html" class="viz-link">
+      <span class="viz-num">06</span>
+      <span class="viz-title">Journey Workability</span>
+      <span class="viz-desc">618 connections · the two-corridor problem</span>
+    </a>
+    <a href="viz_07_narrative_scroll.html" class="viz-link">
+      <span class="viz-num">07</span>
+      <span class="viz-title">Full Narrative</span>
+      <span class="viz-desc">The complete scrollytelling version</span>
+    </a>
+    <a href="city101_clock_diagram.html" class="viz-link">
+      <span class="viz-num">08</span>
+      <span class="viz-title">Clock Diagram</span>
+      <span class="viz-desc">24-hour service continuity · gap hours revealed</span>
+    </a>
+    <a href="city101_marey_diagram.html" class="viz-link">
+      <span class="viz-num">09</span>
+      <span class="viz-title">Marey Diagram</span>
+      <span class="viz-desc">Train paths through space and time</span>
+    </a>
+    <a href="city101_spacetime_diagram.html" class="viz-link">
+      <span class="viz-num">10</span>
+      <span class="viz-title">Space-Time Grid</span>
+      <span class="viz-desc">29 stations × 24 hours — when the line dies</span>
+    </a>
+  </div>
+</section>
+
+<!-- ==================== COLOPHON ==================== -->
+<section class="colophon">
+  <p>
+    The Archipelago — City101 Data Narrative<br>
+    A02 Data Synchronicity · Studio Huang AR-302(k) · EPFL Spring 2026<br>
+    Andrea Crespo + Henna Rafik<br><br>
+    32 datasets · 8,000+ data points · 49 stations × 7 time slots<br>
+    618 connections · 4 diversity indices · Zurich comparison<br>
+    10 interactive visualizations · 7 QGIS print layouts
+  </p>
+</section>
+
+<!-- ==================== LIGHTBOX ==================== -->
+<div id="lightbox" class="lightbox-overlay" onclick="this.classList.remove('active')">
+  <img src="" alt="Map enlarged view">
+</div>
+
+<script>
+// ============================================================
+// DATA
+// ============================================================
+const STATIONS = [{"name":"Genève","wci":0.6431,"lat":46.2102,"lon":6.1424,"richness":115,"shannon":1.703,"freq":25.0,"rail_km":0.0,"price_full":3.6,"service_hrs":21.3,"segment":"Geneva"},{"name":"Genève-Sécheron","wci":0.1638,"lat":46.2264,"lon":6.1434,"richness":27,"shannon":1.671,"freq":10.5,"rail_km":2.1,"price_full":3.6,"service_hrs":19.3,"segment":"Geneva"},{"name":"Genève-Champel","wci":0.0882,"lat":46.1905,"lon":6.1477,"richness":36,"shannon":2.123,"freq":8.0,"rail_km":2.5,"price_full":3.6,"service_hrs":19.8,"segment":"Geneva"},{"name":"Genève-Eaux-Vives","wci":0.1601,"lat":46.1989,"lon":6.1573,"richness":93,"shannon":1.809,"freq":12.0,"rail_km":3.0,"price_full":3.6,"service_hrs":19.8,"segment":"Geneva"},{"name":"Lancy-Bachet","wci":0.0514,"lat":46.1825,"lon":6.1345,"richness":5,"shannon":1.099,"freq":10.0,"rail_km":3.2,"price_full":3.6,"service_hrs":19.3,"segment":"Geneva"},{"name":"Lancy-Pont-Rouge","wci":0.0474,"lat":46.1831,"lon":6.1233,"richness":7,"shannon":0.693,"freq":6.0,"rail_km":4.6,"price_full":3.6,"service_hrs":18.8,"segment":"Geneva"},{"name":"Vernier, Blandonnet","wci":0.4647,"lat":46.2152,"lon":6.1032,"richness":7,"shannon":1.55,"freq":84.0,"rail_km":5.0,"price_full":3.6,"service_hrs":19.3,"segment":"Geneva"},{"name":"Meyrin","wci":0.0288,"lat":46.2339,"lon":6.0764,"richness":3,"shannon":0.693,"freq":6.0,"rail_km":7.0,"price_full":3.6,"service_hrs":18.5,"segment":"Geneva"},{"name":"Versoix","wci":0.025,"lat":46.2832,"lon":6.1635,"richness":6,"shannon":0.0,"freq":8.5,"rail_km":12.5,"price_full":7.8,"service_hrs":19.5,"segment":"La Côte"},{"name":"Coppet","wci":0.0471,"lat":46.3142,"lon":6.192,"richness":12,"shannon":0.0,"freq":8.5,"rail_km":15.7,"price_full":9.0,"service_hrs":19.0,"segment":"La Côte"},{"name":"Tannay","wci":0.0174,"lat":46.3073,"lon":6.2025,"richness":2,"shannon":0.0,"freq":4.5,"rail_km":16.0,"price_full":9.0,"service_hrs":18.3,"segment":"La Côte"},{"name":"Founex, est","wci":0.0135,"lat":46.2997,"lon":6.2089,"richness":2,"shannon":0.0,"freq":4.5,"rail_km":17.0,"price_full":9.0,"service_hrs":18.3,"segment":"La Côte"},{"name":"Nyon","wci":0.1222,"lat":46.3831,"lon":6.2382,"richness":37,"shannon":1.386,"freq":8.0,"rail_km":25.0,"price_full":12.6,"service_hrs":20.0,"segment":"La Côte"},{"name":"Gland","wci":0.0332,"lat":46.4189,"lon":6.274,"richness":6,"shannon":0.693,"freq":5.0,"rail_km":30.5,"price_full":14.0,"service_hrs":19.5,"segment":"La Côte"},{"name":"Rolle","wci":0.0398,"lat":46.4609,"lon":6.3363,"richness":13,"shannon":0.693,"freq":4.5,"rail_km":34.0,"price_full":16.6,"service_hrs":19.0,"segment":"La Côte"},{"name":"Perroy, Couronnette","wci":0.0107,"lat":46.4685,"lon":6.3513,"richness":2,"shannon":0.0,"freq":2.0,"rail_km":35.0,"price_full":16.6,"service_hrs":17.5,"segment":"Lausanne"},{"name":"Allaman","wci":0.0196,"lat":46.4745,"lon":6.3947,"richness":4,"shannon":0.0,"freq":4.0,"rail_km":38.5,"price_full":17.8,"service_hrs":19.3,"segment":"Lausanne"},{"name":"Etoy","wci":0.0197,"lat":46.4851,"lon":6.4173,"richness":3,"shannon":0.0,"freq":3.5,"rail_km":39.5,"price_full":17.8,"service_hrs":18.0,"segment":"Lausanne"},{"name":"St-Prex","wci":0.0218,"lat":46.485,"lon":6.4447,"richness":5,"shannon":0.0,"freq":3.5,"rail_km":41.0,"price_full":19.2,"service_hrs":18.3,"segment":"Lausanne"},{"name":"Morges","wci":0.131,"lat":46.5117,"lon":6.497,"richness":36,"shannon":0.693,"freq":10.5,"rail_km":45.0,"price_full":19.2,"service_hrs":20.0,"segment":"Lausanne"},{"name":"Denges-Echandens","wci":0.0162,"lat":46.5267,"lon":6.5389,"richness":2,"shannon":0.0,"freq":2.0,"rail_km":48.0,"price_full":21.0,"service_hrs":18.0,"segment":"Lausanne"},{"name":"Bussigny","wci":0.0364,"lat":46.5428,"lon":6.5564,"richness":4,"shannon":0.0,"freq":6.0,"rail_km":49.5,"price_full":21.0,"service_hrs":19.5,"segment":"Lausanne"},{"name":"Renens VD","wci":0.2268,"lat":46.5371,"lon":6.5789,"richness":26,"shannon":1.609,"freq":18.0,"rail_km":50.5,"price_full":21.0,"service_hrs":20.5,"segment":"Lausanne"},{"name":"Prilly-Malley","wci":0.0837,"lat":46.5345,"lon":6.5946,"richness":5,"shannon":0.693,"freq":14.0,"rail_km":51.5,"price_full":21.0,"service_hrs":19.3,"segment":"Lausanne"},{"name":"Lausanne","wci":0.5536,"lat":46.5167,"lon":6.6291,"richness":159,"shannon":1.955,"freq":28.5,"rail_km":53.0,"price_full":23.2,"service_hrs":21.0,"segment":"Lausanne"},{"name":"Lausanne-Flon","wci":0.3951,"lat":46.5213,"lon":6.6302,"richness":277,"shannon":1.946,"freq":20.0,"rail_km":53.5,"price_full":23.2,"service_hrs":20.5,"segment":"Lausanne"},{"name":"Pully","wci":0.0326,"lat":46.5106,"lon":6.6618,"richness":14,"shannon":0.0,"freq":6.0,"rail_km":56.0,"price_full":23.2,"service_hrs":19.0,"segment":"Lavaux"},{"name":"Lutry","wci":0.0402,"lat":46.5056,"lon":6.6859,"richness":9,"shannon":0.693,"freq":5.0,"rail_km":57.5,"price_full":23.2,"service_hrs":19.0,"segment":"Lavaux"},{"name":"Cully","wci":0.0313,"lat":46.4899,"lon":6.7298,"richness":6,"shannon":0.0,"freq":4.0,"rail_km":60.5,"price_full":25.4,"service_hrs":19.0,"segment":"Lavaux"},{"name":"Epesses","wci":0.0196,"lat":46.4924,"lon":6.7465,"richness":2,"shannon":0.0,"freq":2.0,"rail_km":62.0,"price_full":25.4,"service_hrs":17.5,"segment":"Lavaux"},{"name":"Rivaz","wci":0.0128,"lat":46.4821,"lon":6.764,"richness":2,"shannon":0.0,"freq":2.0,"rail_km":63.0,"price_full":25.4,"service_hrs":17.3,"segment":"Riviera"},{"name":"St-Saphorin (Lavaux), gare","wci":0.0003,"lat":46.4712,"lon":6.7873,"richness":1,"shannon":0.0,"freq":0.0,"rail_km":65.0,"price_full":25.4,"service_hrs":0.0,"segment":"Riviera"},{"name":"Vevey","wci":0.4011,"lat":46.4604,"lon":6.8434,"richness":62,"shannon":1.872,"freq":16.0,"rail_km":70.0,"price_full":27.6,"service_hrs":20.5,"segment":"Riviera"},{"name":"La Tour-de-Peilz","wci":0.0714,"lat":46.452,"lon":6.8592,"richness":8,"shannon":0.0,"freq":6.0,"rail_km":72.0,"price_full":27.6,"service_hrs":19.5,"segment":"Riviera"},{"name":"Clarens","wci":0.0306,"lat":46.4465,"lon":6.8788,"richness":6,"shannon":0.0,"freq":3.5,"rail_km":74.0,"price_full":27.6,"service_hrs":18.5,"segment":"Riviera"},{"name":"Montreux","wci":0.2485,"lat":46.4373,"lon":6.9108,"richness":55,"shannon":1.386,"freq":12.5,"rail_km":76.0,"price_full":28.8,"service_hrs":20.5,"segment":"Riviera"},{"name":"Territet","wci":0.0081,"lat":46.4308,"lon":6.9244,"richness":3,"shannon":0.0,"freq":1.5,"rail_km":77.5,"price_full":28.8,"service_hrs":17.0,"segment":"Riviera"},{"name":"Veytaux-Chillon","wci":0.0166,"lat":46.4251,"lon":6.9339,"richness":4,"shannon":0.0,"freq":4.0,"rail_km":78.5,"price_full":28.8,"service_hrs":17.5,"segment":"Riviera"},{"name":"Villeneuve","wci":0.0345,"lat":46.4004,"lon":6.9329,"richness":4,"shannon":0.0,"freq":6.0,"rail_km":82.0,"price_full":31.0,"service_hrs":19.5,"segment":"Riviera"},{"name":"Bossière","wci":0.0166,"lat":46.4927,"lon":6.7096,"richness":1,"shannon":0.0,"freq":2.0,"rail_km":59.0,"price_full":25.4,"service_hrs":17.5,"segment":"Lavaux"},{"name":"Palézieux","wci":0.0198,"lat":46.5506,"lon":6.8409,"richness":0,"shannon":0.0,"freq":4.0,"rail_km":66.0,"price_full":25.4,"service_hrs":19.0,"segment":"Riviera"},{"name":"Aigle","wci":0.0556,"lat":46.3149,"lon":6.9656,"richness":15,"shannon":0.693,"freq":8.0,"rail_km":92.0,"price_full":33.0,"service_hrs":19.8,"segment":"Riviera"},{"name":"Bex","wci":0.0264,"lat":46.2491,"lon":7.0091,"richness":6,"shannon":0.0,"freq":6.0,"rail_km":97.0,"price_full":33.6,"service_hrs":19.5,"segment":"Riviera"},{"name":"Ollon","wci":0.0184,"lat":46.295,"lon":6.9875,"richness":3,"shannon":0.0,"freq":2.0,"rail_km":94.5,"price_full":33.0,"service_hrs":17.5,"segment":"Riviera"},{"name":"Roche VD","wci":0.0187,"lat":46.3586,"lon":6.9337,"richness":2,"shannon":0.0,"freq":4.0,"rail_km":87.0,"price_full":31.0,"service_hrs":18.5,"segment":"Riviera"},{"name":"Yvorne","wci":0.0192,"lat":46.3381,"lon":6.9592,"richness":3,"shannon":0.0,"freq":2.0,"rail_km":90.0,"price_full":33.0,"service_hrs":17.5,"segment":"Riviera"},{"name":"Blonay","wci":0.0309,"lat":46.4686,"lon":6.893,"richness":5,"shannon":0.0,"freq":4.0,"rail_km":74.0,"price_full":27.6,"service_hrs":18.5,"segment":"Riviera"},{"name":"Chamby","wci":0.0204,"lat":46.4619,"lon":6.8853,"richness":2,"shannon":0.0,"freq":2.0,"rail_km":73.5,"price_full":27.6,"service_hrs":17.5,"segment":"Riviera"},{"name":"Les Avants","wci":0.0183,"lat":46.4524,"lon":6.9284,"richness":2,"shannon":0.0,"freq":2.0,"rail_km":79.0,"price_full":28.8,"service_hrs":17.5,"segment":"Riviera"}];
+
+const TEMPORAL = [{"s":"early_morning","w":13,"ic":104,"t":0.1227},{"s":"am_peak","w":14,"ic":128,"t":0.1457},{"s":"midday","w":14,"ic":109,"t":0.1471},{"s":"pm_peak","w":14,"ic":128,"t":0.1487},{"s":"evening","w":14,"ic":118,"t":0.1287},{"s":"late_night","w":13,"ic":72,"t":0.1209},{"s":"weekend_mid","w":14,"ic":113,"t":0.1324}];
+
+const VENUES = {"Geneva":76,"Lausanne":34,"Morges area":8,"Lavaux/Riviera":8,"Montreux":3,"Vevey":2,"Lausanne-West":2,"Nyon area":1};
+
+const WORKABILITY = {"PRIME_WORK":93,"WORKABLE":76,"MARGINAL":240,"NOT_WORKABLE":195,"BROKEN":14};
+
+const SEG_COLORS = {Geneva:'#e74c3c','La Côte':'#e67e22',Lausanne:'#3498db',Lavaux:'#9b59b6',Riviera:'#2ecc71'};
+
+const LATE_NIGHT = [{"name":"New Navy Bar","type":"bar","lat":46.19975,"lon":6.14849,"seg":"Geneva"},{"name":"La Buvette de l'Ilôt 13","type":"bar","lat":46.2118,"lon":6.14177,"seg":"Geneva"},{"name":"Marius","type":"bar","lat":46.19139,"lon":6.14461,"seg":"Geneva"},{"name":"La Petite Reine","type":"bar","lat":46.19843,"lon":6.14114,"seg":"Geneva"},{"name":"Java Club","type":"bar","lat":46.20826,"lon":6.15098,"seg":"Geneva"},{"name":"Scandale","type":"bar","lat":46.21121,"lon":6.14491,"seg":"Geneva"},{"name":"L'Apothicaire Cocktail Club","type":"bar","lat":46.20284,"lon":6.13985,"seg":"Geneva"},{"name":"Lady Godiva","type":"bar","lat":46.19424,"lon":6.14094,"seg":"Geneva"},{"name":"Little Barrel","type":"bar","lat":46.20418,"lon":6.15763,"seg":"Geneva"},{"name":"OH NO LULU !","type":"bar","lat":46.20304,"lon":6.13983,"seg":"Geneva"},{"name":"BDG Club","type":"bar","lat":46.20955,"lon":6.1392,"seg":"Geneva"},{"name":"L'atelier Cocktail Club","type":"bar","lat":46.20319,"lon":6.15846,"seg":"Geneva"},{"name":"La Taverne","type":"bar","lat":46.20933,"lon":6.14056,"seg":"Geneva"},{"name":"Coffee LYB","type":"bar","lat":46.20929,"lon":6.13861,"seg":"Geneva"},{"name":"S'Beer bar","type":"bar","lat":46.2437,"lon":6.0943,"seg":"Geneva"},{"name":"La Barje","type":"bar","lat":46.20474,"lon":6.13884,"seg":"Geneva"},{"name":"FMR - Funky Monkey Room","type":"bar","lat":46.20333,"lon":6.13573,"seg":"Geneva"},{"name":"La Buvette du Bateau","type":"bar","lat":46.20496,"lon":6.15415,"seg":"Geneva"},{"name":"Le Verre à Monique","type":"bar","lat":46.19987,"lon":6.13802,"seg":"Geneva"},{"name":"La Jonquille","type":"bar","lat":46.203,"lon":6.13474,"seg":"Geneva"},{"name":"Le Phare","type":"bar","lat":46.20738,"lon":6.14389,"seg":"Geneva"},{"name":"Vert Bouteille","type":"bar","lat":46.18529,"lon":6.14239,"seg":"Geneva"},{"name":"Café Métis","type":"bar","lat":46.19679,"lon":6.13827,"seg":"Geneva"},{"name":"Bar du Nord","type":"bar","lat":46.18096,"lon":6.14047,"seg":"Geneva"},{"name":"La Paillote (Geneva)","type":"bar","lat":46.21168,"lon":6.15316,"seg":"Geneva"},{"name":"La Muse Gueule","type":"bar","lat":46.19976,"lon":6.1395,"seg":"Geneva"},{"name":"L'Alambic (Geneva)","type":"bar","lat":46.20894,"lon":6.14784,"seg":"Geneva"},{"name":"Bar Ernest","type":"bar","lat":46.20022,"lon":6.12974,"seg":"Geneva"},{"name":"Nico & Co.","type":"bar","lat":46.20475,"lon":6.14597,"seg":"Geneva"},{"name":"Floky la loutre","type":"bar","lat":46.19455,"lon":6.14338,"seg":"Geneva"},{"name":"Le Derby","type":"bar","lat":46.21398,"lon":6.13374,"seg":"Geneva"},{"name":"Luis Bar à Tapas","type":"bar","lat":46.20982,"lon":6.13782,"seg":"Geneva"},{"name":"Le Lagoon","type":"bar","lat":46.20634,"lon":6.1416,"seg":"Geneva"},{"name":"Le Déclic","type":"bar","lat":46.19519,"lon":6.14244,"seg":"Geneva"},{"name":"Mademoiselle Fifi","type":"bar","lat":46.21063,"lon":6.13897,"seg":"Geneva"},{"name":"Kidouro wine & tapas","type":"bar","lat":46.2119,"lon":6.1459,"seg":"Geneva"},{"name":"Any's bar","type":"bar","lat":46.19218,"lon":6.14567,"seg":"Geneva"},{"name":"cosmic","type":"bar","lat":46.20179,"lon":6.14589,"seg":"Geneva"},{"name":"La distillerie","type":"bar","lat":46.19674,"lon":6.13836,"seg":"Geneva"},{"name":"Le Baratin (Geneva)","type":"bar","lat":46.21531,"lon":6.13395,"seg":"Geneva"},{"name":"PAV bar","type":"bar","lat":46.18352,"lon":6.12977,"seg":"Geneva"},{"name":"Café de la Sarine","type":"bar","lat":46.20739,"lon":6.14353,"seg":"Geneva"},{"name":"Le Bavard","type":"bar","lat":46.18481,"lon":6.14229,"seg":"Geneva"},{"name":"Wall Street Cafe","type":"bar","lat":46.20721,"lon":6.14612,"seg":"Geneva"},{"name":"Le Studio Café","type":"cafe","lat":46.19991,"lon":6.14933,"seg":"Geneva"},{"name":"Café Bar Chez Zia","type":"cafe","lat":46.21547,"lon":6.1317,"seg":"Geneva"},{"name":"Cosmic Café (Geneva)","type":"cafe","lat":46.2103,"lon":6.13978,"seg":"Geneva"},{"name":"Café du Grütli","type":"cafe","lat":46.20095,"lon":6.1416,"seg":"Geneva"},{"name":"Glacier Remor","type":"cafe","lat":46.20152,"lon":6.14005,"seg":"Geneva"},{"name":"Post' Cafe","type":"cafe","lat":46.20902,"lon":6.14461,"seg":"Geneva"},{"name":"La Courbe du Goût","type":"cafe","lat":46.19989,"lon":6.17457,"seg":"Geneva"},{"name":"Café du Soleil","type":"cafe","lat":46.25648,"lon":6.11002,"seg":"Geneva"},{"name":"Café du Cinéma","type":"cafe","lat":46.18163,"lon":6.14112,"seg":"Geneva"},{"name":"Café Gavroche","type":"cafe","lat":46.20616,"lon":6.13979,"seg":"Geneva"},{"name":"La Sixième Heure","type":"cafe","lat":46.19656,"lon":6.14457,"seg":"Geneva"},{"name":"Restaurant Café de l'Europe","type":"cafe","lat":46.21205,"lon":6.13012,"seg":"Geneva"},{"name":"Subarashii Manga Café","type":"cafe","lat":46.20812,"lon":6.12572,"seg":"Geneva"},{"name":"Cottage Cafe","type":"cafe","lat":46.20869,"lon":6.14851,"seg":"Geneva"},{"name":"Le Zoo","type":"nightclub","lat":46.20401,"lon":6.13635,"seg":"Geneva"},{"name":"Village du Soir","type":"nightclub","lat":46.17646,"lon":6.12743,"seg":"Geneva"},{"name":"Motel Campo","type":"nightclub","lat":46.1854,"lon":6.12898,"seg":"Geneva"},{"name":"La Gravière","type":"nightclub","lat":46.19746,"lon":6.12994,"seg":"Geneva"},{"name":"L'Usine","type":"nightclub","lat":46.20397,"lon":6.136,"seg":"Geneva"},{"name":"Le Groove","type":"nightclub","lat":46.20157,"lon":6.13391,"seg":"Geneva"},{"name":"Palais Mascotte","type":"bar","lat":46.21109,"lon":6.14642,"seg":"Geneva"},{"name":"Audio Club","type":"nightclub","lat":46.19165,"lon":6.12915,"seg":"Geneva"},{"name":"Java Club (nightclub)","type":"nightclub","lat":46.20999,"lon":6.15089,"seg":"Geneva"},{"name":"Undertown","type":"nightclub","lat":46.23234,"lon":6.08129,"seg":"Geneva"},{"name":"Weetamix","type":"nightclub","lat":46.214,"lon":6.10512,"seg":"Geneva"},{"name":"Le Kiss Club","type":"nightclub","lat":46.19237,"lon":6.23262,"seg":"Geneva"},{"name":"Le Cotton Club","type":"nightclub","lat":46.18975,"lon":6.23509,"seg":"Geneva"},{"name":"Alambic Lounge Bar","type":"bar","lat":46.50877,"lon":6.49817,"seg":"Morges area"},{"name":"La Rive Lounge Bar","type":"bar","lat":46.50884,"lon":6.49646,"seg":"Morges area"},{"name":"Le Bachibouzouk","type":"bar","lat":46.46079,"lon":6.83881,"seg":"Lavaux/Riviera"},{"name":"Le Bardu Carré","type":"bar","lat":46.45863,"lon":6.84334,"seg":"Lavaux/Riviera"},{"name":"Bar Tabac (Lausanne)","type":"bar","lat":46.51807,"lon":6.63487,"seg":"Lausanne"},{"name":"Qwertz","type":"bar","lat":46.51847,"lon":6.63401,"seg":"Lausanne"},{"name":"Les Boucaniers","type":"bar","lat":46.51952,"lon":6.63822,"seg":"Lausanne"},{"name":"Les Gosses du Québec","type":"bar","lat":46.51719,"lon":6.63305,"seg":"Lausanne"},{"name":"Le Cali","type":"bar","lat":46.51993,"lon":6.63159,"seg":"Lausanne"},{"name":"La Parenthèse","type":"bar","lat":46.38178,"lon":6.23881,"seg":"Geneva"},{"name":"Winemoon","type":"bar","lat":46.38296,"lon":6.23869,"seg":"Geneva"},{"name":"BowlinGland Le Sports Bar","type":"bar","lat":46.41432,"lon":6.27355,"seg":"Nyon area"},{"name":"WhyNot Bar (Évian)","type":"bar","lat":46.39925,"lon":6.58109,"seg":"Morges area"},{"name":"La Rincette","type":"bar","lat":46.51207,"lon":6.60207,"seg":"Morges area"},{"name":"Le Minimum","type":"bar","lat":46.50834,"lon":6.61708,"seg":"Morges area"},{"name":"Jetée de la Compagnie","type":"bar","lat":46.50877,"lon":6.61637,"seg":"Morges area"},{"name":"Rex Café (Vevey)","type":"bar","lat":46.46133,"lon":6.84119,"seg":"Lavaux/Riviera"},{"name":"Le Bordu Carré","type":"bar","lat":46.45847,"lon":6.84329,"seg":"Lavaux/Riviera"},{"name":"La Presque (Morges)","type":"bar","lat":46.5055,"lon":6.497,"seg":"Morges area"},{"name":"La soliderie (Nyon)","type":"cafe","lat":46.38485,"lon":6.2355,"seg":"Geneva"},{"name":"BREW (Vevey)","type":"cafe","lat":46.46082,"lon":6.84291,"seg":"Lavaux/Riviera"},{"name":"KymèM Café","type":"cafe","lat":46.46242,"lon":6.8441,"seg":"Lavaux/Riviera"},{"name":"Le Café du Bois d'Amour","type":"cafe","lat":46.46043,"lon":6.84212,"seg":"Lavaux/Riviera"},{"name":"Cafétéria MX (EPFL)","type":"cafe","lat":46.5192,"lon":6.56363,"seg":"Morges area"},{"name":"Buvette du Pel","type":"cafe","lat":46.49658,"lon":6.81041,"seg":"Lavaux/Riviera"},{"name":"Coop Pronto Genève-Cornavin","type":"food_shop_24h","lat":46.2099,"lon":6.1422,"seg":"Geneva"},{"name":"Coop Pronto Lausanne-Flon","type":"food_shop_24h","lat":46.5197,"lon":6.6316,"seg":"Lausanne"},{"name":"Coop Pronto Lausanne CFF","type":"food_shop_24h","lat":46.5168,"lon":6.6298,"seg":"Lausanne"},{"name":"Coop Pronto Montreux CFF","type":"food_shop_24h","lat":46.434,"lon":6.9109,"seg":"Vevey"},{"name":"Starbucks Geneva Cornavin","type":"cafe","lat":46.2107,"lon":6.1432,"seg":"Geneva"},{"name":"Caffè Spettacolo Lausanne","type":"cafe","lat":46.51691,"lon":6.63029,"seg":"Lausanne"},{"name":"Tekoe (Lausanne CFF)","type":"cafe","lat":46.51704,"lon":6.62849,"seg":"Lausanne"},{"name":"Movida","type":"bar","lat":46.52313,"lon":6.62599,"seg":"Lausanne"},{"name":"Base Bar","type":"bar","lat":46.52287,"lon":6.61912,"seg":"Lausanne"},{"name":"Satellite (EPFL)","type":"bar","lat":46.52046,"lon":6.56782,"seg":"Lausanne"},{"name":"Barberousse","type":"bar","lat":46.52149,"lon":6.62817,"seg":"Lausanne"},{"name":"La Datcha","type":"bar","lat":46.52125,"lon":6.62595,"seg":"Lausanne"},{"name":"Trois 14","type":"bar","lat":46.52675,"lon":6.63118,"seg":"Lausanne"},{"name":"Pin-Up Bar","type":"bar","lat":46.52135,"lon":6.6399,"seg":"Lausanne"},{"name":"Ōmi","type":"bar","lat":46.52121,"lon":6.63215,"seg":"Lausanne"},{"name":"Bulldog Bar & Resto","type":"bar","lat":46.51906,"lon":6.62667,"seg":"Lausanne"},{"name":"Meraki","type":"bar","lat":46.52435,"lon":6.63384,"seg":"Lausanne"},{"name":"Le Pointu","type":"cafe","lat":46.52337,"lon":6.63063,"seg":"Lausanne"},{"name":"Officine","type":"bar","lat":46.52113,"lon":6.62788,"seg":"Lausanne"},{"name":"Café Louve","type":"cafe","lat":46.52127,"lon":6.63235,"seg":"Lausanne"},{"name":"Jaja","type":"nightclub","lat":46.52543,"lon":6.63579,"seg":"Lausanne"},{"name":"CHIC Latino club","type":"nightclub","lat":46.52085,"lon":6.63197,"seg":"Lausanne"},{"name":"Chauderon 18 / No Name","type":"nightclub","lat":46.52375,"lon":6.62535,"seg":"Lausanne"},{"name":"ABC Club","type":"nightclub","lat":46.52097,"lon":6.63115,"seg":"Lausanne"},{"name":"Jagger's","type":"nightclub","lat":46.51947,"lon":6.6384,"seg":"Lausanne"},{"name":"Les Docks","type":"nightclub","lat":46.5224,"lon":6.61925,"seg":"Lausanne"},{"name":"MAD Club","type":"nightclub","lat":46.52188,"lon":6.62721,"seg":"Lausanne"},{"name":"kerri.","type":"nightclub","lat":46.52544,"lon":6.63607,"seg":"Lausanne"},{"name":"La Couronne d'Or","type":"cafe","lat":46.52485,"lon":6.63358,"seg":"Lausanne"},{"name":"Loxton","type":"cafe","lat":46.52103,"lon":6.63335,"seg":"Lausanne"},{"name":"Downtown Lausanne","type":"cafe","lat":46.52151,"lon":6.63006,"seg":"Lausanne"},{"name":"Chez Elle","type":"cafe","lat":46.52052,"lon":6.63356,"seg":"Lausanne"},{"name":"Sky Beach (Renens)","type":"cafe","lat":46.53761,"lon":6.58171,"seg":"Lausanne-West"},{"name":"King's (Renens)","type":"cafe","lat":46.53684,"lon":6.58231,"seg":"Lausanne-West"},{"name":"Rocking Chair (venue)","type":"nightclub","lat":46.47201,"lon":6.85219,"seg":"Vevey"},{"name":"Décal'Quai","type":"nightclub","lat":46.43449,"lon":6.91121,"seg":"Montreux"},{"name":"Millésime Club","type":"nightclub","lat":46.43786,"lon":6.90748,"seg":"Montreux"},{"name":"Rex Café","type":"bar","lat":46.46136,"lon":6.84084,"seg":"Montreux"}];
+
+const REMOTE_WORK = [{"name":"Voisins de Collex-Bossy","type":"coworking","lat":46.2719,"lon":6.1261,"rating":4.9},{"name":"Voisins Saint-Gervais","type":"coworking","lat":46.2072,"lon":6.1401,"rating":4.3},{"name":"Boréal Coffee Shop","type":"café","lat":46.2035,"lon":6.1409,"rating":4.4},{"name":"Signature Quartier des Banques","type":"coworking","lat":46.203,"lon":6.1411,"rating":4.9},{"name":"Impact Hub Geneva","type":"coworking","lat":46.2106,"lon":6.1412,"rating":4.5},{"name":"Open Space","type":"coworking","lat":46.2074,"lon":6.1417,"rating":5.0},{"name":"Satellite Office Genève","type":"coworking","lat":46.2033,"lon":6.1434,"rating":5.0},{"name":"Spaces Quai de l'Ile","type":"coworking","lat":46.2051,"lon":6.1436,"rating":4.6},{"name":"Café Calico","type":"café","lat":46.2071,"lon":6.1436,"rating":4.8},{"name":"Mitwit Office Genève","type":"coworking","lat":46.2038,"lon":6.1439,"rating":4.8},{"name":"Voisins Plainpalais","type":"coworking","lat":46.1961,"lon":6.1443,"rating":4.4},{"name":"Brew Society","type":"café","lat":46.2039,"lon":6.1447,"rating":4.2},{"name":"Bibliothèque municipale de la Cité","type":"library","lat":46.2028,"lon":6.1451,"rating":4.6},{"name":"Bibliothèque de Genève","type":"library","lat":46.1989,"lon":6.1453,"rating":4.6},{"name":"Signature Rhone","type":"coworking","lat":46.204,"lon":6.1455,"rating":5.0},{"name":"Pages & Sips","type":"café","lat":46.2014,"lon":6.1468,"rating":4.5},{"name":"Spaces Nations","type":"coworking","lat":46.2232,"lon":6.1479,"rating":4.9},{"name":"Vicky's Coffee","type":"café","lat":46.2045,"lon":6.1629,"rating":5.0},{"name":"Regus Versoix Station Lakeside","type":"coworking","lat":46.2813,"lon":6.165,"rating":4.8},{"name":"Café Express Tea Room","type":"café","lat":46.2004,"lon":6.1662,"rating":4.7},{"name":"Neufdixieme","type":"coworking","lat":46.2777,"lon":6.1686,"rating":5.0},{"name":"Bibliothèque Marens Nyon","type":"library","lat":46.3819,"lon":6.2259,"rating":5.0},{"name":"Café Jayko","type":"café","lat":46.3833,"lon":6.2339,"rating":4.9},{"name":"Café Ex Machina","type":"café","lat":46.3815,"lon":6.2394,"rating":4.7},{"name":"ATELIER 9 Coworking Nyon","type":"coworking","lat":46.3816,"lon":6.2395,"rating":5.0},{"name":"PepperHub Gland","type":"coworking","lat":46.4217,"lon":6.2718,"rating":4.6},{"name":"Ichibani Coworking Rolle","type":"coworking","lat":46.4616,"lon":6.3225,"rating":4.8},{"name":"Uluwatu House Rolle","type":"café","lat":46.4572,"lon":6.3373,"rating":4.6},{"name":"lykke Bar Café Boutique","type":"café","lat":46.5081,"lon":6.4974,"rating":4.9},{"name":"Bibliothèque publique de Morges","type":"library","lat":46.5087,"lon":6.4994,"rating":4.8},{"name":"KO-LAB","type":"café","lat":46.5094,"lon":6.4998,"rating":5.0},{"name":"Society Coworking Morges","type":"coworking","lat":46.5156,"lon":6.5042,"rating":4.6},{"name":"Regus Préverenges","type":"coworking","lat":46.5182,"lon":6.5175,"rating":5.0},{"name":"T19 Bi Coworking","type":"coworking","lat":46.5209,"lon":6.6153,"rating":4.6},{"name":"Bibliothèques de Lausanne Chauderon","type":"library","lat":46.5233,"lon":6.6251,"rating":4.4},{"name":"Gotham Lausanne Flon","type":"coworking","lat":46.5223,"lon":6.6253,"rating":4.3},{"name":"Ça Passe Crème","type":"café","lat":46.5164,"lon":6.6255,"rating":4.9},{"name":"Impact Hub Lausanne","type":"coworking","lat":46.5286,"lon":6.6256,"rating":4.6},{"name":"Regus Lausanne Main Station","type":"coworking","lat":46.5179,"lon":6.6281,"rating":4.8},{"name":"Do It Better Coworking","type":"coworking","lat":46.5162,"lon":6.6283,"rating":4.5},{"name":"Powerhouse","type":"coworking","lat":46.5178,"lon":6.6285,"rating":4.8},{"name":"Bel-Air Coffee","type":"café","lat":46.5228,"lon":6.6285,"rating":4.8},{"name":"Regus Lausanne City Flon","type":"coworking","lat":46.5207,"lon":6.6294,"rating":4.5},{"name":"Bold Coffee","type":"café","lat":46.5133,"lon":6.6303,"rating":4.9},{"name":"Ordinary Man Coffee","type":"café","lat":46.5186,"lon":6.6309,"rating":4.8},{"name":"Coffee Shop Sleepy Bear","type":"café","lat":46.5154,"lon":6.6313,"rating":4.6},{"name":"Gotham Lausanne Gare","type":"coworking","lat":46.5164,"lon":6.6328,"rating":4.4},{"name":"Coworking de la Madeleine","type":"coworking","lat":46.5224,"lon":6.6329,"rating":5.0},{"name":"BCU Lausanne (Unithèque)","type":"library","lat":46.5232,"lon":6.6335,"rating":4.4},{"name":"Tchalo Work Lounge","type":"coworking","lat":46.5122,"lon":6.634,"rating":5.0},{"name":"Pully-coworking","type":"coworking","lat":46.5106,"lon":6.65,"rating":5.0},{"name":"Rush Coffee Lutry","type":"café","lat":46.5028,"lon":6.6839,"rating":4.9},{"name":"Café culturel OZarts","type":"café","lat":46.5041,"lon":6.6869,"rating":4.9},{"name":"Office Hub Vevey","type":"coworking","lat":46.4636,"lon":6.838,"rating":4.7},{"name":"Vibration Workingshare","type":"coworking","lat":46.4651,"lon":6.8396,"rating":4.4},{"name":"Café La Belle Epoque","type":"café","lat":46.4623,"lon":6.8417,"rating":4.8},{"name":"Eleven Coffee Vevey","type":"café","lat":46.4612,"lon":6.843,"rating":4.9},{"name":"Coworking Vevey Communaux","type":"coworking","lat":46.4623,"lon":6.8439,"rating":5.0},{"name":"Bibliothèque municipale Vevey","type":"library","lat":46.4584,"lon":6.8448,"rating":4.6},{"name":"En Vogue Vevey","type":"café","lat":46.4589,"lon":6.849,"rating":5.0},{"name":"TheWorkHub Vevey","type":"coworking","lat":46.457,"lon":6.8536,"rating":4.9},{"name":"Bibliothèque Montreux-Veytaux","type":"library","lat":46.4372,"lon":6.9083,"rating":4.6},{"name":"Coworking Montreux","type":"coworking","lat":46.4368,"lon":6.9098,"rating":4.9},{"name":"Sleepy Bear Coffee Montreux","type":"café","lat":46.4347,"lon":6.9108,"rating":4.6},{"name":"C+ Montreux","type":"café","lat":46.4295,"lon":6.9117,"rating":4.9},{"name":"Five Coworking Montreux","type":"coworking","lat":46.4303,"lon":6.9129,"rating":5.0},{"name":"Fleurs de thé Montreux","type":"café","lat":46.43,"lon":6.913,"rating":5.0},{"name":"Restaurant l'Oasis Villeneuve","type":"café","lat":46.3973,"lon":6.9238,"rating":4.0}];
+
+// ============================================================
+// OBSERVERS
+// ============================================================
+const chartBuilders = {};
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      const id = e.target.id;
+      if (chartBuilders[id] && !e.target.dataset.built) {
+        chartBuilders[id]();
+        e.target.dataset.built = 'true';
+      }
+    }
+  });
+}, { threshold: 0.15 });
+
+document.querySelectorAll('.chapter').forEach(ch => observer.observe(ch));
+
+// Nav highlighting — scroll-based approach for reliability
+const navDots = document.querySelectorAll('.nav-dot');
+const navChapters = Array.from(document.querySelectorAll('.chapter[id^="ch"]'));
+let navTicking = false;
+function updateNavHighlight() {
+  const offset = 100; // px below top to consider "current"
+  let current = null;
+  for (const ch of navChapters) {
+    const rect = ch.getBoundingClientRect();
+    if (rect.top <= offset) current = ch.id;
+  }
+  if (!current && navChapters.length) current = navChapters[0].id;
+  if (current) {
+    navDots.forEach(d => d.classList.toggle('active', d.getAttribute('href') === '#' + current));
+  }
+  navTicking = false;
+}
+window.addEventListener('scroll', () => {
+  if (!navTicking) { navTicking = true; requestAnimationFrame(updateNavHighlight); }
+}, { passive: true });
+updateNavHighlight();
+
+// ============================================================
+// LIGHTBOX
+// ============================================================
+function openLightbox(src) {
+  if (!src) return;
+  const lb = document.getElementById('lightbox');
+  lb.querySelector('img').src = src;
+  lb.classList.add('active');
+}
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') document.getElementById('lightbox').classList.remove('active');
+});
+
+// ============================================================
+// CHART: WCI BAR CHART (Ch 03)
+// ============================================================
+chartBuilders['ch3'] = () => {
+  const margin = {top: 10, right: 20, bottom: 70, left: 50};
+  const width = 860 - margin.left - margin.right;
+  const height = 280 - margin.top - margin.bottom;
+  const sorted = [...STATIONS].sort((a,b) => a.rail_km - b.rail_km);
+
+  const svg = d3.select('#wci-chart').append('svg')
+    .attr('viewBox', `0 0 ${width + margin.left + margin.right} ${height + margin.top + margin.bottom}`)
+    .append('g').attr('transform', `translate(${margin.left},${margin.top})`);
+
+  const x = d3.scaleBand().domain(sorted.map(d=>d.name)).range([0, width]).padding(0.15);
+  const y = d3.scaleLinear().domain([0, 0.7]).range([height, 0]);
+
+  svg.selectAll('rect').data(sorted).join('rect')
+    .attr('x', d => x(d.name)).attr('width', x.bandwidth())
+    .attr('y', height).attr('height', 0)
+    .attr('fill', d => SEG_COLORS[d.segment]).attr('rx', 1)
+    .transition().duration(800).delay((d,i) => i * 20)
+    .attr('y', d => y(d.wci)).attr('height', d => height - y(d.wci));
+
+  svg.append('g').call(d3.axisLeft(y).ticks(5).tickFormat(d3.format('.2f')))
+    .selectAll('text').attr('fill', '#8a8880').attr('font-size', '9px');
+  svg.selectAll('.domain, .tick line').attr('stroke', '#333');
+
+  const keyStations = ['Genève','Nyon','Morges','Lausanne','Cully','St-Saphorin (Lavaux), gare','Vevey','Montreux','Villeneuve'];
+  svg.append('g').attr('transform', `translate(0,${height})`)
+    .call(d3.axisBottom(x).tickValues(keyStations))
+    .selectAll('text').attr('fill', '#8a8880').attr('font-size', '8px')
+    .attr('transform', 'rotate(-40)').attr('text-anchor', 'end')
+    .text(d => d.replace(' (Lavaux), gare', ''));
+  svg.selectAll('.domain').attr('stroke', '#333');
+
+  const legend = svg.append('g').attr('transform', `translate(${width - 320}, 5)`);
+  Object.entries(SEG_COLORS).forEach(([seg, col], i) => {
+    legend.append('rect').attr('x', i * 65).attr('width', 8).attr('height', 8).attr('fill', col).attr('rx', 4);
+    legend.append('text').attr('x', i * 65 + 12).attr('y', 8).text(seg).attr('fill', '#8a8880').attr('font-size', '8px');
+  });
+};
+
+// ============================================================
+// CHART: WORKABILITY DONUT (Ch 04)
+// ============================================================
+chartBuilders['ch4'] = () => {
+  const w = 860, h = 260;
+  const svg = d3.select('#workability-chart').append('svg').attr('viewBox', `0 0 ${w} ${h}`);
+
+  const data = [
+    {label: 'Prime', value: WORKABILITY.PRIME_WORK, color: '#2ecc71'},
+    {label: 'Workable', value: WORKABILITY.WORKABLE, color: '#f1c40f'},
+    {label: 'Marginal', value: WORKABILITY.MARGINAL, color: '#e67e22'},
+    {label: 'Not Workable', value: WORKABILITY.NOT_WORKABLE, color: '#e74c3c'},
+    {label: 'Broken', value: WORKABILITY.BROKEN, color: '#555'},
+  ];
+  const total = d3.sum(data, d => d.value);
+
+  const g = svg.append('g').attr('transform', `translate(160, ${h/2})`);
+  const pie = d3.pie().value(d => d.value).sort(null).padAngle(0.02);
+  const arc = d3.arc().innerRadius(60).outerRadius(105);
+
+  g.selectAll('path').data(pie(data)).join('path')
+    .attr('fill', d => d.data.color)
+    .transition().duration(800)
+    .attrTween('d', function(d) {
+      const i = d3.interpolate({startAngle: d.startAngle, endAngle: d.startAngle}, d);
+      return t => arc(i(t));
+    });
+
+  g.append('text').attr('text-anchor','middle').attr('dy','-0.3em').attr('fill','#fff').attr('font-size','22px').attr('font-weight','600').text('618');
+  g.append('text').attr('text-anchor','middle').attr('dy','1.2em').attr('fill','#8a8880').attr('font-size','10px').text('connections');
+
+  const lg = svg.append('g').attr('transform', `translate(320, 40)`);
+  data.forEach((d, i) => {
+    const pct = ((d.value / total) * 100).toFixed(0);
+    const row = lg.append('g').attr('transform', `translate(0, ${i * 40})`);
+    row.append('rect').attr('width', 12).attr('height', 12).attr('fill', d.color).attr('rx', 3);
+    row.append('text').attr('x', 22).attr('y', 11).attr('fill', '#e8e6e1').attr('font-size', '14px').text(d.label);
+    row.append('text').attr('x', 260).attr('y', 11).attr('fill', d.color).attr('font-size', '14px')
+      .attr('font-weight', '600').attr('text-anchor', 'end').text(`${d.value} (${pct}%)`);
+  });
+};
+
+// ============================================================
+// CHART: COST CURVE (Ch 05)
+// ============================================================
+chartBuilders['ch5'] = () => {
+  const margin = {top: 20, right: 30, bottom: 50, left: 50};
+  const width = 860 - margin.left - margin.right;
+  const height = 280 - margin.top - margin.bottom;
+  const sorted = [...STATIONS].filter(d => d.rail_km <= 101).sort((a,b) => a.rail_km - b.rail_km);
+
+  const svg = d3.select('#cost-chart').append('svg')
+    .attr('viewBox', `0 0 ${width + margin.left + margin.right} ${height + margin.top + margin.bottom}`)
+    .append('g').attr('transform', `translate(${margin.left},${margin.top})`);
+
+  const x = d3.scaleLinear().domain([0, 101]).range([0, width]);
+  const y = d3.scaleLinear().domain([0, 35]).range([height, 0]);
+
+  svg.append('g').attr('transform', `translate(0,${height})`).call(d3.axisBottom(x).ticks(10).tickFormat(d => d + ' km'))
+    .selectAll('text').attr('fill', '#8a8880').attr('font-size', '9px');
+  svg.append('g').call(d3.axisLeft(y).ticks(6).tickFormat(d => 'CHF ' + d))
+    .selectAll('text').attr('fill', '#8a8880').attr('font-size', '9px');
+  svg.selectAll('.domain, .tick line').attr('stroke', '#333');
+
+  svg.append('line').attr('x1', 0).attr('x2', width).attr('y1', y(20)).attr('y2', y(20))
+    .attr('stroke', '#e74c3c').attr('stroke-dasharray', '6,4').attr('opacity', 0.7);
+  svg.append('text').attr('x', width - 5).attr('y', y(20) - 6).attr('text-anchor', 'end')
+    .attr('fill', '#e74c3c').attr('font-size', '9px').text('CHF 20 daily budget');
+
+  svg.append('line').attr('x1', 0).attr('x2', width).attr('y1', y(10.58)).attr('y2', y(10.58))
+    .attr('stroke', '#2ecc71').attr('stroke-dasharray', '6,4').attr('opacity', 0.7);
+  svg.append('text').attr('x', width - 5).attr('y', y(10.58) - 6).attr('text-anchor', 'end')
+    .attr('fill', '#2ecc71').attr('font-size', '9px').text('GA daily cost (≈ CHF 10.58)');
+
+  const line = d3.line().x(d => x(d.rail_km)).y(d => y(d.price_full)).curve(d3.curveMonotoneX);
+  svg.append('path').datum(sorted).attr('fill', 'none')
+    .attr('stroke', '#c8a86e').attr('stroke-width', 2.5).attr('d', line)
+    .attr('stroke-dasharray', function() { return this.getTotalLength(); })
+    .attr('stroke-dashoffset', function() { return this.getTotalLength(); })
+    .transition().duration(1500).attr('stroke-dashoffset', 0);
+
+  svg.selectAll('circle').data(sorted).join('circle')
+    .attr('cx', d => x(d.rail_km)).attr('cy', d => y(d.price_full))
+    .attr('r', 3).attr('fill', d => SEG_COLORS[d.segment])
+    .attr('opacity', 0).transition().delay(1500).duration(300).attr('opacity', 1);
+
+  const stprex = sorted.find(d => d.name === 'St-Prex');
+  if (stprex) {
+    svg.append('line').attr('x1', x(stprex.rail_km)).attr('x2', x(stprex.rail_km))
+      .attr('y1', y(stprex.price_full)).attr('y2', height)
+      .attr('stroke', '#e74c3c').attr('stroke-dasharray', '3,3').attr('opacity', 0.5);
+    svg.append('text').attr('x', x(stprex.rail_km)).attr('y', height + 25).attr('text-anchor', 'middle')
+      .attr('fill', '#e74c3c').attr('font-size', '9px').text('St-Prex — city ends here');
+  }
+};
+
+// ============================================================
+// CHART: TEMPORAL BARS + SERVICE LOLLIPOP (Ch 06)
+// ============================================================
+chartBuilders['ch6'] = () => {
+  // --- Temporal bars ---
+  const margin = {top: 10, right: 20, bottom: 40, left: 50};
+  const width = 500 - margin.left - margin.right;
+  const height = 220 - margin.top - margin.bottom;
+  const labels = {'early_morning':'5–7h','am_peak':'7–9h','midday':'11–13h','pm_peak':'17–19h','evening':'19–21h','late_night':'21–23h','weekend_mid':'Weekend'};
+
+  const svg = d3.select('#temporal-chart').append('svg')
+    .attr('viewBox', `0 0 ${width + margin.left + margin.right} ${height + margin.top + margin.bottom}`)
+    .append('g').attr('transform', `translate(${margin.left},${margin.top})`);
+
+  const x = d3.scaleBand().domain(TEMPORAL.map(d => d.s)).range([0, width]).padding(0.25);
+  const y = d3.scaleLinear().domain([0, 49]).range([height, 0]);
+
+  svg.append('g').attr('transform', `translate(0,${height})`)
+    .call(d3.axisBottom(x).tickFormat(d => labels[d] || d))
+    .selectAll('text').attr('fill', '#8a8880').attr('font-size', '9px');
+  svg.append('g').call(d3.axisLeft(y).ticks(5))
+    .selectAll('text').attr('fill', '#8a8880').attr('font-size', '9px');
+  svg.selectAll('.domain, .tick line').attr('stroke', '#333');
+
+  svg.selectAll('.ghost').data(TEMPORAL).join('rect').attr('class','ghost')
+    .attr('x', d => x(d.s)).attr('width', x.bandwidth())
+    .attr('y', y(49)).attr('height', height - y(49))
+    .attr('fill', 'rgba(255,255,255,0.03)').attr('rx', 3);
+
+  svg.selectAll('.bar').data(TEMPORAL).join('rect').attr('class','bar')
+    .attr('x', d => x(d.s)).attr('width', x.bandwidth())
+    .attr('y', height).attr('height', 0)
+    .attr('fill', '#c8a86e').attr('rx', 3)
+    .transition().duration(800).delay((d,i) => i * 100)
+    .attr('y', d => y(d.w)).attr('height', d => height - y(d.w));
+
+  svg.selectAll('.label').data(TEMPORAL).join('text').attr('class','label')
+    .attr('x', d => x(d.s) + x.bandwidth()/2).attr('y', d => y(d.w) - 6)
+    .attr('text-anchor', 'middle').attr('fill', '#c8a86e').attr('font-size', '11px').attr('font-weight', '600')
+    .text(d => d.w);
+
+  // --- Service window lollipop ---
+  const sm = {top: 10, right: 30, bottom: 30, left: 130};
+  const sw = 860 - sm.left - sm.right;
+  const sh = 560 - sm.top - sm.bottom;
+  const sorted = [...STATIONS].sort((a,b) => a.rail_km - b.rail_km);
+
+  const ssvg = d3.select('#service-chart').append('svg')
+    .attr('viewBox', `0 0 ${sw + sm.left + sm.right} ${sh + sm.top + sm.bottom}`)
+    .append('g').attr('transform', `translate(${sm.left},${sm.top})`);
+
+  const sy = d3.scaleBand().domain(sorted.map(d => d.name)).range([0, sh]).padding(0.15);
+  const sx = d3.scaleLinear().domain([0, 22]).range([0, sw]);
+
+  ssvg.append('g').call(d3.axisLeft(sy))
+    .selectAll('text')
+    .attr('fill', d => { const st = STATIONS.find(s => s.name === d); return st ? SEG_COLORS[st.segment] : '#8a8880'; })
+    .attr('font-size', '7px')
+    .text(d => d.length > 20 ? d.slice(0,17)+'…' : d);
+  ssvg.selectAll('.domain, .tick line').attr('stroke', 'rgba(255,255,255,0.06)');
+
+  ssvg.append('g').attr('transform', `translate(0,${sh})`)
+    .call(d3.axisBottom(sx).ticks(6).tickFormat(d => d+'h'))
+    .selectAll('text').attr('fill', '#8a8880').attr('font-size', '9px');
+  ssvg.selectAll('.domain').attr('stroke', '#333');
+
+  ssvg.selectAll('.lollipop-line').data(sorted).join('line')
+    .attr('x1', 0).attr('x2', 0)
+    .attr('y1', d => sy(d.name) + sy.bandwidth()/2)
+    .attr('y2', d => sy(d.name) + sy.bandwidth()/2)
+    .attr('stroke', d => SEG_COLORS[d.segment]).attr('stroke-width', 2).attr('opacity', 0.7)
+    .transition().duration(800).delay((d,i) => i * 12)
+    .attr('x2', d => sx(d.service_hrs));
+
+  ssvg.selectAll('.lollipop-dot').data(sorted).join('circle')
+    .attr('cx', 0).attr('cy', d => sy(d.name) + sy.bandwidth()/2)
+    .attr('r', 3).attr('fill', d => SEG_COLORS[d.segment])
+    .transition().duration(800).delay((d,i) => i * 12)
+    .attr('cx', d => sx(d.service_hrs));
+};
+
+// ============================================================
+// CHART: DIVERSITY SCATTER (Ch 07)
+// ============================================================
+chartBuilders['ch7'] = () => {
+  const margin = {top: 20, right: 30, bottom: 50, left: 55};
+  const width = 860 - margin.left - margin.right;
+  const height = 320 - margin.top - margin.bottom;
+
+  const svg = d3.select('#diversity-chart').append('svg')
+    .attr('viewBox', `0 0 ${width + margin.left + margin.right} ${height + margin.top + margin.bottom}`)
+    .append('g').attr('transform', `translate(${margin.left},${margin.top})`);
+
+  const x = d3.scaleLinear().domain([0, 2.3]).range([0, width]);
+  const y = d3.scaleLinear().domain([0, 280]).range([height, 0]);
+
+  svg.append('g').attr('transform', `translate(0,${height})`).call(d3.axisBottom(x).ticks(5))
+    .selectAll('text').attr('fill', '#8a8880').attr('font-size', '9px');
+  svg.append('g').call(d3.axisLeft(y).ticks(5))
+    .selectAll('text').attr('fill', '#8a8880').attr('font-size', '9px');
+  svg.selectAll('.domain, .tick line').attr('stroke', '#333');
+
+  svg.append('text').attr('x', width/2).attr('y', height + 38).attr('text-anchor', 'middle')
+    .attr('fill', '#8a8880').attr('font-size', '10px').text('Shannon Diversity Index (religious)');
+  svg.append('text').attr('transform', 'rotate(-90)').attr('y', -42).attr('x', -height/2).attr('text-anchor', 'middle')
+    .attr('fill', '#8a8880').attr('font-size', '10px').text('Station Richness (1 km)');
+
+  svg.append('line').attr('x1', x(1.0)).attr('x2', x(1.0)).attr('y1', 0).attr('y2', height)
+    .attr('stroke', '#c8a86e').attr('stroke-dasharray', '6,4').attr('opacity', 0.5);
+  svg.append('text').attr('x', x(1.0) + 5).attr('y', 15).attr('fill', '#c8a86e').attr('font-size', '9px').text('Phase transition');
+
+  svg.append('text').attr('x', x(0.5)).attr('y', height - 10).attr('text-anchor', 'middle')
+    .attr('fill', 'rgba(231,76,60,0.3)').attr('font-size', '10px').text('Avg richness: 8.8');
+  svg.append('text').attr('x', x(1.6)).attr('y', height - 10).attr('text-anchor', 'middle')
+    .attr('fill', 'rgba(46,204,113,0.3)').attr('font-size', '10px').text('Avg richness: 70.5');
+
+  svg.selectAll('circle').data(STATIONS).join('circle')
+    .attr('cx', d => x(d.shannon)).attr('cy', d => y(d.richness))
+    .attr('r', 0).attr('fill', d => SEG_COLORS[d.segment])
+    .attr('opacity', 0.85).attr('stroke', 'rgba(255,255,255,0.15)').attr('stroke-width', 1)
+    .transition().duration(600).delay((d,i) => i * 15)
+    .attr('r', d => Math.max(4, Math.sqrt(d.freq) * 2));
+
+  const outliers = STATIONS.filter(d => d.richness > 100 || (d.shannon > 1.8 && d.richness > 30));
+  svg.selectAll('.outlier-label').data(outliers).join('text').attr('class','outlier-label')
+    .attr('x', d => x(d.shannon) + 8).attr('y', d => y(d.richness) + 4)
+    .attr('fill', '#e8e6e1').attr('font-size', '8px')
+    .text(d => d.name.replace(' (Lavaux), gare','').replace('Genève','Geneva'));
+};
+
+// ============================================================
+// CHART: NIGHTLIFE BARS + LEAFLET MAP (Ch 09)
+// ============================================================
+chartBuilders['ch9'] = () => {
+  // --- Nightlife bars ---
+  const margin = {top: 10, right: 20, bottom: 50, left: 110};
+  const width = 600 - margin.left - margin.right;
+  const height = 240 - margin.top - margin.bottom;
+  const data = Object.entries(VENUES).sort((a,b) => b[1] - a[1]).map(([seg, count]) => ({seg, count}));
+
+  const svg = d3.select('#nightlife-chart').append('svg')
+    .attr('viewBox', `0 0 ${width + margin.left + margin.right} ${height + margin.top + margin.bottom}`)
+    .append('g').attr('transform', `translate(${margin.left},${margin.top})`);
+
+  const y = d3.scaleBand().domain(data.map(d => d.seg)).range([0, height]).padding(0.2);
+  const x = d3.scaleLinear().domain([0, 80]).range([0, width]);
+
+  svg.append('g').call(d3.axisLeft(y)).selectAll('text').attr('fill', '#e8e6e1').attr('font-size', '10px');
+  svg.selectAll('.domain, .tick line').attr('stroke', '#333');
+
+  svg.selectAll('rect').data(data).join('rect')
+    .attr('y', d => y(d.seg)).attr('height', y.bandwidth())
+    .attr('x', 0).attr('width', 0)
+    .attr('fill', (d, i) => i === 0 ? '#e74c3c' : i === 1 ? '#3498db' : '#555')
+    .attr('rx', 3)
+    .transition().duration(800).delay((d,i) => i * 80)
+    .attr('width', d => x(d.count));
+
+  svg.selectAll('.count').data(data).join('text').attr('class','count')
+    .attr('y', d => y(d.seg) + y.bandwidth()/2 + 4)
+    .attr('x', d => x(d.count) + 8)
+    .attr('fill', '#c8a86e').attr('font-size', '12px').attr('font-weight', '500')
+    .text(d => d.count);
+
+  // --- Leaflet map ---
+  const map = L.map('corridor-map', { scrollWheelZoom: false }).fitBounds([[46.17, 6.07], [46.56, 7.02]]);
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+    maxZoom: 18,
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
+  }).addTo(map);
+
+  const stationLayer = L.layerGroup();
+  STATIONS.forEach(s => {
+    L.circleMarker([s.lat, s.lon], {
+      radius: Math.max(4, s.wci * 25),
+      fillColor: SEG_COLORS[s.segment],
+      color: 'rgba(255,255,255,0.2)',
+      weight: 1,
+      fillOpacity: 0.8
+    }).bindPopup(`<strong>${s.name}</strong><br>WCI: ${s.wci.toFixed(4)}<br>Freq: ${s.freq}/h<br>Service: ${s.service_hrs}h`)
+    .addTo(stationLayer);
+  });
+  stationLayer.addTo(map);
+
+  const venueLayer = L.layerGroup();
+  LATE_NIGHT.forEach(v => {
+    L.circleMarker([v.lat, v.lon], {
+      radius: 3, fillColor: '#9b59b6', color: 'transparent', fillOpacity: 0.6
+    }).bindPopup(`<strong>${v.name}</strong><br>${v.type}`)
+    .addTo(venueLayer);
+  });
+
+  const workLayer = L.layerGroup();
+  REMOTE_WORK.forEach(w => {
+    L.circleMarker([w.lat, w.lon], {
+      radius: 3, fillColor: '#e67e22', color: 'transparent', fillOpacity: 0.6
+    }).bindPopup(`<strong>${w.name}</strong><br>${w.type}<br>Rating: ${w.rating}`)
+    .addTo(workLayer);
+  });
+
+  L.control.layers(null, {
+    'Stations (WCI)': stationLayer,
+    'Late-night venues': venueLayer,
+    'Remote workspaces': workLayer
+  }).addTo(map);
+};
+
+</script>
+</body>
+</html>

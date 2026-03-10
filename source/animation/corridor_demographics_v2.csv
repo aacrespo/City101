@@ -1,0 +1,50 @@
+station_name,lat_wgs84,lon_wgs84,catchment_communes,catchment_commune_names,population_total,population_source,pct_age_0_19,pct_age_20_39,pct_age_40_64,pct_age_65plus,pct_commute_public_transport,pct_commute_car,pct_commute_bike_foot,commute_mode_source,pct_tertiary_sector,frontaliers_estimate,frontaliers_source,data_resolution
+"Vernier, Blandonnet",46.221936,6.097217,2,"Vernier, Meyrin",64000,BFS_STATPOP_2022,0.222,0.281,0.324,0.174,0.254,0.537,0.209,BFS_Structural_Survey_2021,0.789,12096,STAF_2024_commune_proportional,commune
+Lausanne,46.516795,6.629087,1,Lausanne,140000,BFS_STATPOP_2022,0.182,0.315,0.318,0.185,0.33,0.4,0.27,BFS_Structural_Survey_2021,0.85,8400,STAF_2024_commune_proportional,commune
+Renens VD,46.537046,6.57892,1,Renens (VD),23500,BFS_STATPOP_2022,0.198,0.312,0.315,0.175,0.3,0.48,0.22,BFS_Structural_Survey_2021,0.79,1175,STAF_2024_commune_proportional,commune
+Genève,46.210228,6.142435,1,Genève,203856,BFS_STATPOP_2022,0.178,0.305,0.322,0.195,0.32,0.42,0.26,BFS_Structural_Survey_2021,0.87,50964,STAF_2024_commune_proportional,commune
+Vevey,46.463002,6.84343,1,Vevey,20200,BFS_STATPOP_2022,0.188,0.295,0.322,0.195,0.25,0.52,0.23,BFS_Structural_Survey_2021,0.8,808,STAF_2024_commune_proportional,commune
+Aigle,46.316856,6.96367,1,Aigle,11200,BFS_STATPOP_2022,0.215,0.272,0.332,0.181,0.16,0.65,0.19,BFS_Structural_Survey_2021,0.7,224,STAF_2024_commune_proportional,commune
+Morges,46.511102,6.493958,1,Morges,17200,BFS_STATPOP_2022,0.205,0.272,0.332,0.191,0.22,0.58,0.2,BFS_Structural_Survey_2021,0.76,860,STAF_2024_commune_proportional,commune
+Montreux,46.435887,6.910425,1,Montreux,26800,BFS_STATPOP_2022,0.175,0.268,0.328,0.229,0.22,0.55,0.23,BFS_Structural_Survey_2021,0.82,804,STAF_2024_commune_proportional,commune
+Nyon,46.384429,6.23595,1,Nyon,22500,BFS_STATPOP_2022,0.212,0.275,0.328,0.185,0.24,0.56,0.2,BFS_Structural_Survey_2021,0.78,3375,STAF_2024_commune_proportional,commune
+Genève-Eaux-Vives,46.201461,6.166549,3,"Genève, Chêne-Bougeries, Thônex",231056,BFS_STATPOP_2022,0.181,0.3,0.323,0.196,0.315,0.431,0.255,BFS_Structural_Survey_2021,0.862,53373,STAF_2024_commune_proportional,commune
+Genève-Champel,46.192208,6.153473,2,"Genève, Carouge (GE)",227056,BFS_STATPOP_2022,0.177,0.306,0.323,0.195,0.319,0.422,0.259,BFS_Structural_Survey_2021,0.869,54493,STAF_2024_commune_proportional,commune
+Lancy-Bachet,46.174342,6.12934,2,"Lancy, Carouge (GE)",57500,BFS_STATPOP_2022,0.184,0.301,0.327,0.188,0.304,0.458,0.238,BFS_Structural_Survey_2021,0.848,11040,STAF_2024_commune_proportional,commune
+Lancy-Pont-Rouge,46.18596,6.124929,1,Lancy,34300,BFS_STATPOP_2022,0.195,0.295,0.325,0.185,0.3,0.47,0.23,BFS_Structural_Survey_2021,0.84,7546,STAF_2024_commune_proportional,commune
+Palézieux,46.542766,6.83786,1,Palézieux,2400,BFS_STATPOP_2022,0.215,0.235,0.35,0.2,0.12,0.72,0.16,BFS_Structural_Survey_2021,0.58,24,STAF_2024_commune_proportional,commune
+"Aubonne, gare",46.493844,6.39294,1,Aubonne,3800,BFS_STATPOP_2022,0.218,0.258,0.342,0.182,0.15,0.68,0.17,BFS_Structural_Survey_2021,0.65,114,STAF_2024_commune_proportional,commune
+Coppet,46.317405,6.187806,1,Coppet,3800,BFS_STATPOP_2022,0.22,0.252,0.34,0.188,0.22,0.6,0.18,BFS_Structural_Survey_2021,0.72,418,STAF_2024_commune_proportional,commune
+Bussigny,46.547597,6.551814,1,Bussigny,10200,BFS_STATPOP_2022,0.21,0.278,0.332,0.18,0.25,0.55,0.2,BFS_Structural_Survey_2021,0.78,408,STAF_2024_commune_proportional,commune
+Prilly-Malley,46.526697,6.602624,1,Prilly,12800,BFS_STATPOP_2022,0.195,0.292,0.328,0.185,0.28,0.5,0.22,BFS_Structural_Survey_2021,0.8,512,STAF_2024_commune_proportional,commune
+Cully,46.488565,6.727141,1,Bourg-en-Lavaux,5600,BFS_STATPOP_2022,0.208,0.242,0.345,0.205,0.15,0.68,0.17,BFS_Structural_Survey_2021,0.64,56,STAF_2024_commune_proportional,commune
+"Begnins, poste",46.440225,6.247701,1,Begnins,2600,BFS_STATPOP_2022,0.23,0.228,0.358,0.184,0.12,0.72,0.16,BFS_Structural_Survey_2021,0.6,130,STAF_2024_commune_proportional,commune
+Genève-Sécheron,46.222452,6.144542,1,Genève,203856,BFS_STATPOP_2022,0.178,0.305,0.322,0.195,0.32,0.42,0.26,BFS_Structural_Survey_2021,0.87,50964,STAF_2024_commune_proportional,commune
+Genthod-Bellevue,46.256747,6.153947,2,"Genthod, Bellevue",6700,BFS_STATPOP_2022,0.207,0.236,0.343,0.214,0.203,0.597,0.2,BFS_Structural_Survey_2021,0.703,743,STAF_2024_commune_proportional,commune
+Versoix,46.279741,6.165718,1,Versoix,13800,BFS_STATPOP_2022,0.215,0.258,0.335,0.192,0.24,0.55,0.21,BFS_Structural_Survey_2021,0.74,1932,STAF_2024_commune_proportional,commune
+Tannay,46.307659,6.181097,1,Tannay,1800,BFS_STATPOP_2022,0.225,0.23,0.355,0.19,0.2,0.62,0.18,BFS_Structural_Survey_2021,0.7,144,STAF_2024_commune_proportional,commune
+Mies,46.298503,6.167641,1,Mies,2200,BFS_STATPOP_2022,0.235,0.24,0.345,0.18,0.18,0.65,0.17,BFS_Structural_Survey_2021,0.68,220,STAF_2024_commune_proportional,commune
+Villeneuve VD,46.398369,6.926992,1,Villeneuve (VD),5800,BFS_STATPOP_2022,0.205,0.275,0.335,0.185,0.18,0.62,0.2,BFS_Structural_Survey_2021,0.68,116,STAF_2024_commune_proportional,commune
+Bex,46.251462,7.000653,1,Bex,7800,BFS_STATPOP_2022,0.218,0.262,0.338,0.182,0.14,0.68,0.18,BFS_Structural_Survey_2021,0.65,156,STAF_2024_commune_proportional,commune
+Gland,46.419998,6.269128,1,Gland,14000,BFS_STATPOP_2022,0.222,0.268,0.338,0.172,0.2,0.62,0.18,BFS_Structural_Survey_2021,0.72,1400,STAF_2024_commune_proportional,commune
+Allaman,46.47576,6.399683,1,Allaman,850,BFS_STATPOP_2022,0.235,0.23,0.36,0.175,0.12,0.72,0.16,BFS_Structural_Survey_2021,0.58,17,STAF_2024_commune_proportional,commune
+Puidoux,46.493838,6.76568,1,Puidoux,3100,BFS_STATPOP_2022,0.21,0.238,0.348,0.204,0.14,0.7,0.16,BFS_Structural_Survey_2021,0.62,31,STAF_2024_commune_proportional,commune
+"Prangins, Les Abériaux",46.393015,6.254119,1,Prangins,4800,BFS_STATPOP_2022,0.232,0.245,0.342,0.181,0.18,0.65,0.17,BFS_Structural_Survey_2021,0.68,384,STAF_2024_commune_proportional,commune
+Genève-Aéroport,46.232547,6.111969,3,"Genève, Vernier, Meyrin",267856,BFS_STATPOP_2022,0.189,0.299,0.322,0.19,0.304,0.448,0.248,BFS_Structural_Survey_2021,0.851,62946,STAF_2024_commune_proportional,commune
+Rolle,46.462757,6.336387,1,Rolle,7200,BFS_STATPOP_2022,0.215,0.262,0.338,0.185,0.2,0.62,0.18,BFS_Structural_Survey_2021,0.74,432,STAF_2024_commune_proportional,commune
+Grandvaux,46.496948,6.722641,1,Bourg-en-Lavaux,5600,BFS_STATPOP_2022,0.208,0.242,0.345,0.205,0.15,0.68,0.17,BFS_Structural_Survey_2021,0.64,56,STAF_2024_commune_proportional,commune
+St-Prex,46.482324,6.455897,1,St-Prex,6200,BFS_STATPOP_2022,0.22,0.255,0.34,0.185,0.18,0.64,0.18,BFS_Structural_Survey_2021,0.7,248,STAF_2024_commune_proportional,commune
+Lonay-Préverenges,46.523141,6.519527,2,"Lonay, Préverenges",9000,BFS_STATPOP_2022,0.223,0.253,0.34,0.184,0.186,0.634,0.18,BFS_Structural_Survey_2021,0.706,270,STAF_2024_commune_proportional,commune
+Lausanne-Flon,46.520798,6.63033,1,Lausanne,140000,BFS_STATPOP_2022,0.182,0.315,0.318,0.185,0.33,0.4,0.27,BFS_Structural_Survey_2021,0.85,8400,STAF_2024_commune_proportional,commune
+La Conversion,46.513087,6.678307,2,"Lausanne, Puidoux",143100,BFS_STATPOP_2022,0.183,0.313,0.319,0.185,0.326,0.406,0.268,BFS_Structural_Survey_2021,0.845,8442,STAF_2024_commune_proportional,commune
+La Tour-de-Peilz,46.455457,6.859523,1,La Tour-de-Peilz,12200,BFS_STATPOP_2022,0.195,0.265,0.332,0.208,0.22,0.58,0.2,BFS_Structural_Survey_2021,0.75,366,STAF_2024_commune_proportional,commune
+Burier,46.447889,6.877108,2,"La Tour-de-Peilz, Montreux",39000,BFS_STATPOP_2022,0.181,0.267,0.329,0.222,0.22,0.559,0.221,BFS_Structural_Survey_2021,0.798,1170,STAF_2024_commune_proportional,commune
+Clarens,46.442736,6.895771,1,Montreux,26800,BFS_STATPOP_2022,0.175,0.268,0.328,0.229,0.22,0.55,0.23,BFS_Structural_Survey_2021,0.82,804,STAF_2024_commune_proportional,commune
+"Founex, est",46.334766,6.19494,1,Founex,4200,BFS_STATPOP_2022,0.24,0.235,0.35,0.175,0.16,0.67,0.17,BFS_Structural_Survey_2021,0.65,378,STAF_2024_commune_proportional,commune
+Rivaz,46.474211,6.784583,1,Rivaz,420,BFS_STATPOP_2022,0.185,0.215,0.365,0.235,0.12,0.72,0.16,BFS_Structural_Survey_2021,0.55,4,STAF_2024_commune_proportional,commune
+"Perroy, Couronnette",46.463879,6.352911,1,Perroy,1900,BFS_STATPOP_2022,0.228,0.238,0.352,0.182,0.14,0.7,0.16,BFS_Structural_Survey_2021,0.62,38,STAF_2024_commune_proportional,commune
+Epesses,46.489333,6.745157,1,Bourg-en-Lavaux,5600,BFS_STATPOP_2022,0.208,0.242,0.345,0.205,0.15,0.68,0.17,BFS_Structural_Survey_2021,0.64,56,STAF_2024_commune_proportional,commune
+Denges-Echandens,46.529129,6.54049,2,"Denges, Echandens",7300,BFS_STATPOP_2022,0.222,0.25,0.341,0.187,0.175,0.655,0.17,BFS_Structural_Survey_2021,0.695,219,STAF_2024_commune_proportional,commune
+Bossière,46.509753,6.699305,1,Bourg-en-Lavaux,5600,BFS_STATPOP_2022,0.208,0.242,0.345,0.205,0.15,0.68,0.17,BFS_Structural_Survey_2021,0.64,56,STAF_2024_commune_proportional,commune
+Territet,46.426381,6.922695,1,Montreux,26800,BFS_STATPOP_2022,0.175,0.268,0.328,0.229,0.22,0.55,0.23,BFS_Structural_Survey_2021,0.82,804,STAF_2024_commune_proportional,commune
+"St-Saphorin (Lavaux), gare",46.472696,6.79809,2,"Rivaz, Chexbres",2820,BFS_STATPOP_2022,0.202,0.232,0.351,0.215,0.137,0.703,0.16,BFS_Structural_Survey_2021,0.61,28,STAF_2024_commune_proportional,commune

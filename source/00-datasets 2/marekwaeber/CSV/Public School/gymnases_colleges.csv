@@ -1,0 +1,29 @@
+﻿ID,Nom,Type,Commune,Canton,Region,Adresse,lat_wgs84,lon_wgs84,E_LV95,N_LV95,Source,Statut_Coordonnees
+172,Gymnase Auguste Piccard,Gymnase,Lausanne,VD,Lausanne,"Avenue des Bains 21, 1007 Lausanne",46.511700,6.619300,2537117.68,1151484.19,DGEP - vd.ch/def/dgep/les-gymnases,Oui - OSM
+173,Gymnase de Beaulieu,Gymnase,Lausanne,VD,Lausanne,"Avenue des Bergières 10, 1004 Lausanne",46.527000,6.623000,2537419.35,1153181.97,DGEP - vd.ch/def/dgep/les-gymnases,Oui - OSM
+174,Gymnase du Bugnon (site de l'Ours),Gymnase,Lausanne,VD,Lausanne,"Chemin des Abeilles 14, 1010 Lausanne",46.522200,6.640200,2538733.55,1152634.80,DGEP - vd.ch/def/dgep/les-gymnases,Oui - OSM
+175,Gymnase du Bugnon (site de Sévelin),Gymnase,Lausanne,VD,Lausanne,"Avenue de Sévelin 44, 1004 Lausanne",46.522800,6.617200,2536969.46,1152719.75,DGEP - vd.ch/def/dgep/les-gymnases,Oui - OSM
+176,Gymnase de Burier,Gymnase,La Tour-de-Peilz,VD,Lavaux-Riviera,"Route de Chailly 1, 1814 La Tour-de-Peilz",46.449600,6.877800,2556907.04,1144406.17,DGEP - vd.ch/def/dgep/les-gymnases,Oui - OSM
+177,Gymnase de Bussigny,Gymnase,Bussigny,VD,CRENOL,"Chemin de Rente 26, 1030 Bussigny",46.557700,6.561500,2532739.12,1156645.53,DGEP - vd.ch/def/dgep/les-gymnases,Oui - OSM
+178,Gymnase de Chamblandes,Gymnase,Pully,VD,Lavaux-Riviera,"Avenue des Désertes 29, 1009 Pully",46.506300,6.658100,2540089.40,1150853.52,DGEP - vd.ch/def/dgep/les-gymnases,Oui - OSM
+179,Gymnase de Crissier,Gymnase,Crissier,VD,CRENOL,"Route de Cossonay 20, 1023 Crissier",46.554500,6.575500,2533808.70,1156277.89,DGEP - vd.ch/def/dgep/les-gymnases,Non - Approximatif
+180,Gymnase d'Etoy,Gymnase,Etoy,VD,La Dôle,"Route de la Gare 7, 1163 Etoy",46.484800,6.419800,2521768.45,1148673.75,DGEP - vd.ch/def/dgep/les-gymnases,Oui - OSM
+181,Gymnase de la Cité,Gymnase,Lausanne,VD,Lausanne,"Place du Château 12, 1005 Lausanne",46.524500,6.635900,2538406.23,1152893.84,DGEP - vd.ch/def/dgep/les-gymnases,Oui - OSM
+182,Gymnase intercantonal de la Broye,Gymnase,Payerne,VD,Broye - Gros-de-Vaud,"Rue du Gymnase 1, 1530 Payerne",46.815000,6.940900,2562013.65,1184992.77,DGEP - vd.ch/def/dgep/les-gymnases,Oui - OSM
+183,Gymnase de Morges (Marcelin),Gymnase,Morges,VD,Venoge-Lac,"Avenue de Marcelin 27, 1110 Morges",46.517900,6.488400,2527080.25,1152286.85,DGEP - vd.ch/def/dgep/les-gymnases,Oui - OSM
+184,Gymnase de Nyon,Gymnase,Nyon,VD,La Dôle,"Route de Divonne 8, 1260 Nyon",46.382800,6.231600,2507143.92,1137541.55,DGEP - vd.ch/def/dgep/les-gymnases,Oui - OSM
+185,Gymnase pour Adultes (GyPAd),Gymnase,Lausanne,VD,Lausanne,"Avenue des Désertes 29, 1009 Pully",46.506300,6.658100,2540089.40,1150853.52,DGEP - vd.ch/def/dgep/les-gymnases,Oui - OSM
+186,Gymnase Provence,Gymnase,Lausanne,VD,Lausanne,"Avenue de Provence 26, 1004 Lausanne",46.523500,6.610800,2536479.22,1152802.73,DGEP - vd.ch/def/dgep/les-gymnases,Oui - OSM
+187,Gymnase de Renens,Gymnase,Renens,VD,CRENOL,"Avenue du Silo 1, 1020 Renens",46.533700,6.583800,2534419.94,1153958.81,DGEP - vd.ch/def/dgep/les-gymnases,Oui - OSM
+188,Gymnase d'Yverdon,Gymnase,Yverdon-les-Bains,VD,Jura - Nord vaudois,"Route de Bellevue, 1400 Yverdon-les-Bains",46.778400,6.664600,2540887.23,1181095.46,DGEP - vd.ch/def/dgep/les-gymnases,Oui - OSM
+189,CEC André-Chavanne,Collège (Secondaire II),Genève,GE,Canton de Genève,"Avenue Trembley 14, 1209 Genève",46.221400,6.120400,2498288.40,1119739.91,DIP Genève - edu.ge.ch/secondaire2/college,Oui - OSM
+190,Collège Calvin,Collège (Secondaire II),Genève,GE,Canton de Genève,"Rue Théodore-de-Bèze 2-4, 1205 Genève",46.200800,6.151300,2500634.71,1117410.57,DIP Genève - edu.ge.ch/secondaire2/college,Oui - OSM
+191,Collège Claparède,Collège (Secondaire II),Chêne-Bougeries,GE,Canton de Genève,"Chemin de Fossard 6, 1224 Chêne-Bougeries",46.189400,6.184500,2503176.78,1116101.89,DIP Genève - edu.ge.ch/secondaire2/college,Oui - OSM
+192,Collège de Candolle,Collège (Secondaire II),Chêne-Bourg,GE,Canton de Genève,"Avenue A.-M.-Mirany 36, 1225 Chêne-Bourg",46.204900,6.204100,2504716.98,1117800.71,DIP Genève - edu.ge.ch/secondaire2/college,Oui - OSM
+193,Collège de Saussure,Collège (Secondaire II),Petit-Lancy,GE,Canton de Genève,"Vieux-Chemin-d'Onex 9, 1213 Petit-Lancy",46.184900,6.114300,2497749.21,1115690.89,DIP Genève - edu.ge.ch/secondaire2/college,Oui - OSM
+194,CEC Emilie-Gourd,Collège (Secondaire II),Genève,GE,Canton de Genève,"Rue Le-Corbusier 15, 1208 Genève",46.193700,6.168000,2501910.80,1116600.36,DIP Genève - edu.ge.ch/secondaire2/college,Oui - OSM
+195,CECG Madame de Staël,Collège (Secondaire II),Carouge,GE,Canton de Genève,"Route de Saint-Julien 25, 1227 Carouge",46.176000,6.134600,2499299.94,1114675.37,DIP Genève - edu.ge.ch/secondaire2/college,Oui - OSM
+196,Collège pour adultes Alice-Rivaz,Collège (Secondaire II),Genève,GE,Canton de Genève,"Rue Théodore-de-Bèze 2-4, 1205 Genève",46.200800,6.151300,2500634.71,1117410.57,DIP Genève - edu.ge.ch/secondaire2/college,Oui - OSM
+197,Collège Rousseau,Collège (Secondaire II),Genève,GE,Canton de Genève,"Avenue du Bouchet 16A, 1209 Genève",46.217600,6.121900,2498397.02,1119315.60,DIP Genève - edu.ge.ch/secondaire2/college,Oui - OSM
+198,Collège Sismondi,Collège (Secondaire II),Genève,GE,Canton de Genève,"Chemin Eugène-Rigot 3, 1202 Genève",46.221500,6.142500,2499993.59,1119722.58,DIP Genève - edu.ge.ch/secondaire2/college,Oui - OSM
+199,Collège Voltaire,Collège (Secondaire II),Genève,GE,Canton de Genève,"Rue Voltaire 21, 1201 Genève",46.207500,6.136500,2499504.83,1118174.15,DIP Genève - edu.ge.ch/secondaire2/college,Oui - OSM

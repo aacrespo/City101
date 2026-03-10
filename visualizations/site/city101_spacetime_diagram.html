@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>City101 — 24-Hour Space-Time Diagram</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=DM+Sans:wght@300;400;500;700&display=swap');
+
+  :root {
+    --bg: #0a0a0f;
+    --text: #e8e6e1;
+    --text-dim: #8a8880;
+    --gap-color: #1a0a0a;
+    --accent: #ff4d2a;
+    --cold: #1a2a4a;
+    --warm: #ff6b35;
+    --grid: rgba(255,255,255,0.04);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    overflow-x: auto;
+    min-height: 100vh;
+  }
+
+  .header {
+    padding: 40px 40px 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .header h1 {
+    font-family: 'DM Mono', monospace;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+
+  .header h2 {
+    font-weight: 300;
+    font-size: 32px;
+    line-height: 1.2;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+
+  .header p {
+    font-size: 14px;
+    color: var(--text-dim);
+    max-width: 600px;
+    line-height: 1.5;
+  }
+
+  .legend {
+    display: flex;
+    gap: 24px;
+    padding: 16px 40px;
+    max-width: 1400px;
+    margin: 0 auto;
+    flex-wrap: wrap;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    color: var(--text-dim);
+  }
+
+  .legend-swatch {
+    width: 20px;
+    height: 12px;
+    border-radius: 2px;
+  }
+
+  .diagram-wrapper {
+    padding: 10px 40px 40px;
+    max-width: 1400px;
+    margin: 0 auto;
+    overflow-x: auto;
+  }
+
+  .diagram {
+    display: grid;
+    grid-template-columns: 100px repeat(29, 1fr);
+    grid-template-rows: 36px repeat(24, 1fr);
+    gap: 1px;
+    min-width: 900px;
+    min-height: 700px;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.06);
+    position: relative;
+  }
+
+  /* Station header cells */
+  .station-header {
+    font-family: 'DM Mono', monospace;
+    font-size: 8px;
+    font-weight: 400;
+    letter-spacing: 0.5px;
+    color: var(--text-dim);
+    writing-mode: vertical-lr;
+    text-orientation: mixed;
+    transform: rotate(180deg);
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 4px 2px;
+    background: rgba(255,255,255,0.02);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    white-space: nowrap;
+    overflow: hidden;
+  }
+
+  .station-header.major {
+    color: var(--text);
+    font-weight: 700;
+  }
+
+  .station-header.medium {
+    color: rgba(232, 228, 220, 0.7);
+    font-weight: 500;
+  }
+
+  /* Hour label cells */
+  .hour-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    font-weight: 400;
+    color: var(--text-dim);
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 10px;
+    background: transparent;
+    border-right: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .hour-label.gap-hour {
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  /* Data cells */
+  .cell {
+    position: relative;
+    transition: all 0.15s ease;
+    cursor: crosshair;
+    min-height: 24px;
+  }
+
+  .cell:hover {
+    outline: 1px solid rgba(255,255,255,0.3);
+    z-index: 10;
+  }
+
+  .cell .tooltip {
+    display: none;
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #1a1a24;
+    border: 1px solid rgba(255,255,255,0.15);
+    padding: 6px 10px;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--text);
+    white-space: nowrap;
+    z-index: 100;
+    pointer-events: none;
+    border-radius: 3px;
+  }
+
+  .cell:hover .tooltip {
+    display: block;
+  }
+
+  /* Gap hour overlay */
+  .gap-overlay {
+    position: absolute;
+    left: 100px;
+    right: 0;
+    pointer-events: none;
+    z-index: 5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .gap-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    color: var(--accent);
+    opacity: 0.4;
+    text-align: center;
+    padding: 4px 16px;
+    border: 1px solid rgba(255, 77, 42, 0.15);
+  }
+
+  /* Bottom stats */
+  .stats {
+    padding: 30px 40px;
+    max-width: 1400px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+  }
+
+  .stat-card {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.06);
+    padding: 20px;
+  }
+
+  .stat-number {
+    font-family: 'DM Mono', monospace;
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .stat-label {
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+
+  .annotation {
+    padding: 20px 40px 40px;
+    max-width: 1400px;
+    margin: 0 auto;
+    font-size: 12px;
+    color: var(--text-dim);
+    font-family: 'DM Mono', monospace;
+    line-height: 1.6;
+  }
+</style>
+</head>
+<body>
+<a href="index.html#explore" style="position:fixed;top:12px;left:16px;z-index:9999;font-family:'DM Sans',sans-serif;font-size:13px;color:#8a8880;text-decoration:none;padding:6px 14px;border:1px solid rgba(255,255,255,0.08);border-radius:20px;backdrop-filter:blur(12px);background:rgba(10,10,15,0.85);transition:color .2s,border-color .2s;" onmouseover="this.style.color='#c8a86e';this.style.borderColor='rgba(200,168,110,0.3)'" onmouseout="this.style.color='#8a8880';this.style.borderColor='rgba(255,255,255,0.08)'">← The Archipelago</a>
+
+<div class="header">
+  <h1>City101 — Geneva → Villeneuve</h1>
+  <h2>When the Line Dies</h2>
+  <p>Train service frequency across 29 stations and 24 hours. The void between 01:00 and 05:00 is when the linear city breaks its fundamental promise: connectivity.</p>
+</div>
+
+<div class="legend">
+  <div class="legend-item">
+    <div class="legend-swatch" style="background: #0d0d12"></div>
+    <span>0 trains/h — DEAD</span>
+  </div>
+  <div class="legend-item">
+    <div class="legend-swatch" style="background: #1a1520"></div>
+    <span>1–2 trains/h</span>
+  </div>
+  <div class="legend-item">
+    <div class="legend-swatch" style="background: #2a2040"></div>
+    <span>3–4 trains/h</span>
+  </div>
+  <div class="legend-item">
+    <div class="legend-swatch" style="background: #4030a0"></div>
+    <span>5–8 trains/h</span>
+  </div>
+  <div class="legend-item">
+    <div class="legend-swatch" style="background: #6a3fff"></div>
+    <span>9–12 trains/h</span>
+  </div>
+  <div class="legend-item">
+    <div class="legend-swatch" style="background: #ff6b35"></div>
+    <span>13–16 trains/h — PEAK</span>
+  </div>
+  <div class="legend-item">
+    <div class="legend-swatch" style="background: rgba(255,77,42,0.12); border: 1px solid rgba(255,77,42,0.3);"></div>
+    <span>GAP HOURS (01:00–04:59)</span>
+  </div>
+</div>
+
+<div class="diagram-wrapper">
+  <div class="diagram" id="diagram">
+    <!-- Generated by JS -->
+  </div>
+</div>
+
+<div class="stats">
+  <div class="stat-card">
+    <div class="stat-number">4h</div>
+    <div class="stat-label">Dead window<br>01:00 — 04:59</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-number">116</div>
+    <div class="stat-label">Station-hours<br>with zero service</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-number">29</div>
+    <div class="stat-label">Stations<br>disconnected nightly</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-number">92km</div>
+    <div class="stat-label">Corridor length<br>Geneva → Villeneuve</div>
+  </div>
+</div>
+
+<div class="annotation">
+  Data: SBB timetable structure, weekday service (Mon–Fri). Frequencies are approximate departures per hour (both directions).<br>
+  Major stations: Genève, Lausanne. Medium: Versoix, Coppet, Nyon, Rolle, Morges, Renens, Vevey, Montreux. Small: all others.<br>
+  City101 Sentient Cities Studio — EPFL BA6 — Feb 2026
+</div>
+
+<script>
+const stations = [
+  {name:"Genève",km:0,type:"major"},
+  {name:"Genève-Séch.",km:2,type:"small"},
+  {name:"Genthod-Bell.",km:6,type:"small"},
+  {name:"Versoix",km:10,type:"medium"},
+  {name:"Coppet",km:13,type:"medium"},
+  {name:"Tannay",km:15,type:"small"},
+  {name:"Mies",km:17,type:"small"},
+  {name:"Nyon",km:22,type:"medium"},
+  {name:"Gland",km:28,type:"small"},
+  {name:"Rolle",km:33,type:"medium"},
+  {name:"Allaman",km:38,type:"small"},
+  {name:"St-Prex",km:42,type:"small"},
+  {name:"Morges",km:45,type:"medium"},
+  {name:"Préverenges",km:48,type:"small"},
+  {name:"Renens VD",km:55,type:"medium"},
+  {name:"Lausanne",km:60,type:"major"},
+  {name:"Pully",km:63,type:"small"},
+  {name:"Lutry",km:66,type:"small"},
+  {name:"Villette VD",km:68,type:"small"},
+  {name:"Cully",km:70,type:"small"},
+  {name:"Epesses",km:72,type:"small"},
+  {name:"Rivaz",km:74,type:"small"},
+  {name:"St-Saphorin",km:76,type:"small"},
+  {name:"Vevey",km:80,type:"medium"},
+  {name:"La Tour-de-P.",km:82,type:"small"},
+  {name:"Montreux",km:86,type:"medium"},
+  {name:"Territet",km:88,type:"small"},
+  {name:"Veytaux-Ch.",km:89,type:"small"},
+  {name:"Villeneuve",km:92,type:"small"},
+];
+
+function getFrequency(type, hour) {
+  if (hour >= 1 && hour <= 4) return 0;
+  if (hour === 0) return type==="major"?3:type==="medium"?2:1;
+  if (hour === 5) return type==="major"?4:type==="medium"?2:1;
+  if (hour === 6) return type==="major"?10:type==="medium"?6:4;
+  if (hour >= 7 && hour <= 8) return type==="major"?16:type==="medium"?8:4;
+  if (hour >= 9 && hour <= 15) return type==="major"?12:type==="medium"?6:4;
+  if (hour >= 16 && hour <= 18) return type==="major"?16:type==="medium"?8:4;
+  if (hour >= 19 && hour <= 20) return type==="major"?10:type==="medium"?6:4;
+  if (hour >= 21 && hour <= 22) return type==="major"?8:type==="medium"?4:2;
+  if (hour === 23) return type==="major"?4:type==="medium"?2:1;
+  return 0;
+}
+
+function getColor(freq) {
+  if (freq === 0) return '#0d0d12';
+  if (freq <= 2) return '#1a1520';
+  if (freq <= 4) return '#2a2040';
+  if (freq <= 8) return '#4030a0';
+  if (freq <= 12) return '#6a3fff';
+  return '#ff6b35';
+}
+
+function isGapHour(h) { return h >= 1 && h <= 4; }
+
+const diagram = document.getElementById('diagram');
+
+// Corner cell
+const corner = document.createElement('div');
+corner.style.background = 'transparent';
+corner.style.gridRow = '1';
+corner.style.gridColumn = '1';
+diagram.appendChild(corner);
+
+// Station headers (top row)
+stations.forEach((s, i) => {
+  const el = document.createElement('div');
+  el.className = `station-header ${s.type}`;
+  el.textContent = s.name;
+  el.style.gridRow = '1';
+  el.style.gridColumn = `${i + 2}`;
+  diagram.appendChild(el);
+});
+
+// Hours and data cells
+for (let h = 0; h < 24; h++) {
+  // Hour label
+  const label = document.createElement('div');
+  label.className = `hour-label${isGapHour(h) ? ' gap-hour' : ''}`;
+  label.textContent = `${String(h).padStart(2,'0')}:00`;
+  label.style.gridRow = `${h + 2}`;
+  label.style.gridColumn = '1';
+  diagram.appendChild(label);
+
+  // Data cells for each station
+  stations.forEach((s, i) => {
+    const freq = getFrequency(s.type, h);
+    const cell = document.createElement('div');
+    cell.className = 'cell';
+    cell.style.gridRow = `${h + 2}`;
+    cell.style.gridColumn = `${i + 2}`;
+    cell.style.background = getColor(freq);
+
+    if (isGapHour(h)) {
+      cell.style.background = freq === 0 ? 'rgba(255,77,42,0.06)' : getColor(freq);
+      cell.style.borderTop = h === 1 ? '1px solid rgba(255,77,42,0.25)' : 'none';
+      cell.style.borderBottom = h === 4 ? '1px solid rgba(255,77,42,0.25)' : 'none';
+    }
+
+    // Tooltip
+    const tip = document.createElement('div');
+    tip.className = 'tooltip';
+    tip.textContent = `${s.name} · ${String(h).padStart(2,'0')}:00 · ${freq} dep/h${freq === 0 ? ' · NO SERVICE' : ''}`;
+    cell.appendChild(tip);
+
+    diagram.appendChild(cell);
+  });
+}
+</script>
+</body>
+</html>

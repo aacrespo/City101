@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>City101 — Zurich Comparison</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;600;700&display=swap');
+
+  :root {
+    --bg: #0a0a0f;
+    --bg2: #111118;
+    --bg3: #1a1a24;
+    --text: #e8e6e1;
+    --text-dim: #8a8880;
+    --text-bright: #ffffff;
+    --accent: #c8a86e;
+    --accent-dim: #8a7548;
+    --geneva: #e74c3c;
+    --lacote: #e67e22;
+    --lausanne: #3498db;
+    --lavaux: #9b59b6;
+    --riviera: #2ecc71;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: #0a0a0f;
+    color: #e8e6e1;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 24px;
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 16px;
+    max-width: 1200px;
+  }
+  .header h1 {
+    font-size: 28px;
+    font-family: 'Instrument Serif', serif;
+    font-weight: 400;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+    margin-bottom: 6px;
+  }
+  .header .subtitle {
+    font-size: 14px;
+    color: #8a8880;
+    font-weight: 400;
+  }
+  .header .subtitle em {
+    color: #c8a86e;
+    font-style: normal;
+    font-weight: 600;
+  }
+
+  .maps-row {
+    display: flex;
+    gap: 16px;
+    max-width: 1200px;
+    width: 100%;
+    margin-bottom: 12px;
+  }
+  .map-container {
+    flex: 1;
+    background: #111118;
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .map-label {
+    padding: 10px 16px;
+    font-size: 14px;
+    font-weight: 700;
+    color: #ffffff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .map-label span {
+    font-size: 12px;
+    font-weight: 400;
+    color: #8a8880;
+    font-family: 'DM Mono', monospace;
+  }
+  .map {
+    height: 340px;
+    width: 100%;
+  }
+
+  .leaflet-container { background: #0a0a0f; }
+  .leaflet-control-zoom a { background: #111118 !important; color: #e8e6e1 !important; border-color: rgba(255,255,255,0.06) !important; }
+  .leaflet-control-attribution { background: rgba(26,26,46,0.7) !important; color: #555 !important; font-size: 10px !important; }
+
+  .map-tooltip .leaflet-popup-content-wrapper {
+    background: #111118 !important;
+    border: 1px solid #8a7548 !important;
+    border-radius: 8px !important;
+    color: #e8e6e1 !important;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.5) !important;
+    font-family: 'DM Sans', sans-serif !important;
+  }
+  .map-tooltip .leaflet-popup-content {
+    margin: 10px 14px !important;
+    font-size: 13px !important;
+  }
+  .map-tooltip .leaflet-popup-tip {
+    background: #111118 !important;
+    border: 1px solid #8a7548 !important;
+  }
+  .map-tooltip .station-name { font-weight: 700; color: #fff; font-size: 14px; margin-bottom: 4px; }
+  .map-tooltip .stat-row { display: flex; justify-content: space-between; gap: 16px; margin-top: 2px; }
+  .map-tooltip .stat-label { color: #8a8880; }
+  .map-tooltip .stat-val { font-family: 'DM Mono', monospace; font-weight: 700; color: #c8a86e; text-align: right; }
+
+  .legend-bar {
+    max-width: 1200px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 20px;
+    padding: 8px 0;
+  }
+  .legend-gradient {
+    width: 240px;
+    height: 12px;
+    border-radius: 6px;
+    background: linear-gradient(to right, #e74c3c, #e67e22, #f1c40f, #2ecc71);
+  }
+  .legend-label {
+    font-size: 11px;
+    color: #8a8880;
+    font-family: 'DM Mono', monospace;
+  }
+
+  .section {
+    max-width: 1200px;
+    width: 100%;
+    margin-bottom: 20px;
+  }
+  .section h2 {
+    font-size: 18px;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 10px;
+    padding-left: 4px;
+  }
+
+  .callout {
+    background: #111118;
+    border: 1px solid #8a7548;
+    border-left: 4px solid #c8a86e;
+    border-radius: 8px;
+    padding: 14px 18px;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #e8e6e1;
+    margin-bottom: 14px;
+  }
+  .callout strong {
+    color: #ffffff;
+    font-family: 'DM Mono', monospace;
+  }
+  .callout .accent {
+    color: #e74c3c;
+    font-weight: 700;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    background: #111118;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+  thead th {
+    background: #0f3460;
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 10px 12px;
+    text-align: left;
+    border-bottom: 2px solid #c8a86e;
+  }
+  tbody td {
+    padding: 8px 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    vertical-align: top;
+  }
+  tbody tr:nth-child(even) { background: rgba(26,26,46,0.5); }
+  tbody tr:hover { background: rgba(52,152,219,0.08); }
+  tbody tr.highlight {
+    background: rgba(52,152,219,0.12);
+    border-left: 3px solid #c8a86e;
+  }
+  tbody tr.highlight td:first-child { padding-left: 9px; }
+  .mono {
+    font-family: 'DM Mono', monospace;
+    font-weight: 500;
+    color: #c8a86e;
+  }
+  .mono-red {
+    font-family: 'DM Mono', monospace;
+    font-weight: 700;
+    color: #e74c3c;
+  }
+  .mono-green {
+    font-family: 'DM Mono', monospace;
+    font-weight: 700;
+    color: #2ecc71;
+  }
+  .sig-text {
+    font-size: 11px;
+    color: #8a8880;
+    max-width: 300px;
+    line-height: 1.4;
+  }
+  .metric-name {
+    font-weight: 600;
+    color: #ffffff;
+  }
+
+  .footer {
+    max-width: 1200px;
+    width: 100%;
+    text-align: center;
+    font-size: 11px;
+    color: #555;
+    margin-top: 8px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+</style>
+</head>
+<body>
+<a href="index.html#explore" style="position:fixed;top:12px;left:16px;z-index:9999;font-family:'DM Sans',sans-serif;font-size:13px;color:#8a8880;text-decoration:none;padding:6px 14px;border:1px solid rgba(255,255,255,0.08);border-radius:20px;backdrop-filter:blur(12px);background:rgba(10,10,15,0.85);transition:color .2s,border-color .2s;" onmouseover="this.style.color='#c8a86e';this.style.borderColor='rgba(200,168,110,0.3)'" onmouseout="this.style.color='#8a8880';this.style.borderColor='rgba(255,255,255,0.08)'">← The Archipelago</a>
+
+<div class="header">
+  <h1>Same Country, Different City</h1>
+  <div class="subtitle">Zurich S8 Lakeside vs City101 Geneva-Villeneuve &mdash; <em>radial compresses variation, linear amplifies it</em></div>
+</div>
+
+<div class="maps-row">
+  <div class="map-container">
+    <div class="map-label">City101 Geneva&ndash;Villeneuve <span>49 stations &middot; 101 km</span></div>
+    <div id="mapC101" class="map"></div>
+  </div>
+  <div class="map-container">
+    <div class="map-label">Zurich S8 Lakeside <span>12 stations &middot; 32 km</span></div>
+    <div id="mapZH" class="map"></div>
+  </div>
+</div>
+
+<div class="legend-bar">
+  <span class="legend-label">0 tph</span>
+  <div class="legend-gradient"></div>
+  <span class="legend-label">24+ tph</span>
+  <span class="legend-label" style="margin-left: 12px; color: #e8e6e1;">Trains per hour (AM Peak)</span>
+</div>
+
+<div class="section">
+  <h2>System Comparison</h2>
+  <table id="metricsTable">
+    <thead>
+      <tr>
+        <th>Metric</th>
+        <th>Zurich S8</th>
+        <th>City101</th>
+        <th>Ratio</th>
+        <th>Significance</th>
+      </tr>
+    </thead>
+    <tbody id="metricsBody"></tbody>
+  </table>
+</div>
+
+<div class="section">
+  <h2>Analog Pairings</h2>
+  <div class="callout">
+    The minimum Zurich station (<strong>Oberrieden</strong>, <strong>2/hr</strong>) is <strong>11 km</strong> from center.
+    The equivalent City101 station (<strong>Grandvaux</strong>, <strong>2/hr</strong>) is <span class="accent">56 km</span> from Geneva.
+    Same floor frequency &mdash; <span class="accent">5&times; the distance</span>.
+  </div>
+  <table id="pairingsTable">
+    <thead>
+      <tr>
+        <th>Zurich Station</th>
+        <th>City101 Analog</th>
+        <th>ZH tph</th>
+        <th>C101 tph</th>
+        <th>Ratio</th>
+        <th>Structural Note</th>
+      </tr>
+    </thead>
+    <tbody id="pairingsBody"></tbody>
+  </table>
+</div>
+
+<div class="footer">
+  City101 Geneva-Villeneuve corridor | EPFL BA6 Studio Huang | Data: SBB, ZVV timetable comparison
+</div>
+
+<script>
+// ── Data: City101 stations (49) ──────────────────────────────────────
+const C101 = [
+  {n:"Vernier, Blandonnet",la:46.221936,lo:6.097217,f:84.0},
+  {n:"Lausanne",la:46.516795,lo:6.629087,f:28.5},
+  {n:"Renens VD",la:46.537046,lo:6.57892,f:26.5},
+  {n:"Geneve",la:46.210228,lo:6.142435,f:25.0},
+  {n:"Vevey",la:46.463002,lo:6.84343,f:20.0},
+  {n:"Aigle",la:46.316856,lo:6.96367,f:16.5},
+  {n:"Morges",la:46.511102,lo:6.493958,f:16.0},
+  {n:"Montreux",la:46.435887,lo:6.910425,f:16.0},
+  {n:"Nyon",la:46.384429,lo:6.23595,f:14.5},
+  {n:"Geneve-Eaux-Vives",la:46.201461,lo:6.166549,f:12.5},
+  {n:"Geneve-Champel",la:46.192208,lo:6.153473,f:12.5},
+  {n:"Lancy-Bachet",la:46.174342,lo:6.12934,f:12.5},
+  {n:"Lancy-Pont-Rouge",la:46.18596,lo:6.124929,f:12.0},
+  {n:"Palezieux",la:46.542766,lo:6.83786,f:11.5},
+  {n:"Aubonne, gare",la:46.493844,lo:6.39294,f:11.0},
+  {n:"Coppet",la:46.317405,lo:6.187806,f:9.5},
+  {n:"Bussigny",la:46.547597,lo:6.551814,f:9.0},
+  {n:"Prilly-Malley",la:46.526697,lo:6.602624,f:9.0},
+  {n:"Cully",la:46.488565,lo:6.727141,f:9.0},
+  {n:"Begnins, poste",la:46.440225,lo:6.247701,f:8.5},
+  {n:"Geneve-Secheron",la:46.222452,lo:6.144542,f:8.0},
+  {n:"Genthod-Bellevue",la:46.256747,lo:6.153947,f:8.0},
+  {n:"Versoix",la:46.279741,lo:6.165718,f:8.0},
+  {n:"Tannay",la:46.307659,lo:6.181097,f:8.0},
+  {n:"Mies",la:46.298503,lo:6.167641,f:8.0},
+  {n:"Villeneuve VD",la:46.398369,lo:6.926992,f:8.0},
+  {n:"Bex",la:46.251462,lo:7.000653,f:7.5},
+  {n:"Gland",la:46.419998,lo:6.269128,f:6.5},
+  {n:"Allaman",la:46.47576,lo:6.399683,f:6.0},
+  {n:"Puidoux",la:46.493838,lo:6.76568,f:6.0},
+  {n:"Prangins, Les Aberiaux",la:46.393015,lo:6.254119,f:5.5},
+  {n:"Geneve-Aeroport",la:46.232547,lo:6.111969,f:4.5},
+  {n:"Rolle",la:46.462757,lo:6.336387,f:4.5},
+  {n:"Grandvaux",la:46.496948,lo:6.722641,f:4.5},
+  {n:"St-Prex",la:46.482324,lo:6.455897,f:4.0},
+  {n:"Lonay-Preverenges",la:46.523141,lo:6.519527,f:4.0},
+  {n:"Lausanne-Flon",la:46.520798,lo:6.63033,f:4.0},
+  {n:"La Conversion",la:46.513087,lo:6.678307,f:4.0},
+  {n:"La Tour-de-Peilz",la:46.455457,lo:6.859523,f:4.0},
+  {n:"Burier",la:46.447889,lo:6.877108,f:4.0},
+  {n:"Clarens",la:46.442736,lo:6.895771,f:4.0},
+  {n:"Founex, est",la:46.334766,lo:6.19494,f:3.5},
+  {n:"Rivaz",la:46.474211,lo:6.784583,f:3.5},
+  {n:"Perroy, Couronnette",la:46.463879,lo:6.352911,f:3.0},
+  {n:"Epesses",la:46.489333,lo:6.745157,f:3.0},
+  {n:"Denges-Echandens",la:46.529129,lo:6.54049,f:2.0},
+  {n:"Bossiere",la:46.509753,lo:6.699305,f:2.0},
+  {n:"Territet",la:46.426381,lo:6.922695,f:2.0},
+  {n:"St-Saphorin",la:46.472696,lo:6.79809,f:0.0},
+];
+
+// ── Data: Zurich S8 stations (12) ────────────────────────────────────
+const ZH = [
+  {n:"Zurich HB",la:47.3782,lo:8.5403,f:24.0,d:0.0,c:"Lausanne",cf:28.5,r:0.84,role:"hub_baseline",note:"Both main hubs. Lausanne slightly higher due to tram/metro overlay."},
+  {n:"Zurich Enge",la:47.3641,lo:8.5310,f:8.0,d:1.5,c:"Renens VD",cf:26.5,r:0.30,role:"inner_ring",note:"Inner-city. Enge: 3 S-Bahn + IR. Renens: junction with much higher frequency."},
+  {n:"Zurich Wollishofen",la:47.3503,lo:8.5316,f:4.0,d:3.2,c:"Prilly-Malley",cf:5.0,r:0.80,role:"suburban_baseline",note:"First suburban station. Both suburbs near the hub with similar frequency."},
+  {n:"Kilchberg",la:47.3256,lo:8.5446,f:4.0,d:5.0,c:"La Conversion",cf:4.0,r:1.00,role:"suburban_parity",note:"Quiet lakeside suburb. Same frequency but La Conversion is 54 km vs 5 km."},
+  {n:"Ruschlikon",la:47.3086,lo:8.5519,f:4.0,d:6.5,c:"Bossiere",cf:2.0,r:2.00,role:"frequency_floor_proof",note:"Quiet village 6.5 km out still gets 4/hr. Bossiere at 56 km gets only 2/hr."},
+  {n:"Thalwil",la:47.2937,lo:8.5618,f:8.0,d:9.5,c:"Morges",cf:11.0,r:0.73,role:"junction_node",note:"Major junction. Both are mid-corridor junction nodes."},
+  {n:"Oberrieden",la:47.2773,lo:8.5741,f:2.0,d:11.0,c:"Grandvaux",cf:4.5,r:0.44,role:"minimum_frequency",note:"THE key station. Zurich's minimum: 2/hr at 11 km. City101's near-min at 56 km."},
+  {n:"Horgen",la:47.2613,lo:8.5975,f:4.0,d:14.0,c:"Nyon",cf:12.5,r:0.32,role:"mid_line_express",note:"Express + local = 4/hr. Nyon gets 3x more despite being a similar mid-line town."},
+  {n:"Wadenswil",la:47.2267,lo:8.6637,f:10.0,d:20.5,c:"Vevey",cf:20.0,r:0.50,role:"branch_junction",note:"Lakeside junction with branch line. Both are cultural towns with elevated frequency."},
+  {n:"Richterswil",la:47.2097,lo:8.6968,f:4.0,d:24.5,c:"La Tour-de-Peilz",cf:4.0,r:1.00,role:"outer_suburban",note:"24.5 km from hub, still 4/hr. La Tour-de-Peilz gets same 4/hr at 68 km."},
+  {n:"Bach",la:47.2000,lo:8.7244,f:2.0,d:27.0,c:"Epesses",cf:3.0,r:0.67,role:"outer_minimum",note:"Single-line station. Epesses has slightly more trains but zero workspaces and WiFi."},
+  {n:"Pfaffikon SZ",la:47.1974,lo:8.7825,f:12.0,d:32.0,c:"Montreux",cf:14.0,r:0.86,role:"outer_hub",note:"Terminal junction. Both serve as end-of-line hubs with strong frequency."},
+];
+
+// ── Data: Comparison metrics (15) ────────────────────────────────────
+const METRICS = [
+  {m:"Network topology",zh:"Radial hub-and-spoke",c1:"Linear single trunk",rat:"Structural",sig:"Zurich: every line passes through HB creating overlap. City101: one main line with minimal branching.",hi:false},
+  {m:"Total line length",zh:"32 km",c1:"101 km",rat:"3.2\u00d7 longer",sig:"City101 corridor is 3\u00d7 the length but with less than half the frequency variation.",hi:false},
+  {m:"Stations sampled",zh:"12",c1:"49",rat:"4.1\u00d7 more",sig:"City101 has more stations but many are barely served.",hi:false},
+  {m:"Max trains/hour",zh:"24.0",c1:"28.5",rat:"0.84\u00d7",sig:"Hub comparison (ZH HB vs Lausanne). Roughly equivalent.",hi:false},
+  {m:"Min trains/hour",zh:"2.0",c1:"0.0",rat:"\u221e",sig:"THE critical number. Zurich's worst never drops to zero.",hi:true},
+  {m:"Frequency range ratio",zh:"12\u00d7",c1:"42\u00d7",rat:"3.5\u00d7 flatter",sig:"Zurich: 24/2 = 12\u00d7. City101: 28.5/0 = \u221e. Radial networks compress variation.",hi:true},
+  {m:"Avg trains/hour",zh:"6.3",c1:"8.7",rat:"0.72\u00d7",sig:"City101 average is higher because Geneva/Lausanne inflate it. Distribution is bimodal.",hi:false},
+  {m:"Stations below 3/hr",zh:"2",c1:"6",rat:"3\u00d7 fewer",sig:"Only 2 of 12 Zurich stations below 3/hr (both at exactly 2). 6 of 49 City101 stations.",hi:false},
+  {m:"Median trains/hour",zh:"4.0",c1:"6.5",rat:"0.62\u00d7",sig:"Zurich median is lower but more evenly distributed. City101 median hides extreme tails.",hi:false},
+  {m:"Zero-service stations",zh:"0",c1:"1",rat:"Binary",sig:"St-Saphorin has no scheduled trains during workday morning. Zero Zurich stations have this.",hi:false},
+  {m:"Min S-Bahn lines/station",zh:"1",c1:"1",rat:"Parity",sig:"Both have single-line minimum stations. Zurich's still get 2/hr; City101's get 2\u20133/hr at best.",hi:false},
+  {m:"Max S-Bahn lines/station",zh:"16",c1:"n/a",rat:"Structural",sig:"HB has 16 S-Bahn lines. Incomparable to City101's non-radial system.",hi:false},
+  {m:"Stations with IR",zh:"4",c1:"8",rat:"0.5\u00d7",sig:"Zurich's IR is redundant (S-Bahn covers same). City101's IR is the ONLY express service.",hi:false},
+  {m:"Frequency floor \u22652/hr",zh:"100%",c1:"96%",rat:"Near parity",sig:"All 12 ZH stations get \u22652/hr. 47/49 City101 stations. But City101's 2/hr are 60 km from any hub.",hi:false},
+  {m:"Continuous \u22654/hr coverage",zh:"83%",c1:"45%",rat:"1.8\u00d7",sig:"10/12 ZH stations get \u22654/hr vs ~22/49 City101. This is where the radial advantage shows.",hi:true},
+];
+
+// ── Shared color scale ───────────────────────────────────────────────
+function freqColor(v) {
+  if (v <= 0) return '#8b0000';
+  if (v <= 2) return '#e74c3c';
+  if (v <= 4) return '#e67e22';
+  if (v <= 8) return '#f1c40f';
+  if (v <= 16) return '#7dce5a';
+  return '#2ecc71';
+}
+
+function freqRadius(v) {
+  if (v <= 0) return 4;
+  return Math.max(4, Math.min(14, 3 + Math.sqrt(v) * 2));
+}
+
+// ── City101 Map ──────────────────────────────────────────────────────
+const mapC101 = L.map('mapC101', {
+  zoomControl: true,
+  attributionControl: true,
+}).fitBounds([[46.16, 6.05], [46.56, 7.05]]);
+
+L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+  maxZoom: 16,
+  attribution: '&copy; OSM &copy; CARTO'
+}).addTo(mapC101);
+
+C101.forEach(s => {
+  const marker = L.circleMarker([s.la, s.lo], {
+    radius: freqRadius(s.f),
+    fillColor: freqColor(s.f),
+    fillOpacity: 0.85,
+    color: '#0a0a0f',
+    weight: 1.5,
+  }).addTo(mapC101);
+
+  marker.on('mouseover', function(e) {
+    this.setStyle({color: '#ffffff', weight: 2.5});
+    L.popup({className: 'map-tooltip', closeButton: false, offset: [0, -8]})
+      .setLatLng(e.latlng)
+      .setContent(`
+        <div class="station-name">${s.n}</div>
+        <div class="stat-row"><span class="stat-label">Trains/hr (AM Peak)</span><span class="stat-val" style="color:${freqColor(s.f)}">${s.f}</span></div>
+      `)
+      .openOn(mapC101);
+  });
+  marker.on('mouseout', function() {
+    this.setStyle({color: '#0a0a0f', weight: 1.5});
+    mapC101.closePopup();
+  });
+});
+
+// ── Zurich Map ───────────────────────────────────────────────────────
+const mapZH = L.map('mapZH', {
+  zoomControl: true,
+  attributionControl: true,
+}).fitBounds([[47.17, 8.50], [47.40, 8.82]]);
+
+L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+  maxZoom: 16,
+  attribution: '&copy; OSM &copy; CARTO'
+}).addTo(mapZH);
+
+// Draw S8 route polyline
+const zhRoute = ZH.map(s => [s.la, s.lo]);
+L.polyline(zhRoute, {color: '#3498db', weight: 2, opacity: 0.4, dashArray: '6,4'}).addTo(mapZH);
+
+ZH.forEach(s => {
+  const marker = L.circleMarker([s.la, s.lo], {
+    radius: freqRadius(s.f),
+    fillColor: freqColor(s.f),
+    fillOpacity: 0.85,
+    color: '#0a0a0f',
+    weight: 1.5,
+  }).addTo(mapZH);
+
+  marker.on('mouseover', function(e) {
+    this.setStyle({color: '#ffffff', weight: 2.5});
+    L.popup({className: 'map-tooltip', closeButton: false, offset: [0, -8]})
+      .setLatLng(e.latlng)
+      .setContent(`
+        <div class="station-name">${s.n}</div>
+        <div class="stat-row"><span class="stat-label">Trains/hr</span><span class="stat-val" style="color:${freqColor(s.f)}">${s.f}</span></div>
+        <div class="stat-row"><span class="stat-label">Dist from HB</span><span class="stat-val">${s.d} km</span></div>
+        <div class="stat-row"><span class="stat-label">City101 analog</span><span class="stat-val" style="color:#f1c40f">${s.c}</span></div>
+        <div class="stat-row"><span class="stat-label">C101 tph</span><span class="stat-val">${s.cf}</span></div>
+        <div class="stat-row"><span class="stat-label">ZH/C101 ratio</span><span class="stat-val">${s.r.toFixed(2)}</span></div>
+      `)
+      .openOn(mapZH);
+  });
+  marker.on('mouseout', function() {
+    this.setStyle({color: '#0a0a0f', weight: 1.5});
+    mapZH.closePopup();
+  });
+});
+
+// ── Metrics Table ────────────────────────────────────────────────────
+const metricsBody = document.getElementById('metricsBody');
+METRICS.forEach(m => {
+  const tr = document.createElement('tr');
+  if (m.hi) tr.className = 'highlight';
+
+  const isNum = v => /^[\d.]+$/.test(v);
+  const zhClass = isNum(m.zh) ? 'mono' : '';
+  const c1Class = isNum(m.c1) ? 'mono' : '';
+
+  tr.innerHTML = `
+    <td class="metric-name">${m.m}</td>
+    <td class="${zhClass}">${m.zh}</td>
+    <td class="${c1Class}">${m.c1}</td>
+    <td class="mono">${m.rat}</td>
+    <td class="sig-text">${m.sig}</td>
+  `;
+  metricsBody.appendChild(tr);
+});
+
+// ── Pairings Table ───────────────────────────────────────────────────
+const pairingsBody = document.getElementById('pairingsBody');
+ZH.forEach(s => {
+  const tr = document.createElement('tr');
+  if (s.role === 'minimum_frequency') tr.className = 'highlight';
+
+  // Color-code the ratio
+  let ratioClass = 'mono';
+  if (s.r >= 1.5) ratioClass = 'mono-red';
+  else if (s.r <= 0.5) ratioClass = 'mono-green';
+
+  tr.innerHTML = `
+    <td class="metric-name">${s.n}</td>
+    <td>${s.c}</td>
+    <td class="mono">${s.f}</td>
+    <td class="mono">${s.cf}</td>
+    <td class="${ratioClass}">${s.r.toFixed(2)}</td>
+    <td class="sig-text">${s.note}</td>
+  `;
+  pairingsBody.appendChild(tr);
+});
+</script>
+</body>
+</html>

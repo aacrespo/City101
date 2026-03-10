@@ -1,0 +1,24 @@
+Nom,Type,Adresse,Ville,Note_Google,lat_wgs84,lon_wgs84,E_LV95,N_LV95
+Hôpitaux Universitaires de Genève (HUG),Hôpital universitaire,"Rue Gabrielle-Perret-Gentil 4, 1205 Genève",Genève,3.4,46.1936197,6.1491603,2499913.78,1117512.15
+GHOL - Nyon Hospital,Hôpital général,"Chem. Monastier 10, 1260 Nyon",Nyon,3.4,46.3834614,6.2274926,2515904.26,1138566.85
+EHC - Hospital Morges,Hôpital régional,"Chem. du Crêt 2, 1110 Morges",Morges,3.0,46.5228287,6.4999939,2534347.65,1153977.35
+Ehc - Permanence Des Halles,Centre médical,"14, Promenade de la Castellane, 1110 Morges",Morges,4.0,46.5115159,6.494987,2534014.23,1152727.08
+CMM - Medical Center De Morges,Centre médical,"Rue de la Gare 15, 1110 Morges",Morges,4.0,46.5091748,6.4953174,2534037.62,1152469.15
+Lausanne University Hospital (CHUV),Hôpital universitaire,"Rue du Bugnon 46, 1005 Lausanne",Lausanne,3.4,46.5249174,6.6424293,2543856.91,1152181.76
+Centre des urgences Hirslanden Lausanne,Centre d'urgences,"Av. Louis-Ruchonnet 53, 1003 Lausanne",Lausanne,2.9,46.5202098,6.6219933,2542500.94,1151662.36
+Hospital Beaumont Du Chuv,Hôpital général,"Av. de Beaumont 29, 1012 Lausanne",Lausanne,4.8,46.5269737,6.6447269,2544007.31,1152406.92
+Clinique Bois-Cerf,Clinique privée,"Av. d'Ouchy 31, 1006 Lausanne",Lausanne,4.2,46.5119945,6.6305324,2543063.66,1150751.3
+Hospital Ophthalmic Jules-Gonin,Hôpital ophtalmologique,"Av. de France 15, 1004 Lausanne",Lausanne,3.7,46.5244283,6.6230133,2542590.76,1152134.2
+Clinique Cecil Hirslanden,Clinique privée,"Av. Louis-Ruchonnet 53, 1003 Lausanne",Lausanne,3.8,46.5202481,6.622027,2542503.3,1151665.62
+Clinique La Source,Clinique privée,"Ave Alexandre-Vinet 30, 1004 Lausanne",Lausanne,4.2,46.527316,6.6282964,2542940.48,1152434.79
+Centre médical d'Epalinges,Centre médical,"Rte de la Corniche 1, 1066 Epalinges",Epalinges,3.3,46.542663,6.6620932,2545451.04,1154137.48
+Clinique De Montchoisi,Clinique privée,"Chem. des Allinges 10, 1006 Lausanne",Lausanne,4.5,46.509744,6.635653,2544001.4,1150501.05
+Hôpital Riviera-Chablais Site De Vevey Providence,Hôpital régional,"Av. de la Prairie 3, 1800 Vevey",Vevey,3.7,46.4578884,6.8548161,2558459.64,1148536.18
+Medical Center Gare De Vevey,Centre médical,"Pl. de la Gare 3, 1800 Vevey",Vevey,3.3,46.4630519,6.8431546,2557682.97,1149109.08
+Medical Home Vevey,Centre médical,"Rue du Simplon 48, 1800 Vevey",Vevey,4.1,46.4613072,6.8437024,2557719.53,1148915.28
+Medbase Vevey,Centre médical,"Rue des Moulins 1, 1800 Vevey",Vevey,3.6,46.4644959,6.8420331,2557608.37,1149269.93
+Hôpital Riviera-Chablais Urgences Rennaz,Hôpital régional - Urgences,"Rte du Vieux Séquoia 20, 1847 Rennaz",Rennaz,2.6,46.3802359,6.9206613,2562671.13,1140613.3
+Swiss Riviera Medical Center,Centre médical,"Rue de la Gare 2, 1820 Montreux",Montreux,N/A,46.4375105,6.9081783,2561887.68,1146910.07
+Clinical Valmont,Clinique privée,"Rte de Valmont 22, 1823 Glion",Glion,4.5,46.4261631,6.9310263,2563398.85,1145640.52
+Clinique Suisse Montreux,Clinique privée,"Grand' Rue 3, 1820 Montreux",Montreux,4.5,46.4314394,6.9103438,2562085.98,1146235.66
+Quai Santé - Montreux,Centre médical,"Av. des Alpes 74, 1820 Montreux",Montreux,3.3,46.4359746,6.9103806,2562087.96,1146738.96

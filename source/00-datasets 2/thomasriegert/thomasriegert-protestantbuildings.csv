@@ -1,0 +1,13 @@
+nom,adresse,lat_wgs84,lon_wgs84,E_LV95,N_LV95,type,ville
+"Synagogue Beth-Yaacov","Pl. de la Synagogue 11, 1204 Genève",46.202770,6.140974,2501355.18,1116052.29,Synagogue orthodoxe,Genève
+"Hekhal Haness Synagogue","Rte de Malagnou 54TER, 1208 Genève",46.196006,6.164620,2503050.83,1115294.39,Synagogue séfarade,Genève
+"Chabad of Geneva","Av. Théodore-Weber 12, 1208 Genève",46.198967,6.162264,2502885.64,1115625.27,Synagogue Loubavitch,Genève
+"Communauté Juive Libérale de Genève (GIL)","Chem. Ella-Maillart 2, 1208 Genève",46.200497,6.170743,2503485.37,1115796.42,Synagogue libérale,Genève
+"Centre Communautaire Juif de Genève","Av. Dumas 21, 1206 Genève",46.190831,6.156337,2502570.88,1114716.48,Centre communautaire,Genève
+"School Ohalei Mena Hem Habad","Av. Théodore-Weber 12, 1208 Genève",46.198986,6.162289,2502885.28,1115623.14,École juive Habad,Genève
+"School Beit Yossef Girsa","Rte de Veyrier 206, 1255 Genève",46.172360,6.171792,2503517.26,1112776.62,École juive,Veyrier
+"Cimetière juif de Carouge","Rue de la Fontenette 5, 1227 Carouge",46.185664,6.147150,2501926.77,1114138.14,Cimetière juif,Carouge
+"Cimetière israélite de Veyrier","Chem. de l'Arvaz 16, 1255 Veyrier",46.169256,6.187636,2505074.66,1112433.39,Cimetière juif,Veyrier
+"Synagogue of Lausanne","Av. Juste-Olivier 1, 1006 Lausanne",46.516245,6.637700,2538241.55,1150211.37,Synagogue,Lausanne
+"CILV - Communauté Israélite Libérale Vaud","Av. Georgette 3, 1003 Lausanne",46.517200,6.638000,2538262.77,1150317.74,Synagogue libérale,Lausanne
+"Habad Lausanne","Av. Juste-Olivier 23, 1006 Lausanne",46.513907,6.636353,2538145.10,1149949.99,Centre Loubavitch,Lausanne

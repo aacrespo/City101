@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>City101 — Diversity Convergence</title>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: #1a1a2e;
+    color: #e0e0e0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 24px;
+  }
+  .header { text-align: center; margin-bottom: 12px; max-width: 1200px; }
+  .header h1 { font-size: 28px; font-weight: 700; color: #ffffff; letter-spacing: -0.5px; margin-bottom: 6px; }
+  .header .subtitle { font-size: 14px; color: #8892a0; }
+  .header .subtitle em { color: #3498db; font-style: normal; font-weight: 600; }
+
+  .dashboard {
+    display: flex;
+    gap: 16px;
+    max-width: 1200px;
+    width: 100%;
+    margin-bottom: 16px;
+  }
+  .panel {
+    background: #16213e;
+    border: 1px solid #2a2a4a;
+    border-radius: 12px;
+    padding: 14px;
+  }
+  .panel-left { flex: 1 1 52%; display: flex; flex-direction: column; }
+  .panel-right { flex: 1 1 48%; display: flex; flex-direction: column; gap: 14px; }
+  .panel-header {
+    font-size: 13px;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .toggle-btn {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    background: #1a1a2e;
+    border: 1px solid #2a2a4a;
+    color: #8892a0;
+    padding: 4px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .toggle-btn:hover { border-color: #3498db; color: #e0e0e0; }
+  .toggle-btn.active { background: #3498db; color: #fff; border-color: #3498db; }
+
+  .scatter-container { position: relative; height: 440px; }
+  .scatter-container svg { width: 100%; }
+
+  .tooltip {
+    position: absolute;
+    background: #16213e;
+    border: 1px solid #3498db;
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 12px;
+    color: #e0e0e0;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.15s;
+    max-width: 220px;
+  }
+  .tooltip .tt-name { font-weight: 700; color: #fff; font-size: 13px; margin-bottom: 4px; }
+  .tooltip .tt-row { display: flex; justify-content: space-between; gap: 12px; margin-top: 1px; }
+  .tooltip .tt-label { color: #8892a0; }
+  .tooltip .tt-val { font-family: 'Space Mono', monospace; font-weight: 700; color: #3498db; }
+
+  .bar-container { min-height: 220px; }
+  .bar-container svg { width: 100%; height: 100%; }
+
+  .mini-maps { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .mini-map-wrap {
+    background: #1a1a2e;
+    border: 1px solid #2a2a4a;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .mini-map-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #8892a0;
+    padding: 5px 8px;
+    background: #16213e;
+    border-bottom: 1px solid #2a2a4a;
+  }
+  .mini-map { height: 170px; width: 100%; }
+  .leaflet-container { background: #1a1a2e; }
+  .leaflet-control-attribution { display: none !important; }
+
+  .map-tooltip .leaflet-popup-content-wrapper {
+    background: #16213e !important;
+    border: 1px solid #3498db !important;
+    border-radius: 8px !important;
+    color: #e0e0e0 !important;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.5) !important;
+    font-family: 'Inter', sans-serif !important;
+  }
+  .map-tooltip .leaflet-popup-content { margin: 8px 12px !important; font-size: 12px !important; }
+  .map-tooltip .leaflet-popup-tip { background: #16213e !important; }
+
+  .legend-row {
+    max-width: 1200px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    color: #8892a0;
+  }
+  .legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+  .footer {
+    max-width: 1200px; width: 100%; text-align: center;
+    font-size: 11px; color: #555; margin-top: 4px; padding-top: 10px; border-top: 1px solid #2a2a4a;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Four Indices, One Collapse</h1>
+  <div class="subtitle">Diversity convergence across the Geneva-Villeneuve corridor &mdash; <em>the Lavaux Fracture is systemic</em></div>
+</div>
+
+<div class="dashboard">
+  <!-- Panel A: Scatter -->
+  <div class="panel panel-left">
+    <div class="panel-header">
+      Religious Diversity vs Station Richness
+      <button class="toggle-btn" id="regressionToggle">Regression</button>
+    </div>
+    <div class="scatter-container" id="scatterContainer">
+      <div class="tooltip" id="scatterTooltip"></div>
+    </div>
+  </div>
+
+  <!-- Panels B+C -->
+  <div class="panel-right">
+    <!-- Panel B: Correlations -->
+    <div class="panel" style="flex: 0 0 auto;">
+      <div class="panel-header">Pairwise Correlations</div>
+      <div class="bar-container" id="barContainer"></div>
+    </div>
+    <!-- Panel C: Mini maps -->
+    <div class="panel" style="flex: 1;">
+      <div class="panel-header">Corridor Diversity Fingerprints</div>
+      <div class="mini-maps">
+        <div class="mini-map-wrap"><div class="mini-map-label">Religious Shannon</div><div class="mini-map" id="map1"></div></div>
+        <div class="mini-map-wrap"><div class="mini-map-label">Modal Shannon</div><div class="mini-map" id="map2"></div></div>
+        <div class="mini-map-wrap"><div class="mini-map-label">Restaurants / 1 km</div><div class="mini-map" id="map3"></div></div>
+        <div class="mini-map-wrap"><div class="mini-map-label">Station Richness</div><div class="mini-map" id="map4"></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="legend-row">
+  <div class="legend-item"><span class="legend-dot" style="background:#e74c3c"></span>Geneva</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#e67e22"></span>La C&ocirc;te</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#3498db"></span>Lausanne</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#9b59b6"></span>Lavaux</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#2ecc71"></span>Riviera</div>
+  <span style="color:#555;margin:0 8px;">|</span>
+  <div class="legend-item"><span style="width:8px;height:1px;display:inline-block;border-top:2px dashed #e74c3c;margin-right:2px"></span>Phase transition (Shannon = 1.0)</div>
+</div>
+
+<div class="footer">
+  City101 Geneva-Villeneuve corridor | EPFL BA6 Studio Huang | Data: OpenStreetMap amenity survey, SBB timetable
+</div>
+
+<script>
+// ── Segment colors ───────────────────────────────────────────────────
+const SEG = {
+  'Geneva':'#e74c3c','La Cote':'#e67e22','Lausanne':'#3498db','Lavaux':'#9b59b6','Riviera':'#2ecc71'
+};
+
+// ── Joined data: 49 stations ─────────────────────────────────────────
+// n=name, la=lat, lo=lon, km=rail_km, seg=segment, rs=relig_shannon, ms=modal_shannon, sr=station_richness, rest=restaurants_1000m, tph=trains_per_hour
+const S = [
+  {n:"Geneve",la:46.210228,lo:6.142435,km:0.0,seg:"Geneva",rs:1.703,ms:1.946,sr:115,rest:15,tph:25.0},
+  {n:"Geneve-Secheron",la:46.222452,lo:6.144542,km:1.4,seg:"Geneva",rs:0.956,ms:1.099,sr:23,rest:1,tph:8.0},
+  {n:"Geneve-Eaux-Vives",la:46.201461,lo:6.166549,km:2.2,seg:"Geneva",rs:1.936,ms:1.609,sr:59,rest:0,tph:12.5},
+  {n:"Geneve-Champel",la:46.192208,lo:6.153473,km:2.3,seg:"Geneva",rs:2.123,ms:1.099,sr:127,rest:2,tph:12.5},
+  {n:"Lancy-Pont-Rouge",la:46.18596,lo:6.124929,km:3.2,seg:"Geneva",rs:1.33,ms:1.609,sr:11,rest:0,tph:12.0},
+  {n:"Geneve-Aeroport",la:46.232547,lo:6.111969,km:3.6,seg:"Geneva",rs:1.33,ms:1.609,sr:7,rest:0,tph:4.5},
+  {n:"Vernier, Blandonnet",la:46.221936,lo:6.097217,km:3.9,seg:"Geneva",rs:1.55,ms:1.386,sr:7,rest:1,tph:84.0},
+  {n:"Lancy-Bachet",la:46.174342,lo:6.12934,km:4.3,seg:"Geneva",rs:1.277,ms:1.792,sr:5,rest:0,tph:12.5},
+  {n:"Genthod-Bellevue",la:46.256747,lo:6.153947,km:5.5,seg:"Geneva",rs:0.0,ms:0.693,sr:10,rest:0,tph:8.0},
+  {n:"Versoix",la:46.279741,lo:6.165718,km:8.3,seg:"Geneva",rs:0.562,ms:1.099,sr:23,rest:0,tph:8.0},
+  {n:"Mies",la:46.298503,lo:6.167641,km:10.5,seg:"La Cote",rs:0.0,ms:0.0,sr:4,rest:0,tph:8.0},
+  {n:"Tannay",la:46.307659,lo:6.181097,km:11.8,seg:"La Cote",rs:0.0,ms:0.0,sr:3,rest:0,tph:8.0},
+  {n:"Coppet",la:46.317405,lo:6.187806,km:13.0,seg:"La Cote",rs:0.0,ms:1.099,sr:21,rest:3,tph:9.5},
+  {n:"Founex",la:46.334766,lo:6.19494,km:15.1,seg:"La Cote",rs:0.0,ms:0.0,sr:1,rest:0,tph:3.5},
+  {n:"Nyon",la:46.384429,lo:6.23595,km:21.7,seg:"La Cote",rs:1.54,ms:1.792,sr:57,rest:10,tph:14.5},
+  {n:"Prangins",la:46.393015,lo:6.254119,km:23.2,seg:"La Cote",rs:0.0,ms:0.693,sr:4,rest:0,tph:5.5},
+  {n:"Gland",la:46.419998,lo:6.269128,km:26.5,seg:"La Cote",rs:1.56,ms:1.099,sr:27,rest:5,tph:6.5},
+  {n:"Begnins",la:46.440225,lo:6.247701,km:28.2,seg:"La Cote",rs:0.0,ms:0.693,sr:7,rest:0,tph:8.5},
+  {n:"Rolle",la:46.462757,lo:6.336387,km:33.4,seg:"La Cote",rs:0.5,ms:1.099,sr:26,rest:4,tph:4.5},
+  {n:"Perroy",la:46.463879,lo:6.352911,km:34.1,seg:"La Cote",rs:0.0,ms:0.0,sr:3,rest:0,tph:3.0},
+  {n:"Allaman",la:46.47576,lo:6.399683,km:37.3,seg:"Lausanne",rs:0.0,ms:0.693,sr:4,rest:1,tph:6.0},
+  {n:"Aubonne",la:46.493844,lo:6.39294,km:38.8,seg:"Lausanne",rs:0.562,ms:0.693,sr:14,rest:2,tph:11.0},
+  {n:"St-Prex",la:46.482324,lo:6.455897,km:40.6,seg:"Lausanne",rs:0.562,ms:0.693,sr:13,rest:2,tph:4.0},
+  {n:"Morges",la:46.511102,lo:6.493958,km:45.1,seg:"Lausanne",rs:1.359,ms:1.609,sr:57,rest:11,tph:16.0},
+  {n:"Lonay-Preverenges",la:46.523141,lo:6.519527,km:47.5,seg:"Lausanne",rs:0.673,ms:0.0,sr:7,rest:0,tph:4.0},
+  {n:"Denges-Echandens",la:46.529129,lo:6.54049,km:49.1,seg:"Lausanne",rs:0.693,ms:0.0,sr:1,rest:0,tph:2.0},
+  {n:"Bussigny",la:46.547597,lo:6.551814,km:51.4,seg:"Lausanne",rs:0.0,ms:0.693,sr:3,rest:0,tph:9.0},
+  {n:"Renens VD",la:46.537046,lo:6.57892,km:51.9,seg:"Lausanne",rs:0.898,ms:1.792,sr:15,rest:3,tph:26.5},
+  {n:"Prilly-Malley",la:46.526697,lo:6.602624,km:52.3,seg:"Lausanne",rs:1.517,ms:0.693,sr:21,rest:2,tph:9.0},
+  {n:"Lausanne",la:46.516795,lo:6.629087,km:53.1,seg:"Lausanne",rs:1.955,ms:2.079,sr:250,rest:26,tph:28.5},
+  {n:"Lausanne-Flon",la:46.520798,lo:6.63033,km:53.5,seg:"Lausanne",rs:1.943,ms:1.099,sr:277,rest:24,tph:4.0},
+  {n:"La Conversion",la:46.513087,lo:6.678307,km:55.8,seg:"Lavaux",rs:0.0,ms:0.0,sr:6,rest:0,tph:4.0},
+  {n:"Bossiere",la:46.509753,lo:6.699305,km:56.9,seg:"Lavaux",rs:0.0,ms:0.0,sr:1,rest:0,tph:2.0},
+  {n:"Cully",la:46.488565,lo:6.727141,km:57.2,seg:"Lavaux",rs:0.562,ms:1.099,sr:20,rest:5,tph:9.0},
+  {n:"Grandvaux",la:46.496948,lo:6.722641,km:57.5,seg:"Lavaux",rs:0.562,ms:0.693,sr:16,rest:4,tph:4.5},
+  {n:"Epesses",la:46.489333,lo:6.745157,km:58.5,seg:"Lavaux",rs:0.0,ms:0.0,sr:6,rest:3,tph:3.0},
+  {n:"Puidoux",la:46.493838,lo:6.76568,km:60.2,seg:"Lavaux",rs:0.0,ms:0.693,sr:4,rest:1,tph:6.0},
+  {n:"Rivaz",la:46.474211,lo:6.784583,km:60.2,seg:"Lavaux",rs:0.693,ms:0.0,sr:2,rest:0,tph:3.5},
+  {n:"St-Saphorin",la:46.472696,lo:6.79809,km:61.1,seg:"Lavaux",rs:0.0,ms:0.0,sr:1,rest:0,tph:0.0},
+  {n:"Vevey",la:46.463002,lo:6.84343,km:63.7,seg:"Riviera",rs:1.731,ms:1.946,sr:75,rest:13,tph:20.0},
+  {n:"La Tour-de-Peilz",la:46.455457,lo:6.859523,km:64.5,seg:"Riviera",rs:1.273,ms:0.693,sr:28,rest:2,tph:4.0},
+  {n:"Burier",la:46.447889,lo:6.877108,km:65.4,seg:"Riviera",rs:0.693,ms:0.0,sr:4,rest:0,tph:4.0},
+  {n:"Clarens",la:46.442736,lo:6.895771,km:66.5,seg:"Riviera",rs:1.667,ms:0.693,sr:21,rest:0,tph:4.0},
+  {n:"Villeneuve VD",la:46.398369,lo:6.926992,km:67.0,seg:"Riviera",rs:0.451,ms:1.099,sr:27,rest:4,tph:8.0},
+  {n:"Montreux",la:46.435887,lo:6.910425,km:67.3,seg:"Riviera",rs:1.237,ms:1.946,sr:54,rest:8,tph:16.0},
+  {n:"Aigle",la:46.316856,lo:6.96367,km:67.4,seg:"Riviera",rs:0.0,ms:1.609,sr:1,rest:0,tph:16.5},
+  {n:"Territet",la:46.426381,lo:6.922695,km:67.8,seg:"Riviera",rs:0.637,ms:0.693,sr:12,rest:0,tph:2.0},
+  {n:"Palezieux",la:46.542766,lo:6.83786,km:68.2,seg:"Riviera",rs:0.0,ms:0.693,sr:0,rest:0,tph:11.5},
+  {n:"Bex",la:46.251462,lo:7.000653,km:69.5,seg:"Riviera",rs:0.0,ms:1.099,sr:1,rest:0,tph:7.5},
+];
+
+// ── Correlation constants (Lumen S8.2 analysis) ─────────────────────
+const CORR = [
+  {pair:"Cuisine vs Shannon",r:0.71},
+  {pair:"Economic vs Shannon",r:0.708},
+  {pair:"Richness vs Shannon",r:0.632},
+  {pair:"Modal vs Shannon",r:0.626},
+  {pair:"Richness vs Modal",r:0.58},
+  {pair:"Economic vs Modal",r:0.55},
+  {pair:"Richness vs Economic",r:0.52},
+  {pair:"Cuisine vs Modal",r:0.48},
+  {pair:"Cuisine vs Richness",r:0.45},
+  {pair:"Cuisine vs Economic",r:0.42},
+];
+
+// ── State ────────────────────────────────────────────────────────────
+let selectedStation = null;
+let showRegression = false;
+
+// ══════════════════════════════════════════════════════════════════════
+// PANEL A: Scatter Plot
+// ══════════════════════════════════════════════════════════════════════
+const scatterEl = document.getElementById('scatterContainer');
+const tooltip = document.getElementById('scatterTooltip');
+const margin = {top: 20, right: 20, bottom: 44, left: 50};
+const W = scatterEl.clientWidth - margin.left - margin.right;
+const H = 440 - margin.top - margin.bottom;
+
+const svg = d3.select('#scatterContainer').append('svg')
+  .attr('width', W + margin.left + margin.right)
+  .attr('height', H + margin.top + margin.bottom);
+const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
+
+const xScale = d3.scaleLinear().domain([0, 2.3]).range([0, W]);
+const yScale = d3.scaleLinear().domain([0, 290]).range([H, 0]);
+
+// Grid
+g.selectAll('.gridY').data(yScale.ticks(6)).enter().append('line')
+  .attr('class','gridY').attr('x1',0).attr('x2',W)
+  .attr('y1',d=>yScale(d)).attr('y2',d=>yScale(d))
+  .attr('stroke','#2a2a4a').attr('stroke-dasharray','2,3');
+g.selectAll('.gridX').data(xScale.ticks(5)).enter().append('line')
+  .attr('class','gridX').attr('y1',0).attr('y2',H)
+  .attr('x1',d=>xScale(d)).attr('x2',d=>xScale(d))
+  .attr('stroke','#2a2a4a').attr('stroke-dasharray','2,3');
+
+// Axes
+g.append('g').attr('transform',`translate(0,${H})`).call(d3.axisBottom(xScale).ticks(5))
+  .selectAll('text').attr('fill','#8892a0').attr('font-size','11px');
+g.append('g').call(d3.axisLeft(yScale).ticks(6))
+  .selectAll('text').attr('fill','#8892a0').attr('font-size','11px');
+g.selectAll('.domain').attr('stroke','#2a2a4a');
+g.selectAll('.tick line').attr('stroke','#2a2a4a');
+
+// Axis labels
+g.append('text').attr('x',W/2).attr('y',H+36).attr('text-anchor','middle')
+  .attr('fill','#8892a0').attr('font-size','11px').text('Religious Shannon Diversity');
+g.append('text').attr('transform','rotate(-90)').attr('x',-H/2).attr('y',-38)
+  .attr('text-anchor','middle').attr('fill','#8892a0').attr('font-size','11px').text('Station Richness (1 km)');
+
+// Phase transition line at Shannon = 1.0
+g.append('line').attr('x1',xScale(1.0)).attr('x2',xScale(1.0))
+  .attr('y1',0).attr('y2',H)
+  .attr('stroke','#e74c3c').attr('stroke-width',1.5).attr('stroke-dasharray','6,4').attr('opacity',0.7);
+g.append('text').attr('x',xScale(0.5)).attr('y',yScale(260)).attr('text-anchor','middle')
+  .attr('fill','#e74c3c').attr('font-size','10px').attr('opacity',0.8).text('Below 1.0:');
+g.append('text').attr('x',xScale(0.5)).attr('y',yScale(245)).attr('text-anchor','middle')
+  .attr('fill','#e74c3c').attr('font-size','10px').attr('opacity',0.8).text('avg richness 8.8');
+g.append('text').attr('x',xScale(1.65)).attr('y',yScale(260)).attr('text-anchor','middle')
+  .attr('fill','#2ecc71').attr('font-size','10px').attr('opacity',0.8).text('Above 1.0:');
+g.append('text').attr('x',xScale(1.65)).attr('y',yScale(245)).attr('text-anchor','middle')
+  .attr('fill','#2ecc71').attr('font-size','10px').attr('opacity',0.8).text('avg richness 70.5');
+
+// Regression line (hidden by default)
+function linReg(data) {
+  const n = data.length;
+  const xm = d3.mean(data, d => d.rs);
+  const ym = d3.mean(data, d => d.sr);
+  let ssxy = 0, ssxx = 0, sstot = 0, ssres = 0;
+  data.forEach(d => { ssxy += (d.rs - xm) * (d.sr - ym); ssxx += (d.rs - xm) ** 2; });
+  const slope = ssxy / ssxx;
+  const intercept = ym - slope * xm;
+  data.forEach(d => { const pred = slope * d.rs + intercept; ssres += (d.sr - pred) ** 2; sstot += (d.sr - ym) ** 2; });
+  return { slope, intercept, r2: 1 - ssres / sstot };
+}
+const reg = linReg(S);
+const regLine = g.append('line')
+  .attr('x1', xScale(0)).attr('y1', yScale(reg.intercept))
+  .attr('x2', xScale(2.3)).attr('y2', yScale(reg.slope * 2.3 + reg.intercept))
+  .attr('stroke', '#f1c40f').attr('stroke-width', 2).attr('stroke-dasharray', '8,4')
+  .attr('opacity', 0);
+const regLabel = g.append('text')
+  .attr('x', xScale(2.0)).attr('y', yScale(reg.slope * 2.0 + reg.intercept) - 10)
+  .attr('fill', '#f1c40f').attr('font-size', '11px').attr('font-family', "'Space Mono', monospace")
+  .text(`r\u00B2 = ${reg.r2.toFixed(3)}`).attr('opacity', 0);
+
+document.getElementById('regressionToggle').addEventListener('click', function() {
+  showRegression = !showRegression;
+  this.classList.toggle('active', showRegression);
+  regLine.attr('opacity', showRegression ? 0.8 : 0);
+  regLabel.attr('opacity', showRegression ? 1 : 0);
+});
+
+// Station dots
+const dots = g.selectAll('.station-dot').data(S).enter().append('circle')
+  .attr('class', 'station-dot')
+  .attr('cx', d => xScale(d.rs))
+  .attr('cy', d => yScale(d.sr))
+  .attr('r', 6)
+  .attr('fill', d => SEG[d.seg])
+  .attr('fill-opacity', 0.85)
+  .attr('stroke', '#1a1a2e')
+  .attr('stroke-width', 1.5)
+  .style('cursor', 'pointer');
+
+// Tooltip
+dots.on('mouseenter', function(event, d) {
+    tooltip.style.opacity = 1;
+    tooltip.innerHTML = `
+      <div class="tt-name">${d.n}</div>
+      <div class="tt-row"><span class="tt-label">Segment</span><span class="tt-val" style="color:${SEG[d.seg]}">${d.seg}</span></div>
+      <div class="tt-row"><span class="tt-label">Relig. Shannon</span><span class="tt-val">${d.rs.toFixed(3)}</span></div>
+      <div class="tt-row"><span class="tt-label">Modal Shannon</span><span class="tt-val">${d.ms.toFixed(3)}</span></div>
+      <div class="tt-row"><span class="tt-label">Richness</span><span class="tt-val">${d.sr}</span></div>
+      <div class="tt-row"><span class="tt-label">Restaurants</span><span class="tt-val">${d.rest}</span></div>
+      <div class="tt-row"><span class="tt-label">km from GVA</span><span class="tt-val">${d.km.toFixed(1)}</span></div>
+    `;
+  })
+  .on('mousemove', function(event) {
+    const rect = scatterEl.getBoundingClientRect();
+    let x = event.clientX - rect.left + 14;
+    let y = event.clientY - rect.top - 10;
+    if (x + 220 > rect.width) x = event.clientX - rect.left - 230;
+    tooltip.style.left = x + 'px';
+    tooltip.style.top = y + 'px';
+  })
+  .on('mouseleave', function() { tooltip.style.opacity = 0; })
+  .on('click', function(event, d) {
+    selectStation(d.n === selectedStation ? null : d.n);
+  });
+
+// Anomaly labels
+function addLabel(name, dx, dy, anchor) {
+  const d = S.find(s => s.n === name);
+  if (!d) return;
+  const lx = xScale(d.rs), ly = yScale(d.sr);
+  g.append('line').attr('x1', lx).attr('y1', ly).attr('x2', lx + dx).attr('y2', ly + dy)
+    .attr('stroke', '#8892a0').attr('stroke-width', 0.8).attr('stroke-dasharray', '2,2');
+  g.append('text').attr('x', lx + dx).attr('y', ly + dy - 4)
+    .attr('text-anchor', anchor || 'start').attr('fill', '#e0e0e0').attr('font-size', '10px').attr('font-weight', '600')
+    .text(name);
+}
+addLabel('Vernier, Blandonnet', -30, -25, 'end');
+addLabel('Coppet', 10, -18, 'start');
+addLabel('Lausanne', 12, 5, 'start');
+addLabel('Lausanne-Flon', 12, 12, 'start');
+
+// ══════════════════════════════════════════════════════════════════════
+// PANEL B: Correlation Bar Chart
+// ══════════════════════════════════════════════════════════════════════
+const barEl = document.getElementById('barContainer');
+const bW = barEl.clientWidth - 8;
+const bH = CORR.length * 22;
+const bSvg = d3.select('#barContainer').append('svg').attr('width', bW).attr('height', bH);
+
+const bx = d3.scaleLinear().domain([0, 0.8]).range([130, bW - 50]);
+const by = d3.scaleBand().domain(CORR.map(c => c.pair)).range([0, bH]).padding(0.25);
+
+const barColorScale = d3.scaleLinear().domain([0.4, 0.72]).range(['#e67e22', '#2ecc71']);
+
+bSvg.selectAll('.bar').data(CORR).enter().append('rect')
+  .attr('x', bx(0)).attr('y', d => by(d.pair))
+  .attr('width', d => bx(d.r) - bx(0)).attr('height', by.bandwidth())
+  .attr('fill', d => barColorScale(d.r)).attr('rx', 3).attr('opacity', 0.85);
+
+bSvg.selectAll('.bar-label').data(CORR).enter().append('text')
+  .attr('x', bx(0) - 6).attr('y', d => by(d.pair) + by.bandwidth() / 2 + 4)
+  .attr('text-anchor', 'end').attr('fill', '#8892a0').attr('font-size', '10px')
+  .text(d => d.pair);
+
+bSvg.selectAll('.bar-val').data(CORR).enter().append('text')
+  .attr('x', d => bx(d.r) + 6).attr('y', d => by(d.pair) + by.bandwidth() / 2 + 4)
+  .attr('text-anchor', 'start').attr('fill', '#ffffff').attr('font-size', '10px')
+  .attr('font-family', "'Space Mono', monospace").attr('font-weight', '700')
+  .text(d => d.r.toFixed(2));
+
+// ══════════════════════════════════════════════════════════════════════
+// PANEL C: Mini Maps
+// ══════════════════════════════════════════════════════════════════════
+const corridorBounds = [[46.16, 6.05], [46.56, 7.05]];
+const miniMaps = [];
+const miniMarkerSets = [];
+
+function diversityColor(val, max) {
+  const t = Math.min(val / max, 1);
+  if (t < 0.05) return '#8b0000';
+  if (t < 0.2) return '#e74c3c';
+  if (t < 0.4) return '#e67e22';
+  if (t < 0.6) return '#f1c40f';
+  if (t < 0.8) return '#7dce5a';
+  return '#2ecc71';
+}
+
+const mapConfigs = [
+  {id:'map1', key:'rs', max:2.2, label:'Religious Shannon'},
+  {id:'map2', key:'ms', max:2.1, label:'Modal Shannon'},
+  {id:'map3', key:'rest', max:26, label:'Restaurants/1km'},
+  {id:'map4', key:'sr', max:280, label:'Station Richness'},
+];
+
+function initMiniMap(cfg, idx) {
+  const map = L.map(cfg.id, {
+    zoomControl: false, dragging: false, scrollWheelZoom: false,
+    doubleClickZoom: false, touchZoom: false, boxZoom: false,
+    keyboard: false, attributionControl: false, preferCanvas: true,
+  }).fitBounds(corridorBounds);
+
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {maxZoom: 14}).addTo(map);
+
+  const markers = [];
+  S.forEach(s => {
+    const val = s[cfg.key];
+    // Use sqrt scale for richness to avoid Lausanne-Flon dominating
+    const effMax = cfg.key === 'sr' ? Math.sqrt(cfg.max) : cfg.max;
+    const effVal = cfg.key === 'sr' ? Math.sqrt(val) : val;
+    const color = diversityColor(effVal, effMax);
+    const m = L.circleMarker([s.la, s.lo], {
+      radius: 5, fillColor: color, fillOpacity: 0.85,
+      color: '#1a1a2e', weight: 1,
+    }).addTo(map);
+    m.on('mouseover', function(e) {
+      L.popup({className: 'map-tooltip', closeButton: false, offset: [0, -6]})
+        .setLatLng(e.latlng)
+        .setContent(`<strong style="color:#fff">${s.n}</strong><br><span style="color:#8892a0">${cfg.label}:</span> <strong style="color:${color};font-family:'Space Mono',monospace">${typeof val === 'number' ? (val < 10 ? val.toFixed(3) : val) : val}</strong>`)
+        .openOn(map);
+    });
+    m.on('mouseout', () => map.closePopup());
+    m.on('click', () => selectStation(s.n === selectedStation ? null : s.n));
+    m.stationName = s.n;
+    markers.push(m);
+  });
+  miniMaps.push(map);
+  miniMarkerSets.push(markers);
+}
+
+// Stagger initialization
+mapConfigs.forEach((cfg, i) => {
+  setTimeout(() => initMiniMap(cfg, i), i * 100);
+});
+
+// ══════════════════════════════════════════════════════════════════════
+// Cross-panel selection
+// ══════════════════════════════════════════════════════════════════════
+function selectStation(name) {
+  selectedStation = name;
+
+  // Update scatter dots
+  dots.attr('stroke', d => d.n === name ? '#ffffff' : '#1a1a2e')
+      .attr('stroke-width', d => d.n === name ? 3 : 1.5)
+      .attr('r', d => d.n === name ? 9 : 6)
+      .attr('fill-opacity', d => name === null ? 0.85 : (d.n === name ? 1 : 0.3));
+
+  // Update mini map markers
+  miniMarkerSets.forEach(markers => {
+    markers.forEach(m => {
+      if (name === null) {
+        m.setStyle({color: '#1a1a2e', weight: 1, fillOpacity: 0.85});
+        m.setRadius(5);
+      } else if (m.stationName === name) {
+        m.setStyle({color: '#ffffff', weight: 3, fillOpacity: 1});
+        m.setRadius(8);
+        m.bringToFront();
+      } else {
+        m.setStyle({color: '#1a1a2e', weight: 1, fillOpacity: 0.25});
+        m.setRadius(4);
+      }
+    });
+  });
+}
+
+// Click on SVG background to deselect
+svg.on('click', function(event) {
+  if (event.target.tagName !== 'circle') selectStation(null);
+});
+</script>
+</body>
+</html>

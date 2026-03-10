@@ -1,0 +1,31 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3:*)",
+      "Bash(\"/Applications/Python 3.13/Install Certificates.command\")",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(sort:*)",
+      "Bash(ls:*)",
+      "Bash(wc:*)",
+      "Bash(head:*)",
+      "Bash(done)",
+      "Bash(while read f)",
+      "Bash(do echo \"  $f\")",
+      "Bash(grep:*)",
+      "Bash(du -sh:*)",
+      "Bash(xargs -I {} basename \"{}\")",
+      "Bash(comm -12 /tmp/source_basenames.txt /tmp/datasets_basenames.txt)",
+      "Bash(find /Users/andreacrespo/CLAUDE/City101_ClaudeCode/source -name \"*.gpkg\" -type f -exec ls -lh {} ;)",
+      "Bash(unzip -l CITY101_WORKING.qgz)",
+      "Bash(find /Users/andreacrespo/CLAUDE/City101_ClaudeCode/source -maxdepth 1 -type d -exec du -h {} ;)",
+      "Bash(find /Users/andreacrespo/CLAUDE/City101_ClaudeCode/source -name \"city101_wifi_MERGED*\" -exec ls -lah {} ;)",
+      "Bash(xargs -I {} basename {})",
+      "Bash(find /Users/andreacrespo/CLAUDE/City101_ClaudeCode/datasets -name \"*.csv\" -exec sh -c 'echo \"\"File: $\\(basename \"\"$1\"\"\\)\"\"; head -1 \"\"$1\"\" | tr \"\",\"\" \"\"\\\\n\"\" | wc -l' _ {} ;)",
+      "Bash(__NEW_LINE_7d0f27db18da3eb8__ python3:*)",
+      "Bash(find /Users/andreacrespo/CLAUDE/City101_ClaudeCode/visualizations/site/maps -type f -exec ls -lh {} ;)",
+      "Bash(test:*)",
+      "WebSearch",
+      "Bash(open:*)"
+    ]
+  }
+}

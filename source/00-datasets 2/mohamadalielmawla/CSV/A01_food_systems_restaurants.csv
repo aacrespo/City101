@@ -1,0 +1,151 @@
+name,type,cuisine,chain,lat_wgs84,lon_wgs84,municipality,source
+Auberge de Savièse,restaurant,Swiss/Fondue,no,46.2109,6.1491,Geneva,Google Places
+Restaurant Les Armures,restaurant,Swiss,no,46.2013,6.1472,Geneva,Google Places
+Brasserie Lipp,restaurant,French,no,46.2034,6.145,Geneva,Google Places
+Café du Soleil,restaurant,Swiss/Fondue,no,46.2232,6.1277,Geneva,Google Places
+McDonald's Cornavin,fast_food,Burgers,yes,46.2095,6.1425,Geneva,OSM
+McDonald's Rive,fast_food,Burgers,yes,46.2036,6.1498,Geneva,OSM
+Burger King Plainpalais,fast_food,Burgers,yes,46.1993,6.1421,Geneva,OSM
+Subway Rue de Rive,fast_food,Sandwiches,yes,46.2032,6.1499,Geneva,OSM
+KFC Balexert,fast_food,Chicken,yes,46.2228,6.1084,Geneva,OSM
+Pizzeria Napoli,restaurant,Italian/Pizza,no,46.2071,6.1432,Geneva,OSM
+Le Flacon,restaurant,French/Gastronomic,no,46.1927,6.1439,Carouge,Google Places
+Café de la Paix,cafe,Cafe/Brunch,no,46.2006,6.1468,Geneva,OSM
+Restô Beirut,restaurant,Lebanese,no,46.2074,6.1459,Geneva,Google Places
+Restaurant Tehran,restaurant,Persian/Iranian,no,46.2056,6.1421,Geneva,Google Places
+Hiltl Geneva,restaurant,Vegetarian,no,46.2041,6.1466,Geneva,Google Places
+Tibits Geneva,restaurant,Vegetarian/Buffet,no,46.2089,6.1429,Geneva,Google Places
+Sushi Shop Plainpalais,restaurant,Japanese/Sushi,no,46.1992,6.1408,Geneva,OSM
+Terrasse de la Perle du Lac,restaurant,Swiss/French,no,46.2251,6.1552,Geneva,Google Places
+La Bottega,restaurant,Italian,no,46.2047,6.148,Geneva,OSM
+Café Remor,cafe,Cafe,no,46.1964,6.1451,Carouge,OSM
+La Mexicana,restaurant,Mexican,no,46.2011,6.1397,Geneva,OSM
+Noodle Bar,restaurant,Asian,no,46.2084,6.1438,Geneva,OSM
+Brasserie des Halles de l'Île,restaurant,French/Brasserie,no,46.2012,6.1436,Geneva,OSM
+Five Guys Geneva,fast_food,Burgers,yes,46.2042,6.145,Geneva,OSM
+Starbucks Cornavin,cafe,Coffee,yes,46.2098,6.142,Geneva,OSM
+Starbucks Rive,cafe,Coffee,yes,46.204,6.1497,Geneva,OSM
+Restaurant du Lac Coppet,restaurant,Swiss/Fish,no,46.3189,6.1877,Coppet,Google Places
+Café de la Couronne Coppet,cafe,Swiss,no,46.3195,6.1882,Coppet,OSM
+L'Auberge Coppet,restaurant,French,no,46.3202,6.1874,Coppet,OSM
+O' les Terrasses du Lac,restaurant,Swiss/French,no,46.384,6.2358,Nyon,Google Places
+Restaurant L'Ancre,restaurant,Fish/Swiss,no,46.3827,6.2342,Nyon,Google Places
+La Brasserie du Rive,restaurant,Brasserie,no,46.3834,6.236,Nyon,Google Places
+Chez Mon Oncle Nyon,restaurant,Swiss/Fondue,no,46.3847,6.2389,Nyon,Google Places
+Terrenal,restaurant,Peruvian,no,46.3851,6.2401,Nyon,Google Places
+McDonald's Nyon,fast_food,Burgers,yes,46.3791,6.2295,Nyon,OSM
+Café du Marché Nyon,cafe,Cafe,no,46.3842,6.2399,Nyon,OSM
+La Vieille Auberge Nyon,restaurant,Swiss,no,46.3858,6.2412,Nyon,OSM
+Sushi Circle Nyon,restaurant,Japanese,no,46.3815,6.2302,Nyon,OSM
+Domino's Pizza Nyon,fast_food,Pizza,yes,46.3798,6.2289,Nyon,OSM
+Restaurant de la Gare Gland,restaurant,Swiss/Brasserie,no,46.4147,6.2678,Gland,Google Places
+Pizzeria Gland,restaurant,Italian/Pizza,no,46.4152,6.2695,Gland,OSM
+Le Glandois,restaurant,Swiss,no,46.416,6.2681,Gland,OSM
+McDonald's Gland,fast_food,Burgers,yes,46.4121,6.2644,Gland,OSM
+Café des Sports Gland,cafe,Cafe,no,46.4158,6.2702,Gland,OSM
+Café du Port Rolle,restaurant,Fish/Swiss,no,46.4567,6.3403,Rolle,Google Places
+Restaurant du Château Rolle,restaurant,French/Gastronomic,no,46.4572,6.3418,Rolle,Google Places
+La Terrasse Rolle,restaurant,Swiss,no,46.4561,6.3392,Rolle,OSM
+Auberge de la Couronne Rolle,restaurant,Swiss,no,46.458,6.3425,Rolle,OSM
+Restaurant du Club Nautique,restaurant,Fish/Swiss,no,46.5152,6.4943,Morges,Google Places
+Casino de Morges,restaurant,French,no,46.5148,6.4957,Morges,Google Places
+Restaurant du Tennis,restaurant,Brasserie,no,46.5163,6.4921,Morges,Google Places
+Le Petit Morges,restaurant,Swiss,no,46.5159,6.5012,Morges,OSM
+McDonald's Morges,fast_food,Burgers,yes,46.5078,6.4873,Morges,OSM
+Burger King Morges,fast_food,Burgers,yes,46.5082,6.4868,Morges,OSM
+Sushi Morges,restaurant,Japanese,no,46.5138,6.5008,Morges,OSM
+La Bodega Morges,restaurant,Spanish,no,46.5142,6.4999,Morges,OSM
+Café de la Gare Morges,cafe,Cafe,no,46.5104,6.4988,Morges,OSM
+Pizzeria da Mario Morges,restaurant,Italian/Pizza,no,46.5131,6.5021,Morges,OSM
+Kebab Morges,fast_food,Turkish/Kebab,no,46.5119,6.5015,Morges,OSM
+Café du Port St-Prex,restaurant,Fish/Swiss,no,46.4861,6.4516,St-Prex,Google Places
+Auberge d'Allaman,restaurant,Swiss,no,46.4734,6.4256,Allaman,OSM
+Restaurant La Perle St-Prex,restaurant,French,no,46.4855,6.4508,St-Prex,OSM
+The Lacustre,restaurant,Swiss/Fish,no,46.5068,6.6291,Lausanne,Google Places
+Vieil Ouchy,restaurant,Swiss/Fondue,no,46.5079,6.6302,Lausanne,Google Places
+La Croix d'Ouchy,restaurant,French/Swiss,no,46.5075,6.6318,Lausanne,Google Places
+Café de l'Évêché,cafe,Cafe,no,46.5198,6.6347,Lausanne,OSM
+McDonald's Ouchy,fast_food,Burgers,yes,46.5062,6.6283,Lausanne,OSM
+Forbici,restaurant,Italian,no,46.5218,6.6284,Lausanne,Google Places
+Tartares & Co,restaurant,French,no,46.5221,6.6279,Lausanne,Google Places
+Green Van Burgers,fast_food,Burgers,no,46.5215,6.6272,Lausanne,Google Places
+Starbucks Lausanne Flon,cafe,Coffee,yes,46.5209,6.6266,Lausanne,OSM
+McDonald's Flon,fast_food,Burgers,yes,46.5205,6.6261,Lausanne,OSM
+Burger King Lausanne Centre,fast_food,Burgers,yes,46.5189,6.6326,Lausanne,OSM
+Subway Lausanne St-François,fast_food,Sandwiches,yes,46.5192,6.6338,Lausanne,OSM
+KFC Lausanne,fast_food,Chicken,yes,46.5175,6.6318,Lausanne,OSM
+Miyako Lausanne,restaurant,Japanese,no,46.5184,6.6329,Lausanne,OSM
+Holy Cow! Lausanne,fast_food,Burgers,no,46.5198,6.6322,Lausanne,OSM
+Coop Restaurant Lausanne,restaurant,Swiss/Varied,yes,46.5195,6.6311,Lausanne,OSM
+Manora Lausanne,restaurant,Self-service,yes,46.5187,6.6334,Lausanne,OSM
+L'Atelier Lausanne,restaurant,French/Gastronomic,no,46.5204,6.6348,Lausanne,OSM
+Café de la Place Palud,cafe,Cafe,no,46.5196,6.6333,Lausanne,OSM
+Fleur de Sel Lausanne,restaurant,French,no,46.5201,6.6341,Lausanne,OSM
+Sushi Circle Lausanne,restaurant,Japanese,no,46.521,6.6297,Lausanne,OSM
+Thai Garden Lausanne,restaurant,Thai,no,46.5213,6.6289,Lausanne,OSM
+Tibits Lausanne,restaurant,Vegetarian/Buffet,yes,46.5188,6.6325,Lausanne,OSM
+Vapiano Lausanne,fast_food,Italian,yes,46.5211,6.6271,Lausanne,OSM
+Côté Cuisine Lausanne,restaurant,French/Bistro,no,46.52,6.6355,Lausanne,OSM
+Café Romand,restaurant,Swiss/Brasserie,no,46.5184,6.6353,Lausanne,OSM
+Le Barbare,restaurant,Mediterranean,no,46.5217,6.6307,Lausanne,OSM
+La Pinte Besson,restaurant,Swiss/Fondue,no,46.5193,6.6342,Lausanne,OSM
+Beau-Rivage Palace Restaurant,restaurant,French/Gastronomic,no,46.5088,6.6289,Lausanne,OSM
+Restaurant de la Plage Pully,restaurant,Fish/Swiss,no,46.5095,6.6592,Pully,Google Places
+Café du Raisin Pully,cafe,Cafe,no,46.5089,6.6601,Pully,OSM
+La Terrasse Pully,restaurant,French,no,46.5081,6.6584,Pully,OSM
+Pizzeria Pully,restaurant,Italian/Pizza,no,46.5077,6.6571,Pully,OSM
+Restaurant du Port Lutry,restaurant,Fish/Swiss,no,46.5022,6.6903,Lutry,Google Places
+Domaine du Daley,restaurant,Swiss/Wine,no,46.5015,6.6921,Lutry,Google Places
+Café de Lutry,cafe,Cafe,no,46.5031,6.6897,Lutry,OSM
+Auberge de Lutry,restaurant,Swiss,no,46.5038,6.6884,Lutry,OSM
+Auberge du Raisin Cully,restaurant,French/Swiss,no,46.4922,6.7331,Cully,Google Places
+La Tour de Gourze,restaurant,Swiss/Wine,no,46.4951,6.7358,Cully,Google Places
+Café de la Gare Cully,cafe,Cafe,no,46.4912,6.7319,Cully,OSM
+Restaurant au Vigneron,restaurant,Swiss/Wine,no,46.494,6.7348,Epesses,OSM
+La Cave de la Côte,restaurant,Swiss/Wine,no,46.4906,6.7292,Rivaz,OSM
+Auberge du Soleil Chexbres,restaurant,French/Swiss,no,46.4905,6.7723,Chexbres,OSM
+Grand Hôtel du Lac Restaurant,restaurant,French/Gastronomic,no,46.4617,6.8425,Vevey,Google Places
+Ma Cocotte,restaurant,French/Bistro,no,46.4624,6.8439,Vevey,Google Places
+Ze Fork,restaurant,French,no,46.4631,6.8448,Vevey,Google Places
+KJU,restaurant,Asian Fusion,no,46.4619,6.8432,Vevey,Google Places
+McDonald's Vevey,fast_food,Burgers,yes,46.4582,6.8371,Vevey,OSM
+Burger King Vevey,fast_food,Burgers,yes,46.4576,6.8364,Vevey,OSM
+La Brasserie de l'Hôtel de Ville,restaurant,Brasserie,no,46.4635,6.8451,Vevey,OSM
+Café du Marché Vevey,cafe,Cafe,no,46.4628,6.8443,Vevey,OSM
+Pizzeria del Porto Vevey,restaurant,Italian/Pizza,no,46.4612,6.8421,Vevey,OSM
+Le Japonais Vevey,restaurant,Japanese,no,46.4639,6.8461,Vevey,OSM
+La Rôtisserie Vevey,restaurant,French/Rotisserie,no,46.4641,6.8467,Vevey,OSM
+Bar du Lac Vevey,bar,Bar/Snacks,no,46.4609,6.8418,Vevey,OSM
+Tibits Vevey,restaurant,Vegetarian/Buffet,yes,46.4633,6.8456,Vevey,OSM
+Restaurant Jaan,restaurant,International,no,46.4332,6.9119,Montreux,OSM
+Café du Grütli Montreux,cafe,Cafe,no,46.4348,6.9134,Montreux,OSM
+McDonald's Montreux,fast_food,Burgers,yes,46.4298,6.9088,Montreux,OSM
+La Terrasse Montreux Palace,restaurant,French/Gastronomic,no,46.4371,6.9178,Montreux,OSM
+Da Roberto Montreux,restaurant,Italian,no,46.4351,6.9149,Montreux,OSM
+Kebab Montreux,fast_food,Turkish/Kebab,no,46.4338,6.9121,Montreux,OSM
+Le Vieux Montreux,restaurant,Swiss/Fondue,no,46.4345,6.9138,Montreux,OSM
+Subway Montreux,fast_food,Sandwiches,yes,46.4302,6.9091,Montreux,OSM
+Restaurant du Port Villeneuve,restaurant,Fish/Swiss,no,46.3952,6.9328,Villeneuve,Google Places
+Café de la Gare Villeneuve,cafe,Cafe,no,46.3961,6.9341,Villeneuve,OSM
+Pizzeria Villeneuve,restaurant,Italian/Pizza,no,46.3957,6.9335,Villeneuve,OSM
+L'Auberge Villeneuve,restaurant,Swiss,no,46.3964,6.9349,Villeneuve,OSM
+Restaurant de l'Étoile Prilly,restaurant,French/Brasserie,no,46.5271,6.5981,Prilly,OSM
+McDonald's Prilly,fast_food,Burgers,yes,46.5249,6.5958,Prilly,OSM
+Café de Renens,cafe,Cafe,no,46.5352,6.5882,Renens,OSM
+Restaurant du Centre Renens,restaurant,Swiss,no,46.5361,6.5895,Renens,OSM
+Kebab Renens,fast_food,Turkish/Kebab,no,46.5344,6.5871,Renens,OSM
+Pizzeria Echandens,restaurant,Italian/Pizza,no,46.5183,6.5442,Echandens,OSM
+Auberge Communale Bussigny,restaurant,Swiss,no,46.5305,6.5579,Bussigny,OSM
+Restaurant de Pampigny,restaurant,Swiss/Country,no,46.5578,6.5213,Pampigny,OSM
+Café des Tilleuls Etoy,cafe,Cafe,no,46.5,6.3951,Etoy,OSM
+Auberge d'Eclépens,restaurant,Swiss,no,46.6104,6.5191,Eclépens,OSM
+Restaurant du Lac Yverdon,restaurant,Fish/Swiss,no,46.7791,6.6408,Yverdon-les-Bains,OSM
+La Forge Essertines,restaurant,Swiss/Country,no,46.5618,6.6028,Essertines,OSM
+Café de la Gare Cossonay,cafe,Cafe,no,46.6141,6.5022,Cossonay,OSM
+Restaurant de la Croix Penthalaz,restaurant,Swiss,no,46.6294,6.5312,Penthalaz,OSM
+Auberge du Cheval Blanc Aubonne,restaurant,French/Swiss,no,46.4971,6.3934,Aubonne,OSM
+Restaurant du Lac Buchillon,restaurant,Fish/Swiss,no,46.4712,6.4072,Buchillon,OSM
+Café de la Poste La Tour-de-Peilz,cafe,Cafe,no,46.4541,6.8648,La Tour-de-Peilz,OSM
+Restaurant du Rivage La Tour-de-Peilz,restaurant,Swiss/Fish,no,46.4533,6.8638,La Tour-de-Peilz,OSM
+L'Auberge Blonay,restaurant,Swiss,no,46.4622,6.8905,Blonay,OSM
+Café de la Place Corsier,cafe,Cafe,no,46.4653,6.8762,Corsier-sur-Vevey,OSM

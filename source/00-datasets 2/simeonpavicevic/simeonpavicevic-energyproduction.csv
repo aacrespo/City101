@@ -1,0 +1,21 @@
+id,nom,type_source,technologie,production_elec_GWh_an,production_therm_GWh_an,puissance_MW,exploitant,commune,canton,E_LV95,N_LV95,notes_corrections
+P01,Centrale FMHL Veytaux I+II,Hydraulique,Pompage-turbinage,1000,0,480,FMHL / Hydro Exploitation SA,Veytaux,VD,2561020,1139998,CORRIGÉ +6559m: coord vérifiée gem.wiki x2 sources (Veytaux I+II) → 46.4102°N 6.9317°E
+P02,Centrale hydroélectrique de Lavey,Hydraulique,Fil de l'eau (Rhône),400,0,236,Services Industriels de Lausanne (SiL),Lavey-Village,VD,2566038,1116111,CORRIGÉ +4173m: centrale souterraine galerie 4km depuis Evionnaz → 46.1956°N 6.9987°E
+P03,Barrage du Seujet (Rhône),Hydraulique,Fil de l'eau (Rhône),20,0,17,SIG,Genève,GE,2500249,1117428,CORRIGÉ +1293m: barrage Seujet rive gauche Rhône Genève → 46.2009°N 6.1463°E
+P04,Centrale de Verbois (Rhône),Hydraulique,Fil de l'eau (Rhône),466,0,98,SIG / Alpiq,Aire-la-Ville,GE,2491141,1116685,"CORRIGÉ +4042m: Wikidata 46°11'34.59""N 6°1'42.99""E → bâtiment turbines rive droite"
+P05,Centrale de Chancy-Pougny (Rhône),Hydraulique,Fil de l'eau (Rhône),250,0,56,SIG / CNR,Avully,GE,2487030,1113180,"CORRIGÉ +6807m: Wikidata 46°9'38.17""N 5°58'33.96""E → barrage franco-suisse exact"
+P06,UVTD TRIDEL,Thermique déchets,Incinération ordures ménagères,150,250,80,TRIDEL SA,Lausanne,VD,2539123,1153954,CORRIGÉ +1376m: Rue du Vallon 35 yellowpages.swiss → 46.5341°N 6.6451°E
+P07,UVTD SATOM Monthey,Thermique déchets,Incinération ordures ménagères,127,250,40,SATOM SA,Monthey,VS,2564173,1123259,CORRIGÉ +3192m: Route Boeuferrant-Nord 16 Monthey → 46.2598°N 6.9740°E; prod=127GWh
+P08,Usine des Cheneviers (Genève),Thermique déchets,Incinération ordures ménagères,130,220,75,SIG,Aire-la-Ville,GE,2491465,1117101,CORRIGÉ +4184m: Route de Verbois 40 l-agenda.ch → 46.196606°N 6.032597°E
+P09,Centrale solaire EPFL Ecublens,Solaire,Photovoltaïque,5,0,3,EPFL,Ecublens,VD,2532899,1152397,Grande installation PV campus; ~4 000 m2; valeur symbolique et pédagogique; coord sur toiture bâtiment BP
+P10,Installations PV Aéroport Genève,Solaire,Photovoltaïque,7.5,0,5,SIG / Genève Aéroport,Meyrin,GE,2497420,1120878,AJUSTÉ -435m: recalé sur terminal T1 aéroport Meyrin
+P11,Parc solaire Romande Energie (La Côte),Solaire,Photovoltaïque,8,0,5,Romande Energie,Rolle,VD,2525903,1150834,CORRIGÉ: parc solaire Cave La Côte à Tolochenaz (Uvavins) → 46.5047°N 6.4733°E. Hors lac.
+P12,Centrale méthanisation Châtillon (SIG),Biomasse/biogaz,Méthanisation déchets verts,2,18,3,SIG,Bernex,GE,2493382,1114577,Biogaz déchets verts canton Genève; injection réseau gaz SIG; 18 GWh thermique (pouvoir calorifique gaz)
+P13,Géothermie AGEPP Lavey-les-Bains,Géothermie,Hydrothermie basse enthalpie,4.2,15.5,1.5,AGEPP SA,Lavey-les-Bains,VS,2565741,1114156,CORRIGÉ +4095m: AGEPP source thermale Lavey-les-Bains → 46.1780°N 6.9950°E
+P14,Centrale hydraulique sur la Véveyse,Hydraulique,Fil de l'eau (petite hydraulique),2.1,0,0.8,aventron,Vevey,VD,2556017,1145569,Mise en service 2022; petite hydraulique sur la Véveyse; alimente ~840 ménages
+P15,GeniLac – station de pompage Vengeron,Hydrothermie lac,Pompe à chaleur lacustre,0,200,50,SIG,Bellevue,GE,2500744,1123101,"CORRIGÉ: STAP GeniLac sous autoroute A1 Vengeron, Bellevue → 46.252°N 6.1515°E. Hors lac."
+P16,Centrale hydraulique de Bieudron / Nendaz (évacuation vers lac),Hydraulique,Pompage-turbinage (Grande Dixence),2100,0,1269,Alpiq,Nendaz,VS,2585279,1114633,CORRIGÉ +2198m: croisement latitude.to/Wikidata/industryabout → 46.183°N 7.248°E
+P17,Centrale hydroélectrique de Vouvry (Canal stockalper),Hydraulique,Fil de l'eau (petite hydraulique),15,0,5,Romande Energie,Vouvry,VS,2562800,1126802,Canal stockalper; coord sur usine de Vouvry; production locale Chablais
+P18,Parc solaire Toiture logistique Bussigny–Crissier,Solaire,Photovoltaïque,6,0,4,SiL / Privé,Bussigny,VD,2531197,1153206,Toitures entrepôts logistiques zone industrielle; potentiel fort; estimation agrégée
+P19,Centrale solaire Nyon – toitures communales,Solaire,Photovoltaïque,3,0,2,Romande Energie,Nyon,VD,2507383,1137571,"CORRIGÉ: toitures communales Nyon, centré ville → 46.3831°N 6.2347°E. Hors lac."
+P20,Chauffage à distance CAD Villeneuve–Aigle (biomasse bois),Biomasse,Chaudière bois-énergie,0,25,8,Services Industriels Aigle,Aigle,VD,2563904,1129753,CORRIGÉ +4438m: chaufferie bois ZI Aigle → 46.3182°N 6.9700°E (pas coord P04!)

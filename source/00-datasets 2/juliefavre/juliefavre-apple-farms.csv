@@ -1,0 +1,48 @@
+id,name,type,municipality,canton,address,lat_wgs84,lon_wgs84,E_LV95,N_LV95,source,notes
+1,Ferme du Lignon,Mixed Farm / Market,Vernier,GE,Rte du Bois-des-Frères 51B 1219 Vernier,46.205385,6.095988,2494480,1118870,Google Places,Livestock + market garden; near Lignon district
+2,Budé Farm,Urban Farm / Market,Genève,GE,"Chem. Moïse-Duboule 2, 1209 Genève",46.224164,6.128872,2496930,1120940,Google Places,Organic urban farm shop in city centre; high-activity hub
+3,Ferme Courtois,Mixed Farm / Orchard / Market,Versoix,GE,"Rte de la Branvaude 10, 1290 Versoix",46.310748,6.128746,2496870,1130520,Google Places,Fruit orchard + vegetables; apple picking; near lakeshore
+4,Ferme Les Morennes,Dairy Farm,Tannay,VD,"Chem. des Moulins 31, 1295 Tannay",46.310978,6.169077,2500330,1130550,Google Places,Dairy (milk yogurt butter); daily direct sales; family farm
+5,Agro-idée,Organic Market Garden,Mies,VD,1295 Mies,46.308646,6.161625,2499660,1130310,Google Places,Organic fruits vegetables eggs; Saturday market
+6,Marché de Trembley (fruitdefendu.ch),Fruit Farm / Direct Sales,Commugny,VD,"en Trembley, 1291 Commugny",46.325121,6.164880,2499980,1132130,Google Places,Zero-km fruit & vegetables; renowned for peaches and apricots
+7,Marché Balmer,Market Garden / Farm Shop,Founex,VD,"Chem. des Arzillières 1, 1297 Founex",46.329892,6.192401,2502500,1132640,Google Places,Vegetables + fruits from adjacent farm fields; Balmer family
+8,Domaine de la Ruche,Vineyard / Farm,Founex,VD,"Rte de Céligny 14, 1297 Founex",46.338078,6.195590,2502810,1133540,Google Places,Vineyard with limited direct sales
+9,La Ferme aux Agrumes,Citrus Greenhouse / Event Farm,Borex,VD,"Rte d'Arnex 9, 1277 Borex",46.377637,6.184210,2501740,1137910,Google Places,Unique citrus greenhouse; agritourism + tasting; event venue
+10,Ferme En Orset,Mixed Livestock / Butcher,Trélex,VD,"Rte de Gingins 16, 1270 Trélex",46.414528,6.191394,2502390,1142030,Google Places,Self-service butcher; ultra-local meat; highly rated
+11,Domaine Les Perrettes,Vineyard / Mixed Farm,Eysins,VD,"Rte de Crans 2, 1262 Eysins",46.378537,6.204038,2503540,1138000,Google Places,Mixed: vineyards grains fruit trees; permanent market stall
+12,Le Panier Gourmand,Market Garden,Signy-Avenex,VD,"Chem. Matthey Pierre-L 1, 1274 Signy-Avenex",46.391850,6.211184,2504220,1139430,Google Places,Own-land vegetables fruits; livestock; wine tasting
+13,Famille Mugnier – Marché à la Ferme,Vineyard / Mixed Orchard Farm,Duillier,VD,"Rue du Vieux-Village 10, 1266 Duillier",46.410835,6.236966,2506540,1141500,Google Places,Orchard + vineyard; self-service; apple juice; jams
+14,Domain de Bois-Bougy Self Serve,Dairy / Mixed Farm,Nyon,VD,"Chem. de Plantachoux, 1260 Nyon",46.376363,6.224809,2505450,1137700,Google Places,Last dairy farm of Nyon; milk horses cows hens; self-serve
+15,Domaine des Avouillons,Dairy / Cheese Farm,Gland,VD,"Rte des Avouillons 103, 1196 Gland",46.410406,6.266596,2509170,1141360,Google Places,Fresh milk yogurts goats; private; limited access
+16,Ferme Pré-de-Vert,Farm (general),Rolle,VD,"Rte de Genève 38, 1180 Rolle",46.450690,6.325077,2514310,1145720,Google Places,Farm registered; no current reviews; gap candidate
+17,Domaine de la Dolle,Vineyard / Wine Farm,Rolle,VD,"Rte de Gilly 31, 1180 Rolle",46.450185,6.319720,2513840,1145670,Google Places,Winery + terroir; vineyard estate with lake views
+18,Domaine Beauregard,Vineyard / B&B Farm,Rolle,VD,"Chem. de Penloup 7, 1180 Rolle",46.469128,6.318511,2513720,1147740,Google Places,Winery + B&B; exceptional lake and Alps views
+19,Domaine Rosset,Vineyard / Wine Farm,Rolle,VD,"Chem. de Jolimont 8, 1180 Rolle",46.463888,6.340133,2515670,1147140,Google Places,Modern cellar; broad grape variety range
+20,The Gardner Vineyard,Vineyard / Farm,Mont-sur-Rolle,VD,"Rte du Château 13, 1185 Mont-sur-Rolle",46.474708,6.329019,2514670,1148290,Google Places,Pinot Noir specialist; traditional vintner
+21,Domaine du Vieux Toit,Vineyard / Farm,Mont-sur-Rolle,VD,"Rue de Mont-le-Grand 29, 1185 Mont-sur-Rolle",46.472076,6.340328,2515680,1148000,Google Places,Chasselas + Chardonnay; renovated cellar
+22,Domaine de Roliebot,Vineyard / Wine Farm,Mont-sur-Rolle,VD,"Rte de l'Etraz 2, 1185 Mont-sur-Rolle",46.470353,6.343489,2515970,1147810,Google Places,Winery with farm; family estate; quality local wine
+23,La Vaudoise des Quatre Vents,Vineyard / Mixed Farm Market,Perroy,VD,"Chem. des Quatre-Vents 15, 1166 Perroy",46.471547,6.361098,2517540,1147940,Google Places,Vineyard + farm market; gift and grocery items
+24,Domaine du Feuillerage,Vineyard / Farm / Camping,Perroy,VD,"Le Follièrage 4, 1166 Perroy",46.464485,6.359940,2517430,1147150,Google Places,Winery + farm stay / camping; agritourism; multi-generational
+25,Cave du Consul,Vineyard / Wine Farm,Perroy,VD,"Grand-Rue 39, 1166 Perroy",46.469088,6.367384,2518090,1147660,Google Places,Boutique vineyard; award-winning whites and reds
+26,Domaine de la Pêcherie et la Frésaire,Organic Fruit Farm (Kiwi),Allaman,VD,"Chem. de la Pêcherie 5, 1165 Allaman",46.465680,6.396991,2520700,1147250,Google Places,Organic kiwi plantation; riparian landscape; Aubonne River mouth
+27,Domain Verex,Vineyard / Wine Farm,Allaman,VD,"Rte Suisse 3, 1165 Allaman",46.467328,6.382569,2519410,1147430,Google Places,Family winery; La Côte appellation
+28,Ferme La Vignette,Mixed Arable / Livestock Farm,Aubonne,VD,"La Vignettaz 30, 1170 Aubonne",46.497708,6.364871,2517730,1150830,Google Places,Grains legumes oils Angus beef; self-service vending; organic ethos
+29,Domaine de Roveray / Marché à la Ferme,Organic Orchard / Vegetable Farm,Aubonne,VD,"Roveray 192, 1170 Aubonne",46.481312,6.401703,2521050,1149120,Google Places,Organic fruits vegetables dairy; orchard; apple juice; 20yr history
+30,La Ferme des Morand,Livestock / Education Farm,Saint-Prex,VD,"Rte de Villars-Sous-Yens 11, 1162 Saint-Prex",46.485142,6.448482,2525190,1149530,Google Places,Horses cattle; agritourism birthdays; linseed oil products
+31,Terres de Lavaux,Vineyard / Wine Farm,Lutry,VD,"Chem. de la Culturaz 21, 1095 Lutry",46.503048,6.688553,2546510,1151480,Google Places,Award-winning Lutry wines; Viognier; Lavaux UNESCO zone
+32,Domaine des Granges,Organic Market Garden,La Croix-sur-Lutry,VD,"Chem. de la Grangette 201, 1090 La Croix-sur-Lutry",46.521812,6.716775,2548990,1153480,Google Places,Organic farm market; sourdough bread; seasonal fruits & veg
+33,Farm Cery,Farm / Equestrian,Prilly,VD,"Rte de Cery 42, 1008 Prilly",46.547723,6.609797,2539660,1156280,Google Places,Equestrian farm; open landscape near Blecherette; pastoral
+34,Marché à la Ferme – En Lussy (Amaudruz),Market Garden / Mixed Farm,Le Mont-sur-Lausanne,VD,"Rte du Jorat 52/54, 1052 Le Mont-sur-Lausanne",46.561991,6.641369,2542610,1157800,Google Places,Family farm market; open 7 days; vegetables and farm produce
+35,Ferme de Praz-Romond,Sheep Dairy / Ice Cream Farm,Puidoux,VD,"Rte de Forel 3, 1070 Puidoux",46.518566,6.772323,2553520,1153150,Google Places,Sheep's milk dairy + ice cream; by Lake Breton; lactose-friendly
+36,Lavaux Vinorama,Vineyard / Wine Hub,Puidoux (Rivaz),VD,"Rte du Lac 2, 1071 Puidoux",46.474999,6.777489,2553990,1148370,Google Places,Regional wine showcase; tasting; Lavaux UNESCO zone hub
+37,Les Frères Dubois SA,Vineyard / Wine Farm,Cully,VD,"Chem. de Versailles 1, 1096 Cully",46.487875,6.728510,2549420,1149750,Google Places,Prestigious Lavaux winery; wine bar; terrace
+38,Terrasses Viticoles de Lavaux (Cully),Vineyard Terraces / Wine Agri-zone,Cully,VD,"Rue du Temple 17, 1096 Cully",46.488111,6.730302,2549580,1149780,Google Places,UNESCO World Heritage vineyard zone; major agri-tourism hub
+39,Pierre-André Jaunin,Organic Vineyard / Farm,Chexbres,VD,"Chem. de Chenilly 2, 1071 Chexbres",46.480870,6.782510,2554200,1148940,Google Places,Organic vigneron; cellar tours; passionate direct sales
+40,Domaine Bovy,Vineyard / Wine Farm,Chexbres,VD,"Rue du Bourg de Plaêt 15, 1071 Chexbres",46.480007,6.779378,2553920,1148850,Google Places,Lavaux Saphorin wines; terrace with panoramic lake view
+41,Domaine des Faverges,Vineyard / Wine Farm,Saint-Saphorin,VD,"Rte de Vevey 11, 1071 Saint-Saphorin",46.475911,6.794140,2555280,1148370,Google Places,Lavaux estate; UNESCO wine zone; iconic lakeshore vineyard
+42,Caveau de Saint-Saphorin,Vineyard / Wine Farm,Saint-Saphorin,VD,"Chem. de l'Ancien-Collège 6, 1071 Saint-Saphorin",46.472808,6.797216,2555550,1148020,Google Places,Village cave / vineyard; Lavaux zone
+43,Cave de Corseaux,Vineyard / Winery,Corseaux,VD,"Rue du Village 20, 1802 Corseaux",46.472234,6.832378,2558620,1147960,Google Places,Boutique winery; Chasselas + red; cellar tour
+44,Ferme Philipona,Livestock / Cheese Farm,Chardonne,VD,"Chem. de Perey Very, 1801 Chardonne",46.509238,6.827237,2558160,1152020,Google Places,Cheese production (Le Jaman); family livestock farm
+45,Fisheries of Upper Lake Geneva,Fishery / Direct Sales,Montreux,VD,"Port du Basset, 1815 Montreux",46.441738,6.882158,2563060,1144610,Google Places,Fresh lake fish; perch fillets; direct sales + Vevey market
+46,Laiterie de la Grenette,Dairy / Fromagerie,Vevey,VD,"Rue des Deux-Marchés 27, 1800 Vevey",46.460127,6.843246,2559310,1146690,Google Places,Artisan cheese and dairy; Vacherin fondue; local landmark
+47,Ferme des Meleys,Mixed Farm / Agritourism,Aigle,VD,"Chemin des Meleys 2, 1860 Aigle",46.313503,6.948556,2569240,1130960,Google Places,Fruits vegetables apricot products; camper stop; 24h self-service

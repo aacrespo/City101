@@ -1,0 +1,33 @@
+﻿ID,Nom,Type,Commune,Canton,Region,Adresse,lat_wgs84,lon_wgs84,E_LV95,N_LV95,Source,Statut_Coordonnees
+9,Etablissement secondaire d'Echallens - Trois-Sapins,Secondaire,Echallens,VD,Broye - Gros-de-Vaud,"Chemin du Collège 6, 1040 Echallens",46.640200,6.647600,2539433.83,1165745.94,DGEO Annuaire 2025-2026 (vd.ch),Oui - OSM
+13,Etablissement secondaire de Moudon - Lucens,Secondaire,Moudon,VD,Broye - Gros-de-Vaud,"Avenue de Lucens 3b, 1510 Moudon",46.668000,6.794500,2550706.43,1168733.19,DGEO Annuaire 2025-2026 (vd.ch),Oui - OSM/NPA
+14,Etablissement secondaire de Payerne et environs,Secondaire,Payerne,VD,Broye - Gros-de-Vaud,"Avenue de la Promenade 11, 1530 Payerne",46.820600,6.935700,2561620.80,1185617.83,DGEO Annuaire 2025-2026 (vd.ch),Oui - OSM/NPA
+30,Etablissement secondaire de Renens,Secondaire,Renens VD,VD,CRENOL,"Rue du Léman 12, 1020 Renens VD",46.530800,6.586000,2534585.20,1153634.61,DGEO Annuaire 2025-2026 (vd.ch),Oui - Google Places
+34,Etablissement secondaire d'Orbe et environs,Secondaire,Orbe,VD,Jura - Nord vaudois,"Route de Valeyres 1a, 1350 Orbe",46.728000,6.533000,2530772.64,1175600.76,DGEO Annuaire 2025-2026 (vd.ch),Oui - OSM/NPA
+38,Etablissement secondaire d'Yverdon-les-Bains - de Felice,Secondaire,Yverdon-les-Bains,VD,Jura - Nord vaudois,"Rue de l'Arsenal 14, 1400 Yverdon-les-Bains",46.780000,6.641000,2539086.78,1181291.41,DGEO Annuaire 2025-2026 (vd.ch),Oui - OSM/NPA
+40,Etablissement secondaire d'Yverdon-les-Bains - Léon-Michaud,Secondaire,Yverdon-les-Bains,VD,Jura - Nord vaudois,"Rue Léon-Michaud 3, 1400 Yverdon-les-Bains",46.779000,6.632000,2538398.36,1181187.28,DGEO Annuaire 2025-2026 (vd.ch),Oui - OSM/NPA
+46,Etablissement secondaire de Coppet - Terre-Sainte,Secondaire,Coppet,VD,La Dôle,"Route de Founex 31, 1296 Coppet",46.322600,6.187100,2503613.99,1130903.98,DGEO Annuaire 2025-2026 (vd.ch),Oui - Google Places
+50,Etablissement secondaire de Gland - Grand-Champ,Secondaire,Gland,VD,La Dôle,"Rue du Collège , 1196 Gland",46.421900,6.259800,2509378.53,1141854.57,DGEO Annuaire 2025-2026 (vd.ch),Oui - Google Places
+52,Etablissement secondaire de Nyon - Marens,Secondaire,Nyon,VD,La Dôle,"Route du Stand 5, 1260 Nyon",46.382200,6.226000,2506712.12,1137481.51,DGEO Annuaire 2025-2026 (vd.ch),Oui - Google Places
+81,Etablissement secondaire de Pully,Secondaire,Pully,VD,Lavaux-Riviera,"Chemin du Fau-blanc 15, 1009 Pully",46.513000,6.660000,2540242.64,1151596.84,DGEO Annuaire 2025-2026 (vd.ch),Oui - Google Places
+85,Etablissement secondaire de Cossonay et Penthalaz - Pré aux Moines,Secondaire,Cossonay-Ville,VD,Venoge-Lac,"Pré aux Moines 5, 1304 Cossonay-Ville",46.615000,6.506000,2528559.29,1163064.04,DGEO Annuaire 2025-2026 (vd.ch),Oui - OSM/NPA
+88,Etablissement secondaire de Morges - Beausobre,Secondaire,Morges,VD,Venoge-Lac,"Chemin de la Grosse-Pierre 1, 1110 Morges",46.517000,6.500800,2528030.56,1152175.34,DGEO Annuaire 2025-2026 (vd.ch),Oui - Google Places
+94,CO de l'Aubépine,Secondaire (CO),Genève,GE,Canton de Genève,"Rue de l'Aubépine 21, 1205 Genève",46.188200,6.147100,2500287.47,1116015.41,DIP Genève - edu.ge.ch/secondaire1,Oui - Google Places
+95,CO de Bois-Caran,Secondaire (CO),Collonge-Bellerive,GE,Canton de Genève,"Chemin du Bois-Caran 40, 1245 Collonge-Bellerive",46.248100,6.198900,2504391.65,1122608.78,DIP Genève - edu.ge.ch/secondaire1,Oui - Google Places
+96,CO de Budé,Secondaire (CO),Genève,GE,Canton de Genève,"Chemin Briquet 4, 1209 Genève",46.225100,6.127200,2498819.90,1120142.36,DIP Genève - edu.ge.ch/secondaire1,Oui - Google Places
+97,CO de Cayla,Secondaire (CO),Genève,GE,Canton de Genève,"Chemin William-Lescaze 8, 1203 Genève",46.205500,6.120500,2498266.38,1117972.50,DIP Genève - edu.ge.ch/secondaire1,Oui - Google Places
+98,CO des Colombières,Secondaire (CO),Versoix,GE,Canton de Genève,"Chemin des Colombières 4, 1290 Versoix",46.278900,6.162800,2501663.63,1126076.90,DIP Genève - edu.ge.ch/secondaire1,Oui - Google Places
+99,CO des Coudriers,Secondaire (CO),Genève,GE,Canton de Genève,"Avenue de Joli-Mont 15A, 1209 Genève",46.220300,6.116500,2497985.45,1119622.72,DIP Genève - edu.ge.ch/secondaire1,Oui - Google Places
+100,CO de Drize,Secondaire (CO),Carouge,GE,Canton de Genève,"Route de Drize 8, 1227 Carouge",46.175400,6.137600,2499530.47,1114604.83,DIP Genève - edu.ge.ch/secondaire1,Oui - Google Places
+101,CO de la Florence,Secondaire (CO),Genève,GE,Canton de Genève,"Chemin du Velours 16, 1208 Genève",46.191800,6.169000,2501984.57,1116387.92,DIP Genève - edu.ge.ch/secondaire1,Oui - Google Places
+102,CO du Foron,Secondaire (CO),Thônex,GE,Canton de Genève,"Chemin du Foron 43, 1226 Thônex",46.196500,6.210500,2505196.26,1116859.27,DIP Genève - edu.ge.ch/secondaire1,Oui - Google Places
+103,CO de la Golette,Secondaire (CO),Meyrin,GE,Canton de Genève,"Rue de la Golette 17, 1217 Meyrin",46.228700,6.076300,2494900.23,1120609.50,DIP Genève - edu.ge.ch/secondaire1,Oui - Google Places
+104,CO de la Gradelle,Secondaire (CO),Chêne-Bougeries,GE,Canton de Genève,"Chemin du Pré-du-Couvent 5, 1224 Chêne-Bougeries",46.202600,6.181900,2502999.61,1117572.30,DIP Genève - edu.ge.ch/secondaire1,Oui - Google Places
+105,CO des Grandes-Communes,Secondaire (CO),Petit-Lancy,GE,Canton de Genève,"Chemin Gérard-De-Ternier 20, 1213 Petit-Lancy",46.193900,6.106800,2497187.21,1116701.05,DIP Genève - edu.ge.ch/secondaire1,Oui - Google Places
+106,CO du Marais,Secondaire (CO),Vernier (Le Lignon),GE,Canton de Genève,"Avenue du Lignon 55, 1219 Le Lignon",46.206000,6.096000,2496376.62,1118060.18,DIP Genève - edu.ge.ch/secondaire1,Non - Approximatif
+107,CO de Montbrillant,Secondaire (CO),Genève,GE,Canton de Genève,"Rue de Montbrillant 29, 1201 Genève",46.214100,6.140800,2499848.81,1118902.24,DIP Genève - edu.ge.ch/secondaire1,Oui - Google Places
+108,CO de Pinchat,Secondaire (CO),Carouge,GE,Canton de Genève,"Chemin Charles-Poluzzi 50, 1227 Carouge",46.180900,6.148300,2500366.74,1115202.49,DIP Genève - edu.ge.ch/secondaire1,Oui - Google Places
+109,CO du Renard,Secondaire (CO),Vernier,GE,Canton de Genève,"Avenue du Lignon 55, 1219 Vernier",46.205800,6.095800,2496360.81,1118038.22,DIP Genève - edu.ge.ch/secondaire1,Non - Approximatif
+110,CO de Sécheron,Secondaire (CO),Genève,GE,Canton de Genève,"Avenue Blanc 1, 1202 Genève",46.217700,6.146100,2500264.36,1119295.62,DIP Genève - edu.ge.ch/secondaire1,Oui - Google Places
+111,CO des Voirets,Secondaire (CO),Plan-les-Ouates,GE,Canton de Genève,"Chemin des Voirets 22, 1228 Plan-les-Ouates",46.172800,6.116700,2497911.80,1114342.85,DIP Genève - edu.ge.ch/secondaire1,Oui - Google Places
+112,CO du Vuillonnex,Secondaire (CO),Confignon,GE,Canton de Genève,"Chemin de Sous le Clos 3, 1232 Confignon",46.177400,6.081100,2495171.70,1114901.15,DIP Genève - edu.ge.ch/secondaire1,Oui - Google Places

@@ -1,0 +1,133 @@
+name,type,public_or_private,access_type,lat_wgs84,lon_wgs84,municipality,source
+Bibliothèque de la Cité,library,public,free,46.2014,6.1462,Geneva,OSM
+Bibliothèque du Musée d'Art et d'Histoire,library,public,free,46.2004,6.1538,Geneva,OSM
+Bibliothèque de Carouge,library,public,free,46.1887,6.1439,Carouge,OSM
+Bibliothèque Musicale de Genève,library,public,free,46.2011,6.1458,Geneva,OSM
+Bibliothèque Universitaire de Genève,library,public,free,46.1992,6.1408,Geneva,OSM
+Médiathèque de la Servette,library,public,free,46.2151,6.1351,Geneva,OSM
+Musée d'Art et d'Histoire,museum,public,paid,46.1998,6.1543,Geneva,Google Places
+Musée d'Ethnographie de Genève,museum,public,free,46.1942,6.1448,Geneva,Google Places
+MAMCO – Musée d'Art Moderne et Contemporain,museum,public,paid,46.1991,6.1419,Geneva,Google Places
+Musée d'Histoire des Sciences,museum,public,free,46.2264,6.1538,Geneva,Google Places
+Maison Tavel,museum,public,paid,46.2014,6.1468,Geneva,Google Places
+Espace Culturel des Grottes,cultural_center,public,free,46.2098,6.1441,Geneva,OSM
+La Maison des Associations,community_center,public,free,46.1971,6.1397,Geneva,OSM
+Le Commun – Bâtiment d'Art Contemporain,cultural_center,public,mixed,46.1988,6.1413,Geneva,OSM
+Maison des Quartiers Jonction,community_center,public,free,46.1963,6.1358,Geneva,OSM
+Maison de Quartier des Pâquis,community_center,public,free,46.2091,6.1481,Geneva,OSM
+Maison de Quartier Plainpalais,community_center,public,free,46.1991,6.1414,Geneva,OSM
+Centre de Loisirs et Culture Rive Gauche,community_center,public,free,46.2032,6.1501,Geneva,OSM
+Espace Kugler,cultural_center,public,mixed,46.1988,6.1541,Geneva,OSM
+FabLab Genève,makerspace,private,paid,46.1994,6.1409,Geneva,OSM
+Coworking Station Geneva,coworking_space,private,paid,46.2089,6.1434,Geneva,OSM
+Impact Hub Geneva,coworking_space,private,paid,46.1998,6.1419,Geneva,OSM
+Bonne Cause Repair Café,repair_cafe,private,free,46.2015,6.1452,Geneva,OSM
+Centre Culturel Africain,cultural_center,private,free,46.2041,6.1489,Geneva,OSM
+Café des Philosophes,book_cafe,private,free,46.2007,6.1461,Geneva,OSM
+Librairie Payot Rive Gauche,book_cafe,private,free,46.2033,6.15,Geneva,OSM
+Maison Internationale des Associations,community_center,public,free,46.1972,6.1398,Geneva,OSM
+Centre Culturel de Carouge,cultural_center,public,free,46.1889,6.1441,Carouge,OSM
+Espace CDC Carouge,community_center,public,free,46.1895,6.1436,Carouge,OSM
+Geneva Youth Center (Cité des Jeunes),youth_center,public,free,46.2054,6.1368,Geneva,OSM
+Centre de Contact Suisses-Immigrés,community_center,private,free,46.2044,6.1484,Geneva,OSM
+Bibliothèque Municipale de Nyon,library,public,free,46.3847,6.2398,Nyon,OSM
+Musée du Léman,museum,public,paid,46.3831,6.2358,Nyon,Google Places
+Musée Romain de Nyon,museum,public,paid,46.3852,6.2412,Nyon,Google Places
+Maison de la Culture Nyon,cultural_center,public,free,46.3844,6.2401,Nyon,OSM
+Centre Communautaire Nyon,community_center,public,free,46.3861,6.2419,Nyon,OSM
+Espace Jeunesse Nyon,youth_center,public,free,46.3838,6.2387,Nyon,OSM
+Coworking Espace K Nyon,coworking_space,private,paid,46.3821,6.2371,Nyon,OSM
+FabLab Nyon,makerspace,private,mixed,46.3815,6.2363,Nyon,OSM
+Bibliothèque Municipale de Morges,library,public,free,46.5141,6.5015,Morges,OSM
+Musée Alexis Forel,museum,public,paid,46.5148,6.5021,Morges,Google Places
+Musée Militaire Vaudois,museum,public,paid,46.5159,6.4942,Morges,Google Places
+Centre Culturel l'Octogone,cultural_center,public,mixed,46.5139,6.5009,Morges,OSM
+Maison de Quartier Morges,community_center,public,free,46.5132,6.5002,Morges,OSM
+Centre de Jeunesse Morges,youth_center,public,free,46.5121,6.4988,Morges,OSM
+Espace Coworking Morges,coworking_space,private,paid,46.5115,6.4981,Morges,OSM
+Repair Café Morges,repair_cafe,private,free,46.5144,6.5018,Morges,OSM
+Bibliothèque Cantonale et Universitaire – Lausanne,library,public,free,46.5225,6.6315,Lausanne,OSM
+Bibliothèque de la Riponne,library,public,free,46.5213,6.6334,Lausanne,OSM
+Bibliothèque de Chailly,library,public,free,46.5342,6.6301,Lausanne,OSM
+Bibliothèque de Renens,library,public,free,46.5361,6.5886,Renens,OSM
+Musée Cantonal des Beaux-Arts (MCBA),museum,public,paid,46.5212,6.6283,Lausanne,Google Places
+Musée de l'Art Brut,museum,public,paid,46.5291,6.6389,Lausanne,Google Places
+Musée Historique de Lausanne,museum,public,paid,46.5197,6.6348,Lausanne,Google Places
+Musée Olympique,museum,public,paid,46.5062,6.6303,Lausanne,Google Places
+Musée Cantonal de Géologie,museum,public,free,46.5228,6.6378,Lausanne,OSM
+Fondation de l'Hermitage,museum,public,paid,46.5291,6.6501,Lausanne,Google Places
+MUDAC – Musée de Design et d'Arts Appliqués,museum,public,paid,46.5211,6.6289,Lausanne,OSM
+Maison de la Littérature et des Langues,cultural_center,public,free,46.5208,6.6341,Lausanne,OSM
+La Grange de Dorigny,cultural_center,public,mixed,46.5221,6.5784,Lausanne,OSM
+Espace Culturel le Bourg,cultural_center,public,free,46.5202,6.6352,Lausanne,OSM
+Maison de Quartier de l'Entre-Deux-Villes,community_center,public,free,46.5181,6.6418,Lausanne,OSM
+Centre Social Protestant Lausanne,community_center,private,free,46.5196,6.6331,Lausanne,OSM
+Espace Dickens (Maison de Quartier),community_center,public,free,46.5334,6.6452,Lausanne,OSM
+Youth Lab Lausanne,youth_center,public,free,46.5209,6.6272,Lausanne,OSM
+Maison des Jeunes Lausanne,youth_center,public,free,46.5188,6.6395,Lausanne,OSM
+Impact Hub Lausanne,coworking_space,private,paid,46.5215,6.6281,Lausanne,OSM
+Coworking Lausanne L'Atelier,coworking_space,private,paid,46.5219,6.6267,Lausanne,OSM
+FabLab EPFL,makerspace,public,free,46.5183,6.5681,Lausanne,OSM
+Artilect Lausanne,makerspace,private,paid,46.5211,6.6274,Lausanne,OSM
+Repair Café Lausanne,repair_cafe,private,free,46.5198,6.6349,Lausanne,OSM
+Le Bûcheron – Café Librairie,book_cafe,private,free,46.5192,6.6338,Lausanne,OSM
+Librairie Basta,book_cafe,private,free,46.5204,6.6344,Lausanne,OSM
+CHUV Espace Public de Santé,community_center,public,free,46.5241,6.6408,Lausanne,OSM
+Espace Fil Rouge Lausanne,public_discussion_space,private,free,46.5188,6.6321,Lausanne,OSM
+SIC – Service d'Information Culturel,cultural_center,public,free,46.5216,6.6298,Lausanne,OSM
+Bibliothèque Municipale de Vevey,library,public,free,46.4629,6.8441,Vevey,OSM
+Alimentarium – Musée de l'Alimentation,museum,public,paid,46.4608,6.8418,Vevey,Google Places
+Musée Jenisch,museum,public,paid,46.4621,6.8433,Vevey,Google Places
+Musée Historique de Vevey,museum,public,paid,46.4638,6.8459,Vevey,OSM
+Maison de la Culture Vevey,cultural_center,public,mixed,46.4644,6.8468,Vevey,OSM
+Centre Culturel du Chablais,cultural_center,public,free,46.4618,6.8429,Vevey,OSM
+Espace Jeunes Vevey,youth_center,public,free,46.4632,6.8447,Vevey,OSM
+Repair Café Vevey,repair_cafe,private,free,46.4625,6.8438,Vevey,OSM
+Coworking Vevey Pixel,coworking_space,private,paid,46.4611,6.8422,Vevey,OSM
+Bibliothèque Municipale de Montreux,library,public,free,46.4344,6.9131,Montreux,OSM
+Auditorium Stravinski / Centre Culturel,cultural_center,public,paid,46.4361,6.9155,Montreux,OSM
+Musée du Vieux-Montreux,museum,public,paid,46.4352,6.9148,Montreux,OSM
+Centre Communautaire Montreux,community_center,public,free,46.4338,6.9122,Montreux,OSM
+Espace Jeunesse Montreux,youth_center,public,free,46.4345,6.9139,Montreux,OSM
+Maison du Léman Montreux,cultural_center,public,mixed,46.4327,6.9112,Montreux,OSM
+Bibliothèque de Rolle,library,public,free,46.4571,6.3418,Rolle,OSM
+Musée du Léman Rolle,museum,public,paid,46.4563,6.3404,Rolle,OSM
+Espace Culturel Rolle,cultural_center,public,free,46.4579,6.3428,Rolle,OSM
+Centre Culturel Lavaux,cultural_center,public,free,46.4919,6.7322,Cully,OSM
+Bibliothèque de Cully,library,public,free,46.4925,6.7335,Cully,OSM
+Espace Jeunes Lavaux,youth_center,public,free,46.4913,6.7318,Cully,OSM
+Bibliothèque de Lutry,library,public,free,46.5028,6.6896,Lutry,OSM
+Musée de la Vigne et du Vin Lutry,museum,public,paid,46.5021,6.6908,Lutry,OSM
+Bibliothèque de Pully,library,public,free,46.5087,6.6594,Pully,OSM
+Musée d'Art de Pully,museum,public,paid,46.5081,6.6582,Pully,OSM
+Centre Culturel de Pully,cultural_center,public,free,46.5093,6.6608,Pully,OSM
+Bibliothèque de Gland,library,public,free,46.4151,6.2688,Gland,OSM
+Centre Culturel de Gland,cultural_center,public,free,46.4159,6.2701,Gland,OSM
+Maison de Quartier Gland,community_center,public,free,46.4163,6.2715,Gland,OSM
+Musée du Château de Coppet,museum,public,paid,46.3191,6.1885,Coppet,Google Places
+Bibliothèque de Coppet,library,public,free,46.3198,6.1878,Coppet,OSM
+Centre Culturel l'Oriental Renens,cultural_center,public,mixed,46.5372,6.5891,Renens,OSM
+Maison de Quartier Renens,community_center,public,free,46.5355,6.5876,Renens,OSM
+Centre de Jeunesse Prilly,youth_center,public,free,46.5264,6.5972,Prilly,OSM
+Bibliothèque de Prilly,library,public,free,46.5271,6.5988,Prilly,OSM
+Centre Communautaire Bussigny,community_center,public,free,46.5308,6.5582,Bussigny,OSM
+Bibliothèque d'Echandens,library,public,free,46.5181,6.5445,Echandens,OSM
+Bibliothèque de Villeneuve,library,public,free,46.3958,6.9338,Villeneuve,OSM
+Centre Culturel de Villeneuve,cultural_center,public,free,46.3965,6.9352,Villeneuve,OSM
+Bibliothèque de La Tour-de-Peilz,library,public,free,46.4538,6.8642,La Tour-de-Peilz,OSM
+Musée Suisse du Jeu,museum,public,paid,46.4531,6.8635,La Tour-de-Peilz,Google Places
+Centre Communautaire La Tour-de-Peilz,community_center,public,free,46.4545,6.8655,La Tour-de-Peilz,OSM
+Bibliothèque de Blonay,library,public,free,46.4619,6.8898,Blonay,OSM
+Centre Culturel de Chexbres,cultural_center,public,free,46.4901,6.7718,Chexbres,OSM
+Espace Communautaire Corsier,community_center,public,free,46.4657,6.8759,Corsier-sur-Vevey,OSM
+Plateforme 10 (Arts District Lausanne),cultural_center,public,mixed,46.5211,6.6278,Lausanne,Google Places
+DéchetriLAB (Repair & Circular),makerspace,private,free,46.5214,6.6273,Lausanne,OSM
+Espace Numérique Ouchy,public_discussion_space,public,free,46.5059,6.6288,Lausanne,OSM
+La Rotonde Lausanne,public_discussion_space,public,free,46.5198,6.6327,Lausanne,OSM
+Bibliothèque Vivante Lausanne,public_discussion_space,public,free,46.5204,6.6341,Lausanne,OSM
+Espace Presse Lausanne,public_discussion_space,public,free,46.5191,6.6333,Lausanne,OSM
+MakerSpace HEIG-VD Yverdon,makerspace,public,mixed,46.7794,6.6411,Yverdon-les-Bains,OSM
+Bibliothèque d'Aubonne,library,public,free,46.4969,6.3928,Aubonne,OSM
+Centre Associatif Cossonay,community_center,public,free,46.6138,6.5019,Cossonay,OSM
+FabLab Vevey,makerspace,private,paid,46.4615,6.8427,Vevey,OSM
+Coworking Swiss Riviera Vevey,coworking_space,private,paid,46.4628,6.8443,Vevey,OSM

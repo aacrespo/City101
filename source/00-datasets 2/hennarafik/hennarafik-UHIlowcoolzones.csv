@@ -1,0 +1,110 @@
+zone_name,lat_wgs84,lon_wgs84,E_LV95,N_LV95,UHI_category,UHI_intensity_score,description,land_use_type,population,density_per_km2,impervious_surface_pct,green_cover_pct
+Chancy,46.147639,5.97888,2487219,1111733,LOW,1,"Low-density residential (309/km2), weak UHI.",Village,1664,309,15-30%,60-75%
+Dardagny,46.198504,5.989049,2488109,1117372,LOW,1,"Low-density residential (213/km2), weak UHI.",Village,1828,213,15-30%,60-75%
+Avully,46.167486,5.998485,2488774,1113911,LOW,1,"Low-density residential (378/km2), weak UHI.",Village,1746,378,15-30%,60-75%
+Avusy,46.149561,6.008823,2489536,1111904,LOW,1,"Low-density residential (273/km2), weak UHI.",Village,1412,273,15-30%,60-75%
+Russin,46.193891,6.013943,2490021,1116824,LOW,1,"Rural/village (111/km2), minimal UHI.",Rural,543,111,<15%,>75%
+Cartigny,46.176132,6.030583,2491270,1114827,LOW,1,"Low-density residential (240/km2), weak UHI.",Village,1050,240,15-30%,60-75%
+Laconnex,46.158927,6.03398,2491498,1112910,LOW,1,"Rural/village (184/km2), minimal UHI.",Rural,704,184,<15%,>75%
+Satigny,46.214087,6.036782,2491824,1119037,LOW,1,"Low-density residential (249/km2), weak UHI.",Village,4713,249,15-30%,60-75%
+Aire-la-Ville,46.190249,6.042215,2492196,1116380,LOW,1,"Low-density residential (400/km2), weak UHI.",Village,1173,400,15-30%,60-75%
+Soral,46.148125,6.047319,2492507,1111691,LOW,1,"Low-density residential (320/km2), weak UHI.",Village,942,320,15-30%,60-75%
+Collex-Bossy,46.279565,6.12202,2498523,1126201,LOW,1,"Low-density residential (242/km2), weak UHI.",Village,1666,242,15-30%,60-75%
+Chavannes-des-Bois,46.316882,6.136659,2499720,1130330,LOW,1,"Low-density residential (464/km2), weak UHI.",Residential,983,464,15-30%,60-75%
+Chavannes-de-Bogis,46.340063,6.154471,2501134,1132884,LOW,1,"Low-density residential (484/km2), weak UHI.",Residential,1384,484,15-30%,60-75%
+Commugny,46.323609,6.160873,2501597,1131047,LOW,1,"Low-density residential (455/km2), weak UHI.",Residential,2973,455,15-30%,60-75%
+Bogis-Bossey,46.353796,6.171597,2502477,1134389,LOW,1,"Low-density residential (404/km2), weak UHI.",Residential,991,404,15-30%,60-75%
+Mies,46.299506,6.174484,2502602,1128351,LOW,1,"Low-density residential (328/km2), weak UHI.",Village,2180,328,15-30%,60-75%
+Tannay,46.307227,6.181068,2503123,1129201,LOW,1,"Low-density residential (497/km2), weak UHI.",Residential,1746,497,15-30%,60-75%
+Arnex-sur-Nyon,46.37291,6.189816,2503913,1136491,LOW,1,"Rural/village (132/km2), minimal UHI.",Rural,270,132,<15%,>75%
+Grens,46.396628,6.191741,2504103,1139125,LOW,1,"Rural/village (153/km2), minimal UHI.",Rural,391,153,<15%,>75%
+Founex,46.33313,6.197549,2504438,1132060,LOW,1,"Low-density residential (463/km2), weak UHI.",Residential,3763,463,15-30%,60-75%
+Signy-Avenex,46.392652,6.20412,2505048,1138668,LOW,1,"Low-density residential (313/km2), weak UHI.",Village,608,313,15-30%,60-75%
+Celigny,46.347303,6.205228,2505054,1133626,LOW,1,"Rural/village (100/km2), minimal UHI.",Rural,862,100,<15%,>75%
+Crans (VD),46.358841,6.21388,2505740,1134898,LOW,1,"Low-density residential (276/km2), weak UHI.",Village,2445,276,15-30%,60-75%
+Anieres,46.274713,6.233159,2507080,1125524,LOW,1,"Low-density residential (292/km2), weak UHI.",Village,2563,292,15-30%,60-75%
+Choulex,46.226274,6.223822,2506277,1120151,LOW,1,"Low-density residential (315/km2), weak UHI.",Village,1232,315,15-30%,60-75%
+Duillier,46.409266,6.229716,2507045,1140484,LOW,1,"Low-density residential (277/km2), weak UHI.",Village,1140,277,15-30%,60-75%
+Hermance,46.293557,6.244682,2508000,1127605,LOW,1,"Low-density residential (254/km2), weak UHI.",Village,1246,254,15-30%,60-75%
+Meinier,46.24302,6.23508,2507174,1121999,LOW,1,"Low-density residential (298/km2), weak UHI.",Village,2069,298,15-30%,60-75%
+Coinsins,46.423373,6.237337,2507655,1142043,LOW,1,"Rural/village (178/km2), minimal UHI.",Rural,519,178,<15%,>75%
+Begnins,46.446824,6.253295,2508921,1144631,LOW,1,"Low-density residential (425/km2), weak UHI.",Residential,2035,425,15-30%,60-75%
+Presinge,46.218031,6.260167,2509067,1119192,LOW,1,"Rural/village (150/km2), minimal UHI.",Rural,708,150,<15%,>75%
+Prangins,46.391064,6.250807,2508636,1138436,LOW,1,"Low-density residential (369/km2), weak UHI.",Village,4271,369,15-30%,60-75%
+Burtigny,46.471563,6.265268,2509882,1147367,LOW,1,"Rural/village (71/km2), minimal UHI.",Rural,401,71,<15%,>75%
+Gy,46.251727,6.270072,2509887,1122926,LOW,1,"Rural/village (168/km2), minimal UHI.",Rural,553,168,<15%,>75%
+Jussy,46.237137,6.279097,2510559,1121294,LOW,1,"Rural/village (108/km2), minimal UHI.",Rural,1223,108,<15%,>75%
+Luins,46.441474,6.275354,2510607,1144011,LOW,1,"Low-density residential (237/km2), weak UHI.",Village,633,237,15-30%,60-75%
+Vinzel,46.450451,6.276984,2510747,1145007,LOW,1,"Low-density residential (352/km2), weak UHI.",Village,387,352,15-30%,60-75%
+Bursins,46.45204,6.286335,2511468,1145173,LOW,1,"Low-density residential (242/km2), weak UHI.",Village,814,242,15-30%,60-75%
+Saint-Oyens,46.494939,6.298241,2512452,1149928,LOW,1,"Rural/village (149/km2), minimal UHI.",Rural,457,149,<15%,>75%
+Gilly,46.462209,6.300856,2512600,1146287,LOW,1,"Rural/village (186/km2), minimal UHI.",Rural,1441,186,<15%,>75%
+Dully,46.420388,6.287917,2511538,1141653,LOW,1,"Rural/village (108/km2), minimal UHI.",Rural,620,108,<15%,>75%
+Tartegnin,46.469729,6.311571,2513435,1147111,LOW,1,"Low-density residential (216/km2), weak UHI.",Village,235,216,15-30%,60-75%
+Essertines-sur-Rolle,46.483628,6.31248,2513527,1148655,LOW,1,"Rural/village (113/km2), minimal UHI.",Rural,785,113,<15%,>75%
+Bursinel,46.440994,6.308862,2513181,1143920,LOW,1,"Rural/village (69/km2), minimal UHI.",Rural,532,69,<15%,>75%
+Rolle,46.457583,6.331688,2514961,1145739,LOW,1,"Low-density residential (484/km2), weak UHI.",Residential,6540,484,15-30%,60-75%
+Bougy-Villars,46.483687,6.350808,2516470,1148620,LOW,1,"Low-density residential (290/km2), weak UHI.",Village,514,290,15-30%,60-75%
+Aubonne,46.496381,6.367893,2517801,1150013,LOW,1,"Low-density residential (269/km2), weak UHI.",Village,3856,269,15-30%,60-75%
+Perroy,46.470182,6.359113,2517087,1147110,LOW,1,"Rural/village (98/km2), minimal UHI.",Rural,1584,98,<15%,>75%
+Fechy,46.47883,6.372745,2518147,1148057,LOW,1,"Low-density residential (342/km2), weak UHI.",Village,923,342,15-30%,60-75%
+Saint-Livres,46.518078,6.380118,2518772,1152412,LOW,1,"Rural/village (88/km2), minimal UHI.",Rural,715,88,<15%,>75%
+Allaman,46.470057,6.393881,2519757,1147060,LOW,1,"Rural/village (37/km2), minimal UHI.",Rural,430,37,<15%,>75%
+Yens,46.527031,6.406689,2520824,1153380,LOW,1,"Rural/village (158/km2), minimal UHI.",Rural,1498,158,<15%,>75%
+Lavigny,46.50055,6.408093,2520893,1150435,LOW,1,"Low-density residential (275/km2), weak UHI.",Village,1099,275,15-30%,60-75%
+Buchillon,46.467003,6.411139,2521078,1146703,LOW,1,"Rural/village (33/km2), minimal UHI.",Rural,686,33,<15%,>75%
+Villars-sous-Yens,46.506946,6.430121,2522593,1151124,LOW,1,"Rural/village (198/km2), minimal UHI.",Rural,602,198,<15%,>75%
+Lussy-sur-Morges,46.500995,6.448106,2523965,1150445,LOW,1,"Low-density residential (307/km2), weak UHI.",Village,719,307,15-30%,60-75%
+Denens,46.517426,6.452628,2524335,1152267,LOW,1,"Low-density residential (225/km2), weak UHI.",Village,742,225,15-30%,60-75%
+Vaux-sur-Morges,46.538511,6.463899,2525229,1154600,LOW,1,"Rural/village (88/km2), minimal UHI.",Rural,185,88,<15%,>75%
+Lully (VD),46.503937,6.465745,2525323,1150755,LOW,1,"Low-density residential (408/km2), weak UHI.",Residential,836,408,15-30%,60-75%
+Vufflens-le-Chateau,46.525806,6.466708,2525427,1153185,LOW,1,"Low-density residential (393/km2), weak UHI.",Village,837,393,15-30%,60-75%
+Saint-Prex,46.48545,6.449198,2524027,1148716,LOW,1,"Low-density residential (232/km2), weak UHI.",Village,5865,232,15-30%,60-75%
+Chigny,46.516175,6.476681,2526179,1152105,LOW,1,"Low-density residential (472/km2), weak UHI.",Residential,420,472,15-30%,60-75%
+Echichens,46.545104,6.481708,2526604,1155316,LOW,1,"Low-density residential (243/km2), weak UHI.",Village,3222,243,15-30%,60-75%
+Tolochenaz,46.501606,6.477278,2526205,1150485,LOW,1,"Low-density residential (345/km2), weak UHI.",Village,1934,345,15-30%,60-75%
+Romanel-sur-Morges,46.556607,6.510587,2528834,1156568,LOW,1,"Low-density residential (258/km2), weak UHI.",Village,454,258,15-30%,60-75%
+Aclens,46.568295,6.510908,2528874,1157867,LOW,1,"Rural/village (150/km2), minimal UHI.",Rural,585,150,<15%,>75%
+Bremblens,46.548303,6.5194,2529499,1155637,LOW,1,"Low-density residential (211/km2), weak UHI.",Village,614,211,15-30%,60-75%
+Vufflens-la-Ville,46.575274,6.537506,2530922,1158619,LOW,1,"Low-density residential (249/km2), weak UHI.",Village,1342,249,15-30%,60-75%
+Mex (VD),46.577495,6.559204,2532588,1158847,LOW,1,"Low-density residential (285/km2), weak UHI.",Village,807,285,15-30%,60-75%
+Saint-Sulpice (VD),46.513016,6.559951,2532565,1151679,LOW,1,"Low-density residential (214/km2), weak UHI.",Village,5155,214,15-30%,60-75%
+Paudex,46.508396,6.673656,2541286,1151074,LOW,1,"Low-density residential (387/km2), weak UHI.",Village,1509,387,15-30%,60-75%
+Bourg-en-Lavaux,46.490224,6.724892,2545200,1149017,LOW,1,"Rural/village (199/km2), minimal UHI.",Rural,5464,199,<15%,>75%
+Savigny,46.548883,6.727039,2545424,1155536,LOW,1,"Low-density residential (220/km2), weak UHI.",Village,3517,220,15-30%,60-75%
+Forel (Lavaux),46.537892,6.762864,2548161,1154290,LOW,1,"Rural/village (113/km2), minimal UHI.",Rural,2087,113,<15%,>75%
+Rivaz,46.476398,6.780025,2549420,1147443,LOW,1,"Rural/village (112/km2), minimal UHI.",Rural,329,112,<15%,>75%
+Puidoux,46.494167,6.777321,2549229,1149420,LOW,1,"Rural/village (90/km2), minimal UHI.",Rural,2974,90,<15%,>75%
+Saint-Saphorin (Lavaux),46.479001,6.793185,2550433,1147724,LOW,1,"Rural/village (73/km2), minimal UHI.",Rural,387,73,<15%,>75%
+Chardonne,46.476527,6.813996,2552029,1147436,LOW,1,"Low-density residential (217/km2), weak UHI.",Village,3337,217,15-30%,60-75%
+Corseaux,46.471027,6.828278,2553121,1146816,LOW,1,"Low-density residential (304/km2), weak UHI.",Village,2320,304,15-30%,60-75%
+Granges (Veveyse),46.525586,6.826516,2553033,1152882,LOW,1,"Low-density residential (219/km2), weak UHI.",Village,977,219,15-30%,60-75%
+Bossonnens,46.528903,6.848115,2554693,1153238,LOW,1,"Low-density residential (387/km2), weak UHI.",Village,1593,387,15-30%,60-75%
+Attalens,46.512021,6.857446,2555395,1151356,LOW,1,"Low-density residential (379/km2), weak UHI.",Village,3693,379,15-30%,60-75%
+Noville,46.393952,6.882984,2557262,1138217,LOW,1,"Rural/village (61/km2), minimal UHI.",Rural,1215,61,<15%,>75%
+Blonay - Saint-Legier,46.483718,6.910402,2559438,1148181,LOW,1,"Low-density residential (399/km2), weak UHI.",Village,12464,399,15-30%,60-75%
+Rennaz,46.375787,6.918392,2559972,1136179,LOW,1,"Low-density residential (433/km2), weak UHI.",Residential,949,433,15-30%,60-75%
+Veytaux,46.423131,6.948495,2562321,1141427,LOW,1,"Rural/village (108/km2), minimal UHI.",Rural,1038,108,<15%,>75%
+Villeneuve (VD),46.406195,6.968441,2563843,1139535,LOW,1,"Rural/village (175/km2), minimal UHI.",Rural,6039,175,<15%,>75%
+Geneve - Rade lakefront,46.204183,6.147956,2500384,1117789,LOW,1,Open waterfront cooling.,Waterfront,0,0,<20%,>70%
+Geneve - Parc Eaux-Vives,46.202012,6.161988,2501463,1117530,LOW,1,Lakeside parks.,Park,0,0,<10%,>85%
+Geneve - Jardin Botanique,46.228554,6.14629,2500300,1120500,LOW,1,Botanical garden.,Park,0,0,<10%,>85%
+Geneve - Bois de la Batie,46.189715,6.132961,2499200,1116200,LOW,1,Wooded park.,Forest,0,0,<5%,>90%
+Lausanne - Bois-de-Vaux,46.511857,6.620365,2537200,1151500,LOW,1,Park/cemetery.,Park,0,0,<15%,>80%
+Lausanne - Sauvabelin,46.538963,6.636904,2538500,1154500,LOW,1,Hilltop forest.,Forest,0,0,<5%,>90%
+Vevey - lakefront,46.464222,6.848012,2554631,1146048,LOW,1,Lakeside promenade.,Waterfront,0,0,<20%,>70%
+Montreux - lakefront,46.438951,6.919452,2560100,1143200,LOW,1,Iconic promenade.,Waterfront,0,0,<20%,>70%
+Montreux - Glion,46.455196,6.931011,2561000,1145000,LOW,1,Hillside forest.,Forest,0,500,<20%,>70%
+Nyon - lakefront,46.371144,6.230278,2507023,1136246,LOW,1,Lakeside promenade.,Waterfront,0,0,<20%,>70%
+Morges - lakefront,46.51401,6.49319,2527443,1151849,LOW,1,Parks and tulip gardens.,Waterfront,0,0,<15%,>80%
+Lavaux - Dezaley,46.479068,6.770551,2548695,1147746,LOW,1,UNESCO vineyards.,Vineyard,0,0,<5%,>95%
+Lavaux - Epesses,46.488936,6.750854,2547192,1148856,LOW,1,Vine hamlet.,Vineyard,0,50,<10%,>85%
+Lavaux - Cully lakefront,46.490662,6.728663,2545490,1149063,LOW,1,Small harbour.,Waterfront,0,0,<15%,>80%
+Preverenges - Plage,46.516013,6.529122,2530203,1152039,LOW,1,Largest beach.,Beach,0,0,<10%,>85%
+Les Grangettes wetland,46.387871,6.964141,2563500,1137500,LOW,1,Protected wetland.,Nature Reserve,0,0,<3%,>95%
+Rolle - lakefront,46.457583,6.331688,2514961,1145739,LOW,1,Lakeside park.,Waterfront,0,0,<15%,>75%
+Coppet - lakefront,46.306401,6.178777,2502945,1129112,LOW,1,Lakeside park.,Waterfront,0,0,<15%,>75%
+La Tour-de-Peilz - lakefront,46.454876,6.869317,2556260,1144997,LOW,1,Lakeside park.,Waterfront,0,0,<15%,>75%
+Lutry - lakefront,46.500095,6.708165,2543926,1150126,LOW,1,Wine village harbour.,Waterfront,0,0,<20%,>70%
+Saint-Prex - lakefront,46.48545,6.449198,2524027,1148716,LOW,1,Beach and park.,Waterfront,0,0,<15%,>75%
+Pully - lakefront,46.52152,6.669522,2540983,1152536,LOW,1,Lakeside promenade.,Waterfront,0,0,<25%,>65%

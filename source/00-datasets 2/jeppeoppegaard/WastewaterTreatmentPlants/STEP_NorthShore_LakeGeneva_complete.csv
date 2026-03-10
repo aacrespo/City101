@@ -1,0 +1,10 @@
+plant_name,city,canton,capacity_population_equivalent,water_body_recipient,E_LV95,N_LV95,notes
+STEP d'Aïre (Aïre2+),Vernier,GE,600000,Rhône,2495800,1115200,Main GE plant; expansion to 1M PE underway (2028). Treats city of Geneva + 24 communes + French communes.
+STEP de Villette,Thônex,GE,142000,Arve,2507350,1117650,Serves 12 GE communes east of Geneva. Micropollutant treatment operational since 2023 (cross-border with STEP Ocybèle/Gaillard FR).
+STEP de Commugny (APEC),Commugny,VD,20000,Lac Léman,2507700,1133500,Regional micropollutant hub for western Nyon district. To be replaced by new STEP-APEC Lavasson (Gland) ~2028.
+STEP de Nyon (l'Asse),Nyon,VD,50000,Lac Léman,2508600,1138800,Two-site plant (pretreatment at Rive + biological treatment at l'Asse). To be replaced by STEP-APEC Lavasson (72500 PE) ~2028.
+STEP ERM (Région Morgienne),Morges,VD,45000,Lac Léman,2524150,1150900,Serves 15 communes. 35000 domestic + 10000 industrial PE. Rue de Lausanne 72. Renovation/expansion planned.
+STEP de Vidy (Région Lausannoise),Lausanne,VD,300000,Lac Léman,2533400,1151600,Largest plant in Lake Geneva basin. Serves Lausanne + 15 communes. New plant under construction on same site.
+STEP de l'Aviron,Vevey,VD,57000,Lac Léman,2553850,1146700,Near saturation. Operated by SIGE. To be decommissioned and replaced by new regional STEP at Noville (future).
+STEP du Pierrier,Clarens (Montreux),VD,46000,Lac Léman,2557200,1146150,Operated by SIGE. In service since 1976. To be decommissioned and replaced by new regional STEP at Noville (future).
+STEP de Jacquetan,Roche,VD,12000,Lac Léman / Rhône,2566700,1141900,Operated by EPUDEHL. In service since 1999. To be replaced by new regional STEP at Noville (future).

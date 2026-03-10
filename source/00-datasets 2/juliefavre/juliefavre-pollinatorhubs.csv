@@ -1,0 +1,30 @@
+Hub ID,Pollinator Hub Name,Municipality,Classification,Habitat Type,lat_wgs84,lon_wgs84,E_LV95,N_LV95,Area (ha),Primary Flora,Pollinator Species,Connectivity Score,Description,OSM Verified
+GE01,Jardin Botanique de Genève,Geneva,Type B,Botanical Garden,46.2231283,6.1486016,2500316,1121295,28,Diverse cultivated flora,High diversity - managed habitat,9,28 hectares botanical garden with extensive flowering plant collections,YES
+GE02,Parc La Grange,Geneva,Type B,Urban Park,46.2060984,6.1675085,2501651,1119402,20,Rose garden + meadows,Bees and butterflies,8,Historic park with famous rose garden - 200+ varieties,YES
+GE03,Parc des Eaux-Vives,Geneva,Type B,Urban Park,46.2086435,6.1692822,2501778,1119686,12,Mixed parkland trees,Moderate diversity,7,Lakefront park with mature trees and flowering shrubs,YES
+GE04,Parc Mon-Repos,Geneva,Type B,Urban Park,46.2185365,6.1499995,2500416,1121115,5,Ornamental gardens,Urban pollinators,7,Historic park near UN headquarters with formal gardens,YES
+GE05,Parc de la Perle-du-Lac,Geneva,Type C,Lakefront Park,46.2207722,6.1529263,2500626,1121363,9,Lakefront vegetation,Moderate diversity,8,Lakefront promenade park with flowering meadows,YES
+GE06,Bois de la Bâtie,Geneva,Type A,Natural Forest,46.1981208,6.1257651,2499442,1118753,20,Native forest + meadows,High diversity - bees/butterflies,9,Large forested park with wildflower meadows and zoo,YES
+GE07,Réserve Naturelle Pointe à la Bise,Collonge-Bellerive,Type A,Nature Reserve,46.2435032,6.1919727,2504506,1123846,25,Wetland + reed beds,High diversity - rare species,10,Protected lakefront wetland habitat - critical biodiversity,YES
+CP01,Parc Château de Coppet,Coppet,Type D,Historic Garden,46.3164464,6.1927752,2504504,1133211,3,Historic ornamental,Moderate diversity,6,Castle gardens with flowering borders,YES
+PR01,Parc Château de Prangins,Prangins,Type B,Historic Garden,46.3947976,6.2487871,2508508,1141897,7,Historic kitchen garden,Bees and hoverflies,8,National Museum gardens with vegetable and herb gardens,YES
+NY01,Parc du Château de Nyon,Nyon,Type D,Historic Garden,46.3811984,6.2385223,2507830,1140399,2,Ornamental gardens,Urban pollinators,6,Castle gardens overlooking lake,YES
+RO01,Parc Château de Rolle,Rolle,Type D,Historic Garden,46.4601563,6.3380469,2514682,1147848,4,Mixed parkland,Moderate diversity,7,Castle park with mature trees along lakefront,YES
+SP01,Réserve Naturelle de Saint-Prex,Saint-Prex,Type A,Wetland Reserve,46.4809059,6.4586004,2523238,1150164,15,Reed beds + wetland,High diversity - aquatic insects,9,Protected lakefront wetland with diverse habitat,YES
+MO01,Parc de l'Indépendance Morges,Morges,Type B,Urban Park,46.5055556,6.4956218,2526033,1152905,7,Mixed ornamental,Bees and butterflies,8,Lakefront park with flower gardens and mature trees,YES
+MO02,Parc du Château de Morges,Morges,Type D,Historic Garden,46.5093268,6.4983170,2526064,1153304,3,Historic gardens,Urban pollinators,7,Castle gardens in town center,YES
+RE01,Parc Bourget Vidy,Lausanne-Vidy,Type B,Lakefront Park,46.5189354,6.5934490,2533217,1154353,8,Lakefront meadows,Moderate diversity,8,Sports park with wildflower areas near Olympic Museum,YES
+LA01,Parc de Milan,Lausanne,Type B,Urban Park,46.5143126,6.6227867,2535304,1153834,15,Mixed parkland + meadows,High urban diversity,8,Large park with woodland and meadow areas,YES
+LA02,Esplanade de Montbenon,Lausanne,Type D,Urban Garden,46.5200634,6.6259276,2535527,1154471,4,Ornamental gardens,Urban pollinators,7,Terraced gardens with panoramic views,YES
+LA03,Parc Olympique Ouchy,Lausanne,Type C,Lakefront Park,46.5069892,6.6346036,2536150,1153017,6,Ornamental lakefront,Moderate diversity,8,Olympic Museum gardens and lakefront promenade,YES
+PU01,Parc de Pully,Pully,Type D,Neighborhood Park,46.5098019,6.6617476,2538146,1153217,3,Mixed parkland,Moderate diversity,7,Local park with flowering trees,YES
+LU01,Vignes de Lutry,Lutry,Type E,Vineyard Landscape,46.5032766,6.6867879,2539932,1152495,50,Vineyard terraces + hedgerows,Wild bees + butterflies,9,UNESCO Lavaux vineyards with flower-rich margins,YES
+CU01,Vignes de Cully-Lavaux,Cully,Type E,Vineyard Landscape,46.4886072,6.7271541,2542820,1150868,100,Vineyard terraces,High wild pollinator diversity,10,UNESCO World Heritage vineyard terraces - critical biodiversity,YES
+EP01,Vignes d'Épesses-Riex,Épesses,Type E,Vineyard Landscape,46.4820000,6.7600000,2545170,1150140,80,Vineyard + dry stone walls,Rare species - mining bees,10,Traditional Lavaux vineyards with stone walls and wildflowers,YES
+VE01,Quai Perdonnet Promenade,Vevey,Type C,Lakefront Promenade,46.4576470,6.8493626,2551544,1147445,8,Lakefront plantings,Moderate diversity,7,Lakefront promenade with ornamental plantings,YES
+VE02,Jardin du Rivage,Vevey,Type D,Urban Garden,46.4602978,6.8418655,2550865,1147708,2,Mixed ornamental,Urban pollinators,6,Town center garden area,YES
+TP01,Parc de la Tour-de-Peilz,La Tour-de-Peilz,Type D,Neighborhood Park,46.4537524,6.8569063,2551933,1146987,4,Mixed parkland,Moderate diversity,7,Lakefront park between Vevey and Montreux,YES
+MX01,Parc de Vernex,Montreux,Type D,Urban Park,46.4395668,6.9038848,2555291,1145417,3,Mixed parkland,Urban pollinators,7,Residential park along lakefront,YES
+MX02,Jardin Doret Montreux,Montreux,Type D,Urban Garden,46.4310831,6.9129921,2555956,1144495,2,Ornamental gardens,Urban pollinators,7,Terraced gardens in town center,YES
+CH01,Parc Château de Chillon,Veytaux,Type F,Historic Castle,46.4142394,6.9276018,2557004,1142628,5,Historic gardens + wildflowers,Moderate to high diversity,8,Medieval castle with surrounding natural areas and lake access,YES
+VN01,Réserve Naturelle Embouchure du Rhône,Villeneuve,Type A,Wetland Reserve,46.3965712,6.9248129,2556793,1140679,40,Delta wetland + reed beds,High diversity - migratory insects,10,Rhône River delta - critical wetland habitat and migration corridor,YES

@@ -1,0 +1,51 @@
+id,municipality,place_name,work_type,platform,workers_est,season,permit_status,lat_wgs84,lon_wgs84,dist_lakeshore_m,notes
+1,Geneva,Jet d'Eau Pier,Boat tour guide,Informal,8,Summer,Informal,46.2074,6.1559,30,Seasonal guides operating around the iconic water jet and harbour area - coords on quayside
+2,Geneva,Bains des Pâquis,Beach attendant,Informal,12,Summer,Informal,46.2101,6.1544,10,Casual staff managing sunbathers towel rental and snack sales - OSM verified (node 3665235469)
+3,Geneva,Jardin Anglais,Street photographer,Informal,5,Summer,Informal,46.2042,6.1561,50,Tourist portrait photographers operating near the floral clock - on-land quayside position
+4,Geneva,Rive Gauche Promenade,Artisan vendor,Informal,10,Summer,Informal,46.2028,6.1500,80,Jewellery and craft sellers along Quai du Général-Guisan
+5,Geneva,Cornavin Station forecourt,Ride-hailing wait zone,App-based (Uber),15,Year-round,Formal,46.2093,6.1423,1200,Platform drivers waiting near main rail hub serving airport tourists
+6,Geneva,Parc Mon Repos,Festival catering staff,Agency,20,Summer,Formal,46.2155,6.1568,300,Temporary catering workers hired for open-air concerts and events
+7,Cologny,Port de Cologny,Sailing instructor,Informal,4,Summer,Unknown,46.2103,6.1847,20,Freelance sailing lessons offered to tourists and expats - port shore position
+8,Hermance,Hermance Village Quay,Heritage tour guide,Informal,3,Summer,Unknown,46.2974,6.2367,15,Walking tours of medieval village offered informally to cruise visitors
+9,Nyon,Nyon Harbour,Paddle board rental,Informal,6,Summer,Informal,46.3824,6.2344,25,Equipment rental with no fixed business registration observed
+10,Nyon,Nyon Old Town,Street market vendor,Informal,14,Summer,Informal,46.3831,6.2337,350,Seasonal craft and food market traders near castle and lake views
+11,Nyon,Nyon Promenade,Ice cream cart operator,Informal,3,Summer,Informal,46.3818,6.2330,60,Mobile vending along the waterfront promenade
+12,Nyon,Chateau de Nyon surroundings,Tour guide (freelance),Informal,4,Summer,Unknown,46.3836,6.2340,280,Self-employed guides offering castle and Roman history tours
+13,Prangins,Prangins Lakefront,Picnic catering vendor,Informal,2,Summer,Unknown,46.3953,6.2478,90,Occasional informal food supply to leisure visitors near Prangins Castle
+14,Rolle,Port de Rolle,Boat charter crew,Agency,8,Summer,Formal,46.4574,6.3392,10,Seasonal crew hired by charter companies for lake excursions
+15,Rolle,Rolle Promenade,Lakeside event staff,Agency,18,Summer,Formal,46.4568,6.3378,45,Temporary staff for wine festivals and open-air markets
+16,Morges,Port de Morges,Ferry loading assistant,Informal,5,Summer,Unknown,46.5081,6.4988,20,Informal dockside helpers during peak tourist ferry season
+17,Morges,Morges Tulip Festival site,Seasonal vendor,Informal,22,Spring,Informal,46.5073,6.4975,120,High density of informal food and souvenir vendors during April festival
+18,Morges,Morges Waterfront,Cycling tour guide,App-based (local platform),6,Summer,Formal,46.5070,6.4960,55,Bike tour operators using local tourism app
+19,Morges,Morges Market Square,Street food operator,Informal,9,Summer,Informal,46.5065,6.4952,200,Unlicensed food stalls observed on market days
+20,Saint-Sulpice,EPFL Lakefront,Kayak rental,Informal,4,Summer,Unknown,46.5214,6.5723,30,Student-run informal kayak rental near campus waterfront
+21,Lausanne,Ouchy Promenade,Pedalo rental operator,Informal,7,Summer,Informal,46.5075,6.6285,15,Informal pedalo and rowboat rental along Ouchy waterfront - corrected off-lake
+22,Lausanne,Lausanne-Ouchy Port,Lake cruise host,Agency,25,Summer,Formal,46.5068,6.6280,10,CGN cruise ship seasonal hospitality staff - Place du Vieux-Port area
+23,Lausanne,Ouchy Olympic Museum,Tour guide (freelance),Informal,6,Summer,Unknown,46.5080,6.6310,180,Self-employed guides for Olympic Museum and lakefront area
+24,Lausanne,Bellerive Plage,Lifeguard (seasonal),Agency,10,Summer,Formal,46.5093,6.6401,5,Seasonal lifeguards hired through municipal agency - shoreline position corrected
+25,Lausanne,Bellerive Plage,Snack bar casual staff,Informal,8,Summer,Informal,46.5093,6.6401,8,Unlicensed food vendors operating near public beach
+26,Lausanne,Place de la Navigation,Street performer,Informal,5,Summer,Informal,46.5068,6.6275,70,Musicians and performers working for tips near the port
+27,Pully,Pully Lakefront,Fishing guide (tourist),Informal,3,Summer,Unknown,46.5118,6.6637,25,Informal guided fishing excursions for tourists
+28,Lutry,Port de Lutry,Wine tour shuttle driver,Informal,4,Summer,Unknown,46.5038,6.6854,40,Drivers offering informal transfers between Lavaux vineyard estates
+29,Lutry,Lavaux Vineyard Path,Vineyard tour guide,Informal,7,Summer,Informal,46.4998,6.6912,350,Freelance guides operating along UNESCO Lavaux wine trail
+30,Cully,Cully Port,Jazz festival vendor,Informal,30,Spring,Informal,46.4930,6.7278,30,High concentration of informal vendors during Cully Jazz Festival
+31,Cully,Cully Village,Wine tasting host,Informal,5,Summer,Unknown,46.4923,6.7265,200,Informal cellar-door wine hosts targeting passing tourists
+32,Rivaz,Rivaz Lakeshore,Scenic photo guide,Informal,2,Summer,Unknown,46.4872,6.7543,20,Freelance photography guide for Lavaux landscape tourists
+33,Saint-Saphorin,Saint-Saphorin Quay,Heritage walk guide,Informal,3,Summer,Unknown,46.4843,6.7678,15,Informal village heritage guides near Roman ruins site
+34,Vevey,Grande Place Vevey,Street vendor (Nestlé Festival),Informal,40,Summer,Informal,46.4636,6.8422,80,High informal vendor density during Images/Alimentarium festivals - corrected inland
+35,Vevey,Vevey Harbour,Lake photographer (tourist),Informal,6,Summer,Informal,46.4625,6.8435,10,Informal portrait and landscape photographers targeting lake tourists
+36,Vevey,Vevey Promenade,Segway tour operator,App-based (local),5,Summer,Formal,46.4628,6.8440,55,Micro-mobility tour operator using booking platform
+37,Vevey,Vevey Old Town,Food tour guide,Informal,8,Summer,Unknown,46.4635,6.8415,300,Informal culinary walking tour guides
+38,Vevey,Alimentarium Museum surrounds,Costumed tour character,Informal,4,Summer,Informal,46.4630,6.8432,120,Freelance costumed characters offering paid tourist photo opportunities
+39,Corseaux,Corseaux Lakeshore,Windsurfing instructor,Informal,3,Summer,Unknown,46.4562,6.8523,18,Informal windsurfing lessons for tourists along quiet shore
+40,Chardonne,Chardonne Viewpoint,Tourist shuttle driver,Informal,5,Summer,Unknown,46.4738,6.8612,1800,Informal drivers shuttling tourists from Vevey to vineyard viewpoints
+41,Montreux,Montreux Jazz Festival site (2M2C),Temporary event staff,Agency,120,Summer,Formal,46.4334,6.9122,100,Agency-hired seasonal staff - 2M2C Auditorium Stravinski building, OSM verified
+42,Montreux,Montreux Promenade,Street musician,Informal,10,Summer,Informal,46.4320,6.9098,20,Buskers and performers along the flower-lined lakefront - corrected on-land position
+43,Montreux,Montreux Promenade,Souvenir vendor,Informal,12,Summer,Informal,46.4318,6.9096,30,Unlicensed souvenir and postcard sellers targeting cruise tourists
+44,Montreux,Casino de Montreux,Event hospitality staff,Agency,35,Year-round,Formal,46.4327,6.9115,150,Seasonal and year-round event staff hired via agency for casino events
+45,Montreux,Montreux Harbour,Boat excursion guide,Informal,6,Summer,Informal,46.4310,6.9088,10,Freelance lake excursion guides near CGN ferry terminal - on-land corrected
+46,Veytaux,Château de Chillon entrance,Costumed guide,Agency,8,Summer,Formal,46.4143,6.9286,50,Agency-contracted costumed historical guides - OSM verified (node 8690927128)
+47,Veytaux,Château de Chillon car park,Informal parking attendant,Informal,3,Summer,Informal,46.4148,6.9280,80,Unsanctioned parking helpers collecting informal tips from tourists
+48,Villeneuve,Villeneuve Harbour,Sailing race support crew,Informal,5,Summer,Unknown,46.3944,6.9345,15,Casual crew hired informally for sailing regattas on upper lake - corrected on-land
+49,Villeneuve,Villeneuve Lakefront,Kitesurfing instructor,Informal,4,Summer,Unknown,46.3940,6.9340,10,Freelance kitesurf instructors taking advantage of Rhône valley winds
+50,Villeneuve,Villeneuve Train Station,Tourist transfer driver,Informal,6,Summer,Informal,46.3925,6.9318,450,Informal drivers offering transfers to Chillon Castle and Montreux

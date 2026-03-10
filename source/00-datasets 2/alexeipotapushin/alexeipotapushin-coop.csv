@@ -1,0 +1,74 @@
+﻿chain,store_name,address,lat_wgs84,lon_wgs84,E_LV95,N_LV95,rating,rating_count
+Coop,Cornavin Station,"Pl. de Cornavin 7, 1201 Genève",46.210511,6.143168,2500024.78,1118500.35,4.0,553
+Coop,Gare Mont-Blanc,"Rue du Mont-Blanc 30, 1201 Genève",46.209155,6.143095,2500016.65,1118349.72,3.7,158
+Coop,Rue de Lausanne,"Rue de Lausanne 38, 1201 Genève",46.213253,6.145692,2500224.58,1118801.91,4.0,271
+Coop City,Fusterie,"Rue du Commerce 7, 1204 Genève",46.204074,6.145177,2500167.99,1117782.31,4.3,2402
+Coop Pronto,Rue de la Cité,"Rue de la Cité 3, 1204 Genève",46.203423,6.143944,2500071.64,1117711.53,3.8,108
+Coop City,Plainpalais,"Rue de Carouge 12, 1205 Genève",46.196884,6.142797,2499971.1,1116986.18,4.2,1418
+Coop,Augustins,"Rue de Carouge 76, 1205 Genève",46.192186,6.143707,2500032.7,1116462.83,4.1,577
+Coop,Jonction,"Bd Carl-Vogt 22, 1205 Genève",46.199774,6.132325,2499168.17,1117320.83,4.2,569
+Coop,Favon,"Bd Georges-Favon 28, 1204 Genève",46.202102,6.139987,2499763.82,1117569.75,4.0,10
+Coop,Cirque,"Bd de Saint-Georges 72, 1205 Genève",46.20106,6.139066,2499690.82,1117455.11,3.9,297
+Coop,Eaux-Vives Jargonnant,"Rue de Jargonnant 5, 1207 Genève",46.200586,6.159896,2501297.6,1117375.97,4.2,700
+Coop,Servette,"Rue de la Servette 81, 1202 Genève",46.212406,6.131161,2499101.77,1118726.37,4.2,852
+Coop,Montbrillant,"Rue de Montbrillant 90, 1202 Genève",46.220296,6.141812,2499938.15,1119589.69,4.2,919
+Coop,Champel,"Av. de Champel 8C, 1206 Genève",46.194632,6.152285,2500699.31,1116723.8,4.1,680
+Coop,Thônex,"Rue de Genève 106, 1226 Thônex",46.192854,6.201806,2504518.64,1116464.61,4.3,812
+Coop,Carouge Cardinal Mermillod,"Av. Cardinal-Mermillod 36, 1227 Carouge",46.185405,6.143598,2500011.83,1115709.26,4.2,464
+Coop,Carouge Acacias,"Rue des Epinettes 20, 1227 Carouge",46.18905,6.13648,2499469.05,1116123.51,4.2,583
+Coop Pronto,Carouge Gas Station,"Av. Cardinal-Mermillod 11, 1227 Carouge",46.185813,6.144387,2500073.49,1115753.6,3.9,266
+Coop,Grand-Lancy La Praille,"Rte des Jeunes 10, 1212 Lancy",46.180037,6.127687,2498773.5,1115133.04,4.3,1025
+Coop,Grand-Lancy Pont Rouge,"Esplanade de Pont-Rouge 5, 1212 Lancy",46.186757,6.127278,2498754.43,1115880.5,4.8,5
+Coop,Onex,"Rue des Bossons 21, 1213 Onex",46.18771,6.104619,2497006.99,1116015.96,4.2,1113
+Coop,Bernex,"Rue de Bernex 319, 1233 Bernex",46.17439,6.071297,2494408.79,1114579.81,4.1,480
+Coop,Plan-les-Ouates,"Chem. de Vers 2, 1228 Plan-les-Ouates",46.169109,6.121117,2498245.81,1113926.9,4.0,340
+Coop City,Meyrin,"Av. de Feuillasse 24, 1217 Meyrin",46.232575,6.082195,2495362.27,1121032.37,4.2,407
+Coop,Meyrin Verchère,"Chem. Antoine-Verchère 1, 1217 Meyrin",46.228334,6.072568,2494611.49,1120573.9,4.1,285
+Coop,Vernier Meyrin Rd,"Rte de Meyrin 171, 1214 Vernier",46.221631,6.095666,2496380.48,1119798.06,4.3,1330
+Coop,Satigny,"Rte d'Aire-la-Ville 229, 1242 Satigny",46.213962,6.032421,2491485.93,1119031.28,4.4,291
+Coop to go,Cornavin,"Pl. de Cornavin 1, 1201 Genève",46.209756,6.142115,2499942.14,1118417.78,3.5,6
+Coop Pronto,Rue de Lyon Gas Station,"Rue de Lyon 100, 1203 Genève",46.208774,6.124902,2498612.04,1118330.76,4.2,304
+Coop,Versoix Centre,"Rte de Suisse 77, 1290 Versoix",46.280763,6.166611,2501960.57,1126279.26,4.2,738
+Coop Pronto,Nyon Gare,"Pl. de la Gare 4, 1260 Nyon",46.384983,6.236883,2507553.92,1137778.01,4.1,257
+Coop,Nyon Levratte,"La Levratte 22, 1260 Nyon",46.387948,6.228508,2506914.81,1138117.49,4.1,407
+Coop Pronto,Nyon Gas Station,"Rte de Champ-Colin 7, 1260 Nyon",46.384087,6.217407,2506054.29,1137701.58,4.3,295
+Coop,Vich,"Chem. de la Bichette 4, 1267 Vich",46.424209,6.254424,2508969.08,1142117.52,4.1,893
+Coop,Gland Eikenott,"All. du Communet 20, 1196 Gland",46.427375,6.266102,2509871.97,1142455.93,4.1,307
+Coop,Rolle,"Rue du Temple 6, 1180 Rolle",46.45848,6.33773,2515425.92,1145833.48,4.0,283
+Coop,Allaman Littoral,"Rte de la Gare 10, 1165 Allaman",46.476596,6.400723,2520291.55,1147781.11,4.2,1670
+Coop,Saint-Prex,"Rue de la Gare 1, 1162 Saint-Prex",46.482378,6.456726,2524600.21,1148368.37,4.1,482
+Coop Pronto,Saint-Prex Gas Station,"Rte de Morges 20, 1162 Saint-Prex",46.485534,6.460171,2524869.12,1148715.87,4.3,283
+Coop Pronto,Morges Gare,"Pl. de la Gare 2, 1110 Morges",46.511121,6.494185,2527515.02,1151527.99,3.8,195
+Coop,Morges Charpentiers,"Rue des Fossés 4, 1110 Morges",46.510022,6.497578,2527773.94,1151402.69,4.0,979
+Coop,Morges La Gottaz,"Av. de la Gottaz 28, 1110 Morges",46.507246,6.48551,2526844.02,1151105.32,4.0,677
+Coop Pronto,Morges Gas Station,"Rue de Lausanne 43, 1110 Morges",46.515674,6.503788,2528258.04,1152025.25,4.2,281
+Coop Pronto,Renens Gare,"Pl. de la Gare 3, 1020 Renens",46.536748,6.579316,2534079.63,1154301.42,3.6,169
+Coop,Crissier Léman Centre,"Chem. de Saugy 1, 1023 Crissier",46.545212,6.569768,2533357.65,1155250.35,4.3,1934
+Coop,Prilly Centre,"Rte de Cossonay 28, 1008 Prilly",46.534422,6.60612,2536132.99,1154020.65,4.2,1568
+Coop,Prilly Business Parc,"Rte de Renens 24, 1008 Prilly",46.529595,6.600821,2535720.75,1153488.42,3.9,289
+Coop,Prilly Malley,"Av. du Chablais 41, 1008 Prilly",46.524691,6.60267,2535856.78,1152941.78,3.9,477
+Coop City,Lausanne Au Centre,"Rue Saint-Laurent 24/30, 1003 Lausanne",46.522742,6.630389,2537981.32,1152702.8,4.1,2965
+Coop Pronto,Lausanne Gare,"Pl. de la Gare 11, 1003 Lausanne",46.51722,6.627905,2537784.37,1152090.95,3.4,1016
+Coop Pronto,Lausanne Chauderon,"Pl. Chauderon 3, 1003 Lausanne",46.523064,6.626289,2537667.11,1152741.85,3.8,444
+Coop Pronto,Lausanne Ouchy,"Av. d'Ouchy 68, 1006 Lausanne",46.507756,6.627243,2537722.67,1151039.46,4.1,411
+Coop,Lausanne Grancy,"Bd de Grancy 4, 1006 Lausanne",46.515313,6.631604,2538066.04,1151876.04,4.1,572
+Coop,Lausanne Caroline,"Rue Caroline 6, 1003 Lausanne",46.520859,6.637603,2538532.71,1152487.8,4.1,1087
+Coop City,Lausanne St. François,"Av. du Théâtre 4, 1005 Lausanne",46.518541,6.635155,2538342.22,1152232.06,4.1,1151
+Coop,Lausanne La Sallaz,"Place de la Sallaz 3, 1010 Lausanne",46.532883,6.646652,2539240.57,1153817.32,4.2,543
+Coop,Lausanne Rouvraie,"Av. Parc-de-la-Rouvraie 3, 1018 Lausanne",46.530918,6.6347,2538321.43,1153608.24,4.3,114
+Coop Pronto,Lausanne Ave Morges,"Av. de Morges 185, 1004 Lausanne",46.526102,6.608307,2536290.95,1153094.02,4.3,303
+Coop,Lausanne Chailly,"Av. de Chailly 9, 1012 Lausanne",46.525827,6.652152,2539654.63,1153028.73,3.8,260
+Coop,Epalinges Croisettes,"Chem. des Croisettes 10, 1066 Epalinges",46.543732,6.660396,2540306.93,1155012.73,4.0,647
+Coop,Pully,"Av. des Collèges 1, 1009 Pully",46.510538,6.658613,2540133.42,1151324.24,3.8,512
+Coop,Lutry,"Rte de l'Ancienne Ciblerie 2, 1095 Lutry",46.505841,6.688459,2542419.01,1150779.74,4.1,461
+Coop,Lutry La Corniche,"Rte de la Petite Corniche 7, 1091 Aran",46.501054,6.695451,2542950.62,1150242.5,4.4,393
+Coop,Cully,"Rue de la Gare 3, 1096 Bourg-en-Lavaux",46.488166,6.728688,2545488.93,1148786.19,3.8,141
+Coop,Chexbres,"Chem. de Praz-Routoz 1, 1071 Chexbres",46.48253,6.774577,2549006.94,1148128.76,4.0,332
+Coop,Vevey Simplon,"Rue du Simplon 28, 1800 Vevey",46.460365,6.845039,2554398.88,1145621.39,4.1,823
+Coop Pronto,Vevey Gare,"Pl. de la Gare 5, 1800 Vevey",46.463071,6.842786,2554228.1,1145923.51,3.9,281
+Coop Pronto,Vevey Gas Station,"Rue du Clos 16, 1800 Vevey",46.460821,6.847102,2554557.74,1145670.88,4.0,195
+Coop,Montreux,"Rue de la Paix 4, 1820 Montreux",46.431664,6.911436,2559477.99,1142394.39,4.2,769
+Coop Pronto,Montreux Gare,"Av. des Alpes 80, 1820 Montreux",46.436585,6.909723,2559350.03,1142942.31,3.7,292
+Coop,Aigle,"Rue du Rhône 28, 1860 Aigle",46.318993,6.965106,2563527.32,1129843.16,4.0,618
+Coop Pronto,Aigle Gare,"Pl. de la Gare 1, 1860 Aigle",46.316947,6.96377,2563423.04,1129616.34,4.0,248
+Coop,Villeneuve,"Rue du Collège 2, 1844 Villeneuve",46.39811,6.925609,2560542.89,1138657.2,4.0,617

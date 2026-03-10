@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>City101 — Station Profile Explorer</title>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;600;700&display=swap');
+
+  :root {
+    --bg: #0a0a0f;
+    --bg2: #111118;
+    --bg3: #1a1a24;
+    --text: #e8e6e1;
+    --text-dim: #8a8880;
+    --text-bright: #ffffff;
+    --accent: #c8a86e;
+    --accent-dim: #8a7548;
+    --geneva: #e74c3c;
+    --lacote: #e67e22;
+    --lausanne: #3498db;
+    --lavaux: #9b59b6;
+    --riviera: #2ecc71;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: #0a0a0f;
+    color: #e8e6e1;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 24px 24px 48px;
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 16px;
+    max-width: 900px;
+  }
+  .header h1 {
+    font-size: 26px;
+    font-family: 'Instrument Serif', serif;
+    font-weight: 400;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+    margin-bottom: 6px;
+  }
+  .header .subtitle {
+    font-size: 14px;
+    color: #8a8880;
+    font-weight: 400;
+  }
+  .header .subtitle em {
+    color: #c8a86e;
+    font-style: normal;
+    font-weight: 600;
+  }
+
+  .controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+    max-width: 1200px;
+  }
+
+  .search-box {
+    background: #111118;
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 8px;
+    padding: 8px 14px;
+    color: #e8e6e1;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    width: 220px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .search-box:focus { border-color: #c8a86e; }
+  .search-box::placeholder { color: #555; }
+
+  select.seg-filter {
+    background: #111118;
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 8px;
+    padding: 8px 14px;
+    color: #e8e6e1;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    outline: none;
+    cursor: pointer;
+  }
+  select.seg-filter:focus { border-color: #c8a86e; }
+
+  .compare-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #111118;
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-size: 13px;
+    cursor: pointer;
+    user-select: none;
+    transition: border-color 0.2s;
+  }
+  .compare-toggle:has(input:checked) {
+    border-color: #c8a86e;
+    background: var(--bg3);
+  }
+  .compare-toggle input { cursor: pointer; accent-color: #c8a86e; }
+
+  .station-count {
+    font-size: 12px;
+    color: #666;
+    font-family: 'DM Mono', monospace;
+    margin-left: auto;
+  }
+
+  .main {
+    display: flex;
+    gap: 20px;
+    width: 100%;
+    max-width: 1200px;
+    min-height: 600px;
+  }
+
+  .table-panel {
+    flex: 1;
+    min-width: 0;
+    background: #111118;
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .table-scroll {
+    overflow-y: auto;
+    overflow-x: auto;
+    max-height: 620px;
+    flex: 1;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    min-width: 600px;
+  }
+
+  thead th {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background: #0f1729;
+    padding: 10px 6px;
+    text-align: right;
+    font-weight: 600;
+    font-size: 11px;
+    color: #8a8880;
+    cursor: pointer;
+    user-select: none;
+    white-space: nowrap;
+    border-bottom: 2px solid rgba(255,255,255,0.06);
+    transition: color 0.2s;
+  }
+  thead th:first-child { text-align: left; padding-left: 12px; }
+  thead th:hover { color: #c8a86e; }
+  thead th.sorted { color: #c8a86e; }
+  thead th .sort-arrow { font-size: 9px; margin-left: 2px; }
+
+  tbody tr {
+    border-bottom: 1px solid #1e2d4a;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  tbody tr:hover { background: #1a2744; }
+  tbody tr.selected { background: #1a2f55; }
+  tbody tr.compare-selected { background: #1a2744; }
+
+  td {
+    padding: 7px 6px;
+    text-align: right;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: #c0c0c0;
+    white-space: nowrap;
+  }
+  td:first-child {
+    text-align: left;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    color: #e8e6e1;
+    padding-left: 12px;
+  }
+
+  .seg-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 6px;
+    vertical-align: middle;
+  }
+
+  .compare-cb {
+    width: 14px;
+    height: 14px;
+    accent-color: #c8a86e;
+    cursor: pointer;
+    vertical-align: middle;
+    margin-right: 4px;
+  }
+
+  .detail-panel {
+    width: 420px;
+    min-width: 420px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .radar-container {
+    background: #111118;
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .radar-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #ffffff;
+    margin-bottom: 4px;
+    text-align: center;
+  }
+  .radar-subtitle {
+    font-size: 11px;
+    color: #8a8880;
+    margin-bottom: 8px;
+    text-align: center;
+  }
+
+  .radar-prompt {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 340px;
+    color: #555;
+    font-size: 13px;
+    text-align: center;
+    line-height: 1.6;
+  }
+
+  .radar-legend {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 8px;
+  }
+  .radar-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: #c0c0c0;
+  }
+  .radar-legend-swatch {
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+  }
+
+  .info-card {
+    background: #111118;
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 12px;
+    padding: 16px;
+  }
+  .info-card h3 {
+    font-size: 13px;
+    font-weight: 600;
+    color: #ffffff;
+    margin-bottom: 10px;
+  }
+  .info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px 16px;
+  }
+  .info-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+  }
+  .info-label { color: #8a8880; }
+  .info-value {
+    font-family: 'DM Mono', monospace;
+    color: #e8e6e1;
+    font-weight: 700;
+  }
+
+  .callout {
+    background: #111118;
+    border: 1px solid rgba(255,255,255,0.06);
+    border-left: 3px solid #c8a86e;
+    border-radius: 0 12px 12px 0;
+    padding: 14px 16px;
+    font-size: 12px;
+    color: #8a8880;
+    line-height: 1.6;
+    max-width: 1200px;
+    width: 100%;
+    margin-top: 16px;
+  }
+  .callout strong { color: #e8e6e1; }
+  .callout em { color: #c8a86e; font-style: normal; font-weight: 600; }
+
+  .table-scroll::-webkit-scrollbar { width: 6px; height: 6px; }
+  .table-scroll::-webkit-scrollbar-track { background: #0f1729; }
+  .table-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.06); border-radius: 3px; }
+  .table-scroll::-webkit-scrollbar-thumb:hover { background: #c8a86e; }
+</style>
+</head>
+<body>
+<a href="index.html#explore" style="position:fixed;top:12px;left:16px;z-index:9999;font-family:'DM Sans',sans-serif;font-size:13px;color:#8a8880;text-decoration:none;padding:6px 14px;border:1px solid rgba(255,255,255,0.08);border-radius:20px;backdrop-filter:blur(12px);background:rgba(10,10,15,0.85);transition:color .2s,border-color .2s;" onmouseover="this.style.color='#c8a86e';this.style.borderColor='rgba(200,168,110,0.3)'" onmouseout="this.style.color='#8a8880';this.style.borderColor='rgba(255,255,255,0.08)'">← The Archipelago</a>
+
+<div class="header">
+  <h1>Station Profile Explorer</h1>
+  <p class="subtitle">Every station is a different city. Explore <em>49 stations</em> across <em>8 dimensions</em>.</p>
+</div>
+
+<div class="controls">
+  <input class="search-box" id="search" type="text" placeholder="Search stations...">
+  <select class="seg-filter" id="seg-filter">
+    <option value="all">All Segments</option>
+    <option value="Geneva">Geneva</option>
+    <option value="La Côte">La Côte</option>
+    <option value="Lausanne">Lausanne</option>
+    <option value="Lavaux">Lavaux</option>
+    <option value="Riviera">Riviera</option>
+  </select>
+  <label class="compare-toggle">
+    <input type="checkbox" id="compare-mode"> Compare Mode
+  </label>
+  <span class="station-count" id="station-count">49 / 49 stations</span>
+</div>
+
+<div class="main">
+  <div class="table-panel">
+    <div class="table-scroll">
+      <table>
+        <thead id="thead"></thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="detail-panel">
+    <div class="radar-container" id="radar-container">
+      <div class="radar-prompt" id="radar-prompt">
+        Click a station row to see its<br>multi-dimensional profile
+      </div>
+      <div id="radar-chart" style="display:none;"></div>
+      <div class="radar-legend" id="radar-legend" style="display:none;"></div>
+    </div>
+    <div class="info-card" id="info-card" style="display:none;">
+      <h3 id="info-title">Station Details</h3>
+      <div class="info-grid" id="info-grid"></div>
+    </div>
+  </div>
+</div>
+
+<div class="callout">
+  <strong>Reading the radar:</strong> Each axis is normalized 0–1 against the corridor maximum. A full octagon means the station leads in every dimension.
+  Cost accessibility is <em>inverted</em> — closer to Geneva (cheaper) scores higher.
+  Vernier-Blandonnet's 84 tph sets the frequency ceiling; Lausanne-Flon's 277 features sets richness.
+</div>
+
+<script>
+// ─── DATA (49 stations, sorted by rail_km) ───
+const S = [
+  {n:"Genève",km:0,seg:"Geneva",fr:25,ri:115,rs:1.703,ms:1.946,tw:0.6732,sw:21.3,pr:3.6,hc:26},
+  {n:"Genève-Sécheron",km:1.4,seg:"Geneva",fr:8,ri:23,rs:0.956,ms:1.099,tw:0.2478,sw:21,pr:3.6,hc:4},
+  {n:"Genève-Eaux-Vives",km:2.2,seg:"Geneva",fr:12.5,ri:59,rs:1.936,ms:1.609,tw:0.3125,sw:21.2,pr:3.6,hc:22},
+  {n:"Genève-Champel",km:2.3,seg:"Geneva",fr:12.5,ri:127,rs:2.123,ms:1.099,tw:0.2773,sw:21.1,pr:3.6,hc:50},
+  {n:"Lancy-Pont-Rouge",km:3.2,seg:"Geneva",fr:12,ri:11,rs:1.33,ms:1.609,tw:0.1742,sw:21,pr:3.73,hc:0},
+  {n:"Genève-Aéroport",km:3.6,seg:"Geneva",fr:4.5,ri:7,rs:1.33,ms:1.609,tw:0.1734,sw:19.4,pr:4.07,hc:1},
+  {n:"Vernier, Blandonnet",km:3.9,seg:"Geneva",fr:84,ri:7,rs:1.55,ms:1.386,tw:0.5493,sw:20.7,pr:4.32,hc:1},
+  {n:"Lancy-Bachet",km:4.3,seg:"Geneva",fr:12.5,ri:5,rs:1.277,ms:1.792,tw:0.0953,sw:21,pr:4.66,hc:0},
+  {n:"Genthod-Bellevue",km:5.5,seg:"Geneva",fr:8,ri:10,rs:0,ms:0.693,tw:0.0758,sw:21,pr:5.61,hc:0},
+  {n:"Versoix",km:8.3,seg:"Geneva",fr:8,ri:23,rs:0.562,ms:1.099,tw:0.0638,sw:21,pr:7.28,hc:9},
+  {n:"Mies",km:10.5,seg:"La Côte",fr:8,ri:4,rs:0,ms:0,tw:0.0306,sw:21,pr:8.48,hc:1},
+  {n:"Tannay",km:11.8,seg:"La Côte",fr:8,ri:3,rs:0,ms:0,tw:0.1906,sw:21,pr:9.19,hc:0},
+  {n:"Coppet",km:13,seg:"La Côte",fr:9.5,ri:21,rs:0,ms:1.099,tw:0.0773,sw:20.9,pr:9.87,hc:6},
+  {n:"Founex, est",km:15.1,seg:"La Côte",fr:3.5,ri:1,rs:0,ms:0,tw:0.0145,sw:19.2,pr:11.01,hc:0},
+  {n:"Nyon",km:21.7,seg:"La Côte",fr:14.5,ri:57,rs:1.54,ms:1.792,tw:0.2277,sw:20.7,pr:13.63,hc:10},
+  {n:"Prangins, Les Abériaux",km:23.2,seg:"La Côte",fr:5.5,ri:4,rs:0,ms:0.693,tw:0.023,sw:18.5,pr:14.22,hc:1},
+  {n:"Gland",km:26.5,seg:"La Côte",fr:6.5,ri:27,rs:1.56,ms:1.099,tw:0.1638,sw:20.7,pr:15.56,hc:5},
+  {n:"Begnins, poste",km:28.2,seg:"La Côte",fr:8.5,ri:7,rs:0,ms:0.693,tw:0.0357,sw:19.5,pr:16.22,hc:0},
+  {n:"Rolle",km:33.4,seg:"La Côte",fr:4.5,ri:26,rs:0.5,ms:1.099,tw:0.076,sw:20.7,pr:17.79,hc:5},
+  {n:"Perroy, Couronnette",km:34.1,seg:"La Côte",fr:3,ri:3,rs:0,ms:0,tw:0.0107,sw:18.1,pr:17.98,hc:1},
+  {n:"Allaman",km:37.3,seg:"Lausanne",fr:6,ri:4,rs:0,ms:0.693,tw:0.1074,sw:20.9,pr:18.77,hc:0},
+  {n:"Aubonne, gare",km:38.8,seg:"Lausanne",fr:11,ri:14,rs:0.562,ms:0.693,tw:0.0479,sw:19,pr:19.15,hc:5},
+  {n:"St-Prex",km:40.6,seg:"Lausanne",fr:4,ri:13,rs:0.562,ms:0.693,tw:0.0183,sw:19.7,pr:19.6,hc:4},
+  {n:"Morges",km:45.1,seg:"Lausanne",fr:16,ri:57,rs:1.359,ms:1.609,tw:0.267,sw:21.1,pr:20.73,hc:9},
+  {n:"Lonay-Préverenges",km:47.5,seg:"Lausanne",fr:4,ri:7,rs:0.673,ms:0,tw:0.0516,sw:19.9,pr:21.33,hc:2},
+  {n:"Denges-Echandens",km:49.1,seg:"Lausanne",fr:2,ri:1,rs:0.693,ms:0,tw:0.0238,sw:19.4,pr:21.73,hc:0},
+  {n:"Bussigny",km:51.4,seg:"Lausanne",fr:9,ri:3,rs:0,ms:0.693,tw:0.0528,sw:20.1,pr:22.29,hc:0},
+  {n:"Renens VD",km:51.9,seg:"Lausanne",fr:26.5,ri:15,rs:0.898,ms:1.792,tw:0.3426,sw:20.5,pr:22.42,hc:0},
+  {n:"Prilly-Malley",km:52.3,seg:"Lausanne",fr:9,ri:21,rs:1.517,ms:0.693,tw:0.2881,sw:20.3,pr:22.54,hc:5},
+  {n:"Lausanne",km:53.1,seg:"Lausanne",fr:28.5,ri:250,rs:1.955,ms:2.079,tw:0.5117,sw:19.9,pr:22.72,hc:80},
+  {n:"Lausanne-Flon",km:53.5,seg:"Lausanne",fr:4,ri:277,rs:1.943,ms:1.099,tw:0.402,sw:18.9,pr:22.82,hc:92},
+  {n:"La Conversion",km:55.8,seg:"Lavaux",fr:4,ri:6,rs:0,ms:0,tw:0.0696,sw:20.2,pr:23.4,hc:2},
+  {n:"Bossière",km:56.9,seg:"Lavaux",fr:2,ri:1,rs:0,ms:0,tw:0.0498,sw:20.1,pr:23.67,hc:0},
+  {n:"Cully",km:57.2,seg:"Lavaux",fr:9,ri:20,rs:0.562,ms:1.099,tw:0.0728,sw:20.2,pr:23.76,hc:2},
+  {n:"Grandvaux",km:57.5,seg:"Lavaux",fr:4.5,ri:16,rs:0.562,ms:0.693,tw:0.0167,sw:20,pr:23.83,hc:1},
+  {n:"Epesses",km:58.5,seg:"Lavaux",fr:3,ri:6,rs:0,ms:0,tw:0.0507,sw:20.1,pr:24.07,hc:0},
+  {n:"Puidoux",km:60.2,seg:"Lavaux",fr:6,ri:4,rs:0,ms:0.693,tw:0.0248,sw:19.9,pr:24.48,hc:0},
+  {n:"Rivaz",km:60.2,seg:"Lavaux",fr:3.5,ri:2,rs:0.693,ms:0,tw:0.0132,sw:20.1,pr:24.5,hc:0},
+  {n:"St-Saphorin (Lavaux)",km:61.1,seg:"Lavaux",fr:0,ri:1,rs:0,ms:0,tw:0.0007,sw:0,pr:24.69,hc:0},
+  {n:"Vevey",km:63.7,seg:"Riviera",fr:20,ri:75,rs:1.731,ms:1.946,tw:0.3551,sw:20.1,pr:25.27,hc:13},
+  {n:"La Tour-de-Peilz",km:64.5,seg:"Riviera",fr:4,ri:28,rs:1.273,ms:0.693,tw:0.2556,sw:19.9,pr:25.44,hc:6},
+  {n:"Burier",km:65.4,seg:"Riviera",fr:4,ri:4,rs:0.693,ms:0,tw:0.0176,sw:19.9,pr:25.64,hc:1},
+  {n:"Clarens",km:66.5,seg:"Riviera",fr:4,ri:21,rs:1.667,ms:0.693,tw:0.0203,sw:19.9,pr:25.89,hc:7},
+  {n:"Villeneuve VD",km:67,seg:"Riviera",fr:8,ri:27,rs:0.451,ms:1.099,tw:0.1078,sw:19.9,pr:25.99,hc:6},
+  {n:"Montreux",km:67.3,seg:"Riviera",fr:16,ri:54,rs:1.237,ms:1.946,tw:0.3036,sw:20.2,pr:26.05,hc:11},
+  {n:"Aigle",km:67.4,seg:"Riviera",fr:16.5,ri:1,rs:0,ms:1.609,tw:0.0743,sw:19.8,pr:26.09,hc:0},
+  {n:"Territet",km:67.8,seg:"Riviera",fr:2,ri:12,rs:0.637,ms:0.693,tw:0.0091,sw:19.9,pr:26.16,hc:6},
+  {n:"Palézieux",km:68.2,seg:"Riviera",fr:11.5,ri:0,rs:0,ms:0.693,tw:0.0517,sw:20,pr:26.24,hc:0},
+  {n:"Bex",km:69.5,seg:"Riviera",fr:7.5,ri:1,rs:0,ms:1.099,tw:0.0394,sw:18.9,pr:26.54,hc:0},
+];
+
+// ─── CONSTANTS ───
+const SEG_COLORS = {
+  "Geneva": "#e74c3c",
+  "La Côte": "#e67e22",
+  "Lausanne": "#3498db",
+  "Lavaux": "#9b59b6",
+  "Riviera": "#2ecc71"
+};
+
+const DIMS = [
+  { key: "fr", label: "Transit Freq", short: "Freq", unit: "tph", fmt: v => v.toFixed(1) },
+  { key: "ri", label: "Station Richness", short: "Rich", unit: "", fmt: v => Math.round(v) },
+  { key: "rs", label: "Religious Shannon", short: "Shan", unit: "", fmt: v => v.toFixed(2) },
+  { key: "ms", label: "Modal Diversity", short: "Modal", unit: "", fmt: v => v.toFixed(2) },
+  { key: "tw", label: "TWCI Peak", short: "TWCI", unit: "", fmt: v => v.toFixed(3) },
+  { key: "sw", label: "Service Window", short: "Hrs", unit: "h", fmt: v => v.toFixed(1) },
+  { key: "cost", label: "Cost Access.", short: "Cost", unit: "", fmt: null },
+  { key: "hc", label: "Healthcare", short: "HC", unit: "", fmt: v => Math.round(v) },
+];
+
+const MAX = {
+  fr: d3.max(S, d => d.fr),
+  ri: d3.max(S, d => d.ri),
+  rs: d3.max(S, d => d.rs),
+  ms: d3.max(S, d => d.ms),
+  tw: d3.max(S, d => d.tw),
+  sw: d3.max(S, d => d.sw),
+  pr: d3.max(S, d => d.pr),
+  hc: d3.max(S, d => d.hc),
+};
+
+function normalize(d) {
+  return [
+    MAX.fr ? d.fr / MAX.fr : 0,
+    MAX.ri ? d.ri / MAX.ri : 0,
+    MAX.rs ? d.rs / MAX.rs : 0,
+    MAX.ms ? d.ms / MAX.ms : 0,
+    MAX.tw ? d.tw / MAX.tw : 0,
+    MAX.sw ? d.sw / MAX.sw : 0,
+    MAX.pr ? 1 - d.pr / MAX.pr : 0,
+    MAX.hc ? d.hc / MAX.hc : 0,
+  ];
+}
+
+const COMPARE_COLORS = ["#3498db", "#e74c3c", "#2ecc71"];
+
+// ─── STATE ───
+let sortCol = "km";
+let sortAsc = true;
+let selectedStation = null;
+let compareMode = false;
+let compareSet = [];
+let filtered = [...S];
+
+// ─── TABLE COLUMNS ───
+const COLS = [
+  { key: "n", label: "Station", align: "left", fmt: null, w: null },
+  { key: "km", label: "km", align: "right", fmt: v => v.toFixed(1), w: "48px" },
+  { key: "fr", label: "Freq", align: "right", fmt: v => v.toFixed(1), w: "50px" },
+  { key: "ri", label: "Rich", align: "right", fmt: v => v, w: "45px" },
+  { key: "rs", label: "Shan", align: "right", fmt: v => v.toFixed(2), w: "50px" },
+  { key: "ms", label: "Modal", align: "right", fmt: v => v.toFixed(2), w: "52px" },
+  { key: "tw", label: "TWCI", align: "right", fmt: v => v.toFixed(3), w: "56px" },
+  { key: "sw", label: "Hrs", align: "right", fmt: v => v.toFixed(1), w: "44px" },
+  { key: "pr", label: "CHF", align: "right", fmt: v => v.toFixed(1), w: "48px" },
+  { key: "hc", label: "HC", align: "right", fmt: v => v, w: "36px" },
+];
+
+// ─── BUILD TABLE ───
+function buildHeader() {
+  const tr = document.createElement("tr");
+  COLS.forEach(c => {
+    const th = document.createElement("th");
+    th.textContent = c.label;
+    th.dataset.col = c.key;
+    if (c.w) th.style.width = c.w;
+    if (c.align === "left") th.style.textAlign = "left";
+    if (c.key === sortCol) {
+      th.classList.add("sorted");
+      th.innerHTML += ` <span class="sort-arrow">${sortAsc ? "▲" : "▼"}</span>`;
+    }
+    th.addEventListener("click", () => {
+      if (sortCol === c.key) { sortAsc = !sortAsc; }
+      else { sortCol = c.key; sortAsc = c.key === "n" ? true : true; }
+      buildHeader();
+      renderTable();
+    });
+    tr.appendChild(th);
+  });
+  document.getElementById("thead").innerHTML = "";
+  document.getElementById("thead").appendChild(tr);
+}
+
+function renderTable() {
+  const search = document.getElementById("search").value.toLowerCase();
+  const segVal = document.getElementById("seg-filter").value;
+
+  filtered = S.filter(d => {
+    if (search && !d.n.toLowerCase().includes(search)) return false;
+    if (segVal !== "all" && d.seg !== segVal) return false;
+    return true;
+  });
+
+  filtered.sort((a, b) => {
+    let va = a[sortCol], vb = b[sortCol];
+    if (typeof va === "string") {
+      return sortAsc ? va.localeCompare(vb) : vb.localeCompare(va);
+    }
+    return sortAsc ? va - vb : vb - va;
+  });
+
+  document.getElementById("station-count").textContent = `${filtered.length} / ${S.length} stations`;
+
+  const tbody = document.getElementById("tbody");
+  tbody.innerHTML = "";
+
+  filtered.forEach(d => {
+    const tr = document.createElement("tr");
+
+    if (selectedStation === d) tr.classList.add("selected");
+    if (compareSet.includes(d)) tr.classList.add("compare-selected");
+
+    COLS.forEach((c, ci) => {
+      const td = document.createElement("td");
+      if (c.w) td.style.width = c.w;
+
+      if (c.key === "n") {
+        td.style.textAlign = "left";
+        td.style.paddingLeft = "12px";
+        let html = "";
+        if (compareMode) {
+          const checked = compareSet.includes(d) ? "checked" : "";
+          const ci2 = compareSet.indexOf(d);
+          html += `<input type="checkbox" class="compare-cb" data-idx="${S.indexOf(d)}" ${checked}>`;
+        }
+        html += `<span class="seg-dot" style="background:${SEG_COLORS[d.seg]}"></span>${d.n}`;
+        td.innerHTML = html;
+      } else {
+        td.textContent = c.fmt ? c.fmt(d[c.key]) : d[c.key];
+      }
+      tr.appendChild(td);
+    });
+
+    tr.addEventListener("click", (e) => {
+      if (e.target.classList.contains("compare-cb")) {
+        e.stopPropagation();
+        handleCompareCheck(S.indexOf(d), e.target.checked);
+        return;
+      }
+      if (!compareMode) {
+        selectedStation = selectedStation === d ? null : d;
+        renderTable();
+        updateRadar();
+        updateInfo();
+      }
+    });
+
+    tbody.appendChild(tr);
+  });
+}
+
+function handleCompareCheck(idx, checked) {
+  const d = S[idx];
+  if (checked) {
+    if (compareSet.length >= 3) {
+      compareSet.shift();
+    }
+    if (!compareSet.includes(d)) compareSet.push(d);
+  } else {
+    compareSet = compareSet.filter(s => s !== d);
+  }
+  renderTable();
+  updateRadar();
+  updateInfo();
+}
+
+// ─── RADAR CHART (D3) ───
+const RADAR_SIZE = 340;
+const RADAR_MARGIN = 55;
+const RADAR_R = (RADAR_SIZE / 2) - RADAR_MARGIN;
+const RADAR_CX = RADAR_SIZE / 2;
+const RADAR_CY = RADAR_SIZE / 2;
+const NUM_AXES = 8;
+
+function angleForAxis(i) {
+  return -Math.PI / 2 + i * (2 * Math.PI / NUM_AXES);
+}
+
+function radarPoint(i, val) {
+  const a = angleForAxis(i);
+  return [RADAR_CX + val * RADAR_R * Math.cos(a), RADAR_CY + val * RADAR_R * Math.sin(a)];
+}
+
+let radarSvg = null;
+
+function initRadar() {
+  radarSvg = d3.select("#radar-chart")
+    .append("svg")
+    .attr("width", RADAR_SIZE)
+    .attr("height", RADAR_SIZE);
+
+  // Concentric guides
+  const levels = [0.25, 0.5, 0.75, 1.0];
+  levels.forEach(lv => {
+    const pts = [];
+    for (let i = 0; i < NUM_AXES; i++) {
+      pts.push(radarPoint(i, lv));
+    }
+    pts.push(pts[0]);
+    radarSvg.append("polygon")
+      .attr("points", pts.map(p => p.join(",")).join(" "))
+      .attr("fill", "none")
+      .attr("stroke", "rgba(255,255,255,0.06)")
+      .attr("stroke-width", 1)
+      .attr("stroke-dasharray", lv < 1 ? "3,3" : "none");
+  });
+
+  // Level labels (on right axis)
+  levels.forEach(lv => {
+    const [x, y] = radarPoint(2, lv);
+    radarSvg.append("text")
+      .attr("x", x + 4)
+      .attr("y", y - 2)
+      .attr("font-size", 9)
+      .attr("fill", "#444")
+      .attr("font-family", "DM Mono, monospace")
+      .text((lv * 100).toFixed(0) + "%");
+  });
+
+  // Axis lines
+  for (let i = 0; i < NUM_AXES; i++) {
+    const [x, y] = radarPoint(i, 1);
+    radarSvg.append("line")
+      .attr("x1", RADAR_CX).attr("y1", RADAR_CY)
+      .attr("x2", x).attr("y2", y)
+      .attr("stroke", "rgba(255,255,255,0.06)")
+      .attr("stroke-width", 1);
+  }
+
+  // Axis labels
+  const labelOffset = 1.18;
+  for (let i = 0; i < NUM_AXES; i++) {
+    const [x, y] = radarPoint(i, labelOffset);
+    const a = angleForAxis(i);
+    let anchor = "middle";
+    if (Math.cos(a) > 0.3) anchor = "start";
+    else if (Math.cos(a) < -0.3) anchor = "end";
+    let dy = 0;
+    if (Math.sin(a) > 0.3) dy = 12;
+    else if (Math.sin(a) < -0.3) dy = -4;
+    else dy = 4;
+
+    radarSvg.append("text")
+      .attr("class", "radar-label")
+      .attr("x", x)
+      .attr("y", y + dy)
+      .attr("text-anchor", anchor)
+      .attr("font-size", 10)
+      .attr("fill", "#8a8880")
+      .attr("font-family", "Inter, sans-serif")
+      .attr("font-weight", 600)
+      .text(DIMS[i].label);
+  }
+
+  // Data group
+  radarSvg.append("g").attr("class", "radar-data");
+}
+
+function updateRadar() {
+  const dataGroup = radarSvg.select(".radar-data");
+  dataGroup.selectAll("*").remove();
+
+  const prompt = document.getElementById("radar-prompt");
+  const chart = document.getElementById("radar-chart");
+  const legend = document.getElementById("radar-legend");
+
+  if (compareMode) {
+    if (compareSet.length === 0) {
+      prompt.style.display = "flex";
+      prompt.innerHTML = "Select up to 3 stations using<br>checkboxes to compare profiles";
+      chart.style.display = "none";
+      legend.style.display = "none";
+      return;
+    }
+    prompt.style.display = "none";
+    chart.style.display = "block";
+    legend.style.display = "flex";
+
+    compareSet.forEach((d, ci) => {
+      drawRadarPolygon(dataGroup, d, COMPARE_COLORS[ci], 0.15);
+    });
+
+    legend.innerHTML = compareSet.map((d, ci) =>
+      `<div class="radar-legend-item">
+        <div class="radar-legend-swatch" style="background:${COMPARE_COLORS[ci]}"></div>
+        ${d.n}
+      </div>`
+    ).join("");
+
+    const title = document.querySelector(".radar-title");
+    if (title) title.textContent = "Comparing " + compareSet.length + " Stations";
+    const sub = document.querySelector(".radar-subtitle");
+    if (sub) sub.textContent = "";
+
+  } else {
+    legend.style.display = "none";
+    // Clear any leftover title/subtitle from compare mode
+    const oldTitle = document.querySelector(".radar-title");
+    const oldSub = document.querySelector(".radar-subtitle");
+    if (!selectedStation) {
+      prompt.style.display = "flex";
+      prompt.innerHTML = "Click a station row to see its<br>multi-dimensional profile";
+      chart.style.display = "none";
+      if (oldTitle) oldTitle.textContent = "";
+      if (oldSub) oldSub.textContent = "";
+      return;
+    }
+    prompt.style.display = "none";
+    chart.style.display = "block";
+
+    drawRadarPolygon(dataGroup, selectedStation, SEG_COLORS[selectedStation.seg], 0.2);
+
+    // Draw dots on vertices
+    const vals = normalize(selectedStation);
+    vals.forEach((v, i) => {
+      const [x, y] = radarPoint(i, v);
+      dataGroup.append("circle")
+        .attr("cx", x).attr("cy", y).attr("r", 4)
+        .attr("fill", SEG_COLORS[selectedStation.seg])
+        .attr("stroke", "#fff")
+        .attr("stroke-width", 1.5);
+    });
+  }
+
+  // Update or create title/subtitle in container
+  const container = document.getElementById("radar-container");
+  let titleEl = container.querySelector(".radar-title");
+  let subEl = container.querySelector(".radar-subtitle");
+  if (!titleEl) {
+    titleEl = document.createElement("div");
+    titleEl.className = "radar-title";
+    container.insertBefore(titleEl, chart);
+  }
+  if (!subEl) {
+    subEl = document.createElement("div");
+    subEl.className = "radar-subtitle";
+    container.insertBefore(subEl, chart);
+  }
+
+  if (compareMode) {
+    titleEl.textContent = compareSet.length > 0 ? "Comparing " + compareSet.length + " Stations" : "";
+    subEl.textContent = "";
+  } else if (selectedStation) {
+    titleEl.textContent = selectedStation.n;
+    titleEl.style.color = SEG_COLORS[selectedStation.seg];
+    subEl.textContent = selectedStation.seg + " segment · km " + selectedStation.km.toFixed(1);
+  }
+}
+
+function drawRadarPolygon(group, d, color, opacity) {
+  const vals = normalize(d);
+  const pts = vals.map((v, i) => radarPoint(i, v));
+  pts.push(pts[0]);
+
+  group.append("polygon")
+    .attr("points", pts.map(p => p.join(",")).join(" "))
+    .attr("fill", color)
+    .attr("fill-opacity", opacity)
+    .attr("stroke", color)
+    .attr("stroke-width", 2)
+    .attr("stroke-opacity", 0.9);
+}
+
+// ─── INFO CARD ───
+function updateInfo() {
+  const card = document.getElementById("info-card");
+  const grid = document.getElementById("info-grid");
+  const title = document.getElementById("info-title");
+
+  const stations = compareMode ? compareSet : (selectedStation ? [selectedStation] : []);
+
+  if (stations.length === 0) {
+    card.style.display = "none";
+    return;
+  }
+  card.style.display = "block";
+
+  if (compareMode && stations.length > 1) {
+    title.textContent = "Comparison Details";
+    grid.innerHTML = "";
+
+    // Header row
+    let headerHtml = `<div class="info-row" style="grid-column: 1 / -1; border-bottom: 1px solid rgba(255,255,255,0.06); padding-bottom: 6px; margin-bottom: 4px;">
+      <span class="info-label" style="width: 90px;">Dimension</span>`;
+    stations.forEach((d, i) => {
+      headerHtml += `<span class="info-value" style="color: ${COMPARE_COLORS[i]}; font-size: 10px; min-width: 70px;">${d.n.length > 12 ? d.n.substring(0,12) + '…' : d.n}</span>`;
+    });
+    headerHtml += `</div>`;
+    grid.innerHTML = headerHtml;
+    grid.style.gridTemplateColumns = "1fr";
+
+    const rows = [
+      { label: "Frequency", key: "fr", fmt: v => v.toFixed(1) + " tph" },
+      { label: "Richness", key: "ri", fmt: v => Math.round(v) },
+      { label: "Shannon", key: "rs", fmt: v => v.toFixed(2) },
+      { label: "Modal", key: "ms", fmt: v => v.toFixed(2) },
+      { label: "TWCI", key: "tw", fmt: v => v.toFixed(3) },
+      { label: "Service", key: "sw", fmt: v => v.toFixed(1) + "h" },
+      { label: "Cost", key: "pr", fmt: v => "CHF " + v.toFixed(1) },
+      { label: "Healthcare", key: "hc", fmt: v => Math.round(v) },
+    ];
+
+    rows.forEach(r => {
+      let rowHtml = `<div class="info-row" style="grid-column: 1 / -1;">
+        <span class="info-label" style="width: 90px;">${r.label}</span>`;
+      stations.forEach((d, i) => {
+        rowHtml += `<span class="info-value" style="color: ${COMPARE_COLORS[i]}; min-width: 70px;">${r.fmt(d[r.key])}</span>`;
+      });
+      rowHtml += `</div>`;
+      grid.innerHTML += rowHtml;
+    });
+
+  } else {
+    const d = stations[0];
+    title.textContent = d.n + " — Raw Values";
+    grid.style.gridTemplateColumns = "1fr 1fr";
+    grid.innerHTML = `
+      <div class="info-row"><span class="info-label">Segment</span><span class="info-value" style="color:${SEG_COLORS[d.seg]}">${d.seg}</span></div>
+      <div class="info-row"><span class="info-label">Rail km</span><span class="info-value">${d.km.toFixed(1)}</span></div>
+      <div class="info-row"><span class="info-label">Frequency</span><span class="info-value">${d.fr.toFixed(1)} tph</span></div>
+      <div class="info-row"><span class="info-label">Richness</span><span class="info-value">${Math.round(d.ri)} features</span></div>
+      <div class="info-row"><span class="info-label">Religious Shan.</span><span class="info-value">${d.rs.toFixed(2)}</span></div>
+      <div class="info-row"><span class="info-label">Modal Shan.</span><span class="info-value">${d.ms.toFixed(2)}</span></div>
+      <div class="info-row"><span class="info-label">TWCI Peak</span><span class="info-value">${d.tw.toFixed(4)}</span></div>
+      <div class="info-row"><span class="info-label">Service Hrs</span><span class="info-value">${d.sw.toFixed(1)}h</span></div>
+      <div class="info-row"><span class="info-label">Cost from GVA</span><span class="info-value">CHF ${d.pr.toFixed(2)}</span></div>
+      <div class="info-row"><span class="info-label">Healthcare</span><span class="info-value">${Math.round(d.hc)}</span></div>
+      <div class="info-row"><span class="info-label">Cost Norm.</span><span class="info-value">${((1 - d.pr/MAX.pr)*100).toFixed(0)}%</span></div>
+      <div class="info-row"><span class="info-label">Freq Norm.</span><span class="info-value">${((d.fr/MAX.fr)*100).toFixed(0)}%</span></div>
+    `;
+  }
+}
+
+// ─── CONTROLS ───
+document.getElementById("search").addEventListener("input", () => {
+  renderTable();
+});
+
+document.getElementById("seg-filter").addEventListener("change", () => {
+  renderTable();
+});
+
+document.getElementById("compare-mode").addEventListener("change", (e) => {
+  compareMode = e.target.checked;
+  if (!compareMode) {
+    compareSet = [];
+  } else {
+    selectedStation = null;
+  }
+  renderTable();
+  updateRadar();
+  updateInfo();
+});
+
+// ─── INIT ───
+buildHeader();
+renderTable();
+initRadar();
+updateRadar();
+updateInfo();
+</script>
+</body>
+</html>

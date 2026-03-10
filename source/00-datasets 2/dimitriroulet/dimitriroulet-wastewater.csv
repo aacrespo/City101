@@ -1,0 +1,42 @@
+type_infrastructure,nom,adresse,commune,canton,lat_wgs84,lon_wgs84,capacite_eq_hab,verification,source,notes
+STEP,Station d'épuration du Bois de Bay,Rte du Bois-de-Bay 49,Satigny,GE,46.1959979,6.0576322,,VERIFIE,Google Places,Installation récente - Architecture verte
+STEP,Station d'épuration d'Aïre,Chem. de la Verseuse,Vernier,GE,46.1964569,6.0902704,600000.0,VERIFIE,Google Places + Wikipedia,Plus grande STEP Suisse - 25 communes - Rejet Rhône - Modernisation 2023-2028
+POINT_REJET,Émissaire STEP Aïre,Rhône Vernier,Vernier,GE,46.1965,6.0903,,,SITG + Documentation,Rejet eaux traitées dans Rhône après traitement
+STATION_POMPAGE,Station pompage Saint-Jean,Sent. du Promeneur Solitaire 12,Genève,GE,46.201995,6.1212817,,VERIFIE,Google Places,Pompe vers STEP Aïre - Vue lac - Accessible public - Graffitis
+COLLECTEUR,Collecteur principal Rive gauche,Genève rive gauche,Genève,GE,46.2,6.14,,,SITG,Achemine vers STEP Aïre - Réseau primaire
+COLLECTEUR,Collecteur bassin Arve,Carouge-Arve,Carouge,GE,46.18,6.14,,,SITG,Eaux mélangées bassin Arve
+STATION_POMPAGE,Station pompage Prieuré,Le Prieuré,Genève,GE,46.2157344,6.149071,,VERIFIE,Google Places,Architecture brutaliste béton - Eau potable + eaux usées canton
+BASSIN_VERSANT,Bassin versant STEP Aïre,Canton de Genève,Genève,GE,46.2,6.15,,,SITG schéma,Couvre majeure partie canton GE - 25 communes
+COLLECTEUR,Collecteur principal Rive droite,Genève rive droite,Genève,GE,46.21,6.15,,,SITG,Achemine vers STEP Aïre - Réseau primaire
+POINT_REJET,Émissaire STEP Villette,Arve Thônex,Thônex,GE,46.179,6.186,,,SITG,Rejet Arve après traitement micropolluants 80%
+STEP,Station d'épuration de Villette,Av. de Thônex 105,Thônex,GE,46.1793752,6.186236,135000.0,VERIFIE,Google Places,Traitement micropolluants - Rejet Arve - Transfrontalier CH-FR
+BASSIN_VERSANT,Bassin versant STEP Villette,Est Genève,Thônex,GE,46.18,6.19,,,SITG schéma,Zone transfrontalière Suisse-France
+STEP,STEP de Terre Sainte,Chemin de l'Abri,Commugny,VD,46.3250491,6.152344,,VERIFIE,Google Places,STEP intercommunale La Côte vaudoise - Dessert Commugny et communes environnantes
+STEP,Station d'épuration Coppet,,Coppet,VD,46.3223826,6.1918873,,VERIFIE,Google Places,STEP locale La Côte
+STEP,STEP APEC La Dullive,Chemin de la Dullive,Gland,VD,46.402,6.27,72500.0,VERIFIE,Web search + APEC website,À FERMER 2028 lors mise en service STEP Lavasson - STEP intercommunale desservant 21 communes APEC actuellement
+STEP,STEP APEC Lavasson (en construction),Site du Lavasson,Gland,VD,46.4165,6.285,72500.0,VERIFIE,Web search + APEC website + Commune Gland,EN CONSTRUCTION - Mise en service 2028 - Remplacera La Dullive - 21 communes APEC - Traitement micropolluants prévu
+STEP,Station d'épuration AIER,Rue Arthur Vittel,Rolle,VD,46.4614913,6.344588,,VERIFIE,Google Places,Région Rolle
+BASSIN_VERSANT,Bassin versant ERM Morges,Région Morges,Morges,VD,46.51,6.51,,,Estimation,Communes région morgienne
+STEP,Épuration région morgienne ERM,Rue de Lausanne 72,Morges,VD,46.5168884,6.5121996,,VERIFIE,Google Places,STEP régionale Morges - Filtre phosphore excellemment
+BASSIN_VERSANT,Bassin versant STEP Vidy,Ouest lausannois,Lausanne,VD,46.52,6.59,,,Documentation Lausanne,16 communes dont Lausanne Pully Prilly
+POINT_REJET,Émissaire STEP Vidy,Léman Lausanne,Lausanne,VD,46.52,6.591,,,Ville Lausanne,Rejet Léman à 30m profondeur - Émissaire sous-lacustre
+STEP,STEP de Vidy,Rte de Vidy 10,Lausanne,VD,46.519917,6.5914245,300000.0,VERIFIE,Google Places + Ville Lausanne,"16 communes - Rejet Léman 30m prof - Modernisation 2015-2023 TERMINÉE - Traitement micropolluants, biogaz réinjecté réseau"
+COLLECTEUR,Collecteur Lausanne-Vidy,Lausanne centre,Lausanne,VD,46.52,6.63,,,Estimation,Principal collecteur Lausanne vers Vidy
+STEP,Station d'épuration Pully,Chem. de la Plage 1,Pully,VD,46.505385,6.668401,,VERIFIE,Google Places,Dessert Pully et environs
+COLLECTEUR,Collecteur Lavaux,Zone Lavaux,Lutry,VD,46.5,6.7,,,Estimation,Collecte région viticole Lavaux
+STEP,STEP Lutry,Rte de Lavaux 422,Lutry,VD,46.4984036,6.7001538,,VERIFIE,Google Places,Zone Lavaux
+STEP,V.O.G. Step la Verna,Rte de Rue 17,Ecublens,VD,46.6135412,6.8151533,,VERIFIE,Google Places,Vallée de Joux - Orbe - Gland intercommunale
+POINT_REJET,Émissaire STEP de l'Aviron,Léman Vevey,Vevey,VD,46.46,6.836,,,Estimation,Rejet dans le Léman depuis la STEP de l'Aviron (SIGE Vevey)
+STEP,STEP de l'Aviron (SIGE),Quai Maria-Belgia 16,Vevey,VD,46.4630,6.8434,,VERIFIE,SIGE site officiel + contact,"1ère des 3 STEP du SIGE Riviera - Exploitation : SIGE - Dessert Vevey, La Tour-de-Peilz, Veytaux + communes amont"
+COLLECTEUR,Collecteur Riviera,Vevey-Montreux,Vevey,VD,46.455,6.85,,,Estimation,Achemine vers STEP Vevey et Montreux
+BASSIN_VERSANT,Bassin versant Riviera,Vevey-Montreux,Vevey,VD,46.455,6.855,,,Estimation,Zone Riviera vaudoise multiple STEP
+POINT_REJET,Émissaire STEP du Pierrier,Léman Montreux,Clarens / Montreux,VD,46.43,6.91,,,Estimation,"Rejet Léman depuis STEP du Pierrier à Clarens (SIGE) - Clarens, commune de Montreux"
+STEP,STEP du Pierrier (SIGE),Rue du Lac 119,Clarens / Montreux,VD,46.4432,6.9003,46000.0,VERIFIE,SIGE site officiel + ALPS Automation,"2e des 3 STEP du SIGE Riviera - En service depuis 1976 - 46'000 EH - Dessert Montreux, Blonay-Saint-Légier, Veytaux + communes amont (ACPRS: Puidoux, Rivaz, St-Saphorin, Chexbres) + Châtel-St-Denis"
+STEP,STEP du Jaquetan (SIGE/EPUDEHL),Route de Jaquetan 9,Roche,VD,46.3780,6.9215,,VERIFIE,SIGE site officiel contact + presse 24h,"3e STEP du SIGE Riviera - Dessert Villeneuve, Rennaz, Chessel, Noville, Roche (EPUDEHL) - Future méga-STEP régionale planifiée à Noville (budget ~300M CHF)"
+COLLECTEUR,Collecteur Chablais,Aigle-Villeneuve,Aigle,VD,46.33,6.94,,,Estimation,Dessert zone Chablais vaudois
+STEP,STEP Aigle,Rte d'Evian 78,Aigle,VD,46.3142837,6.9424498,,VERIFIE,Google Places,Chablais vaudois - Propreté excellente
+POINT_REJET,Émissaire STEP Aigle,Rhône Aigle,Aigle,VD,46.314,6.943,,,Estimation,Rejet dans Rhône
+BASSIN_VERSANT,Bassin versant Chablais,Aigle-Bex,Aigle,VD,46.32,6.95,,,Estimation,Chablais vaudois
+STEP,Station épuration Ollon,Chem. de la Monnaie 5,Ollon,VD,46.2914962,6.9815449,,VERIFIE,Google Places,STEP intercommunale Ollon – St-Triphon – Seul site STEP de la commune (doublon GPS ligne 51 supprimé)
+STEP,Station d'épuration Bex,Rte de la Gribannaz 35,Bex,VD,46.2443457,6.9954208,,VERIFIE,Google Places,Commune de Bex
+STEP,STEP Collombey-Muraz,Z.I. Reutet 50,Collombey-Muraz,VS,46.286083,6.9412458,,VERIFIE,Google Places,Zone industrielle - Début Valais

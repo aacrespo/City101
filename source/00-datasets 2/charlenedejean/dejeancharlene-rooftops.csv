@@ -1,0 +1,28 @@
+id,building_name,city,address,lat_wgs84,lon_wgs84,coordinate_source,building_type,floors_approx,roof_area_m2_est,roof_material_assumed,solar_potential,rooftop_access_assumed,notes
+1,Palais des Nations,Geneva,Avenue de la Paix 8 – 14 CH-1211,46.2265,6.1392,Google Maps / OSM confirmed,institutional,3,8500,flat membrane,high,restricted,UN HQ complex – large flat rooftop
+2,Bâtiment principal Gare Cornavin,Geneva,Place Cornavin 7 1201 Geneva,46.2101,6.1422,OSM/Google confirmed,transport-infrastructure,4,3200,flat + shed,medium,restricted,Main Geneva railway station
+3,Palais Wilson (UNHCHR),Geneva,52 Rue des Pâquis 1201 Geneva,46.2159,6.1491,OSM confirmed,institutional,4,1800,flat gravel,high,restricted,Historic building on lakefront – north of quai
+4,Musée d'Art et d'Histoire de Genève,Geneva,Rue Charles-Galland 2 1206 Geneva,46.1991,6.1571,OSM confirmed,cultural,3,2400,flat,medium,restricted,Inland from lake; included as anchor urban point
+5,Hôtel Beau-Rivage Geneva,Geneva,Quai du Mont-Blanc 13 1201 Geneva,46.2087,6.1508,OSM confirmed,hotel,6,900,flat,high,restricted,Direct lakefront – quai du Mont-Blanc
+6,Nyon Railway Station,Nyon,Place de la Gare 1260 Nyon,46.3825,6.2358,OSM/Swisstopo confirmed,transport-infrastructure,2,1200,flat,medium,restricted,Verified station building footprint
+7,Château de Nyon (rooftop terrace),Nyon,Place du Château 1260 Nyon,46.3834,6.2338,OSM confirmed,historic-castle,2,600,flat terrace,low,restricted,Historic castle – flat upper terrace documented
+8,Hôtel de Ville de Morges,Morges,Grand-Rue 26 1110 Morges,46.5101,6.4987,OSM confirmed,civic,3,850,flat,medium,restricted,Town hall – flat roof section verified on aerial
+9,Morges Halle de Fêtes,Morges,Rue Louis-de-Savoie 1110 Morges,46.5118,6.4992,OSM/aerial confirmed,cultural-events,2,2100,flat membrane,high,semi-accessible,Large cultural venue with documented flat roof
+10,Lausanne-Ouchy Port Building,Lausanne,Place de la Navigation 1006 Lausanne,46.5088,6.6269,OSM confirmed,transport-infrastructure,2,1500,flat,high,semi-accessible,Port authority building directly on lakefront
+11,Lausanne Gare CFF,Lausanne,Place de la Gare 9 1003 Lausanne,46.5170,6.6290,OSM confirmed,transport-infrastructure,5,4800,flat,high,restricted,Major station – extensive flat roof
+12,Bâtiment des Forces Motrices (BFM) – Lausanne,Lausanne,Rue de Genève 1003 Lausanne,46.5149,6.6268,OSM confirmed,industrial-heritage,2,1100,flat,medium,restricted,Heritage industrial building near lake axis
+13,Palais de Rumine,Lausanne,Place de la Riponne 6 1005 Lausanne,46.5232,6.6343,OSM/Swisstopo confirmed,cultural,4,3000,flat + dome,low,restricted,Known roof morphology from Swisstopo 3D data
+14,Musée Olympique Lausanne,Lausanne,Quai d'Ouchy 1 1006 Lausanne,46.5060,6.6285,OSM confirmed,cultural-museum,3,2200,flat,high,restricted,Directly on lake quai – documented in OSM
+15,EPFL Rolex Learning Center,Lausanne,Route Cantonale 1015 Lausanne,46.5183,6.5680,OSM confirmed,education,1,8000,undulating concrete,medium,restricted,Famous sinusoidal roof – challenging for solar but iconic
+16,EPFL SG Building (Sciences Générales),Lausanne,Station 15 1015 Lausanne,46.5196,6.5671,OSM confirmed,education,8,1800,flat,high,restricted,Standard flat-roof research building at EPFL campus
+17,SwissTech Convention Center,Lausanne,Route Louis-Favre 2 1024 Ecublens,46.5193,6.5657,OSM confirmed,convention,3,6500,flat membrane,high,restricted,Large convention roof – very good solar potential
+18,Vevey Railway Station,Vevey,Place de la Gare 1800 Vevey,46.4612,6.8418,OSM confirmed,transport-infrastructure,3,2500,flat + canopy,medium,restricted,Verified station on OSM – north of lake
+19,Alimentarium (Nestlé Food Museum),Vevey,Quai Perdonnet 25 1800 Vevey,46.4615,6.8446,OSM confirmed,cultural-museum,3,1200,flat,high,semi-accessible,Lakefront museum – confirmed OSM position
+20,Hôtel de Ville de Vevey,Vevey,Grande Place 1800 Vevey,46.4626,6.8429,OSM confirmed,civic,3,900,flat,medium,restricted,Town hall on main square – verified coordinate
+21,Nestlé HQ Building (main tower),Vevey,Avenue Nestlé 55 1800 Vevey,46.4633,6.8401,OSM confirmed,office-corporate,12,2800,flat,high,restricted,Iconic corporate HQ – documented in OSM
+22,Château de Chillon,Veytaux,Route de Chillon 1820 Veytaux,46.4142,6.9274,OSM/Swisstopo confirmed,historic-castle,3,1800,flat terrace + turrets,low,restricted,Most photographed Swiss castle – precise coord from OSM
+23,Montreux Palace Hotel,Montreux,Grand Rue 100 1820 Montreux,46.4326,6.9100,OSM confirmed,hotel,7,1400,flat,high,restricted,Belle Époque palace – lakefront
+24,Montreux Railway Station,Montreux,Avenue des Planches 1820 Montreux,46.4333,6.9120,OSM confirmed,transport-infrastructure,3,1800,flat + canopy,high,restricted,Verified on OSM – main station
+25,Freddie Mercury Statue / Casino Montreux,Montreux,Rue du Théâtre 9 1820 Montreux,46.4305,6.9085,OSM confirmed,entertainment,4,2200,flat,high,restricted,Casino complex adjacent to the famous statue promenade
+26,Villeneuve Hôtel de Ville,Villeneuve,Grande Place 1844 Villeneuve,46.4021,6.9283,OSM confirmed,civic,3,700,flat,medium,restricted,Eastern terminus town – verified coordinate
+27,Villeneuve Railway Station,Villeneuve,Rue de la Gare 1844 Villeneuve,46.4032,6.9301,OSM confirmed,transport-infrastructure,2,900,flat,high,restricted,Eastern end of corridor – confirmed OSM node

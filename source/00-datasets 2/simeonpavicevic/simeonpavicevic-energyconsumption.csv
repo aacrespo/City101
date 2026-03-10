@@ -1,0 +1,21 @@
+id,nom,type_consommateur,conso_elec_GWh_an,conso_therm_GWh_an,population_emplois,commune,canton,E_LV95,N_LV95,notes_corrections
+C01,Ville de Lausanne (résidentiel + tertiaire),Urbain mixte,1400,700,140000 hab,Lausanne,VD,2537702,1152301,Fourniture SiL; 230 000 foyers desservis; réseau CAD Pierre-de-Plan alimenté par TRIDEL; coord sur centre ville (Place St-François)
+C02,Agglomération genevoise,Urbain mixte,3000,1500,520000 hab,Genève,GE,2499799,1118703,Réseau SIG; 275 500 clients électricité; 90% chauffage fossile en cours de transition; coord sur centre (Cornavin)
+C03,Nyon – La Côte,Urbain résidentiel,350,120,50000 hab,Nyon,VD,2507383,1137571,CORRIGÉ: Nyon-La Côte centré sur Nyon → 46.3831°N 6.2347°E. Hors lac.
+C04,Morges – Aubonne,Urbain résidentiel,180,90,35000 hab,Morges,VD,2525197,1151398,Fourniture Romande Energie / SiL; croissance démographique forte; therm estimée ~90 GWh
+C05,Vevey – Montreux,Urbain – tourisme – industrie légère,400,150,55000 hab,Vevey,VD,2556198,1145201,Nestlé HQ + industrie agroalimentaire; Montreux Riviera; hôtellerie importante; therm estimée ~150 GWh
+C06,Aigle – Villeneuve (Chablais vaudois),Urbain – industrie – transport,200,80,30000 hab,Aigle,VD,2563881,1129797,CORRIGÉ +4588m: Gare CFF Aigle → 46.3186°N 6.9697°E (était confondu avec zone VS)
+C07,Site industriel CIMO – Monthey (Valais),Industrie chimique lourde,400,250,5000 emplois,Monthey,VS,2564097,1122103,"Lonza / Syngenta / INEOS; clients directs SATOM via Ecotube (vapeur 250 GWh); coord N corrigée (+2200m, le site est plus au nord que l'original)"
+C08,EPFL – Campus Ecublens,Enseignement – recherche – data,80,30,15000 personnes,Ecublens,VD,2532899,1152397,"Gros consommateur électricité (data centers, labos cryogéniques); objectif campus neutre CO2; production PV propre P09"
+C09,CHUV – Centre hospitalier universitaire vaudois,Santé – tertiaire,60,25,12000 emplois,Lausanne,VD,2537348,1154450,Fonctionnement 24h/24; cogénération partielle; alimentation sécurisée critique; coord sur bâtiment principal (BH)
+C10,Aéroport international de Genève,Transport – tertiaire,70,30,8000 emplois directs,Meyrin,GE,2497420,1120878,AJUSTÉ -435m: même correction aéroport que P10
+C11,Gare CFF Lausanne (nœud ferroviaire),Transport ferroviaire,40,8,nœud national,Lausanne,VD,2537797,1151900,Alimentation 16.7 Hz CFF + réseau 50 Hz bâtiments; trafic voyageurs massif; therm bâtiments ~8 GWh
+C12,Quartier Lignon – Vernier,Résidentiel dense,50,60,15000 hab,Vernier,GE,2496461,1118492,1er réseau CAD Genève (1964); alimenté CAD SIG (Cheneviers + gaz); cas d'école thermique; coord sur tour Lignon
+C13,Zone industrielle Bussigny – Crissier,Industrie légère – logistique,120,40,10000 emplois,Bussigny,VD,2531499,1153502,Entrepôts logistiques + PME industrielles; croissance forte; therm estimée ~40 GWh (gaz process)
+C14,Nœud ferroviaire / triage Renens – Denges,Transport – logistique,30,5,—,Renens,VD,2529698,1153001,Triage CFF Denges; alimentation électrique traction + opérations; flux fret continu; therm bâtiments ~5 GWh
+C15,Communes littorales Léman (Pully – Lutry – Cully – Rivaz),Résidentiel diffus – viticole,80,70,25000 hab,Pully,VD,2544497,1151000,Tissu résidentiel dispersé; peu de réseau CAD; chauffage majoritairement mazout/gaz ~70 GWh; potentiel lacustre inexploité
+C16,Monthey – St-Maurice (Chablais valaisan),Urbain – industrie,150,80,28000 hab,Monthey,VS,2563498,1122496,Zone résidentielle + industrielle Monthey; hors périmètre strict City 101 mais connexe via SATOM; therm ~80 GWh
+C17,Renens – Prilly – Bussigny (1ère couronne Lausanne),Résidentiel – tertiaire,160,90,40000 hab,Renens,VD,2529999,1152497,Croissance forte; peu de CAD; chauffage fossile dominant; coord centroïde zone
+C18,Rolle – Gland (La Côte central),Résidentiel – tertiaire,90,50,22000 hab,Rolle,VD,2515589,1146145,CORRIGÉ: Rolle-Gland centré sur Rolle → 46.4613°N 6.3398°E. Hors lac.
+C19,Villeneuve – Noville – Rennaz,Résidentiel – équipements,40,20,8000 hab,Villeneuve,VD,2566200,1136799,Entrée est City 101; HIEMS (hôpital Riviera-Chablais) gros consommateur; coord sur hôpital Rennaz
+C20,Data Center / campus numérique Genève (Zimeysa – Meyrin),Industrie numérique,120,5,—,Meyrin,GE,2494500,1118004,Concentration data centers région genevoise; consommateurs en forte croissance; récupération chaleur partielle vers CAD SIG

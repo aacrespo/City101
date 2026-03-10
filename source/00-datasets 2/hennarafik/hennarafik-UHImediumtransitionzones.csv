@@ -1,0 +1,55 @@
+zone_name,lat_wgs84,lon_wgs84,E_LV95,N_LV95,UHI_category,UHI_intensity_score,description,land_use_type,population,density_per_km2,impervious_surface_pct,green_cover_pct
+Bernex,46.178459,6.068356,2494191,1115034,MEDIUM,2,"Moderate suburb (858/km2), moderate UHI.",Suburban,11112,858,30-45%,45-60%
+Perly-Certoux,46.1581,6.08786,2495658,1112745,MEDIUM,2,"Moderate suburban (1301/km2), transitional UHI.",Suburban,3304,1301,45-60%,30-45%
+Confignon,46.174272,6.089001,2495777,1114541,MEDIUM,2,"Moderate suburban (1644/km2), transitional UHI.",Urban,4553,1644,45-60%,30-45%
+Bardonnex,46.149022,6.118285,2497991,1111696,MEDIUM,2,"Moderate suburb (509/km2), moderate UHI.",Residential,2545,509,30-45%,45-60%
+Bellevue,46.254678,6.145267,2500269,1123405,MEDIUM,2,"Moderate suburb (646/km2), moderate UHI.",Residential,4105,646,30-45%,45-60%
+Troinex,46.158839,6.151062,2500541,1112745,MEDIUM,2,"Moderate suburb (917/km2), moderate UHI.",Suburban,3145,917,30-45%,45-60%
+Pregny-Chambesy,46.236445,6.148708,2500501,1121374,MEDIUM,2,"Moderate suburb (680/km2), moderate UHI.",Residential,4262,680,30-45%,45-60%
+Versoix,46.287922,6.15639,2501187,1127086,MEDIUM,2,"Moderate suburb (924/km2), moderate UHI.",Suburban,13996,924,30-45%,45-60%
+Genthod,46.262125,6.160111,2501427,1124214,MEDIUM,2,"Moderate suburb (540/km2), moderate UHI.",Residential,2861,540,30-45%,45-60%
+Veyrier,46.17164,6.166856,2501784,1114148,MEDIUM,2,"Moderate suburban (1859/km2), transitional UHI.",Urban,12085,1859,45-60%,30-45%
+Crassier,46.376069,6.168075,2502246,1136869,MEDIUM,2,"Moderate suburb (628/km2), moderate UHI.",Residential,1275,628,30-45%,45-60%
+Cologny,46.21764,6.185366,2503295,1119238,MEDIUM,2,"Moderate suburb (811/km2), moderate UHI.",Suburban,6027,811,30-45%,45-60%
+Borex,46.380988,6.179139,2503106,1137402,MEDIUM,2,"Moderate suburb (576/km2), moderate UHI.",Residential,1146,576,30-45%,45-60%
+Collonge-Bellerive,46.252171,6.198591,2504376,1123060,MEDIUM,2,"Moderate suburb (809/km2), moderate UHI.",Suburban,8643,809,30-45%,45-60%
+Coppet,46.309712,6.180466,2503081,1129478,MEDIUM,2,"Moderate suburb (552/km2), moderate UHI.",Residential,3232,552,30-45%,45-60%
+Vandoeuvres,46.219002,6.203649,2504708,1119367,MEDIUM,2,"Moderate suburb (686/km2), moderate UHI.",Residential,3030,686,30-45%,45-60%
+Eysins,46.381127,6.204876,2505086,1137386,MEDIUM,2,"Moderate suburb (745/km2), moderate UHI.",Residential,1774,745,30-45%,45-60%
+Corsier (GE),46.26588,6.219099,2505981,1124559,MEDIUM,2,"Moderate suburb (539/km2), moderate UHI.",Residential,2313,539,30-45%,45-60%
+Puplinge,46.210853,6.232162,2506894,1118427,MEDIUM,2,"Moderate suburb (984/km2), moderate UHI.",Suburban,2628,984,30-45%,45-60%
+Vich,46.428088,6.249385,2508589,1142553,MEDIUM,2,"Moderate suburb (763/km2), moderate UHI.",Residential,1182,763,30-45%,45-60%
+Gland,46.410185,6.284297,2511243,1140523,MEDIUM,2,"Moderate suburb (810/km2), moderate UHI.",Suburban,13987,810,30-45%,45-60%
+Mont-sur-Rolle,46.475388,6.336403,2515351,1147713,MEDIUM,2,"Moderate suburb (713/km2), moderate UHI.",Residential,2752,713,30-45%,45-60%
+Etoy,46.484164,6.421741,2521917,1148600,MEDIUM,2,"Moderate suburb (602/km2), moderate UHI.",Residential,2962,602,30-45%,45-60%
+Morges,46.51401,6.49319,2527443,1151849,MEDIUM,2,"Moderate suburban (1303/km2), transitional UHI.",Suburban,17701,1303,45-60%,30-45%
+Lonay,46.529877,6.517002,2529291,1153591,MEDIUM,2,"Moderate suburb (735/km2), moderate UHI.",Residential,2734,735,30-45%,45-60%
+Preverenges,46.516013,6.529122,2530203,1152039,MEDIUM,2,"Moderate suburb (520/km2), moderate UHI.",Residential,5260,520,30-45%,45-60%
+Echandens,46.539715,6.537902,2530907,1154666,MEDIUM,2,"Moderate suburb (773/km2), moderate UHI.",Residential,2999,773,30-45%,45-60%
+Denges,46.523378,6.539008,2530971,1152849,MEDIUM,2,"Moderate suburban (1102/km2), transitional UHI.",Suburban,1830,1102,45-60%,30-45%
+Villars-Sainte-Croix,46.567378,6.563229,2532884,1157719,MEDIUM,2,"Moderate suburb (578/km2), moderate UHI.",Residential,953,578,30-45%,45-60%
+Crissier,46.558526,6.57734,2533955,1156723,MEDIUM,2,"Moderate suburban (1941/km2), transitional UHI.",Urban,10676,1941,45-60%,30-45%
+Jouxtens-Mezery,46.551864,6.595976,2535376,1155967,MEDIUM,2,"Moderate suburb (766/km2), moderate UHI.",Residential,1478,766,30-45%,45-60%
+Cheseaux-sur-Lausanne,46.584535,6.595506,2535379,1159599,MEDIUM,2,"Moderate suburban (1056/km2), transitional UHI.",Suburban,4847,1056,45-60%,30-45%
+Romanel-sur-Lausanne,46.56036,6.608599,2536354,1156901,MEDIUM,2,"Moderate suburban (1500/km2), transitional UHI.",Suburban,4321,1500,45-60%,30-45%
+Le Mont-sur-Lausanne,46.559334,6.638702,2538661,1156763,MEDIUM,2,"Moderate suburb (973/km2), moderate UHI.",Suburban,9531,973,30-45%,45-60%
+Cugy (VD),46.581427,6.643711,2539070,1159215,MEDIUM,2,"Moderate suburb (958/km2), moderate UHI.",Suburban,2787,958,30-45%,45-60%
+Pully,46.52152,6.669522,2540983,1152536,MEDIUM,2,"Moderate suburban (1145/km2), transitional UHI.",Suburban,19538,1145,45-60%,30-45%
+Belmont-sur-Lausanne,46.526517,6.687594,2542375,1153078,MEDIUM,2,"Moderate suburban (1477/km2), transitional UHI.",Suburban,3915,1477,45-60%,30-45%
+Lutry,46.500774,6.697786,2543130,1150209,MEDIUM,2,"Moderate suburb (646/km2), moderate UHI.",Residential,10751,646,30-45%,45-60%
+Chexbres,46.484341,6.780072,2549431,1148326,MEDIUM,2,"Moderate suburban (1052/km2), transitional UHI.",Suburban,2261,1052,45-60%,30-45%
+Jongny,46.487631,6.846533,2554537,1148651,MEDIUM,2,"Moderate suburb (893/km2), moderate UHI.",Suburban,1928,893,30-45%,45-60%
+La Tour-de-Peilz,46.449682,6.861433,2555650,1144424,MEDIUM,2,"Moderate suburban (1131/km2), transitional UHI.",Suburban,12812,1131,45-60%,30-45%
+Corsier-sur-Vevey,46.49444,6.871051,2556425,1149394,MEDIUM,2,"Moderate suburb (502/km2), moderate UHI.",Residential,3385,502,30-45%,45-60%
+Geneve - Champel,46.192013,6.148983,2500441,1116435,MEDIUM,2,"Residential, hospital.",Residential,0,4000,50-65%,25-35%
+Lausanne - Ouchy,46.507397,6.625644,2537600,1151000,MEDIUM,2,"Lakefront, some cooling.",Tourism,0,3000,50-65%,25-35%
+Lausanne - Chailly,46.527297,6.640986,2538800,1153200,MEDIUM,2,Eastern residential.,Residential,0,4000,50-60%,30-40%
+Lausanne - Montbenon,46.519971,6.622849,2537400,1152400,MEDIUM,2,Institutional.,Institutional,0,5000,55-70%,20-30%
+Lausanne - La Sallaz,46.529995,6.640947,2538800,1153500,MEDIUM,2,Northern residential.,Residential,0,5500,55-65%,25-35%
+Montreux - Clarens,46.447868,6.902448,2558800,1144200,MEDIUM,2,Western residential.,Residential,0,3000,45-60%,30-40%
+Montreux - Territet,46.435423,6.9351,2561300,1142800,MEDIUM,2,Historic hotels.,Tourism,0,2500,45-55%,35-45%
+Nyon - Centre,46.376165,6.233767,2507300,1136800,MEDIUM,2,Town center.,Residential,0,3000,50-65%,25-35%
+Morges - Centre,46.51401,6.49319,2527443,1151849,MEDIUM,2,Town center.,Residential,0,2500,50-65%,25-35%
+Allaman - Zone Ind.,46.470057,6.393881,2519757,1147060,MEDIUM,2,Highway commercial.,Industrial,0,0,60-75%,<20%
+Etoy - Zone Ind.,46.487772,6.422754,2522000,1149000,MEDIUM,2,Commercial park A1.,Industrial,0,0,60-75%,<20%
+Gland - Zone Ind.,46.419007,6.287452,2511500,1141500,MEDIUM,2,Industrial south A1.,Industrial,0,0,55-70%,20-30%

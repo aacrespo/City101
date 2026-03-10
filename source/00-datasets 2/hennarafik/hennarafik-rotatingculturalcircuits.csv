@@ -1,0 +1,44 @@
+circuit_name,circuit_type,federation,year,host_location,lat_wgs84,lon_wgs84,corridor_segment,estimated_participants,duration_days,season,notes
+Giron Côte Ouest,music_giron,SCMV,2024,Coppet,46.314,6.192,Versoix-Coppet,2000,3,spring,72e - Harmonie de Terre Sainte
+Giron Côte-Est,music_giron,SCMV,2024,Crissier,46.546,6.579,Lausanne,2000,3,spring,89e
+Giron Lavaux,music_giron,SCMV,2024,Belmont-sur-Lausanne,46.530,6.668,Lausanne,1500,3,spring,8e
+Giron Veveyse,music_giron,SCMV,2024,Porsel,46.553,6.883,Vevey-La Tour-de-Peilz,2500,3,spring,72e - hinterland hosting
+Giron District Aigle,music_giron,SCMV,2024,Aigle,46.318,6.970,Montreux-Villeneuve,1500,3,spring,64e
+Giron Côte Ouest,music_giron,SCMV,2025,Dully-Bursinel,46.406,6.231,Nyon-Gland,2000,4,spring,73e - Mont-sur-Rolle fanfare hosting at Dully
+Giron Lavaux,music_giron,SCMV,2025,Forel Lavaux,46.550,6.746,Lutry-Lavaux,1500,3,spring,9e
+Giron Veveyse,music_giron,SCMV,2025,Chardonne-Jongny,46.475,6.828,Vevey-La Tour-de-Peilz,2500,4,spring,73e - returns to lakeside after inland years
+Giron Côte-Est,music_giron,SCMV,2025,Yens,46.509,6.407,Saint-Prex-Morges,2000,2,spring,90e - Solistes concours at Yens
+Giron Côte Ouest,music_giron,SCMV,2026,Gilly,46.462,6.304,Rolle-Allaman,2000,3,spring,74e - www.gilly2026.ch
+Giron Lavaux,music_giron,SCMV,2026,Mézières,46.590,6.773,Lutry-Lavaux,1500,3,spring,10e - slightly above corridor
+Giron Veveyse,music_giron,SCMV,2026,Semsales,46.573,6.935,Vevey-La Tour-de-Peilz,2500,4,spring,74e - edelparc26.ch hinterland hosting
+Giron District Aigle,music_giron,SCMV,2026,Noville,46.387,6.897,Montreux-Villeneuve,1500,2,spring,66e - Noville at eastern lakefront
+Giron FVJC Pied du Jura,youth_giron,FVJC,2025,Saint-Prex,46.480,6.449,Saint-Prex-Morges,15000,5,summer,First FVJC Pied-du-Jura giron at lakefront
+Fête des Vignerons,wine_festival,Confrérie des Vignerons,1999,Vevey,46.461,6.841,Vevey-La Tour-de-Peilz,800000,18,summer,11th edition
+Fête des Vignerons,wine_festival,Confrérie des Vignerons,2019,Vevey,46.461,6.841,Vevey-La Tour-de-Peilz,1000000,23,summer,12th. Next ~2044
+Caves Ouvertes - La Côte,wine_open_cellars,OVV,2025,Nyon,46.383,6.240,Nyon-Gland,50000,2,spring,250+ caves canton-wide. Navettes from Nyon Gland Rolle Allaman Morges
+Caves Ouvertes - La Côte,wine_open_cellars,OVV,2025,Rolle,46.461,6.336,Rolle-Allaman,50000,2,spring,La Côte region: Féchy Vinzel Luins Begnins Mont-sur-Rolle Tartegnin Gilly
+Caves Ouvertes - La Côte,wine_open_cellars,OVV,2025,Morges,46.511,6.498,Saint-Prex-Morges,50000,2,spring,Morges region + Vufflens-Château
+Caves Ouvertes - Lavaux,wine_open_cellars,OVV,2025,Cully,46.490,6.730,Lutry-Lavaux,50000,2,spring,Lavaux: Lutry Grandvaux Cully Riex Epesses Rivaz St-Saphorin Chardonne
+Caves Ouvertes - Lavaux,wine_open_cellars,OVV,2025,Lutry,46.503,6.685,Lutry-Lavaux,50000,2,spring,Navettes from Lutry Grandvaux Chexbres Cully gares CFF
+Caves Ouvertes - Chablais,wine_open_cellars,OVV,2025,Aigle,46.318,6.970,Montreux-Villeneuve,50000,2,spring,Chablais: Aigle Yvorne Bex Ollon Villeneuve
+Vendanges La Côte,grape_harvest,viticultural,2025,Morges,46.511,6.498,Saint-Prex-Morges,5000,14,autumn,Sept-Oct: harvest moves west to east along La Côte
+Vendanges Lavaux,grape_harvest,viticultural,2025,Lutry,46.503,6.685,Lutry-Lavaux,8000,14,autumn,Lavaux harvest: steep terraces hand-picked
+Vendanges Chablais,grape_harvest,viticultural,2025,Aigle,46.318,6.970,Montreux-Villeneuve,3000,14,autumn,Chablais: Aigle Yvorne Ollon last to harvest
+Montreux Jazz Festival,fixed_annual,Fondation MJF,2025,Montreux,46.437,6.911,Montreux-Villeneuve,250000,16,summer,Fixed anchor - never rotates
+Paléo Festival Nyon,fixed_annual,Paléo,2025,Nyon,46.393,6.222,Nyon-Gland,280000,6,summer,Fixed anchor
+Cully Jazz Festival,fixed_annual,Assoc Cully Jazz,2025,Cully,46.490,6.730,Lutry-Lavaux,60000,9,spring,Fixed anchor - Lavaux wine village
+Fête de la Tulipe,fixed_annual,Morges Region Tourisme,2025,Morges,46.511,6.498,Saint-Prex-Morges,100000,42,spring,Parc de lindépendance - 120000 tulips
+Bol dOr Mirabaud,sailing_race,SNG,2025,Geneva,46.210,6.155,Geneva,3000,2,summer,Largest inland regatta in Europe - start Geneva
+Coupe de Noël,winter_swimming,Assoc CdN,2025,Geneva,46.212,6.152,Geneva,4400,1,winter,Bains des Pâquis. National living tradition 2023
+Bô Noël Lausanne,christmas_market,Ville de Lausanne,2025,Lausanne,46.519,6.633,Lausanne,400000,40,winter,11e. St-François + Place des Papilles + Rue du Bourg + Plateforme 10
+Montreux Noël,christmas_market,Montreux Tourisme,2025,Montreux,46.437,6.911,Montreux-Villeneuve,500000,34,winter,Riviera Noël. 150+ chalets. Père Noël volant. Plus grand marché Suisse romande
+Vevey Noël,christmas_market,Riviera Noël,2025,Vevey,46.461,6.841,Vevey-La Tour-de-Peilz,50000,40,winter,12e Place Scanavin + Place du Marché. Open until 31 Dec
+Villeneuve Noël,christmas_market,Riviera Noël,2025,Villeneuve,46.400,6.928,Montreux-Villeneuve,15000,25,winter,Village des Lutins. Place de lOuchettaz
+Morges Noël,christmas_market,Ville de Morges,2025,Morges,46.511,6.498,Saint-Prex-Morges,30000,19,winter,Château et jardins. 100+ exposants
+Nyon Village de Noël,christmas_market,SIC Nyon,2025,Nyon,46.383,6.240,Nyon-Gland,25000,4,winter,Quartier de Rive. Dec only
+Coppet Noël,christmas_market,Commune de Coppet,2025,Coppet,46.314,6.192,Versoix-Coppet,5000,2,winter,Château de Coppet. Early Dec weekend
+Rolle Noël Ensemble,christmas_market,Ville de Rolle,2025,Rolle,46.461,6.336,Rolle-Allaman,3000,3,winter,Château de Rolle. Mid-Dec weekend
+Noël au Château de Chillon,christmas_market,Fondation Chillon,2025,Veytaux,46.414,6.927,Montreux-Villeneuve,10000,6,winter,Medieval castle. Select Dec weekends
+Genève Noël au Quai,christmas_market,Ville de Genève,2025,Geneva,46.207,6.155,Geneva,200000,30,winter,Quai du Mont-Blanc. Village lumineux
+Fête cantonale gymnastique,gymnastics_cantonal,FSG Vaud,2024,Lausanne,46.523,6.632,Lausanne,15000,3,summer,Rotates through canton
+Fête vaudoise de lutte,wrestling_cantonal,ESV,2025,Gilly,46.462,6.304,Rolle-Allaman,3000,2,summer,Schwingen / Lutte suisse

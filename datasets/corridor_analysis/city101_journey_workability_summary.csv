@@ -1,0 +1,36 @@
+from_station,to_station,num_connections,avg_duration_min,best_category,worst_category,avg_stops_per_10min,pct_prime_work,pct_workable,pct_not_workable,requires_transfer_pct,overall_workability
+Allaman,Morges,12,6.5,RE,R,1.25,0.0,0.0,50.0,0.0,NOT_WORKABLE
+Bussigny,Renens VD,18,3.5,R,R,0.0,0.0,0.0,100.0,0.0,NOT_WORKABLE
+Coppet,Nyon,18,14.6,RE,B,2.71,0.0,0.0,55.6,0.0,NOT_WORKABLE
+Cully,Vevey,18,9.1,R,R,0.42,0.0,0.0,5.6,0.0,MARGINAL
+Genève,Genève-Aéroport,18,7.5,IC,RE,0.0,0.0,27.8,72.2,0.0,NOT_WORKABLE
+Genève,Lausanne,18,45.2,IC,RE,0.78,61.1,38.9,0.0,0.0,PRIME_WORK
+Genève,Morges,18,34.5,IR,RE,0.89,44.4,55.6,0.0,0.0,WORKABLE
+Genève,Nyon,18,15.2,IR,RE,0.34,66.7,33.3,0.0,0.0,PRIME_WORK
+Genève-Aéroport,Genève-Champel,18,31.3,R,B,2.05,0.0,0.0,0.0,100.0,MARGINAL
+Genève-Champel,Genève-Eaux-Vives,18,2.7,RE,R,0.0,0.0,0.0,100.0,0.0,NOT_WORKABLE
+Genève-Eaux-Vives,Lancy-Bachet,12,6.0,RE,R,1.67,0.0,0.0,100.0,0.0,NOT_WORKABLE
+Genève-Sécheron,Versoix,18,14.0,R,R,2.86,0.0,0.0,0.0,0.0,MARGINAL
+Gland,Rolle,18,12.3,RE,B,1.85,0.0,0.0,66.7,0.0,NOT_WORKABLE
+La Tour-de-Peilz,Montreux,18,11.6,RE,B,2.0,0.0,44.4,44.4,50.0,MARGINAL
+Lancy-Bachet,Lancy-Pont-Rouge,18,3.6,RE,B,0.2,0.0,0.0,83.3,11.1,NOT_WORKABLE
+Lancy-Pont-Rouge,Genève-Sécheron,18,11.0,R,R,0.91,0.0,0.0,0.0,0.0,MARGINAL
+Lausanne,Montreux,18,20.9,EC,R,0.58,94.4,0.0,0.0,0.0,PRIME_WORK
+Lausanne,Puidoux,18,15.0,R,S,2.33,0.0,0.0,0.0,0.0,MARGINAL
+Lausanne,Vevey,18,16.0,IR,R,0.87,0.0,66.7,0.0,0.0,WORKABLE
+Montreux,Aigle,18,11.1,IR,R,1.04,0.0,66.7,0.0,0.0,WORKABLE
+Montreux,Lausanne,18,21.7,EC,RE,0.43,100.0,0.0,0.0,0.0,PRIME_WORK
+Montreux,Territet,18,10.2,R,B,4.07,0.0,0.0,11.1,5.6,MARGINAL
+Morges,Bussigny,18,23.7,IR,B,5.38,0.0,0.0,0.0,33.3,BROKEN
+Morges,Lausanne,18,13.4,IR,R,1.0,5.6,61.1,0.0,0.0,WORKABLE
+Nyon,Genève,18,15.6,IR,RE,0.31,100.0,0.0,0.0,0.0,PRIME_WORK
+Nyon,Gland,18,9.0,RE,B,1.23,0.0,0.0,66.7,0.0,NOT_WORKABLE
+Puidoux,Cully,18,33.9,R,B,1.56,0.0,0.0,0.0,83.3,BROKEN
+Renens VD,Lausanne,18,5.8,IC,R,0.52,0.0,0.0,100.0,0.0,NOT_WORKABLE
+Rolle,Allaman,18,9.3,RE,B,1.44,0.0,5.6,66.7,5.6,NOT_WORKABLE
+Territet,Villeneuve VD,18,7.7,R,B,6.95,0.0,0.0,22.2,5.6,MARGINAL
+Versoix,Coppet,18,9.0,R,R,3.33,0.0,0.0,0.0,0.0,MARGINAL
+Vevey,La Tour-de-Peilz,18,8.1,R,B,2.54,0.0,0.0,33.3,0.0,MARGINAL
+Vevey,Lausanne,18,16.8,IR,R,0.86,44.4,22.2,0.0,0.0,WORKABLE
+Vevey,Montreux,18,6.5,IR,R,1.18,0.0,0.0,66.7,0.0,NOT_WORKABLE
+Villeneuve VD,Aigle,18,7.6,RE,B,1.04,0.0,0.0,88.9,0.0,NOT_WORKABLE
