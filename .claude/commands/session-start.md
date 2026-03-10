@@ -1,7 +1,8 @@
 # Utility: Session Start
 
-Read the following files and provide a session briefing:
+Sync and provide a session briefing:
 
+0. Run `git pull` to sync with remote before reading anything.
 1. Read `CONTEXT.md` — what's the current project state?
 2. Read `LOCKBOARD.md` — who's working on what?
 
