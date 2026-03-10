@@ -22,6 +22,9 @@ node_modules/
 # Temporary / staging
 output/tmp/
 
+# Large binary templates (keep local, not in git)
+*.pptx
+
 # Credentials — never commit these
 *.key
 *.pem

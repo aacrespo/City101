@@ -115,6 +115,38 @@ SBB open data API. Train schedules, station data. Not yet queried — priority f
 ### Google Places API
 Account-bound on Cairn. Used for: remote work places (68), reviews (109 EV + 109 remote work), ratings. Still needed for: opening hours (68 places with place_ids ready).
 
+### No public hourly SBB ridership data exists
+SBB Passagierfrequenz provides daily totals only. Hourly curves must be modeled (Gaussian mixtures using commuter_index). Documented and accepted — no workaround exists.
+
+### SwissTLM3D doesn't extend to Bex/Aigle
+Rail geometry from SwissTLM3D literally doesn't cover the eastern terminus of the corridor. Bex snap=14km, Aigle snap=6.3km. Use `original_coords_used` flag and accept the limitation.
+
+### Background agents fail on Write/Bash permissions
+Agent team subagents in parallel mode can't execute Write or Bash tools due to permission restrictions. Pragmatic fix: run agent scripts sequentially from the main session, not as parallel background agents.
+
+### GA cost calibration diverges east of Lausanne
+v2 geometry used GA cost estimates to calibrate station distances, but these diverge from SBB km-post benchmarks east of Lausanne. v3 switched to SBB km-post calibration (r=0.9987).
+
+### Night worker counts are the load-bearing claim
+The 7-site healthcare supply chain argument rests on specific night worker numbers (4,600 / 1,680 / 1,500 / 400 / 300 / 730) that are NOT in any dataset. These were likely estimated externally. Field visits and OFS employment data are the verification path.
+
+### "Zero nocturnal transport" is overstated
+The real dead window is **01:00–05:00**, not "all night." Late-night frequencies: Bussigny 9.0 tr/hr, Nyon 7.0, Montreux 10.5, Lausanne 22.0. The argument holds but the framing must be precise — "4-hour gap" not "no night transport."
+
+### Inline GeoJSON for file:// compatibility
+Leaflet maps opened via `file://` can't use `fetch()` for local GeoJSON (CORS). Fix: inline all geodata as JS global variables in a separate `city101_geodata.js` file, loaded via `<script>` tag before the map module. The map module checks for globals first, falls back to `fetch()` for server deployments.
+
+## A03/A04 insights
+
+### The relay-lock prototypology
+Combined two concepts: **relay** (system-level chain of nodes, like postal relay stations) and **lock** (building-level threshold management, like a canal lock). Each site has a different lock condition (cargo↔city, valley↔hilltop, last↔first train, etc.) but the same DNA: a chamber where the transition happens during the 01:00–05:00 dead window.
+
+### Income-transport paradox at CHUV
+CHUV nurses earning CHF 56k live in Renens/Prilly (worse night transport). Doctors earning CHF 95k live in Cour (walkable). The people who need the horizontal elevator most are the ones who can least afford the gap. ⚠️ [NEEDS: verification — are these really where CHUV staff live?]
+
+### Three scales of the same problem
+The 7-site network covers: infrastructure (nodes 1, 4 — how goods move), staff access (nodes 2, 3, 5, 7 — how workers get home), patient access (nodes 2, 5, 6 — how people reach care). Same system, different locks.
+
 ## Crit feedback patterns
 
 - **Benchmark City101 vs Zurich** — always compare linear vs radial
@@ -122,3 +154,6 @@ Account-bound on Cairn. Used for: remote work places (68), reviews (109 EV + 109
 - **Specificity > breadth** — reinforced by assistants and teachers
 - **Data-driven**: let stories emerge from spatial patterns, don't impose narrative
 - **"The line = no cars"** — diversity is expressed through accessibility modes
+- **"Find the one person"** (Huang) — anchor the narrative in a single human experience
+- **Horizontal elevator** — Huang loves this concept. On-demand rail, autonomous module, repurposed tracks.
+- **Be very specific** (assistants) — not "night workers" but "one nurse, one shift, one 2am walk home"

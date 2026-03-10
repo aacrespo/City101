@@ -1,5 +1,5 @@
 # CONTEXT — City101 Working State
-**Last updated:** 2026-03-02 early AM (Cairn, Session 10 — post S9 + Lumen S8.1-S8.3)
+**Last updated:** 2026-03-10 (Cairn Code — consolidated from all handoffs Feb 17 → Mar 09)
 **Read this first every session.**
 
 ---
@@ -8,90 +8,144 @@
 
 EPFL BA6 Architecture studio (AR-302k, Studio Huang — "Sentient Cities"). Andrea analyzes the Geneva–Villeneuve corridor (City101) through the lens of "flow of people" — what makes people stop, where infrastructure creates behavior, and whether this 101km strip functions as one continuous city.
 
-Teammate: Henna Rafik (transit ridership, psycho-comfort, thermal flows, gap hours). She also uses the handoff system.
+Teammate: Henna Rafik (transit ridership, psycho-comfort, thermal flows, gap hours, healthcare sites). She also uses the handoff system.
+
+## Current phase
+
+- **A01** (data collection): ✅ complete
+- **A02** (data synchronicity): ✅ submitted March 3rd. Crit happened March 2nd.
+- **A03** (field data): ⚠️ due March 10 (TODAY). Western field visit done (March 9). Eastern visit Friday March 13. Deliverables partially complete.
+- **A04** (forms of sentience): assigned March 10, due March 30 (midterm). Rhino MCP prototypology. Starting now.
+
+See `briefs/` for full assignment specs and PPTX template.
 
 ## Current narrative direction
 
+### A02 narrative: The Archipelago
 **"Infrastructure for working continuity as a flow."** Teacher-endorsed as of 24-02.
 
-The argument: City101's status as a city can be tested by whether a knowledge worker can maintain an unbroken work session while traversing the corridor. Five dimensions of breakage: connectivity drops, no workspace, temporal lockout, transit gaps, comfort failure.
+The linear city doesn't exist. It's an **archipelago** — only 11 of 49 stations (22%) maintain full working continuity. Five key findings:
 
-**Key finding (01-03):** The linear city doesn't exist. It's an **archipelago** — only 11 of 49 stations (22%) maintain full working continuity. Three structural gaps: Nyon→Gland (19.3km), Gland→Morges (20km), and the Lavaux Fracture (17.5km).
+1. **Three structural gaps**: Nyon→Gland (19.3km), Gland→Morges (20km), Lavaux Fracture (17.5km)
+2. **Two corridors on same tracks**: IC = workable office; S-Bahn = fragmented villages. 85% of connections not workable.
+3. **Different city depending on who you are**: GA holders (CHF 10.50/day) vs full price (CHF 26 GE→LS). ~160k frontaliers can't buy GA.
+4. **Diversity creates unity** (quadruple-validated): Religious, modal, cuisine, economic Shannon all correlate (r = 0.63–0.71). Phase transition at Shannon ≈ 1.0.
+5. **160,000 ghost citizens**: Frontaliers exceed Lausanne's population, invisible in every metric, vanish at 18:00.
 
-**Second finding:** There are **two corridors on the same tracks**. IC passengers experience a workable linear city (WiFi, tables, quiet car). S-Bahn passengers experience fragmented villages (doors every 90sec, no WiFi). 85% of connections are not workable.
+**Narrative deliverables**:
+- `deliverables/A02_NARRATIVE_DRAFT.md` (731 words, "The Archipelago")
+- `deliverables/A02_SPEECH_UNIFIED.md`
+- Karim's diary (`karim_diary_v4.md` — Henna/Cadence, stream-of-consciousness narrative device)
 
-**Third finding (new S6-S7):** The corridor is a **different city depending on who you are**. GA holders treat 101km as one city (CHF 10.50/day). Non-GA holders experience fragmentation (CHF 26 Geneva→Lausanne). Frontaliers (~100k in Geneva canton) can't even buy GA. The gig economy follows tourists, not commuters. Religious diversity correlates with urban completeness. The frequency-amenity paradox stations are the intervention sites.
+### A03 narrative: The Healthcare Supply Chain
+**"Where does the 24h healthcare supply chain break?"**
 
-**EV charging = supporting evidence only.** The working continuity narrative is about the universal commuter/knowledge worker, not the EV driver subset.
+The hospital doesn't end at its walls. A nurse finishing at 02:00 at CHUV and a pharma sorter finishing at 04:00 in Crissier are part of the same system. Neither can get home. The "horizontal elevator" connects the **invisible shift chain** that keeps the 24h city running.
 
-**Fourth finding (confirmed, S8.1-S8.3 — Lumen):** **Diversity creates unity — quadruple-validated.** Religious Shannon, modal Shannon, cuisine Shannon, and economic category diversity ALL converge on the same pattern (r = 0.63–0.71). Phase transition at Shannon ≈ 1.0: below it, avg richness 8.8; above, 70.5 (8× jump). Four independent indices prove the Lavaux Fracture is a *systemic diversity collapse*, not just a transit gap. Architectural inversion: prototypology at break points should introduce *difference*, not fill deficits. The deficit is the asset. Two anomaly sites identified: Vernier-Blandonnet (diversity without programming) and Coppet (programming without diversity) — potential intervention sites.
+**Prototypology: The Relay-Lock**
+- **Relay** (system level): chain of 7 nodes along corridor
+- **Lock** (building level): architecture managing threshold between two states
+- **Chamber**: the architectural space where transition happens (01:00–05:00 dead window)
 
-**Fifth finding (S8.3 — Lumen):** **160,000 ghost citizens.** Combined GE + VD frontaliers exceed Lausanne's population. Present in daytime economy, invisible in every diversity metric, can't buy GA, vanish at 18:00. The corridor's diversity is time-dependent — Henna's night city is literally a city without its daytime workforce. The frontalier blind spot connects GA pricing (Point 3), temporal analysis (Point 2), and diversity (Point 4) into a single argument.
+### The 7-node healthcare circuit
 
-**Narrative draft exists:** `deliverables/A02_NARRATIVE_DRAFT.md` (Lumen, 731 words). Title: "The Archipelago." Needs Andrea + Henna refinement tomorrow AM.
+| Node | Site | km | Lock type | Chamber program |
+|------|------|----|-----------|-----------------|
+| 1 | **Geneva North Industrial Belt** | 8 | Cargo ↔ City | Logistics interface + worker rest |
+| 2 | **Nyon Hospital + Genolier Hilltop** | 25 | Valley ↔ Hilltop | Vertical connector + staff/patient dual use |
+| 3 | **Morges Hospital Gap** | 48 | Last train ↔ First train | Night shelter + elderly mobility hub |
+| 4 | **Crissier-Bussigny Night Belt** | 58 | Invisible ↔ Visible | Supply chain civic space + worker visibility |
+| 5 | **Lausanne CHUV Perpendicular** | 65 | Uphill ↔ Downhill | Gradient connector + equity corrector |
+| 6 | **Montreux–Glion Altitude Medicine** | 85 | Mountain ↔ Lake | Altitude connector + family/rehab access |
+| 7 | **Rennaz Hospital Island** | 89 | Rail ↔ Off-rail | Rail bridge + emergency access |
 
-## ⚠️ TODO — Monday March 2nd morning
+**Why 7 (brief says 3–5):** One healthcare circuit, not 7 separate projects. Remove any node and the chain breaks. Three scales: infrastructure (nodes 1, 4), staff access (nodes 2, 3, 5, 7), patient access (nodes 2, 5, 6).
 
-1. **CHECK LAYOUTS VISUALLY** — all 7 A02 layouts ready to export but labels may be truncated. Open each in QGIS layout manager, verify text isn't cut off, export as PDF to `maps/`
-2. Decide: add GA_Cost_Corridor + temporal layers to existing layouts or create MAP8/MAP9?
-3. **Refine narrative draft** with Henna — current draft (731 words) needs: diversity findings, temporal confirmation, frontalier argument. Consider v2 or integrated update.
-4. ~~Get first/last train data~~ ✅ Done in S9
-5. Upload final PDFs + narrative to team Drive (see `research/DRIVE_STRUCTURE.md`)
-6. **Build interactive HTML visualizations** via Claude Code (see spec in `prompts/VIZ_SPEC_CLAUDE_CODE.md`)
-7. Load temporal WCI + modal diversity into QGIS as layers
+## ⚠️ TODO — current priorities
 
-## Visualization Plan — Interactive Artifacts (last step, after all data is computed)
+### A03 deliverables (due today March 10 — ⚠️ INCOMPLETE)
+1. **Investigation report** — text, images, updated maps from field visit. ⚠️ [NEEDS: Andrea's field visit findings, photos, verification table]
+2. **Combined path dataset** — CSV/GeoJSON of investigated sites. ⚠️ [NEEDS: GPS coordinates from field visit, verified claims]
+3. **Networked intervention concept** — the relay-lock as strategy. 🟡 [Concept exists, needs writeup]
+4. Submit path dataset to Drive: [00-student-paths-datasets](https://drive.google.com/drive/folders/1excOP2HKgnr9jiqCYVhdgHcd3y33cdin?usp=drive_link)
 
-**Purpose**: Data too relational, temporal, or multi-dimensional for print maps gets presented as interactive HTML/React. For the desk crit: open on a laptop alongside printed maps.
+### A03 remaining fieldwork
+5. **Friday March 13** — eastern corridor visit: CHUV, Montreux-Glion, Rennaz (3 sites)
 
-**Candidates** (in priority order):
-1. **Temporal WCI pulse** — time-slider showing corridor at 7 time slots. THE signature piece if Point 2 delivers.
-2. **GA cost curve** — price vs distance with budget threshold lines (CHF 10/15/20). Clearer than colored map dots.
-3. **Zurich comparison dashboard** — side-by-side metrics. Two geographies can't share a map but can share a visualization.
-4. **Station crossref heatmap** — 49 stations × 12 classmate dimensions. Sortable, hoverable, filterable.
-5. **Shannon vs richness/CI scatter** — interactive scatter with station labels on hover. Quick to build.
-6. **Journey workability explorer** — 618 connections, filterable by departure station. Too dense for print.
-7. **Interactive corridor map** — if we do this, use EXACT coordinates and correct geometry (not schematic). Leaflet.js or similar with real basemap.
+### A04 (due March 30 — midterm)
+6. **Rhino MCP prototypology** — siteless project adaptable to different sites
+7. **Midterm PPTX** — 6-screen template (see `briefs/Templates/`). Contents:
+   - Slides 1–2: A01/A02 dataset mapping + index formula + field validation + site sections
+   - Slides 3–4: MCP methodology + architectural output (3+ prototypological models, turntable animations, axonometric interpretations)
+8. **Point-cloud sections** of potential sites (A03 requirement, not yet done)
 
-**Format decision**: Standalone HTML files (single .html with embedded JS/CSS). Reasons:
-- Portable: open in any browser, no server needed
-- Presentable: works at crit on a laptop
-- Archivable: one file, no dependencies
-- Can embed real map tiles (Leaflet + Swiss topo) for geographic accuracy
-- React artifacts are faster to prototype but less portable
+### Data verification gaps (from 08-03 session)
+9. **Night worker counts unsourced** — 4,600 / 1,680 / 1,500 / 400 / 300 / 730 are load-bearing claims with no CSV source. Need: OFS employment data, hospital annual reports, or field visit interviews.
+10. **Hospital ratings** (Rennaz 2.6★, Nyon 3.4★) — not in station ratings CSV. Likely from Google directly, needs confirmation.
+11. **"Zero nocturnal transport" overstated** — real dead window is 01:00–05:00, not all night. Late-night frequency: Bussigny 9.0 tr/hr, Nyon 7.0, Montreux 10.5, Lausanne 22.0.
+12. **Renens commuter index**: JSX says 2.48×, dataset says 2.04.
 
-**When**: After Point 2 (temporal) data exists and all analysis is done. This is presentation layer, not analysis.
+## Visualizations — complete set
 
-## Active assignment
+### Interactive HTML (standalone, in `visualizations/`)
+| Viz | File | Status |
+|-----|------|--------|
+| GA Cost Curve | viz_01_ga_cost.html | ✅ |
+| Temporal Pulse | viz_02_temporal_pulse.html | ✅ |
+| Diversity | viz_03_diversity.html | ✅ |
+| Zurich Comparison | viz_04_zurich.html | ✅ |
+| Station Explorer | viz_05_station_explorer.html | ✅ |
+| Journey Workability | viz_06_journey_workability.html | ✅ |
+| Narrative Scroll | viz_07_narrative_scroll.html | ✅ |
+| Presentation | viz_08_presentation.html | ✅ |
+| Demographics | viz_09_demographics.html | ✅ |
 
-**A02 — Data Synchronicity** — Desk crit: **Monday March 2nd, 1pm**. Submission deadline March 3rd.
-Deliverables: narrative + index formula + updated maps + Zurich comparison + point cloud sections (week 2)
+### Diagrams (in `visualizations/`)
+- `city101_clock_diagram.html` — 24h clock
+- `city101_marey_diagram.html` — Marey train diagram
+- `city101_spacetime_diagram.html` — space-time
 
-## Folder structure
+### Scrollytelling site (in `visualizations/site/`)
+- `index_v2.html` — 7 interactive Leaflet maps replacing static QGIS images
+- `city101_maps.js` — shared map module
+- `city101_geodata.js` — inlined GeoJSON for file:// compatibility
+- 7 PNGs (150 DPI) + 7 PDFs (300 DPI) in `site/maps/`
 
-```
-~/CLAUDE/City101_ClaudeCode/
-├── CONTEXT.md, LEARNINGS.md, TODO_4_POINTS.md   (entry points)
-├── CITY101_WORKING.qgz                          (QGIS project, 52 layers)
-├── datasets/                                     (OUR produced data — share from here)
-│   ├── corridor_analysis/  (WCI, break points, journey workability, crossref, GA cost, temporal, modal diversity + findings)
-│   ├── ev_charging/        (enriched v3, reviews, national stats)
-│   ├── remote_work/        (places, hours, reviews, crossref, wifi, cell towers, anchors)
-│   ├── transit/            (frequency, ridership, shared mobility, raw SBB)
-│   ├── stations/           (ratings, reviews)
-│   └── zurich_comparison/  (S8 lakeside comparison, metrics, findings — Lumen)
-├── handoffs/               (ONLY handoffs: S1-S9 + S8.0-S8.3 Lumen + team handoff)
-├── prompts/                (execution prompts for Cairn/Lumen sessions)
-├── deliverables/           (A02 narrative draft, final submission documents)
-├── scripts/                (7 monolithic Python scripts)
-├── research/               (trawl data, inventory, diversity research docs — Lumen, layout review, drive structure)
-├── maps/                   (empty — for exported PDFs tomorrow morning)
-├── archive/                (old screenshots, obsolete outputs, old session states)
-├── source/                 (FROZEN — classmate data, GeoPackages, raw inputs)
-└── output/                 (staging — empty when clean)
-```
+### Animation maps (in `deliverables/A03/`)
+- `train_pulse_24h.html` — 24h train animation
+- `map2_passenger_flow.html` — ridership-sized train dots
+- `city101_standalone.html` — standalone corridor map
 
-See `research/DRIVE_STRUCTURE.md` for team Drive upload checklist.
+## Animation data pipeline
+
+Phase 1 data validated, promoted to `source/animation/`:
+
+| File | Rows | Key info | Version |
+|------|------|----------|---------|
+| `gtfs_corridor_trains_interpolated.csv` | 39,695 | 860 trips, per-minute positions, 5 line categories | v2 |
+| `station_ridership_v2.csv` | 49 | 49 unique hourly curves, 10 profiles | v2 |
+| `corridor_demographics_v2.csv` | 49 | 42 unique age profiles, commune-level | v2 |
+| `corridor_rail_lines_v3.geojson` | 19 features | CEVA included, Genève=standard_gauge | v3 |
+| `corridor_station_distances_v3.csv` | 49 | 0–105km, monotonic, snap quality classified | v3 |
+| `gtfs_corridor_stops.csv` | 49 | Station coords | v1 |
+
+Agent scripts in `scripts/animation/` (12 files). Known limitations:
+- Ridership hourly curves are **modeled** (no public SBB hourly data exists)
+- Bex snap=14km, Aigle snap=6.3km (SwissTLM3D doesn't extend there)
+- Demographics commute mode may be Strukturerhebung estimates
+
+## Maps — current state
+
+7 print layouts in QGIS (A1 landscape), exported with dark backgrounds (#0a0a0f):
+- WCI hero map (the archipelago)
+- Remote work infrastructure
+- Lavaux Fracture zoom
+- Geneva pole
+- Lausanne pole
+- Transit backbone
+- Data synchronicity (all layers)
+
+Still need: GA cost gradient, classmate crossref / station richness, break point classification, temporal WCI, **7-site relay-lock network map**.
 
 ## Datasets — what exists
 
@@ -100,19 +154,19 @@ See `research/DRIVE_STRUCTURE.md` for team Drive upload checklist.
 |---------|------|-------------|----------|
 | WCI segments | corridor_segments_WCI.csv | 49×10 | Working Continuity Index. Range: 0.0003 (St-Saphorin) → 0.6431 (Genève) |
 | Break points | break_points.csv | 49×~15 | 5 break dimensions, severity classification. Only 11/49 continuous. |
-| Journey workability | journey_workability.csv | 618×~20 | Per-connection: 15% PRIME, 12% WORKABLE, 39% MARGINAL, 32% NOT_WORKABLE |
+| Journey workability | journey_workability.csv | 618×~20 | 15% PRIME, 12% WORKABLE, 39% MARGINAL, 32% NOT_WORKABLE |
 | Journey summary | journey_workability_summary.csv | 35×~10 | OD pair aggregates |
 | Train workability | train_workability.csv | 49×~8 | IC/IR vs R/S ratio per station |
-| **Classmate crossref** | station_crossref_classmates.csv | 49×46 | **NEW S7.** 2,093 points from 33 datasets. Station richness, religious Shannon diversity. |
-| **GA cost OD pairs** | ga_cost_od_pairs.csv | 35×11 | **NEW S8.** Full/halbtax/GA prices for 35 OD pairs. Cost ratio vs GA. |
-| **GA cost corridor** | ga_cost_corridor.csv | 49×14 | **NEW S8.** Cumulative cost from Geneva per station. Budget threshold flags (CHF 10/15/20). |
-| **Zurich comparison** | zurich_sbahn_comparison.csv | 12×18 | **NEW S8 (Lumen).** 12 S8 lakeside stations with City101 analog pairings. |
-| **Zurich metrics** | zurich_comparison_metrics.csv | 15×5 | **NEW S8 (Lumen).** 15 structural comparison metrics. |
-| **Temporal frequency** | city101_temporal_frequency.csv | 49×28 | **NEW Cairn S9.** 7 time slots, trains/hr + IC + deps per slot. |
-| **Temporal WCI** | city101_temporal_WCI.csv | 49×~50 | **NEW Cairn S9.** TWCI per station × 7 slots + first/last trains. |
-| **Temporal summary** | city101_temporal_summary.csv | 7×16 | **NEW Cairn S9.** Per-slot aggregates, workable counts. |
-| **First/last trains** | city101_first_last_trains.csv | 49×10 | **NEW Cairn S9.** Service windows: 0h (St-Saphorin) to 21.3h (Genève). |
-| **Modal diversity** | city101_modal_diversity.csv | 49×17 | **NEW Lumen S8.2.** 11 transport mode types, modal Shannon. r=0.626 vs religious Shannon. |
+| Classmate crossref | station_crossref_classmates.csv | 49×46 | 2,093 points from 33 datasets. Station richness, religious Shannon. |
+| GA cost OD pairs | ga_cost_od_pairs.csv | 35×11 | Full/halbtax/GA prices for 35 OD pairs |
+| GA cost corridor | ga_cost_corridor.csv | 49×14 | Cumulative cost from Geneva per station |
+| Zurich comparison | zurich_sbahn_comparison.csv | 12×18 | 12 S8 lakeside stations with City101 analogs |
+| Zurich metrics | zurich_comparison_metrics.csv | 15×5 | 15 structural comparison metrics |
+| Temporal frequency | city101_temporal_frequency.csv | 49×28 | 7 time slots, trains/hr + IC + deps per slot |
+| Temporal WCI | city101_temporal_WCI.csv | 49×~50 | TWCI per station × 7 slots + first/last trains |
+| Temporal summary | city101_temporal_summary.csv | 7×16 | Per-slot aggregates, workable counts |
+| First/last trains | city101_first_last_trains.csv | 49×10 | Service windows: 0h (St-Saphorin) to 21.3h (Genève) |
+| Modal diversity | city101_modal_diversity.csv | 49×17 | 11 transport mode types, modal Shannon |
 
 ### EV charging
 | Dataset | File | Rows | Key info |
@@ -146,8 +200,11 @@ See `research/DRIVE_STRUCTURE.md` for team Drive upload checklist.
 | Ratings | station_ratings.csv | 37 | M2, M1, Léman Express, CGN with Google ratings |
 | Reviews | station_REVIEWS.csv | 71 | Tagged by theme. Zero "work_friendly" mentions. |
 
-### WMS layers in QGIS (national coverage incl. Zurich)
-Rail noise day/night, road noise day/night, EV 2035 projections (3 scenarios), home charging 2035 (3 scenarios), EV fleet 2035, electricity demand.
+### Henna's datasets (in source/)
+- Late-night venues v3 (133), nocturnal transport stops (146), night workers (51)
+- Population distribution 24h, work locations (73), residencies/professions/neighbourhoods (147)
+- Buildings classified (218,437), healthcare sites JSX
+- UHI zones (203), thermal comfort (33), psycho-comfort, local traditions, cultural circuits
 
 ### Classmate data in source/ (33 datasets integrated into crossref)
 - **Charlene Dejean**: gig work (50), rooftops (27)
@@ -158,102 +215,108 @@ Rail noise day/night, road noise day/night, EV 2035 projections (3 scenarios), h
 - **Henna Rafik**: UHI zones (203), thermal comfort (33)
 - **Mohamad Ali**: restaurants (150), informal learning (132)
 
+### WMS layers in QGIS
+Rail noise day/night, road noise day/night, EV 2035 projections (3 scenarios), home charging 2035 (3 scenarios), EV fleet 2035, electricity demand.
+
 ## Key numbers
 
-- **42x frequency variation**: Lausanne 28.5 tr/hr (2 min wait) → St-Saphorin 0.0
-- **11/49 stations continuous** (22%): the rest are break points of varying severity
+- **42x frequency variation**: Lausanne 28.5 tr/hr → St-Saphorin 0.0
+- **11/49 stations continuous** (22%): the rest are break points
 - **85% of connections not workable**: IC = office, S-Bahn = fragmented
 - **277 vs 0**: Lausanne-Flon classmate features within 1km vs Palézieux
-- **All 10 denominations** at Genève-Champel (Shannon 2.12) — diversity = completeness
-- **Vernier Blandonnet**: 84 trains/hr, richness = 7. Busiest nothing.
-- **CHF 26 vs CHF 10.50**: Geneva→Lausanne full price vs GA daily amortized (2.5x)
-- **~100k frontaliers**: Ghost citizens who can't buy GA
-- **CHF 20 budget = 41km city**: Corridor ends at St-Prex, 12km short of Lausanne
-- **GA breakeven: 85 trips (4.2 months)**: Geneva-Lausanne daily commuters
-- **2.1–2.5x cost ratio**: Full price vs GA across the corridor
-- **6x short-hop penalty**: CHF 2.57/km for Lancy hops vs CHF 0.39/km for full corridor
-- **42× vs 12×**: City101 frequency variation is 3.5× wider than Zurich's S8 lakeside line
-- **0 vs 2/hr**: City101 minimum frequency (St-Saphorin) vs Zurich minimum (Oberrieden, 11km from center)
-- **14/49 at peak, 13/49 at 11pm**: The archipelago barely pulses — structural, not temporal
-- **21.3h vs 0h**: Geneva service window vs St-Saphorin — total temporal inequality
-- **128 → 72 IC trains**: Peak vs late-night — the fast corridor halves
-- **0.90×**: Weekend-to-weekday WCI ratio — the corridor shrinks on Saturday
-- **r = 0.632**: Shannon diversity vs station richness — diversity predicts amenities 3.6× better than transit frequency
-- **r = 0.708**: Economic categories vs Shannon — strongest correlation in the analysis
-- **r = 0.626**: Modal Shannon vs religious Shannon — transport diversity tracks social diversity
-- **Shannon 1.0 threshold**: Below it, avg richness 8.8. Above it, 70.5 (8× jump). Phase transition.
-- **160,000 frontaliers**: Combined GE + VD daily crossings — larger than Lausanne's population
-- **Geneva 50% → Rivaz 12.5%**: Foreign resident share collapse along corridor (3.4×)
-- **Cuisine Shannon 2.03 (Geneva) → 1.50 (Chexbres)**: Diversity visible on the plate
+- **Shannon 1.0 threshold**: Below it, avg richness 8.8. Above it, 70.5 (8× jump)
+- **r = 0.63–0.71**: All four diversity indices correlate with station richness
+- **160,000 frontaliers**: Ghost citizens, exceed Lausanne population
+- **CHF 26 vs CHF 10.50**: GE→LS full price vs GA daily (2.5x)
+- **CHF 20 budget = 41km city**: Corridor ends at St-Prex
+- **6x short-hop penalty**: CHF 2.57/km for Lancy hops vs CHF 0.39/km full corridor
+- **42× vs 12×**: City101 frequency variation 3.5× wider than Zurich's S8
+- **14/49 at peak, 13/49 at 11pm**: Archipelago barely pulses
+- **01:00–05:00**: The real dead window (not "all night")
+- **21.3h vs 0h**: Geneva vs St-Saphorin service windows
 
-## Critical gaps (priority order)
+## Repo structure
 
-1. ~~GA cost map~~ — ✅ DONE (S8)
-2. ~~First/last train~~ — ✅ DONE (S9)
-3. ~~Zurich comparison~~ — ✅ DONE (S8, Lumen)
-4. ~~Temporal corridor~~ — ✅ DONE (S9)
-5. ~~Diversity research~~ — ✅ DONE (Lumen S8.1-S8.3)
-6. **QGIS map export** — 7 layouts exist, need visual check + export + new layouts for temporal/GA/crossref. 🟡 MONDAY AM
-7. **Narrative v2** — draft exists (731 words), needs temporal + diversity + frontalier integration. 🟡 WITH HENNA
-8. **Interactive visualizations** — All 7 viz built ✅ (viz_01 GA Cost, viz_02 Temporal Pulse, viz_03 Diversity, viz_04 Zurich, viz_05 Station Explorer, viz_06 Journey Workability, viz_07 Narrative Scroll). 🟢 COMPLETE
-9. **Load new layers** — temporal WCI, modal diversity, GA cost need QGIS styling. 🟡 CAIRN NEXT
-
-## Maps — current state
-
-7 print layouts in QGIS (A1 landscape), **not yet reviewed or exported**:
-- WCI hero map (the archipelago)
-- Remote work infrastructure
-- Lavaux Fracture zoom
-- Geneva pole
-- Lausanne pole
-- Transit backbone
-- Data synchronicity (all layers)
-
-Need to add: GA cost gradient, classmate cross-reference / station richness, break point classification, temporal WCI (7-slot series or temporal pie charts).
-
-## The 4 investigations (from TODO_4_POINTS.md)
-
-### Point 1: Break Point Map ✅ DONE
-49 stations classified by severity. Five break dimensions. Frequency-amenity paradox identified. Classmate crossref adds 33-dataset richness scoring.
-
-### Point 2: Temporal Corridor ✅ DONE
-Multi-slot frequency (49 stations × 7 time slots), first/last trains (service windows), temporal WCI computed. Key finding: the archipelago is structural, not temporal — only 13-14 stations workable regardless of time. 11pm city = 13 stations. IC trains halve at night (128→72). Weekend 10% less workable. Lavaux Fracture never opens. St-Saphorin has zero service.
-
-### Point 3: GA Hypothesis ✅ DONE
-Cost map computed (distance-based tariff, ±CHF 2-3). CHF 20 budget = 41km city. GA breakeven at 85 trips. 2.1-2.5x cost ratio. Short-hop penalty 6x. Frontalier blind spot documented. Zurich comparison completed (Lumen).
-
-### Point 4: Station Reviews ✅ DONE
-37 new stations rated, 71 reviews tagged. Key finding: zero "work_friendly" mentions — the station-as-workspace is invisible to users.
-
-### How they connect
-Reviews (4) → break quality (1) → varies by time (2) → experienced by ticket type (3). Together: "If you are THIS person at THIS time, here is where the city breaks."
+```
+city101/                              (git-tracked, GitHub: aacrespo/City101)
+├── CLAUDE.md                         ← router (auto-loaded)
+├── CONTEXT.md                        ← YOU ARE HERE — living project state
+├── LEARNINGS.md                      ← accumulated pitfalls
+├── LOCKBOARD.md                      ← who's doing what
+├── CITY101_WORKING.qgz               ← QGIS project (60 layers, EPSG:2056)
+├── 00_Workflow_v04.md                ← scale conventions, Rhino rules
+├── briefs/                           ← assignment specs (A01-A04) + PPTX template
+├── datasets/                         ← verified production data (INVENTORY.md inside)
+│   ├── corridor_analysis/
+│   ├── ev_charging/
+│   ├── remote_work/
+│   ├── transit/
+│   ├── stations/
+│   └── zurich_comparison/
+├── source/                           ← FROZEN inputs (classmate data, GeoPackages, animation data)
+│   ├── 00-datasets 2/               ← classmate datasets
+│   ├── animation/                    ← promoted animation pipeline data (v2/v3)
+│   └── ...
+├── deliverables/                     ← submission documents
+│   ├── A02_NARRATIVE_DRAFT.md
+│   ├── A02_SPEECH_UNIFIED.md
+│   └── A03/                          ← field visit materials, JSX artifacts, maps
+├── handoffs/                         ← all session handoffs (Andrea S1-S11, Henna, team)
+├── prompts/                          ← Claude/LLM execution prompts
+├── scripts/                          ← processing scripts
+│   ├── animation/                    ← 12 agent pipeline scripts
+│   └── *.py                          ← ad-hoc processing
+├── visualizations/                   ← all interactive viz
+│   ├── site/                         ← scrollytelling site (index_v2.html)
+│   └── viz_01 through viz_09 + diagrams
+├── observations/                     ← INDEX.md + research/ subfolder
+├── design_system/                    ← SPEC.md — visual identity
+├── tools/                            ← reusable scripts
+├── workflows/                        ← step-by-step SOPs
+├── output/                           ← staging (hospital research, vertical transport)
+├── archive/                          ← historical (system architecture, old outputs, screenshots, QA logs)
+└── .claude/                          ← commands, rules, agents
+```
 
 ## Infrastructure — how we work
 
 ### Accounts
-- **Cairn** (personal, Max plan): Primary workhorse. Usually on desktop with MCP.
-- **Lumen** (school team): Lower limits. Overflow / parallel tasks.
-- Both have Google Places access as of 28-02.
-
-### Henna's accounts
-- **Meridian** (school): Henna's analytical work
-- **Cadence** (personal, Pro): Not yet used
+| Account | Owner | Type | Capabilities |
+|---------|-------|------|-------------|
+| Cairn | Andrea | Personal, Max | Primary workhorse. Desktop with MCP. |
+| Cairn Code | Andrea | Claude Code CLI | Git-tracked repo. Terminal operations. |
+| Lumen | Andrea | School team | Overflow / parallel tasks |
+| Meridian | Henna | School | Analytical work (built 24-site artifact) |
+| Cadence | Henna | Personal, Pro | Narrative work (Karim's diary) |
 
 ### Key files for any new session
 1. This file (CONTEXT.md)
-2. LEARNINGS.md — accumulated insights
-3. Latest handoff — `handoffs/HANDOFF_01-03_S10.md` (Cairn) + `S8.3` (Lumen)
-6. Layout review — `research/LAYOUT_REVIEW_01-03.md`
-7. Prompts for next sessions — in `prompts/` folder
-4. Team handoff — `handoffs/TEAM_HANDOFF_01-03_S1.md`
-5. TODO_4_POINTS.md — the 4 investigations framework
+2. LEARNINGS.md
+3. LOCKBOARD.md
+4. Assignment briefs in `briefs/`
+5. Latest handoffs — `handoffs/HANDOFF_09-03_S2.md` (latest)
 
 ### Coordinate system
-Always LV95 / EPSG:2056. Source data often WGS84 — convert before QGIS loading.
+Always LV95 / EPSG:2056. Web maps use WGS84. Source data often WGS84 — convert before QGIS.
 
 ## Theoretical references
 
-- **Comtesse**: diversity × accessibility × time = urban vitality. **Quadruple-validated** — religious, modal, cuisine, and economic diversity all correlate with station richness (r = 0.63–0.71). Phase transition at Shannon ≈ 1.0.
+- **Comtesse**: diversity × accessibility × time = urban vitality. Quadruple-validated (r = 0.63–0.71). Phase transition at Shannon ≈ 1.0.
 - **Deleuze**: significance of surface — data flows ARE the urban reality
 - **Fractal principle**: every part expresses the whole — one station = corridor logic
-- **"Infrastructure creates behavior"**: charge speed dictates dwell time, WiFi coverage determines work locations, temporal accessibility shapes spatial programs
+- **"Infrastructure creates behavior"**: charge speed dictates dwell time, WiFi determines work locations, temporal accessibility shapes spatial programs
+- **Horizontal elevator** (Huang): on-demand rail, autonomous module, repurposed tracks. Teacher loves this concept.
+
+## Session log (March 2–10)
+
+| Date | Who | What happened |
+|------|-----|---------------|
+| 02-03 | Cairn Code | Scrollytelling site: 7 static maps → interactive Leaflet. Print exports (7 PNG + 7 PDF, dark bg). |
+| 02-03 | Cadence (Henna) | Karim's diary v4 — narrative anchor for A02 crit. |
+| 02-03 | — | **A02 desk crit** (13:00). Submission deadline March 3rd. |
+| 04-03 | Cairn + Cairn Code | Animation data pipeline: 4 agents (GTFS, ridership, demographics, geometry). Phase 1 QA'd. v2/v3 validated. CLAUDE.md v2 rebuilt. Agent team commands created. |
+| 08-03 | Meridian (Henna) | Built 24 candidate sites for horizontal elevator. Interactive React artifact. |
+| 08-03 | Cairn Code | Narrowed 24→6 sites. Healthcare supply chain narrative. Relay-Lock prototypology. Data verification. |
+| 09-03 | Cairn Code | Expanded to 7 sites (added Montreux-Glion). Full field visit protocol. |
+| 09-03 | Andrea + Henna | **Western corridor field visit** (Geneva North → Nyon → Morges → Crissier-Bussigny). ⚠️ [NEEDS: findings to be documented] |
+| 10-03 | Cairn Code | Migrated old repo → git. All files organized. CONTEXT.md updated. |
