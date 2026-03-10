@@ -1,0 +1,38 @@
+{
+  "last_updated": "2026-02-28T22:00:16.545245",
+  "account": "Cairn",
+  "session_summary": "Safety audit + CLAUDE folder setup. MCP rules finalized and added to project instructions.",
+  "next_tasks": [
+    {
+      "priority": 1,
+      "task": "Run opendata.swiss trawl",
+      "script": "opendata_swiss_trawl.py (in Cairn sandbox /mnt/user-data/outputs/ \u2014 needs to be copied to CLAUDE folder or re-created)",
+      "details": "Triple-filter: 120+ keywords, 11875 place names, bounding box overlap. Output to CLAUDE/City101_ClaudeCode/output/",
+      "resources_needed": "corridor_place_dictionary.json already in scripts/"
+    },
+    {
+      "priority": 2,
+      "task": "Google Places opening hours enrichment",
+      "details": "68 remote work places already have google_place_id in city101_remote_work_places.csv. Fetch opening hours via Places API.",
+      "note": "Needs Google API key \u2014 check if Andrea has one"
+    },
+    {
+      "priority": 3,
+      "task": "SBB transport.opendata.ch queries",
+      "details": "Train schedules for corridor stations \u2014 temporal structure of transit"
+    }
+  ],
+  "folder_structure": {
+    "base": "/Users/andreacrespo/CLAUDE/City101_ClaudeCode/",
+    "scripts": "scripts/ \u2014 reusable code + reference data",
+    "output": "output/ \u2014 all generated results",
+    "source": "source/ \u2014 read-only reference data (TLM3D, classmate datasets, etc.)"
+  },
+  "key_files": {
+    "place_dictionary": "scripts/corridor_place_dictionary.json",
+    "ev_charging": "source/00-datasets 2/andreacrespo/Electrical charging/",
+    "wifi_remote_work": "source/invisible flows copy/",
+    "tlm3d_city101": "source/Documents copy/",
+    "zurich_statpop": "source/zurich/Greater_Zurich_StatPop_Version.gpkg"
+  }
+}

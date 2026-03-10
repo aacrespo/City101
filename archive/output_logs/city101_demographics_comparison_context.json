@@ -1,0 +1,120 @@
+{
+  "corridor_framing": {
+    "total_corridor_pop_estimate": 1200000,
+    "ge_city_pop": 209061,
+    "ge_city_pop_note": "OCSTAT 2024 municipal register — matches Geneva JSON",
+    "ls_city_pop": 148810,
+    "ls_city_pop_note": "Ville de Lausanne 2024 — matches Lausanne JSON",
+    "ge_share_pct": 0.17,
+    "ls_share_pct": 0.12,
+    "source": "BFS STATPOP 2024, corridor estimate from City101 crossref",
+    "year": "2024"
+  },
+  "metro_areas": {
+    "grand_geneve": {
+      "pop": 1046168,
+      "communes": 212,
+      "countries": 2,
+      "source": "Wikipedia Grand Genève, census Jan 2021",
+      "year": "2021",
+      "note": "Cross-border agglomeration including communes in Ain and Haute-Savoie (France)"
+    },
+    "lausanne_agglo": {
+      "pop": 465000,
+      "source": "BFS agglomeration definition 2024",
+      "year": "2024",
+      "note": "Largest fully-Swiss agglomeration on the corridor"
+    },
+    "canton_geneva": {
+      "pop": 531000,
+      "source": "BFS STATPOP 2024",
+      "year": "2024"
+    },
+    "canton_vaud": {
+      "pop": 855700,
+      "source": "RTS / BFS, end 2024",
+      "year": "2024"
+    }
+  },
+  "gdp": {
+    "geneva_canton": {
+      "gdp_mchf": 50000,
+      "gdp_growth_2022_pct": 4.1,
+      "year": "2022",
+      "source": "BFS cantonal GDP / swissinfo.ch",
+      "note": "Approximate; BFS table bfs.admin.ch/asset/en/32627405"
+    },
+    "vaud_canton": {
+      "gdp_mchf": 54000,
+      "gdp_growth_2022_pct": 0.1,
+      "year": "2022",
+      "source": "BFS cantonal GDP / swissinfo.ch",
+      "note": "Approximate; GDP per capita not extracted — data available at BFS"
+    }
+  },
+  "transit_ge_ls": {
+    "daily_ic_trains_approx": 56,
+    "travel_time_minutes": "33-39",
+    "route": "IC1 Geneva-Lausanne",
+    "station_daily_pax": {
+      "lausanne": 105900,
+      "lausanne_year": "2024",
+      "geneva": 79500,
+      "geneva_year": "2023",
+      "source": "SBB station reporting portal"
+    },
+    "note": "Lausanne is busier than Geneva by station traffic — Lausanne is the network hub where lines converge"
+  },
+  "frontalier_trends": {
+    "source": "STAF/SEM, RTS, 20min, Wuest Partner",
+    "note": "Full quarterly timeseries not extracted — partial milestones below",
+    "geneva": {
+      "2024_total": 115000,
+      "growth_2021_2024_pct": 24,
+      "source": "RTS reporting on SEM STAF 2024 record year, Wuest Partner analysis"
+    },
+    "vaud": {
+      "2024_q2": 45230,
+      "source": "20min / SEM STAF Q2 2024"
+    },
+    "switzerland_total_2024_q2": 400000,
+    "corridor_combined_ge_vd": 160000,
+    "narrative_note": "Combined GE+VD frontaliers (~160k) exceed Lausanne municipality population (~145k). Structurally invisible in diversity metrics — vanish from corridor after 18:00."
+  },
+  "cost_of_living": {
+    "source": "Numbeo city comparison, Mercer 2024",
+    "geneva_premium_vs_lausanne_pct": 9,
+    "mercer_global_rank_geneva": 4,
+    "mercer_year": "2024",
+    "note": "Numbeo crowd-sourced — use with caution. Mercer ranking is for expat cost of living."
+  },
+  "season_tickets": {
+    "ga_travelcards_national": 447166,
+    "halbtax_subscriptions_national": 3150000,
+    "year": "2023",
+    "source": "SBB annual report / opendata.swiss",
+    "by_canton": "NOT AVAILABLE — opendata.swiss dataset exists but per-canton breakdown not extracted",
+    "note": "Record year for Halbtax. GA dataset available at opendata.swiss for follow-up."
+  },
+  "key_contrasts": [
+    {"dimension": "Global role", "geneva": "International hub — 38 intl orgs, 750+ NGOs, ~36k intl org jobs", "lausanne": "Olympic Capital since 1994 (IOC HQ since 1915), sport federation hub"},
+    {"dimension": "Metro scale", "geneva": "1.05M cross-border (Grand Genève, 2 countries)", "lausanne": "465k (largest fully-Swiss agglo on corridor)"},
+    {"dimension": "Frontalier dependence", "geneva": "~115k frontaliers (record 2024), ~41% of all jobs", "lausanne": "~8-10k frontaliers, much smaller share"},
+    {"dimension": "Station traffic", "geneva": "79.5k daily pax (2023)", "lausanne": "105.9k daily pax (2024) — network convergence hub"},
+    {"dimension": "Economic profile", "geneva": "Finance, intl orgs, luxury goods, services", "lausanne": "Education, tech/biotech, services, administration"},
+    {"dimension": "Academic weight", "geneva": "UNIGE (~17k), IHEID, HEAD, HEG", "lausanne": "UNIL (~16k), EPFL (~13k), ECAL, EHL, IMD — higher density"},
+    {"dimension": "Cost of living", "geneva": "#4 globally (Mercer 2024), ~9% above Lausanne", "lausanne": "High but below Geneva"}
+  ],
+  "data_gaps": [
+    "GDP per capita by canton — BFS table exists but values not extracted from search",
+    "GA/Halbtax by canton — opendata.swiss dataset exists, not downloaded",
+    "Full quarterly frontalier timeseries 2020-2024 — only milestones available",
+    "Route-specific ridership Geneva-Lausanne — only station-level data public"
+  ],
+  "research_metadata": {
+    "researched_by": "City101 context research agent",
+    "date": "2026-03-04",
+    "web_searches_performed": 19,
+    "reliability_note": "Most figures from official Swiss sources (BFS, SEM, SBB). Cost of living from Numbeo (crowd-sourced). All figures should be verified against primary sources before publication."
+  }
+}

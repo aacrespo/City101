@@ -1,0 +1,33 @@
+id,name,city_commune,type,address,lat_wgs84,lon_wgs84,canton,beds,notes,source,in_riegert_data
+H01,Hôpitaux Universitaires de Genève (HUG) - Cluse-Roseraie,Genève,university_hospital,"Rue Gabrielle-Perret-Gentil 4, 1205 Genève",46.1936,6.1492,GE,1890,Main campus. Largest university hospital in Switzerland. 8 public hospitals + 2 clinics + 40 outpatient units.,hug.ch,yes
+H02,HUG - Hôpital de Beau-Séjour,Genève,rehabilitation,"Avenue de Beau-Séjour 26, 1206 Genève",46.1990,6.1430,GE,,Rehabilitation and orthopaedics.,hug.ch,no
+H03,HUG - Hôpital de Bellerive,Collonge-Bellerive,palliative_rehabilitation,"Chemin de la Savonnière 11, 1245 Collonge-Bellerive",46.2530,6.1920,GE,,Palliative care and rehabilitation. ~8km from Genève station.,hug.ch,no
+H04,HUG - Hôpital de Loëx,Bernex,rehabilitation,"Route de Loëx 151, 1233 Bernex",46.1860,6.0670,GE,,Rehabilitation. ~8km west of Geneva centre.,hug.ch,no
+H05,HUG - Hôpital des Trois-Chêne,Thônex,geriatric,"Chemin du Pont-Bochet 3, 1226 Thônex",46.2020,6.2100,GE,,Acute geriatric care and rehabilitation. On Belle-Idée estate.,hug.ch,no
+H06,HUG - Hôpital de Psychiatrie (Belle-Idée),Thônex,psychiatric,"Chemin du Petit-Bel-Air 2, 1226 Thônex",46.2020,6.2080,GE,,Main psychiatric hospital for Canton de Genève. On Belle-Idée estate.,hug.ch,no
+H07,Clinique de Genolier,Genolier,private_clinic,"Route du Muids 3, 1272 Genolier",46.4370,6.2290,VD,115,"One of Switzerland's largest private clinics. Oncology, orthopaedics, cardiology. ~5km from Gland station.",swissmedical.net,no
+H08,GHOL - Hôpital de Nyon,Nyon,regional_hospital,"Chemin Monastier 10, 1260 Nyon",46.3835,6.2275,VD,162,"Internal medicine, surgery, oncology, maternity, emergency. 6 operating rooms.",ghol.ch,yes
+H09,GHOL - Hôpital de Rolle,Rolle,regional_hospital_specialized,"Route de l'Hôpital, 1180 Rolle",46.4580,6.3380,VD,40,Specialised in pulmonology.,ghol.ch,no
+H10,Hôpital de Prangins (CHUV),Prangins,psychiatric,"Chemin Oscar Forel 3, 1197 Prangins",46.3930,6.2460,VD,,Psychiatric hospital (CHUV West sector). Near Nyon.,chuv.ch,no
+H11,EHC - Hôpital de Morges,Morges,regional_hospital,"Chemin du Crêt 2, 1110 Morges",46.5228,6.5000,VD,220,"3rd largest maternity in canton. Acute care, surgery, emergency.",ehc-vd.ch,yes
+H12,EHC - CTR Aubonne,Aubonne,rehabilitation,"Aubonne",46.4940,6.3900,VD,,Rehabilitation and treatment centre. ~7km from Allaman station.,ehc-vd.ch,no
+H13,Centre Hospitalier Universitaire Vaudois (CHUV),Lausanne,university_hospital,"Rue du Bugnon 46, 1005 Lausanne",46.5249,6.6424,VD,,"One of 5 Swiss university hospitals. Cantonal and inter-cantonal vocation.",chuv.ch,yes
+H14,CHUV - Hôpital Beaumont,Lausanne,general_hospital,"Avenue de Beaumont 29, 1012 Lausanne",46.5270,6.6447,VD,,Part of CHUV campus.,chuv.ch,yes
+H15,CHUV - Hôpital de Cery,Prilly,psychiatric,"Route de Cery 1, 1008 Prilly",46.5370,6.6050,VD,,Psychiatric hospital (CHUV). University psychiatry department.,chuv.ch,no
+H16,Hôpital Ophtalmique Jules-Gonin,Lausanne,ophthalmology,"Avenue de France 15, 1004 Lausanne",46.5244,6.6230,VD,,Specialised ophthalmic hospital.,chuv.ch,yes
+H17,Clinique de La Source,Lausanne,private_clinic,"Avenue Alexandre-Vinet 30, 1004 Lausanne",46.5273,6.6283,VD,,Major private clinic. Member of Swiss Leading Hospitals.,lasource.ch,yes
+H18,Hirslanden Clinique Bois-Cerf,Lausanne,private_clinic,"Avenue d'Ouchy 31, 1006 Lausanne",46.5120,6.6305,VD,68,"Founded 1685. Orthopaedics, surgery, gastroenterology. 5 operating theatres.",hirslanden.ch,yes
+H19,Hirslanden Clinique Cecil,Lausanne,private_clinic,"Avenue Louis-Ruchonnet 53, 1003 Lausanne",46.5202,6.6220,VD,,Private clinic. Same building as Hirslanden emergency centre.,hirslanden.ch,yes
+H20,Clinique de Montchoisi,Lausanne,private_clinic,"Chemin des Allinges 10, 1006 Lausanne",46.5097,6.6357,VD,,Part of Swiss Medical Network. Ophthalmology and surgery.,swissmedical.net,yes
+H21,Hôpital Riviera-Chablais (HRC) - Rennaz,Rennaz,regional_hospital,"Route du Vieux Séquoia 20, 1847 Rennaz",46.3802,6.9207,VD,,Main acute care site since Nov 2019. 24/7 emergency. Between Villeneuve and Aigle.,hopitalrivierachablais.ch,yes
+H22,HRC - Site de Vevey Providence,Vevey,geriatric_rehabilitation,"Avenue de la Prairie 3, 1800 Vevey",46.4579,6.8548,VD,,Geriatric and rehabilitation clinic (CGR Riviera). Medical emergencies.,hopitalrivierachablais.ch,yes
+H23,Fondation de Nant,Corsier-sur-Vevey,psychiatric,"Route de Nant, 1804 Corsier-sur-Vevey",46.4620,6.8600,VD,,Public psychiatric care for East Vaud (Lavaux-Oron / Riviera / Aigle districts).,nant.ch,no
+H24,Clinique CIC Montreux,Montreux,private_clinic,"Grand-Rue, 1820 Montreux",46.4314,6.9103,VD,,On Lake Geneva shore. Part of CIC Suisse network.,cliniquecic-montreux.ch,no
+H25,Clinique Valmont,Glion-sur-Montreux,private_clinic,"Route de Valmont 22, 1823 Glion",46.4262,6.9310,VD,,Founded 1905. Part of Swiss Medical Network. Rehabilitation.,swissmedical.net,yes
+H26,Hirslanden Clinique La Colline,Genève,private_clinic,"Avenue de Beau-Séjour 6, 1206 Genève",46.1990,6.1440,GE,,Downtown Geneva. 20+ specialties. International patients.,hirslanden.ch,no
+H27,Clinique Générale-Beaulieu,Genève,private_clinic,"Chemin de Beau-Soleil 20, 1206 Genève",46.1950,6.1500,GE,,Founded 1899. Champel district. Part of Swiss Medical Network.,swissmedical.net,no
+H28,Clinique des Grangettes,Chêne-Bougeries,private_clinic,"Chemin des Grangettes 7, 1224 Chêne-Bougeries",46.1960,6.1920,GE,,"Hirslanden. Maternity, oncology, cardiology, paediatrics.",hirslanden.ch,no
+H29,Clinique Châtelaine (Maisonneuve),Châtelaine,private_rehabilitation,"Avenue de Châtelaine 60-64, 1219 Châtelaine",46.2140,6.1140,GE,,First Geneva private clinic dedicated to rehabilitation and post-acute care.,maisonneuve-ge.ch,no
+H30,Centre Médical d'Epalinges,Epalinges,medical_centre,"Route de la Corniche 1, 1066 Epalinges",46.5427,6.6621,VD,,Part of CHUV network.,chuv.ch,yes
+H31,Clinique Suisse de Montreux,Montreux,private_clinic,"Grand-Rue 3, 1820 Montreux",46.4314,6.9103,VD,,Private clinic in Montreux centre.,web,yes
+H32,Swiss Riviera Medical Center,Montreux,medical_centre,"Rue de la Gare 2, 1820 Montreux",46.4375,6.9082,VD,,Near Montreux station.,web,yes

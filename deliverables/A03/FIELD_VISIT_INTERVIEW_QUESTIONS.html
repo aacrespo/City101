@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Field Visit — Interview Questions</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=DM+Mono&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  @page {
+    size: A4;
+    margin: 18mm 16mm 18mm 16mm;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 9.5pt;
+    line-height: 1.55;
+    color: #1a1a1a;
+    background: #fff;
+    max-width: 210mm;
+    margin: 0 auto;
+    padding: 18mm 16mm;
+  }
+
+  .header {
+    border-bottom: 2px solid #1a1a1a;
+    padding-bottom: 10px;
+    margin-bottom: 16px;
+  }
+  .header-top {
+    font-family: 'DM Mono', monospace;
+    font-size: 7.5pt;
+    letter-spacing: 3px;
+    color: #888;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  h1 {
+    font-size: 18pt;
+    font-weight: 700;
+    margin-bottom: 3px;
+  }
+  .header-sub {
+    font-size: 8.5pt;
+    color: #555;
+  }
+
+  h2 {
+    font-size: 12pt;
+    font-weight: 700;
+    margin-top: 20px;
+    margin-bottom: 8px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid #ddd;
+    page-break-after: avoid;
+  }
+
+  h3 {
+    font-size: 10pt;
+    font-weight: 700;
+    margin-top: 14px;
+    margin-bottom: 6px;
+    color: #333;
+    page-break-after: avoid;
+  }
+
+  .site-header {
+    background: #f5f5f5;
+    padding: 8px 12px;
+    margin-top: 18px;
+    margin-bottom: 8px;
+    border-left: 3px solid #1a1a1a;
+    page-break-after: avoid;
+  }
+  .site-header h3 {
+    margin: 0;
+    font-size: 10.5pt;
+  }
+  .site-header .target {
+    font-size: 8pt;
+    color: #666;
+    font-style: italic;
+    margin-top: 2px;
+  }
+
+  .question {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 5px;
+    page-break-inside: avoid;
+  }
+  .question .num {
+    font-family: 'DM Mono', monospace;
+    font-size: 8pt;
+    color: #999;
+    min-width: 22px;
+    text-align: right;
+    padding-top: 1px;
+    flex-shrink: 0;
+  }
+  .question .text {
+    flex: 1;
+  }
+
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 7.5pt;
+    letter-spacing: 2px;
+    color: #aaa;
+    text-transform: uppercase;
+    margin-top: 10px;
+    margin-bottom: 5px;
+  }
+
+  .tip-box {
+    background: #fafafa;
+    border: 1px solid #e0e0e0;
+    padding: 10px 14px;
+    margin-top: 16px;
+    margin-bottom: 8px;
+    page-break-inside: avoid;
+  }
+  .tip-box h3 {
+    margin-top: 0;
+    font-size: 9pt;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .tip-box ul {
+    margin-left: 16px;
+    margin-top: 4px;
+  }
+  .tip-box li {
+    margin-bottom: 3px;
+  }
+
+  .french-box {
+    background: #f0f4f8;
+    border: 1px solid #c8d8e8;
+    padding: 10px 14px;
+    margin-top: 10px;
+    page-break-inside: avoid;
+  }
+  .french-box .label {
+    font-family: 'DM Mono', monospace;
+    font-size: 7.5pt;
+    letter-spacing: 2px;
+    color: #5577aa;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+  }
+  .french-phrase {
+    font-style: italic;
+    margin-bottom: 3px;
+    color: #334;
+  }
+
+  .sub-label {
+    font-size: 8.5pt;
+    font-weight: 600;
+    color: #555;
+    margin-top: 10px;
+    margin-bottom: 4px;
+  }
+
+  @media print {
+    body { padding: 0; }
+    .site-header { break-after: avoid; }
+    h2, h3 { break-after: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-top">City101 &middot; Horizontal Elevator &middot; Field Visit</div>
+  <h1>Interview Questions</h1>
+  <div class="header-sub">7 Healthcare Sites &mdash; Monday 09.03 (western) + Friday 13.03 (eastern) &mdash; Print or keep on phone</div>
+</div>
+
+<!-- UNIVERSAL -->
+<h2>Universal questions <span style="font-weight:400;font-size:9pt;color:#888;">&mdash; ask at every site</span></h2>
+<p style="font-size:8.5pt;color:#666;margin-bottom:10px;">These work for anyone: staff, patients, visitors, security, passersby.</p>
+
+<div class="section-label">Transport &amp; access</div>
+<div class="question"><span class="num">1.</span><span class="text">How did you get here today?</span></div>
+<div class="question"><span class="num">2.</span><span class="text">Do you know what time the last bus/train passes here?</span></div>
+<div class="question"><span class="num">3.</span><span class="text">Is there a way to get here (or home from here) after midnight?</span></div>
+<div class="question"><span class="num">4.</span><span class="text">Do you or people you know rely on a car to get here? Why?</span></div>
+
+<div class="section-label">Night / shift work</div>
+<div class="question"><span class="num">5.</span><span class="text">Do you (or does anyone here) work night shifts?</span></div>
+<div class="question"><span class="num">6.</span><span class="text">What time do night shifts start and end here?</span></div>
+<div class="question"><span class="num">7.</span><span class="text">How do night shift workers get home? Car? Wait? Sleep here?</span></div>
+<div class="question"><span class="num">8.</span><span class="text">Is there anywhere nearby to wait, rest, or eat between shifts?</span></div>
+
+<div class="section-label">The gap</div>
+<div class="question"><span class="num">9.</span><span class="text">Have you ever been stuck here &mdash; missed the last train, no ride?</span></div>
+<div class="question"><span class="num">10.</span><span class="text">What do you do during the gap between the last service and the first?</span></div>
+
+<div class="section-label">The space</div>
+<div class="question"><span class="num">11.</span><span class="text">Is there anywhere around here that feels like it's missing? A place you wish existed?</span></div>
+<div class="question"><span class="num">12.</span><span class="text">If you could change one thing about getting to/from here, what would it be?</span></div>
+
+<!-- SITE SPECIFIC -->
+<h2>Site-specific questions</h2>
+
+<!-- SITE 1 -->
+<div class="site-header">
+  <h3>Site 1 &mdash; Geneva North Industrial Belt <span style="font-weight:400;color:#888;">(Blandonnet / ZIMEYSA)</span></h3>
+  <div class="target">Target: security guards, truck drivers, anyone in safety vests, airport workers</div>
+</div>
+<div class="question"><span class="num">13.</span><span class="text">What gets delivered here at night? Medical supplies? Packages?</span></div>
+<div class="question"><span class="num">14.</span><span class="text">Do you know if DHL/Post handles hospital deliveries from here?</span></div>
+<div class="question"><span class="num">15.</span><span class="text">How many people work here overnight, roughly?</span></div>
+<div class="question"><span class="num">16.</span><span class="text">Is there a break room, canteen, or any shared space for night workers?</span></div>
+<div class="question"><span class="num">17.</span><span class="text">Where do most night workers come from &mdash; Vernier? Meyrin? France?</span></div>
+
+<!-- SITE 2 -->
+<div class="site-header">
+  <h3>Site 2 &mdash; Nyon Hospital + Genolier Hilltop</h3>
+  <div class="target">Target: hospital reception, nurses, bus drivers, pharmacy staff, Genolier clinic staff</div>
+</div>
+<div class="sub-label">At GHOL Nyon (lakeside):</div>
+<div class="question"><span class="num">18.</span><span class="text">How many staff work the night shift here, approximately?</span></div>
+<div class="question"><span class="num">19.</span><span class="text">Where do most staff live?</span></div>
+<div class="question"><span class="num">20.</span><span class="text">Is there a shuttle or transport to Genolier clinic?</span></div>
+<div class="sub-label">At Genolier (hilltop):</div>
+<div class="question"><span class="num">21.</span><span class="text">How do staff get up here at night?</span></div>
+<div class="question"><span class="num">22.</span><span class="text">Is there any bus service after 20:00? After midnight?</span></div>
+<div class="question"><span class="num">23.</span><span class="text">Do patients' families have trouble visiting &mdash; especially without a car?</span></div>
+<div class="sub-label">At Prangins (if time):</div>
+<div class="question"><span class="num">24.</span><span class="text">Is there transport for visitors to the psychiatric facility?</span></div>
+
+<!-- SITE 3 -->
+<div class="site-header">
+  <h3>Site 3 &mdash; Morges Hospital <span style="font-weight:400;color:#888;">(EHC)</span></h3>
+  <div class="target">Target: hospital staff at entrance/caf&eacute;, station kiosk worker, bus driver</div>
+</div>
+<div class="question"><span class="num">25.</span><span class="text">How do night staff get home after their shift ends?</span></div>
+<div class="question"><span class="num">26.</span><span class="text">What time does the last bus from the hospital leave?</span></div>
+<div class="question"><span class="num">27.</span><span class="text">Do patients &mdash; especially elderly &mdash; complain about getting to the hospital?</span></div>
+<div class="question"><span class="num">28.</span><span class="text">Do you know the walk-in clinics at the station (Permanence des Halles, CMM)? Do people confuse them with the hospital?</span></div>
+<div class="question"><span class="num">29.</span><span class="text">Has anyone mentioned the Google rating? What frustrates people?</span></div>
+
+<!-- SITE 4 -->
+<div class="site-header">
+  <h3>Site 4 &mdash; Crissier-Bussigny Night Belt</h3>
+  <div class="target">Target: anyone visible outside a warehouse &mdash; unlikely, try anyway. Migros delivery drivers, workers on smoke break.</div>
+</div>
+<div class="question"><span class="num">30.</span><span class="text">What's being sorted/shipped from here at night?</span></div>
+<div class="question"><span class="num">31.</span><span class="text">Does any of this go to hospitals? CHUV? HUG?</span></div>
+<div class="question"><span class="num">32.</span><span class="text">How many people work here overnight?</span></div>
+<div class="question"><span class="num">33.</span><span class="text">Is there anywhere to eat, sit, or take a break nearby &mdash; within walking distance?</span></div>
+<div class="question"><span class="num">34.</span><span class="text">How do you get here &mdash; car? Is there any other option?</span></div>
+
+<!-- SITE 5 -->
+<div class="site-header">
+  <h3>Site 5 &mdash; Lausanne CHUV Perpendicular</h3>
+  <div class="target">Target: nurses on break, M2 attendant, caf&eacute; workers near staff entrance, anyone walking the gradient</div>
+</div>
+<div class="question"><span class="num">35.</span><span class="text">What time does M2 actually stop running? And start in the morning?</span></div>
+<div class="question"><span class="num">36.</span><span class="text">If you finish a shift at 02:00, how do you get home?</span></div>
+<div class="question"><span class="num">37.</span><span class="text">Do staff who live uphill (Sallaz, Epalinges, Chailly) have it harder getting home?</span></div>
+<div class="question"><span class="num">38.</span><span class="text">Is there a difference between where nurses live and where doctors live?</span></div>
+<div class="question"><span class="num">39.</span><span class="text">Is there any night shuttle or hospital transport for staff?</span></div>
+<div class="question"><span class="num">40.</span><span class="text">Do patients from the northern heights (Epalinges, Pierre-de-Plan) have trouble getting here?</span></div>
+
+<!-- SITE 6 -->
+<div class="site-header">
+  <h3>Site 6 &mdash; Montreux&ndash;Glion Altitude Medicine</h3>
+  <div class="target">Target: funicular operator, Valmont reception, elderly resident, hotel staff</div>
+</div>
+<div class="question"><span class="num">41.</span><span class="text">What time does the funicular stop running? When does it start?</span></div>
+<div class="question"><span class="num">42.</span><span class="text">How do Valmont staff get to work for early/night shifts?</span></div>
+<div class="question"><span class="num">43.</span><span class="text">Do patients' families visit by car or funicular?</span></div>
+<div class="question"><span class="num">44.</span><span class="text">Do elderly residents in Glion/Territet have trouble getting to medical appointments?</span></div>
+<div class="question"><span class="num">45.</span><span class="text">Is there any transport after the funicular stops?</span></div>
+
+<!-- SITE 7 -->
+<div class="site-header">
+  <h3>Site 7 &mdash; Rennaz Hospital <span style="font-weight:400;color:#888;">(HRC)</span></h3>
+  <div class="target">Target: hospital reception/info desk, anyone on the Villeneuve&rarr;Rennaz road, bus driver, patients in waiting area</div>
+</div>
+<div class="question"><span class="num">46.</span><span class="text">How do most people get to this hospital &mdash; car, bus, walk?</span></div>
+<div class="question"><span class="num">47.</span><span class="text">Is there a bus from Villeneuve station? What's the last one?</span></div>
+<div class="question"><span class="num">48.</span><span class="text">Night shift staff &mdash; how do they get home after midnight?</span></div>
+<div class="question"><span class="num">49.</span><span class="text">Do you know why the hospital was built here instead of staying in Vevey?</span></div>
+<div class="question"><span class="num">50.</span><span class="text">Have you seen the Google reviews? What do people complain about most?</span></div>
+<div class="question"><span class="num">51.</span><span class="text">Before HRC moved here, was it easier to get to the old hospital in Vevey?</span></div>
+<div class="question"><span class="num">52.</span><span class="text">Is there a sidewalk the whole way from Villeneuve station?</span></div>
+
+<!-- TIPS -->
+<div class="tip-box">
+  <h3>Interview tips</h3>
+  <ul>
+    <li><strong>Introduce yourself:</strong> "We're architecture students from EPFL studying how people move around hospitals at night."</li>
+    <li><strong>Ask permission</strong> before recording. Most people are fine if you explain.</li>
+    <li><strong>One quote is enough.</strong> One real person saying "I drive because there's nothing after midnight" is more powerful than any dataset.</li>
+    <li><strong>Note:</strong> name (or "anonymous"), role, time of conversation, location.</li>
+  </ul>
+</div>
+
+<div class="french-box">
+  <div class="label">Key phrases in French</div>
+  <div class="french-phrase">"On &eacute;tudie l'architecture &agrave; l'EPFL. On s'int&eacute;resse &agrave; comment les gens se d&eacute;placent la nuit autour des h&ocirc;pitaux."</div>
+  <div class="french-phrase">"Est-ce que vous travaillez de nuit ici ?"</div>
+  <div class="french-phrase">"Comment vous rentrez chez vous apr&egrave;s le dernier train ?"</div>
+  <div class="french-phrase">"Est-ce qu'il y a un endroit pour attendre ou se reposer entre les horaires ?"</div>
+  <div class="french-phrase">"On peut vous poser quelques questions ? C'est pour un projet acad&eacute;mique."</div>
+</div>
+
+</body>
+</html>

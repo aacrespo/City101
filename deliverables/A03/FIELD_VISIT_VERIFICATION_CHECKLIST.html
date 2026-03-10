@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Field Visit — Verification Checklist</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=DM+Mono&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  @page {
+    size: A4;
+    margin: 14mm 12mm 14mm 12mm;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 8.5pt;
+    line-height: 1.45;
+    color: #1a1a1a;
+    background: #fff;
+    max-width: 210mm;
+    margin: 0 auto;
+    padding: 14mm 12mm;
+  }
+
+  .header {
+    border-bottom: 2px solid #1a1a1a;
+    padding-bottom: 8px;
+    margin-bottom: 12px;
+  }
+  .header-top {
+    font-family: 'DM Mono', monospace;
+    font-size: 7pt;
+    letter-spacing: 3px;
+    color: #888;
+    text-transform: uppercase;
+    margin-bottom: 3px;
+  }
+  h1 {
+    font-size: 16pt;
+    font-weight: 700;
+    margin-bottom: 2px;
+  }
+  .header-sub {
+    font-size: 8pt;
+    color: #555;
+  }
+
+  .how-to {
+    background: #f8f8f8;
+    border: 1px solid #e0e0e0;
+    padding: 8px 12px;
+    margin-bottom: 14px;
+    font-size: 8pt;
+    color: #555;
+  }
+  .how-to strong { color: #333; }
+  .legend {
+    display: flex;
+    gap: 16px;
+    margin-top: 5px;
+  }
+  .legend span {
+    font-family: 'DM Mono', monospace;
+    font-size: 8pt;
+  }
+  .legend-y { color: #2e7d32; }
+  .legend-n { color: #c62828; }
+  .legend-p { color: #e65100; }
+  .legend-q { color: #555; }
+
+  /* Site blocks */
+  .site-block {
+    margin-top: 16px;
+    page-break-inside: avoid;
+  }
+
+  .site-header {
+    background: #1a1a1a;
+    color: #fff;
+    padding: 7px 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .site-header h2 {
+    font-size: 10pt;
+    font-weight: 700;
+    margin: 0;
+  }
+  .site-header .km {
+    font-family: 'DM Mono', monospace;
+    font-size: 8pt;
+    color: #aaa;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 8pt;
+    margin-bottom: 0;
+  }
+  thead th {
+    background: #f0f0f0;
+    padding: 4px 6px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 7pt;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid #ccc;
+  }
+  tbody td {
+    padding: 4px 6px;
+    border-bottom: 1px solid #eee;
+    vertical-align: top;
+  }
+  .col-num { width: 28px; font-family: 'DM Mono', monospace; color: #999; font-size: 7.5pt; }
+  .col-claim { width: 34%; }
+  .col-source { width: 18%; font-size: 7.5pt; color: #777; }
+  .col-check { width: 36px; text-align: center; }
+  .col-found { width: 28%; }
+  .col-photo { width: 10%; font-size: 7.5pt; }
+
+  .check-box {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border: 1.5px solid #aaa;
+    border-radius: 2px;
+    vertical-align: middle;
+  }
+
+  .source-verified { color: #2e7d32; font-weight: 500; }
+  .source-unverified { color: #c62828; font-weight: 500; }
+  .source-key { color: #e65100; font-weight: 600; }
+
+  .action-box {
+    background: #fafafa;
+    border: 1px solid #e0e0e0;
+    border-top: none;
+    padding: 7px 12px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .action-box div {
+    font-size: 7.5pt;
+  }
+  .action-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 6.5pt;
+    letter-spacing: 1.5px;
+    color: #999;
+    text-transform: uppercase;
+    margin-bottom: 2px;
+  }
+
+  .patterns-section {
+    margin-top: 20px;
+    page-break-before: auto;
+  }
+  .patterns-section h2 {
+    font-size: 11pt;
+    font-weight: 700;
+    border-bottom: 2px solid #1a1a1a;
+    padding-bottom: 4px;
+    margin-bottom: 10px;
+  }
+  .pattern-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 8px;
+    page-break-inside: avoid;
+  }
+  .pattern-label {
+    font-weight: 700;
+    font-size: 8pt;
+    min-width: 120px;
+    flex-shrink: 0;
+  }
+  .pattern-desc {
+    font-size: 8pt;
+    color: #444;
+  }
+
+  .write-lines {
+    border-bottom: 1px dotted #ccc;
+    height: 18px;
+    margin-bottom: 2px;
+  }
+
+  @media print {
+    body { padding: 0; }
+    .site-block { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-top">City101 &middot; Horizontal Elevator &middot; Field Visit</div>
+  <h1>Verification Checklist</h1>
+  <div class="header-sub">7 Healthcare Sites &mdash; Fill in on-site or immediately after each stop</div>
+</div>
+
+<div class="how-to">
+  <strong>How to use:</strong> For each claim, mark the checkbox and write what you found. Take a photo reference for each.
+  <div class="legend">
+    <span class="legend-y">Y = Verified</span>
+    <span class="legend-n">N = Contradicted</span>
+    <span class="legend-p">P = Partially true</span>
+    <span class="legend-q">? = Couldn't verify</span>
+  </div>
+  <div style="margin-top:4px;">Source codes: <span class="source-verified">OUR DATA</span> = in our CSV datasets. <span class="source-unverified">NO DATA</span> = JSX claim with no dataset. <span class="source-key">KEY CLAIM</span> = load-bearing for the narrative.</div>
+</div>
+
+<!-- SITE 1 -->
+<div class="site-block">
+  <div class="site-header">
+    <h2>Site 1 &mdash; Geneva North Industrial Belt</h2>
+    <span class="km">km 8 &middot; Blandonnet / ZIMEYSA</span>
+  </div>
+  <table>
+    <thead>
+      <tr><th class="col-num">#</th><th class="col-claim">Data claim</th><th class="col-source">Source</th><th class="col-check">Y/N/P/?</th><th class="col-found">What we actually found</th><th class="col-photo">Photo</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="col-num">1.1</td><td>4,600 night workers in zone</td><td class="source-unverified">NO DATA</td><td><span class="check-box"></span></td><td></td><td></td></tr>
+      <tr><td class="col-num">1.2</td><td>Airport has 3,000 night workers</td><td class="source-unverified">NO DATA</td><td><span class="check-box"></span></td><td></td><td></td></tr>
+      <tr><td class="col-num">1.3</td><td>Post sorts 600 workers 02:00&ndash;05:00</td><td class="source-unverified">NO DATA</td><td><span class="check-box"></span></td><td></td><td></td></tr>
+      <tr><td class="col-num">1.4</td><td>DHL has 300 night workers</td><td class="source-unverified">NO DATA</td><td><span class="check-box"></span></td><td></td><td></td></tr>
+      <tr><td class="col-num">1.5</td><td>"3 venues" in the area</td><td class="source-unverified">JSX</td><td><span class="check-box"></span></td><td></td><td></td></tr>
+      <tr><td class="col-num">1.6</td><td>12,000 frontaliers in zone</td><td class="source-unverified">NO DATA</td><td><span class="check-box"></span></td><td></td><td></td></tr>
+      <tr><td class="col-num">1.7</td><td>No public space in industrial belt</td><td>Inference</td><td><span class="check-box"></span></td><td></td><td></td></tr>
+      <tr><td class="col-num">1.8</td><td>Medical cargo (pharma, blood) routes through here</td><td class="source-key">KEY CLAIM</td><td><span class="check-box"></span></td><td></td><td></td></tr>
+    </tbody>
+  </table>
+  <div class="action-box">
+    <div>
+      <div class="action-label">Lock question</div>
+      Where is the threshold between cargo/industrial and the residential city? Where would you place a chamber?
+    </div>
+    <div>
+      <div class="action-label">Sketch prompt</div>
+      Draw the boundary between warehouse scale and human scale.
+    </div>
+  </div>
+</div>
+
+<!-- SITE 2 -->
+<div class="site-block">
+  <div class="site-header">
+    <h2>Site 2 &mdash; Nyon Hospital + Genolier Hilltop</h2>
+    <span class="km">km 25</span>
+  </div>
+  <table>
+    <thead>
+      <tr><th class="col-num">#</th><th class="col-claim">Data claim</th><th class="col-source">Source</th><th class="col-check">Y/N/P/?</th><th class="col-found">What we actually found</th><th class="col-photo">Photo</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="col-num">2.1</td><td>GHOL hospital is 0.7km from station</td><td>Healthcare JSX</td><td><span class="check-box"></span></td><td></td><td></td></tr>
+      <tr><td class="col-num">2.2</td><td>Hospital rated 3.4&star;</td><td class="source-unverified">NOT in dataset</td><td><span class="check-box"></span></td><td></td><td></td></tr>
+      <tr><td class="col-num">2.3</td><td>200 night staff at GHOL</td><td class="source-unverified">NO DATA</td><td><span class="check-box"></span></td><td></td><td></td></tr>
+      <tr><td class="col-num">2.4</td><td>Genolier clinic is 3.6km from rail</td><td>Healthcare JSX</td><td><span class="check-box"></span></td><td></td><td></td></tr>
+      <tr><td class="col-num">2.5</td><td>Genolier has 150 night staff</td><td class="source-unverified">NO DATA</td><td><span class="check-box"></span></td><td></td><td></td></tr>
+      <tr><td class="col-num">2.6</td><td>Zero nocturnal transport to Genolier</td><td>JSX</td><td><span class="check-box"></span></td><td></td><td></td></tr>
+      <tr><td class="col-num">2.7</td><td>56% car dependency in Nyon</td><td>JSX</td><td><span class="check-box"></span></td><td></td><td></td></tr>
+      <tr><td class="col-num">2.8</td><td>Prangins psychiatric facility (16 bldgs)</td><td>Healthcare JSX</td><td><span class="check-box"></span></td><td></td><td></td></tr>
+      <tr><td class="col-num">2.9</td><td>Nyon late-night: 7.0 trains/hr</td><td class="source-verified">OUR DATA</td><td><span class="check-box"></span></td><td></td><td></td></tr>
+      <tr><td class="col-num">2.10</td><td>Nyon last train: 01:05 weekday</td><td class="source-verified">OUR DATA</td><td><span class="check-box"></span></td><td></td><td></td></tr>
+    </tbody>
+  </table>
+  <div class="action-box">
+    <div>
+      <div class="action-label">Measure</div>
+      Walk GHOL &rarr; station. Time it. Is it lit? Sheltered? Would you walk it at 01:00?
+    </div>
+    <div>
+      <div class="action-label">Drive</div>
+      Nyon &rarr; Genolier. Note: time, distance, switchbacks, altitude gain. Where does connected become disconnected?
+    </div>
+  </div>
+</div>
+
+<!-- SITE 3 -->
+<div class="site-block">
+  <div class="site-header">
+    <h2>Site 3 &mdash; Morges Hospital Gap</h2>
+    <span class="km">km 48 &middot; EHC</span>
+  </div>
+  <table>
+    <thead>
+      <tr><th class="col-num">#</th><th class="col-claim">Data claim</th><th class="col-source">Source</th><th class="col-check">Y/N/P/?</th><th class="col-found">What we actually found</th><th class="col-photo">Photo</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="col-num">3.1</td><td>Hospital is 1.4km from station</td><td>Healthcare JSX</td><td><span class="check-box"></span></td><td></td><td></td></tr>
+      <tr><td class="col-num">3.2</td><td>Hospital rated 3.0&star;</td><td class="source-unverified">NOT in dataset</td><td><span class="check-box"></span></td><td></td><td></td></tr>
+      <tr><td class="col-num">3.3</td><td>300 night staff "stranded after last train"</td><td class="source-key">KEY CLAIM, NO DATA</td><td><span class="check-box"></span></td><td></td><td></td></tr>
+      <tr><td class="col-num">3.4</td><td>Permanence des Halles at station: 4.0&star;</td><td>Healthcare JSX</td><td><span class="check-box"></span></td><td></td><td></td></tr>
+      <tr><td class="col-num">3.5</td><td>CMM Medical Center at station: 4.0&star;</td><td>Healthcare JSX</td><td><span class="check-box"></span></td><td></td><td></td></tr>
+      <tr><td class="col-num">3.6</td><td>19% elderly in catchment (4,750 people)</td><td>Healthcare JSX</td><td><span class="check-box"></span></td><td></td><td></td></tr>
+      <tr><td class="col-num">3.7</td><td>58% car dependency</td><td>JSX</td><td><span class="check-box"></span></td><td></td><td></td></tr>
+      <tr><td class="col-num">3.8</td><td>Morges last train: 01:07 weekday</td><td class="source-verified">OUR DATA</td><td><span class="check-box"></span></td><td></td><td></td></tr>
+      <tr><td class="col-num">3.9</td><td>2 nocturnal stops (Noctambus, Fri/Sat only)</td><td>Healthcare JSX</td><td><span class="check-box"></span></td><td></td><td></td></tr>
+      <tr><td class="col-num">3.10</td><td>Station clinics accessible vs hospital not &mdash; contrast</td><td>Healthcare JSX</td><td><span class="check-box"></span></td><td></td><td></td></tr>
+    </tbody>
+  </table>
+  <div class="action-box">
+    <div>
+      <div class="action-label">Measure</div>
+      Walk hospital &rarr; station. Time it. Photo every 300m. Is it walkable at 01:00? Lit?
+    </div>
+    <div>
+      <div class="action-label">Lock question</div>
+      Dead window is 01:07&ndash;05:00. What exists in that 4-hour gap? Where does a chamber sit between hospital and station?
+    </div>
+  </div>
+</div>
+
+<!-- SITE 4 -->
+<div class="site-block">
+  <div class="site-header">
+    <h2>Site 4 &mdash; Crissier-Bussigny Night Belt</h2>
+    <span class="km">km 58 &middot; Logistics zone</span>
+  </div>
+  <table>
+    <thead>
+      <tr><th class="col-num">#</th><th class="col-claim">Data claim</th><th class="col-source">Source</th><th class="col-check">Y/N/P/?</th><th class="col-found">What we actually found</th><th class="col-photo">Photo</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="col-num">4.1</td><td>1,680 night workers total</td><td class="source-unverified">NO DATA</td><td><span class="check-box"></span></td><td></td><td></td></tr>
+      <tr><td class="col-num">4.2</td><td>Bussigny Arc-en-Ciel: 800 workers (3&times;8)</td><td class="source-unverified">NO DATA</td><td><span class="check-box"></span></td><td></td><td></td></tr>
+      <tr><td class="col-num">4.3</td><td>CHUV-HUG pharma supply runs through here</td><td class="source-key">KEY CLAIM, NO DATA</td><td><span class="check-box"></span></td><td></td><td></td></tr>
+      <tr><td class="col-num">4.4</td><td>Migros sorting/distribution here</td><td class="source-unverified">NO DATA</td><td><span class="check-box"></span></td><td></td><td></td></tr>
+      <tr><td class="col-num">4.5</td><td>Voxel: 200 workers (24h)</td><td class="source-unverified">NO DATA</td><td><span class="check-box"></span></td><td></td><td></td></tr>
+      <tr><td class="col-num">4.6</td><td>Zero public space in logistics zone</td><td>Inference</td><td><span class="check-box"></span></td><td></td><td></td></tr>
+      <tr><td class="col-num">4.7</td><td>"Zero nocturnal transport &lt;2km"</td><td class="source-unverified">CONTRADICTED &mdash; 9.0 tr/hr late night</td><td><span class="check-box"></span></td><td></td><td></td></tr>
+      <tr><td class="col-num">4.8</td><td>Residential (Renens 22k) within 2&ndash;3km</td><td>JSX</td><td><span class="check-box"></span></td><td></td><td></td></tr>
+      <tr><td class="col-num">4.9</td><td>Visible pharma/medical logistics signage</td><td class="source-key">Look for it</td><td><span class="check-box"></span></td><td></td><td></td></tr>
+    </tbody>
+  </table>
+  <div class="action-box">
+    <div>
+      <div class="action-label">Hardest site</div>
+      Logistics zones are private. Drive through, photograph signage, company names, truck types. Look for pharma/medical symbols.
+    </div>
+    <div>
+      <div class="action-label">Lock question</div>
+      Where does the supply chain become visible? Where is the edge between the sheds and the city?
+    </div>
+  </div>
+</div>
+
+<!-- SITE 5 -->
+<div class="site-block">
+  <div class="site-header">
+    <h2>Site 5 &mdash; Lausanne CHUV Perpendicular</h2>
+    <span class="km">km 65</span>
+  </div>
+  <table>
+    <thead>
+      <tr><th class="col-num">#</th><th class="col-claim">Data claim</th><th class="col-source">Source</th><th class="col-check">Y/N/P/?</th><th class="col-found">What we actually found</th><th class="col-photo">Photo</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="col-num">5.1</td><td>1,500 CHUV night staff</td><td class="source-key">KEY CLAIM, NO DATA</td><td><span class="check-box"></span></td><td></td><td></td></tr>
+      <tr><td class="col-num">5.2</td><td>250m altitude (370m Ouchy &rarr; 700m Vers-chez-les-Blanc)</td><td>JSX</td><td><span class="check-box"></span></td><td></td><td></td></tr>
+      <tr><td class="col-num">5.3</td><td>5.8km perpendicular spread</td><td>JSX</td><td><span class="check-box"></span></td><td></td><td></td></tr>
+      <tr><td class="col-num">5.4</td><td>M2 stops at ~00:36</td><td class="source-verified">OUR DATA</td><td><span class="check-box"></span></td><td></td><td></td></tr>
+      <tr><td class="col-num">5.5</td><td>Mon&ndash;Thu dead window 00:36&ndash;05:00</td><td>JSX + our data</td><td><span class="check-box"></span></td><td></td><td></td></tr>
+      <tr><td class="col-num">5.6</td><td>Noctambus runs Fri/Sat ONLY</td><td>Healthcare JSX</td><td><span class="check-box"></span></td><td></td><td></td></tr>
+      <tr><td class="col-num">5.7</td><td>Renens nurses (CHF 56k) have 0&ndash;2 nocturnal stops</td><td class="source-unverified">NO DATA</td><td><span class="check-box"></span></td><td></td><td></td></tr>
+      <tr><td class="col-num">5.8</td><td>Flon/Cour (CHF 80&ndash;95k) can walk to CHUV</td><td>Healthcare JSX</td><td><span class="check-box"></span></td><td></td><td></td></tr>
+      <tr><td class="col-num">5.9</td><td>Epalinges medical centre 3.4km from rail</td><td>Healthcare JSX</td><td><span class="check-box"></span></td><td></td><td></td></tr>
+      <tr><td class="col-num">5.10</td><td>Epalinges catchment: 67,736 people</td><td>Healthcare JSX</td><td><span class="check-box"></span></td><td></td><td></td></tr>
+      <tr><td class="col-num">5.11</td><td>Vigie M1 station: 2.9&star; (lowest)</td><td class="source-verified">OUR DATA</td><td><span class="check-box"></span></td><td></td><td></td></tr>
+      <tr><td class="col-num">5.12</td><td>Pierre-de-Plan / Sallaz: CHF 60&ndash;62k, 50% foreign</td><td>Healthcare JSX</td><td><span class="check-box"></span></td><td></td><td></td></tr>
+    </tbody>
+  </table>
+  <div class="action-box">
+    <div>
+      <div class="action-label">Walk the gradient</div>
+      Start at top (Epalinges/Chailly). Walk/drive down to CHUV. Note: where does slope become uncomfortable? Where are the residential pockets?
+    </div>
+    <div>
+      <div class="action-label">Lock question</div>
+      On a 250m gradient, where is the threshold? At CHUV? At Sallaz? At the M2 terminus?
+    </div>
+  </div>
+</div>
+
+<!-- SITE 6 -->
+<div class="site-block">
+  <div class="site-header">
+    <h2>Site 6 &mdash; Montreux&ndash;Glion Altitude Medicine</h2>
+    <span class="km">km 85</span>
+  </div>
+  <table>
+    <thead>
+      <tr><th class="col-num">#</th><th class="col-claim">Data claim</th><th class="col-source">Source</th><th class="col-check">Y/N/P/?</th><th class="col-found">What we actually found</th><th class="col-photo">Photo</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="col-num">6.1</td><td>Clinique Valmont at 600m+ altitude</td><td>Healthcare JSX</td><td><span class="check-box"></span></td><td></td><td></td></tr>
+      <tr><td class="col-num">6.2</td><td>Valmont rated 4.5&star; (rehab)</td><td>Healthcare JSX</td><td><span class="check-box"></span></td><td></td><td></td></tr>
+      <tr><td class="col-num">6.3</td><td>Funicular exists from Territet to Glion</td><td>Healthcare JSX</td><td><span class="check-box"></span></td><td></td><td></td></tr>
+      <tr><td class="col-num">6.4</td><td>Funicular doesn't run at night</td><td class="source-key">KEY &mdash; photograph posted hours</td><td><span class="check-box"></span></td><td></td><td></td></tr>
+      <tr><td class="col-num">6.5</td><td>23% elderly in Montreux (6,137 people)</td><td>Healthcare JSX</td><td><span class="check-box"></span></td><td></td><td></td></tr>
+      <tr><td class="col-num">6.6</td><td>Territet: only 2 trains/hour</td><td>Healthcare JSX</td><td><span class="check-box"></span></td><td></td><td></td></tr>
+      <tr><td class="col-num">6.7</td><td>31 hospital buildings in Montreux (12,470m&sup2;)</td><td>Healthcare JSX</td><td><span class="check-box"></span></td><td></td><td></td></tr>
+      <tr><td class="col-num">6.8</td><td>Haut-Montreux: 5,574 pop, 2 nocturnal stops</td><td>Healthcare JSX</td><td><span class="check-box"></span></td><td></td><td></td></tr>
+      <tr><td class="col-num">6.9</td><td>Health split: lake (Rennaz ER) vs mountain (Valmont rehab)</td><td class="source-key">NARRATIVE CLAIM</td><td><span class="check-box"></span></td><td></td><td></td></tr>
+    </tbody>
+  </table>
+  <div class="action-box">
+    <div>
+      <div class="action-label">Key actions</div>
+      Find funicular in Territet. Photo posted hours. Ride or drive to Glion. Is Valmont visible? Signposted?
+    </div>
+    <div>
+      <div class="action-label">Lock question</div>
+      The funicular IS a proto-lock. What's missing is night operation and the chamber at each end.
+    </div>
+  </div>
+</div>
+
+<!-- SITE 7 -->
+<div class="site-block">
+  <div class="site-header">
+    <h2>Site 7 &mdash; Rennaz Hospital Island</h2>
+    <span class="km">km 89 &middot; HRC</span>
+  </div>
+  <table>
+    <thead>
+      <tr><th class="col-num">#</th><th class="col-claim">Data claim</th><th class="col-source">Source</th><th class="col-check">Y/N/P/?</th><th class="col-found">What we actually found</th><th class="col-photo">Photo</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="col-num">7.1</td><td>Hospital is 2.1km from Villeneuve station</td><td class="source-key">KEY &mdash; WALK IT, TIME IT</td><td><span class="check-box"></span></td><td></td><td></td></tr>
+      <tr><td class="col-num">7.2</td><td>Hospital rated 2.6&star; (lowest on corridor)</td><td class="source-unverified">NOT in dataset</td><td><span class="check-box"></span></td><td></td><td></td></tr>
+      <tr><td class="col-num">7.3</td><td>400 night staff</td><td class="source-unverified">NO DATA</td><td><span class="check-box"></span></td><td></td><td></td></tr>
+      <tr><td class="col-num">7.4</td><td>"Car only" &mdash; no transit at night</td><td>JSX</td><td><span class="check-box"></span></td><td></td><td></td></tr>
+      <tr><td class="col-num">7.5</td><td>Built in 2019 replacing Vevey + Montreux sites</td><td>Healthcare JSX</td><td><span class="check-box"></span></td><td></td><td></td></tr>
+      <tr><td class="col-num">7.6</td><td>Old Vevey site was 0.5km from La Tour station</td><td>Healthcare JSX</td><td><span class="check-box"></span></td><td></td><td></td></tr>
+      <tr><td class="col-num">7.7</td><td>Only 2 shared mobility stations nearby</td><td>Healthcare JSX</td><td><span class="check-box"></span></td><td></td><td></td></tr>
+      <tr><td class="col-num">7.8</td><td>44,149m&sup2; health building footprint</td><td>Healthcare JSX</td><td><span class="check-box"></span></td><td></td><td></td></tr>
+      <tr><td class="col-num">7.9</td><td>Villeneuve: 62% car, 1 nocturnal stop</td><td>Healthcare JSX</td><td><span class="check-box"></span></td><td></td><td></td></tr>
+      <tr><td class="col-num">7.10</td><td>Continuous sidewalk from station to hospital</td><td class="source-key">UNKNOWN &mdash; VERIFY</td><td><span class="check-box"></span></td><td></td><td></td></tr>
+    </tbody>
+  </table>
+  <div class="action-box">
+    <div>
+      <div class="action-label">The most important walk</div>
+      Villeneuve station &rarr; HRC. Time it. GPS track. Photo every 200m. Sidewalk quality? Lighting? Would you walk at 02:00?
+    </div>
+    <div>
+      <div class="action-label">Also if time</div>
+      La Tour station &rarr; old HRC Vevey Providence (0.5km). Walk it. The before/after contrast = the argument.
+    </div>
+  </div>
+</div>
+
+<!-- CROSS-SITE PATTERNS -->
+<div class="patterns-section">
+  <h2>Cross-site patterns &mdash; reflect after all visits</h2>
+
+  <div class="pattern-row">
+    <div class="pattern-label">Scale of the gap</div>
+    <div class="pattern-desc">Is 0.7km (Nyon) different from 1.4km (Morges) different from 2.1km (Rennaz)? At what distance does the gap become unacceptable?</div>
+  </div>
+  <div class="pattern-row">
+    <div class="pattern-label">Night evidence</div>
+    <div class="pattern-desc">Any signs of night activity? 24h signage, lit windows, security cameras, vending machines, worn paths?</div>
+  </div>
+  <div class="pattern-row">
+    <div class="pattern-label">The threshold</div>
+    <div class="pattern-desc">At each site, where exactly does "connected" become "disconnected"? A road? A hill? A fence? A last streetlight?</div>
+  </div>
+  <div class="pattern-row">
+    <div class="pattern-label">Who's present?</div>
+    <div class="pattern-desc">Even in afternoon visits: nurses in scrubs? Elderly with walkers? Delivery trucks? Nobody?</div>
+  </div>
+  <div class="pattern-row">
+    <div class="pattern-label">Public space</div>
+    <div class="pattern-desc">Is there ANY public space at or near each site? A bench? A caf&eacute;? A bus shelter? Or truly nothing?</div>
+  </div>
+  <div class="pattern-row">
+    <div class="pattern-label">Car dominance</div>
+    <div class="pattern-desc">How big are hospital parking lots? How many cars? More parking spaces than bus stops?</div>
+  </div>
+  <div class="pattern-row">
+    <div class="pattern-label">Proto-lock exists?</div>
+    <div class="pattern-desc">Is there already an informal "lock"? A bus shelter used as rest, a caf&eacute; where workers wait, a hospital lobby functioning as transit waiting room?</div>
+  </div>
+  <div class="pattern-row">
+    <div class="pattern-label">What data missed</div>
+    <div class="pattern-desc">Anything not in the JSX or datasets. New connections. Surprises. This is the most important row.</div>
+  </div>
+</div>
+
+</body>
+</html>

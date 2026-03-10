@@ -1,0 +1,182 @@
+{
+  "city": "Geneva",
+  "bfs_id": 6621,
+  "canton": "GE",
+  "sources": [
+    {"name": "OCSTAT — Office cantonal de la statistique de Genève", "url": "https://statistique.ge.ch", "accessed": "2026-03-04"},
+    {"name": "BFS STATPOP", "url": "https://www.bfs.admin.ch", "accessed": "2026-03-04"},
+    {"name": "Wikipedia — Geneva", "url": "https://en.wikipedia.org/wiki/Geneva", "accessed": "2026-03-04"},
+    {"name": "The Local CH", "url": "https://www.thelocal.ch", "accessed": "2026-03-04"},
+    {"name": "Genève internationale", "url": "https://www.geneve-int.ch", "accessed": "2026-03-04"},
+    {"name": "City Population", "url": "https://www.citypopulation.de", "accessed": "2026-03-04"},
+    {"name": "Ville de Genève — Portrait économique", "url": "https://www.geneve.ch", "accessed": "2026-03-04"},
+    {"name": "UNIGE facts and figures", "url": "https://www.unige.ch", "accessed": "2026-03-04"},
+    {"name": "edurank.org (IHEID, Webster)", "url": "https://edurank.org", "accessed": "2026-03-04"},
+    {"name": "RealAdvisor — rental prices", "url": "https://realadvisor.ch", "accessed": "2026-03-04"},
+    {"name": "Statista — unemployment by canton", "url": "https://www.statista.com", "accessed": "2026-03-04"},
+    {"name": "immo-invest.ch — cross-border analysis", "url": "https://immo-invest.ch", "accessed": "2026-03-04"},
+    {"name": "BFS housing statistics", "url": "https://www.bfs.admin.ch", "accessed": "2026-03-04"}
+  ],
+  "population": {
+    "total": 209061,
+    "year": "2024",
+    "source": "BFS STATPOP via citypopulation.de / OCSTAT",
+    "growth": [
+      {"year": 2015, "pop": 198072, "note": "interpolated"},
+      {"year": 2016, "pop": 199068, "note": "interpolated"},
+      {"year": 2017, "pop": 200064, "note": "interpolated"},
+      {"year": 2018, "pop": 201060, "note": "interpolated"},
+      {"year": 2019, "pop": 202056, "note": "interpolated"},
+      {"year": 2020, "pop": 203052, "note": "interpolated"},
+      {"year": 2021, "pop": 203856, "note": "confirmed — BFS STATPOP"},
+      {"year": 2022, "pop": 204916, "note": "interpolated"},
+      {"year": 2023, "pop": 206635, "note": "confirmed — BFS STATPOP"},
+      {"year": 2024, "pop": 209061, "note": "confirmed — OCSTAT"}
+    ],
+    "density_per_km2": 13100,
+    "area_km2": 15.93
+  },
+  "age_pyramid": {
+    "year": "2023",
+    "source": "OCSTAT + BFS STATPOP 2023. NOTE: 5-year brackets by gender NOT available via web search — aggregate percentages only. Full brackets available in OCSTAT table T 01.01.12.03",
+    "data_quality": "PARTIAL — aggregates only, 5-year male/female brackets need OCSTAT direct access",
+    "aggregates": {
+      "under_20_pct": 0.189,
+      "age_20_29_pct": 0.122,
+      "age_30_39_pct": 0.170,
+      "age_40_49_pct": 0.145,
+      "age_50_59_pct": 0.131,
+      "age_60_69_pct": 0.108,
+      "age_70_79_pct": 0.071,
+      "over_80_pct": 0.065
+    },
+    "brackets": ["0-4","5-9","10-14","15-19","20-24","25-29","30-34","35-39","40-44","45-49","50-54","55-59","60-64","65-69","70-74","75-79","80-84","85-89","90+"],
+    "male": [5400, 5200, 5000, 4800, 5300, 7200, 8600, 8400, 7800, 7200, 7000, 6500, 5900, 5300, 4200, 3300, 2500, 1500, 700],
+    "female": [5200, 5000, 4800, 4600, 5500, 7500, 8800, 8700, 8000, 7400, 7200, 6800, 6400, 5800, 4700, 3900, 3300, 2300, 1500],
+    "male_total": 101800,
+    "female_total": 107400,
+    "population_ref": 206635,
+    "sum_check": "M+F = 209,200 — within 1.2% of 2023 BFS pop (206,635). Difference due to rounding of estimated brackets.",
+    "note": "5-year bracket counts are ESTIMATES derived from aggregate percentages and total population. Must be verified against OCSTAT direct data for publication."
+  },
+  "nationality": {
+    "year": "2024",
+    "source": "OCSTAT / The Local CH 2025 reporting",
+    "swiss_pct": 0.503,
+    "foreign_pct": 0.497,
+    "foreign_total": 103800,
+    "top_nationalities": [
+      {"country": "Portugal", "count": 18500, "pct": 0.178, "source": "QC-corrected: original 36,500 was canton-level. Scaled to commune using pop ratio GE-commune/GE-canton ≈ 0.39, rounded", "note": "estimate — commune share of cantonal figure"},
+      {"country": "France", "count": 17000, "pct": 0.164, "source": "QC-corrected: original 33,500 was canton-level", "note": "estimate"},
+      {"country": "Italy", "count": 10600, "pct": 0.102, "source": "QC-corrected: original 20,890 was canton-level", "note": "estimate"},
+      {"country": "Spain", "count": 8500, "pct": 0.082, "source": "QC-corrected: original 16,680 was canton-level", "note": "estimate"},
+      {"country": "United Kingdom", "count": 4200, "pct": 0.040, "note": "estimate — intl orgs concentration in commune"},
+      {"country": "Germany", "count": 3800, "pct": 0.037, "note": "estimate"},
+      {"country": "Kosovo", "count": 2800, "pct": 0.027, "note": "estimate"},
+      {"country": "Turkey", "count": 2200, "pct": 0.021, "note": "estimate"},
+      {"country": "Brazil", "count": 2000, "pct": 0.019, "note": "estimate"},
+      {"country": "Eritrea", "count": 1700, "pct": 0.016, "note": "estimate"}
+    ],
+    "note": "QC FIX: Original counts were canton-level (summed to 128,670, exceeding commune foreign pop of 103,800). Scaled to commune-level using GE commune/canton pop ratio (~0.39) with adjustments for commune concentration. Top 10 now sum to ~71,300 (69% of foreign pop). Remaining ~32,500 from 150+ other nationalities — consistent with Geneva's extreme diversity."
+  },
+  "languages": {
+    "year": "2000",
+    "source": "Swiss Federal Census 2000 — last commune-level language data. Post-2010 structural survey only gives cantonal estimates.",
+    "data_quality": "OLD — 25+ years. Linguistic landscape has shifted significantly.",
+    "french": 0.723,
+    "english": 0.044,
+    "spanish": 0.042,
+    "portuguese": 0.039,
+    "german": 0.038,
+    "italian": 0.037,
+    "other": 0.077
+  },
+  "employment": {
+    "year": "2019",
+    "source": "Ville de Genève — Portrait économique (IREG 2022 report citing BFS STATENT 2019)",
+    "primary_pct": 0.0002,
+    "secondary_pct": 0.056,
+    "tertiary_pct": 0.944,
+    "total_jobs": 215000,
+    "unemployment_rate": 0.038,
+    "unemployment_year": "2023",
+    "unemployment_source": "SECO / Statista — cantonal rate",
+    "note": "Geneva commune has more jobs (~215k) than residents (~209k). The difference is filled by frontaliers and domestic commuters."
+  },
+  "income": {
+    "year": "2022",
+    "source": "OCSTAT 2022 — median gross monthly salary",
+    "median_gross_monthly_chf": 6788,
+    "median_taxable_chf": null,
+    "note": "Median taxable income NOT found via web search. Available in OCSTAT domain 20.02 (T 20.02 tables). Monthly gross salary is canton-level, not commune-specific."
+  },
+  "education": {
+    "year": "2011",
+    "source": "BFS Structural Survey 2011 (commune-level)",
+    "data_quality": "OLD — 15 years. Tertiary attainment has likely increased further.",
+    "tertiary_pct": 0.443,
+    "secondary_pct": 0.370,
+    "obligatory_only_pct": 0.187
+  },
+  "housing": {
+    "year": "2022-2025",
+    "source": "BFS housing census 2022 (ownership), OCSTAT / Batimag 2025 (vacancy), RealAdvisor (rents)",
+    "ownership_pct": 0.189,
+    "rental_pct": 0.811,
+    "avg_rent_3room_chf": 1850,
+    "avg_rent_source": "RealAdvisor / Comparis estimates — approximate",
+    "vacancy_rate": 0.0034,
+    "vacancy_year": "2025",
+    "vacancy_source": "OCSTAT / Batimag reporting, 0.34-0.46% range",
+    "note": "Extremely tight housing market. Among lowest vacancy rates in Switzerland."
+  },
+  "commuters": {
+    "year": "2024",
+    "source": "OCSTAT / SEM STAF 2024 / immo-invest.ch",
+    "inbound_total": null,
+    "outbound_total": null,
+    "domestic_pendlers_note": "Domestic inbound/outbound commuter flows NOT found via web search. Data exists in BFS Pendlermobilitaet tables.",
+    "frontaliers_total": 115000,
+    "frontaliers_from_france": 113000,
+    "frontaliers_pct_of_jobs": 0.28,
+    "frontaliers_source": "RTS / SEM STAF 2024 record year — 115k is canton-level. QC-reconciled: context JSON had 115k, this file had 112k. Using 115k (more recent RTS reporting).",
+    "note": "Record frontalier numbers in 2024. Canton-level figure — city-specific breakdown not publicly available."
+  },
+  "international_orgs": {
+    "year": "2023",
+    "source": "geneve-int.ch — Genève internationale facts & figures",
+    "intl_org_count": 38,
+    "ngo_count": 750,
+    "intl_org_employees": 36000,
+    "note": "38 international organizations (UN European HQ, CERN, WHO, WTO, ICRC, WIPO, ILO, ITU, etc.) + 750+ NGOs. ~36k total international sector jobs."
+  },
+  "universities": {
+    "source": "Institutional websites, edurank.org, HES-SO Genève",
+    "institutions": [
+      {"name": "Université de Genève (UNIGE)", "students": 17100, "international_pct": 0.40, "year": "2023", "source": "unige.ch facts & figures", "note": "Research university, 9 faculties"},
+      {"name": "Graduate Institute (IHEID)", "students": 1082, "international_pct": 0.93, "year": "2024", "source": "edurank.org / graduateinstitute.ch", "note": "93% international — most international institution in corridor"},
+      {"name": "HES-SO Genève (HEG, HEAD, HEdS, HEPIA, HEM, HETS)", "students": 5500, "international_pct": 0.15, "year": "2023", "source": "HES-SO Genève website", "note": "6 schools of applied sciences under HES-SO umbrella"},
+      {"name": "Webster University Geneva", "students": 600, "international_pct": 0.85, "year": "2023", "source": "edurank.org", "note": "American university campus"},
+      {"name": "International University in Geneva (IUG)", "students": 300, "international_pct": 0.90, "year": "2023", "source": "estimated from web search"},
+      {"name": "EU Business School Geneva", "students": 250, "international_pct": 0.80, "year": "2023", "source": "estimated"},
+      {"name": "Other smaller institutions", "students": 500, "year": "2023", "note": "Various private schools and institutes"}
+    ],
+    "total_students": 25332,
+    "students_pct_of_pop": 0.121,
+    "note": "Geneva has significant academic weight (~25k students, 12% of population). UNIGE alone is comparable to UNIL. IHEID is uniquely international (93% foreign students)."
+  },
+  "research_metadata": {
+    "researched_by": "City101 Geneva demographics agent",
+    "date": "2026-03-04",
+    "web_searches_performed": 20,
+    "data_quality_flags": [
+      "Age pyramid 5-year brackets: ESTIMATED from aggregates — verify with OCSTAT T 01.01.12.03",
+      "Language data from 2000 census — severely outdated",
+      "Education data from 2011 — outdated",
+      "Population 2015-2020: interpolated between confirmed endpoints",
+      "Nationality top 5-10: rough estimates from cantonal proportions",
+      "Domestic commuter flows: NOT AVAILABLE — need BFS Pendlermobilitaet",
+      "Median taxable income: NOT AVAILABLE — need OCSTAT domain 20.02"
+    ]
+  }
+}
