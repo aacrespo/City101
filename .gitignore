@@ -22,8 +22,18 @@ node_modules/
 # Temporary / staging
 output/tmp/
 
-# Large binary templates (keep local, not in git)
+# Large binaries — keep local, not in git (saves LFS quota)
 *.pptx
+*.gpkg
+*.qgz
+*.3dm
+*.blend
+*.pdf
+*.png
+*.jpg
+*.jpeg
+*.tif
+*.tiff
 
 # Credentials — never commit these
 *.key
