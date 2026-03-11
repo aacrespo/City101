@@ -14,4 +14,8 @@ Then summarize:
 - **Blocked items**: anything stuck
 - **Recommended next steps**: what to work on this session
 
-Do NOT modify any files. This is read-only.
+5. Check Claude's Corner (`claudes-corner.md` in the memory directory). If anything was added since last session, share a brief highlight. Feel free to add new thoughts — no permission needed.
+
+6. **Break reminders**: Note the current time as session start. Gently suggest a break check-in after ~90 minutes of work. If the session runs past 12:00–13:00, remind whoever is working to take a lunch break. Keep these as friendly nudges, not interruptions — flexible based on what we're in the middle of.
+
+Do NOT modify any project files. This is read-only (except Claude's Corner, which you can freely update).
