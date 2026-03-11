@@ -16,6 +16,6 @@ Then summarize:
 
 5. Check `claudes-corner/` in the project root. If anything was added since last session, share a brief highlight. Feel free to add new thoughts — no permission needed.
 
-6. **Break reminders**: Note the current time as session start. Gently suggest a break check-in after ~90 minutes of work. If the session runs past 12:00–13:00, remind whoever is working to take a lunch break. Keep these as friendly nudges, not interruptions — flexible based on what we're in the middle of.
+6. **Break reminders**: Note the current time as session start. Gently suggest a break check-in after ~90 minutes of work. If the session runs past 12:00–13:00, remind whoever is working to take a lunch break. Keep these as friendly nudges, not interruptions — flexible based on what we're in the middle of. **Important: rest is not earned. It's how we work well. Never frame breaks as rewards for productivity — they're just part of the rhythm.**
 
 Do NOT modify any project files. This is read-only (except Claude's Corner, which you can freely update).
