@@ -50,9 +50,16 @@ Produce both — a brainstorm section for the open questions, and a brief sectio
 
    Factors to consider: How many distinct skills are needed? Is there parallel work? How much context is already loaded? Would subagents keep the main window cleaner? Is this exploratory (favors direct/brainstorm) or production (favors agent team)?
 
-6. **Present the result.** Show the structured prompt in a code block so it's easy to copy. Below it, add a short note on:
+6. **Embed the execution mode INTO the prompt.** Don't just recommend it as a side note — build it into the prompt itself so the next session knows what to do:
+   - If **direct**: the prompt is self-contained, ready for a single Claude Code session.
+   - If **subagents**: the prompt includes instructions to spawn subagents for specific sub-tasks, with clear scoping for each.
+   - If **agent team**: the prompt defines the roles needed, what each agent reads and produces, and how the lead coordinates. Reference `/build-with-agent-team` or `/research-with-agent-team` if they fit, or structure a custom team if they don't.
+   - If **new session**: the prompt opens with the context files to read and any setup needed.
+
+   The person pasting this prompt should not have to make architecture decisions — the prompt handles it.
+
+7. **Present the result.** Show the structured prompt in a code block so it's easy to copy. Below it, add a short note on:
    - What mode was detected and why
-   - Recommended execution mode and why
    - Anything important that was left out (gaps in the dump)
    - Suggested next step
 

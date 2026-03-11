@@ -31,6 +31,7 @@ You're reading this now. Three more files load automatically from `.claude/rules
 | `/session-end` | CONTEXT.md, CONTEXT_ANDREA.md, CONTEXT_HENNA.md, LOCKBOARD.md | session-management |
 | `/verify-data` | (target file) | data-verification |
 | `/brain-dump` | prompt-craft.md (auto-loaded from rules) | — |
+| `/team` | all role commands, prompt-craft.md | dynamic team assembly |
 
 ### Layer 3: Reference (loaded on demand)
 | File | What | Updated |

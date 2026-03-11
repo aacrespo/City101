@@ -32,8 +32,10 @@ Applied automatically when running `/brain-dump` and useful across all roles.
 |------|------|---------|
 | Claude Code direct | Focused, sequential, single-role | One file, one script, quick fix |
 | Code + subagents | Research-heavy, parallel search, context-sensitive | "Find all X", multiple sources, need synthesis |
-| Agent team | Multi-role, parallel production | Distinct deliverables, different skills needed simultaneously |
+| Agent team (`/team`) | Multi-role, parallel production | Distinct deliverables, different skills needed simultaneously |
 | New session | Context is cluttered or task is unrelated | Long conversation, switching topics entirely |
+
+**Proactive team assembly:** You do not need to wait for the user to invoke `/team`. When a task naturally splits into 2+ parallel roles, propose assembling a team or just do it. The `/team` command has the full protocol. When generating prompts (via `/brain-dump` or otherwise), embed team assembly instructions directly — don't reference slash commands, write the actual instructions so any session can follow them.
 
 ## Common anti-patterns to avoid
 - Over-aggressive language ("CRITICAL: You MUST") — causes overtriggering. Use calm instructions.
