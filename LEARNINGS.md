@@ -121,11 +121,20 @@ SBB Passagierfrequenz provides daily totals only. Hourly curves must be modeled 
 ### SwissTLM3D doesn't extend to Bex/Aigle
 Rail geometry from SwissTLM3D literally doesn't cover the eastern terminus of the corridor. Bex snap=14km, Aigle snap=6.3km. Use `original_coords_used` flag and accept the limitation.
 
+### Slash commands vs rules for proactive behavior
+Slash commands (`.claude/commands/`) are only triggered when the user types them. If you want Claude to do something proactively every session (like check a file, suggest a team, remind about breaks), it must be in `.claude/rules/` — those auto-load. Commands are for on-demand tools; rules are for always-on behavior.
+
+### Brain-dump prompts must be self-contained
+When `/brain-dump` generates a prompt for a new session, the execution mode (direct, subagents, agent team) must be embedded IN the prompt, not mentioned as a recommendation. The person pasting the prompt shouldn't have to make architecture decisions — the prompt handles it.
+
 ### Background agents fail on Write/Bash permissions
 Agent team subagents in parallel mode can't execute Write or Bash tools due to permission restrictions. Pragmatic fix: run agent scripts sequentially from the main session, not as parallel background agents.
 
 ### GA cost calibration diverges east of Lausanne
 v2 geometry used GA cost estimates to calibrate station distances, but these diverge from SBB km-post benchmarks east of Lausanne. v3 switched to SBB km-post calibration (r=0.9987).
+
+### On-site interviews don't work for institutional data
+Field visit March 10: staff at pharmacies, hospitals, and post offices all refused to share information and directed us to central offices. This is consistent across the entire corridor — institutional workers follow protocol. Alternative paths: contact central offices directly, use OFS employment data, pull from hospital annual reports. Don't plan field visits around getting interview data from frontline staff.
 
 ### Night worker counts are the load-bearing claim
 The 7-site healthcare supply chain argument rests on specific night worker numbers (4,600 / 1,680 / 1,500 / 400 / 300 / 730) that are NOT in any dataset. These were likely estimated externally. Field visits and OFS employment data are the verification path.

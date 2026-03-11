@@ -1,10 +1,10 @@
 # Lockboard
 
 ## Andrea
-- Working on: Repo created — reviewing all docs and updating stale content
+- Working on: Reviewing all docs, updating stale content, A03/A04 prep
 - Branch: main
 - Since: 10 March 2026
-- Note: CONTEXT.md, LEARNINGS.md, and other docs need a full pass to reflect current state
+- Note: Workflow infrastructure done (brain-dump, team, agents, retro, handoff). Doc review still in progress. Field visit completed Monday — all sites visited, but interviews blocked (staff referred us to central offices). TODO list for midterm exists, needs to be worked through.
 
 ## Henna
 - Working on: (not yet onboarded to new repo)
