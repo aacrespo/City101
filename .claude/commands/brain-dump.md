@@ -42,8 +42,17 @@ Produce a **task prompt** — ready to paste into a new Claude Code session:
 ### If Hybrid:
 Produce both — a brainstorm section for the open questions, and a brief section for the parts ready for action. Flag which parts need resolution before the brief can be executed.
 
-5. **Present the result.** Show the structured prompt in a code block so it's easy to copy. Below it, add a short note on:
+5. **Recommend the execution mode.** Based on the task shape, suggest how to run it:
+   - **Claude Code direct** — single-threaded work: edits, scripts, sequential tasks, quick questions. Use when the task is focused and one role can handle it.
+   - **Code + subagents** — research-heavy or parallel lookups where one main thread should synthesize results. Use when you need to explore multiple sources but want clean context. The main session stays focused while subagents dig.
+   - **Agent team** (`/build-with-agent-team` or `/research-with-agent-team`) — multi-role work where specialists run in parallel. Use when the task naturally splits into distinct roles (analyst + cartographer, builder + visualizer, etc.) and the pieces can progress independently.
+   - **New Claude session** — when the current context is cluttered or the task is unrelated to what's loaded. Suggest `/clear` or a fresh session with the structured prompt.
+
+   Factors to consider: How many distinct skills are needed? Is there parallel work? How much context is already loaded? Would subagents keep the main window cleaner? Is this exploratory (favors direct/brainstorm) or production (favors agent team)?
+
+6. **Present the result.** Show the structured prompt in a code block so it's easy to copy. Below it, add a short note on:
    - What mode was detected and why
+   - Recommended execution mode and why
    - Anything important that was left out (gaps in the dump)
    - Suggested next step
 

@@ -27,6 +27,14 @@ Applied automatically when running `/brain-dump` and useful across all roles.
 - Compress history into summaries preserving decisions and unresolved issues.
 - Subagents explore extensively, return condensed summaries.
 
+## Choosing the execution mode
+| Mode | When | Signals |
+|------|------|---------|
+| Claude Code direct | Focused, sequential, single-role | One file, one script, quick fix |
+| Code + subagents | Research-heavy, parallel search, context-sensitive | "Find all X", multiple sources, need synthesis |
+| Agent team | Multi-role, parallel production | Distinct deliverables, different skills needed simultaneously |
+| New session | Context is cluttered or task is unrelated | Long conversation, switching topics entirely |
+
 ## Common anti-patterns to avoid
 - Over-aggressive language ("CRITICAL: You MUST") — causes overtriggering. Use calm instructions.
 - Prescriptive step-by-step plans — Claude's reasoning often exceeds what you'd prescribe.
