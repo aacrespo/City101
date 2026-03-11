@@ -69,6 +69,7 @@ city101/
 ├── design_system/             ← SPEC.md — visual identity
 ├── observations/              ← INDEX.md — findings, dead ends
 ├── output/                    ← staging for agent team work
+├── claudes-corner/            ← free space for any Claude (no permission needed)
 ├── deliverables/              ← narrative drafts, submissions
 ├── .claude/commands/          ← slash commands (roles + utilities)
 ├── .claude/rules/             ← auto-loaded conventions
