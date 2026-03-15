@@ -96,9 +96,18 @@ This avoids merge conflicts and keeps this file focused on shared project state.
 - 7 PNGs (150 DPI) + 7 PDFs (300 DPI) in `site/maps/`
 
 ### Animation maps (in `deliverables/A03/`)
-- `train_pulse_24h.html` — 24h train animation
+- `train_pulse_24h.html` — 24h train animation (v1, rail only, 860 trips)
 - `map2_passenger_flow.html` — ridership-sized train dots
 - `city101_standalone.html` — standalone corridor map
+
+### Transport Pulse v3 (in `output/transport_pulse_v2/`, pending promotion)
+- `transport_pulse_24h_v2.html` — **multimodal** 24h animation (29,135 trips)
+- All modes: rail, bus, tram, metro, ferry, funicular, noctambus
+- MapLibre GL JS with 3D terrain, two render modes (dot/vector)
+- Collapsible analytics sidebar (donut, sparkline, mode bars, direction, pulse)
+- Shape-coded symbology, keyboard-driven interactivity
+- Feature log: `output/transport_pulse_v2/FEATURES_LOG.md`
+- Known issue: basemap tile transparency creates distracting terrain patches
 
 ## Animation data pipeline
 
@@ -216,7 +225,7 @@ Rail noise day/night, road noise day/night, EV 2035 projections (3 scenarios), h
 - **6x short-hop penalty**: CHF 2.57/km for Lancy hops vs CHF 0.39/km full corridor
 - **42× vs 12×**: City101 frequency variation 3.5× wider than Zurich's S8
 - **14/49 at peak, 13/49 at 11pm**: Archipelago barely pulses
-- **01:00–05:00**: The real dead window (not "all night")
+- **01:00–05:00**: The thin window — NOT dead. 188 trips active (38 Noctambus, 83 buses, 31 trams, trains). Real dead zone only ~01:30–03:30
 - **21.3h vs 0h**: Geneva vs St-Saphorin service windows
 
 ## Repo structure

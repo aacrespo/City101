@@ -23,24 +23,28 @@
 
 ## Handoff
 
-**What was done:** Built the AI workflow diagram for A04 midterm — a 6-screen (3×2) self-contained HTML visualization showing how Andrea & Henna work with AI. Six panels: animated terminal workflow, repo-as-brain file tree, prototypology generator flow, "what's different" vs ChatGPT, 5 agent roles, and the async handoff system. Terminal aesthetic with City101 design system. Includes play-sequence animation and hover cross-references. Tagged as v1 — Henna takes over for iteration.
+**What was done:** Built Transport Pulse v3 — a multimodal 24h interactive animation map with 29,135 trips across all transport modes (rail, bus, tram, metro, ferry, funicular, noctambus). Three major versions in one session: v1 (basic multimodal), v2 (MapLibre 3D terrain + vector glow mode + smooth bus animation), v3 (analytics sidebar + symbology overhaul + keyboard help panel + dead window fix). Full feature log at `output/transport_pulse_v2/FEATURES_LOG.md`.
 
 **What's next:**
-1. Henna iterates on AI workflow diagram v1 (content, styling, animations)
-2. Finish doc review pass (still in progress)
-3. Document field visit findings — all 7 sites visited Monday, no eastern trip needed
-4. Get Henna onboarded to git repo
-5. Continue A04 prototypology planning
+1. **Browser test** the v3 HTML and promote to `deliverables/A03/transport_pulse_24h_v2.html` if good
+2. **Fix basemap transparency** — terrain hillshade creates visible patches on dark bg. Try: disable hillshade, or reduce terrain exaggeration, or use different tile source
+3. **Future v4 ideas** (Andrea's wishlist): highway/traffic layer (ASTRA data), planes (out of scope), better symbology iteration
+4. Continue A04 prototypology planning
+5. Henna iterates on AI workflow diagram v1
 
 **Watch out for:**
-- AI workflow diagram is v1 — Henna owns next iteration. Files at `deliverables/A04/ai_workflow_diagram_v1.html` and `output/ai_workflow_diagram/`
-- On-site interviews were blocked everywhere — need alternative data sourcing strategy
-- Henna still not onboarded to new repo — soft blocker for collaboration
+- HTML is 21 MB — large because of 29K embedded trips. Opens fine in Chrome but may be slow on low-RAM machines
+- Dead window is NOT dead: 188 trips active 01:00–05:00 (38 Noctambus, 83 buses, 31 trams). Real quiet zone only ~01:30–03:30
+- geOps GTFS feed has no shapes.txt — route geometry extraction produced 0 features. Bus routes render without geometry lines.
+- Trams = Geneva only, Metro = Lausanne only (confirmed from GTFS data)
+- Arrow keys → map panning (MapLibre). Time scrubbing uses [ ] keys instead.
 
 **Files to look at:**
-- `deliverables/A04/ai_workflow_diagram_v1.html` — the 6-screen midterm diagram (v1)
-- `output/ai_workflow_diagram/` — working directory with staging copy
-- `prompts/PROMPT_ai_workflow_diagram.md` — the prompt that generated the plan
+- `output/transport_pulse_v2/transport_pulse_24h_v2.html` — the v3 interactive map
+- `output/transport_pulse_v2/FEATURES_LOG.md` — complete feature documentation
+- `scripts/animation/build_transport_pulse_v2.py` — the build script (modify HTML here)
+- `scripts/animation/agent_data_multimodal_gtfs.py` — GTFS extraction (Phase 1)
+- `scripts/animation/agent_interpolation_multimodal.py` — interpolation (Phase 2)
 
 ## Data verification gaps
 - **Night worker counts unsourced** — 4,600 / 1,680 / 1,500 / 400 / 300 / 730 are load-bearing claims with no CSV source. Need: OFS employment data, hospital annual reports, or field visit interviews.
@@ -63,3 +67,4 @@
 | 10-03 | Cairn Code | Git workflow setup: GitHub App, PR test, session commands updated, conventions updated, CONTEXT split. |
 | 11-03 | Cairn Code | Workflow infrastructure session: Claude's Corner (shared creative space), `/brain-dump` command + `prompt-craft.md` rules, `/team` command for dynamic agent assembly, agent definitions for all 5 roles, retro + handoff integrated into session-end, break/lunch reminders in session-start. 6 commits. Also: field visit update — all 7 sites visited Monday (ahead of schedule), but on-site interviews blocked everywhere (pharmacies, hospitals, post offices all said to contact central offices). |
 | 15-03 | Cairn Code | Built AI workflow diagram v1 for A04 midterm (6-screen HTML, tmux aesthetic, City101 design system). 6 panels: terminal workflow, repo file tree, prototypology flow, differentiators, agent roles, handoff system. Play animation + hover interactions. Henna takes over for v2. |
+| 15-03 | Cairn Code | Transport Pulse v3: multimodal 24h animation (29,135 trips, all modes). MapLibre 3D terrain, dot/vector render modes, analytics sidebar (donut, sparkline, mode bars, direction, pulse), symbology overhaul (ferry wake, IC bright edge, funicular cable, size hierarchy), keyboard help panel, dead window label fix. 3 pipeline scripts + 21MB self-contained HTML. |
