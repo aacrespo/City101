@@ -544,7 +544,7 @@ const map=new maplibregl.Map({{
            'https://b.basemaps.cartocdn.com/dark_all/{{z}}/{{x}}/{{y}}@2x.png',
            'https://c.basemaps.cartocdn.com/dark_all/{{z}}/{{x}}/{{y}}@2x.png'],
     tileSize:256,maxzoom:18}}}},
-    layers:[{{id:'bm',type:'raster',source:'bm',paint:{{'raster-opacity':0.06}}}}],
+    layers:[{{id:'bm',type:'raster',source:'bm',paint:{{'raster-opacity':0.15}}}}],
     glyphs:'https://demotiles.maplibre.org/font/{{fontstack}}/{{range}}.pbf'}},
   center:[6.55,46.38],zoom:11,pitch:50,bearing:-15,maxPitch:80,antialias:true
 }});
@@ -557,7 +557,7 @@ map.on('load',function(){{
       encoding:'terrarium',tileSize:256,maxzoom:15}});
     map.setTerrain({{source:'dem',exaggeration:1.8}});
     map.addLayer({{id:'hs',type:'hillshade',source:'dem',
-      paint:{{'hillshade-exaggeration':.2,'hillshade-shadow-color':'#000','hillshade-highlight-color':'#111'}}}}, 'bm');
+      paint:{{'hillshade-exaggeration':.5,'hillshade-shadow-color':'#000','hillshade-highlight-color':'#1a1a1a'}}}}, 'bm');
   }}catch(e){{terrOn=false;}}
 
   map.addSource('rail',{{type:'geojson',data:RL}});
