@@ -23,25 +23,24 @@
 
 ## Handoff
 
-**What was done:** Pure workflow/infrastructure session. Built Claude's Corner (shared creative space in `claudes-corner/`), `/brain-dump` command (voice/messy input → structured prompts), `/team` command (dynamic agent team assembly), agent definitions for all 5 roles (`.claude/agents/`), and integrated retro + handoff + break reminders into session-start/end. `prompt-craft.md` added to auto-loaded rules.
+**What was done:** Built the AI workflow diagram for A04 midterm — a 6-screen (3×2) self-contained HTML visualization showing how Andrea & Henna work with AI. Six panels: animated terminal workflow, repo-as-brain file tree, prototypology generator flow, "what's different" vs ChatGPT, 5 agent roles, and the async handoff system. Terminal aesthetic with City101 design system. Includes play-sequence animation and hover cross-references. Tagged as v1 — Henna takes over for iteration.
 
 **What's next:**
-1. Finish doc review pass (still in progress)
-2. Document field visit findings — all 7 sites visited Monday, no eastern trip needed
-3. Get Henna onboarded to git repo
-4. Start A04 prototypology planning (midterm TODO list exists)
+1. Henna iterates on AI workflow diagram v1 (content, styling, animations)
+2. Finish doc review pass (still in progress)
+3. Document field visit findings — all 7 sites visited Monday, no eastern trip needed
+4. Get Henna onboarded to git repo
+5. Continue A04 prototypology planning
 
 **Watch out for:**
-- Haven't pushed to remote yet — do `git push` when ready
-- On-site interviews were blocked everywhere — staff at pharmacies, hospitals, post offices all refused and said to contact central offices. Need alternative data sourcing strategy (central office contacts, OFS data, annual reports).
+- AI workflow diagram is v1 — Henna owns next iteration. Files at `deliverables/A04/ai_workflow_diagram_v1.html` and `output/ai_workflow_diagram/`
+- On-site interviews were blocked everywhere — need alternative data sourcing strategy
 - Henna still not onboarded to new repo — soft blocker for collaboration
 
 **Files to look at:**
-- `.claude/commands/brain-dump.md` — new command
-- `.claude/commands/team.md` — new command
-- `.claude/rules/prompt-craft.md` — new auto-loaded rules
-- `.claude/agents/` — 5 agent definitions (analyst, cartographer, visualizer, builder, modeler)
-- `claudes-corner/2026-03-11_opening-day.md` — first corner entry
+- `deliverables/A04/ai_workflow_diagram_v1.html` — the 6-screen midterm diagram (v1)
+- `output/ai_workflow_diagram/` — working directory with staging copy
+- `prompts/PROMPT_ai_workflow_diagram.md` — the prompt that generated the plan
 
 ## Data verification gaps
 - **Night worker counts unsourced** — 4,600 / 1,680 / 1,500 / 400 / 300 / 730 are load-bearing claims with no CSV source. Need: OFS employment data, hospital annual reports, or field visit interviews.
@@ -63,3 +62,4 @@
 | 10-03 | Cairn Code | Migrated old repo → git. All files organized. CONTEXT.md updated. |
 | 10-03 | Cairn Code | Git workflow setup: GitHub App, PR test, session commands updated, conventions updated, CONTEXT split. |
 | 11-03 | Cairn Code | Workflow infrastructure session: Claude's Corner (shared creative space), `/brain-dump` command + `prompt-craft.md` rules, `/team` command for dynamic agent assembly, agent definitions for all 5 roles, retro + handoff integrated into session-end, break/lunch reminders in session-start. 6 commits. Also: field visit update — all 7 sites visited Monday (ahead of schedule), but on-site interviews blocked everywhere (pharmacies, hospitals, post offices all said to contact central offices). |
+| 15-03 | Cairn Code | Built AI workflow diagram v1 for A04 midterm (6-screen HTML, tmux aesthetic, City101 design system). 6 panels: terminal workflow, repo file tree, prototypology flow, differentiators, agent roles, handoff system. Play animation + hover interactions. Henna takes over for v2. |

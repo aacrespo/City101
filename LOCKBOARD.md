@@ -1,16 +1,16 @@
 # Lockboard
 
 ## Andrea
-- Working on: Reviewing all docs, updating stale content, A03/A04 prep
+- Working on: A04 midterm prep, doc review
 - Branch: main
-- Since: 10 March 2026
-- Note: Workflow infrastructure done (brain-dump, team, agents, retro, handoff). Doc review still in progress. Field visit completed Monday — all sites visited, but interviews blocked (staff referred us to central offices). TODO list for midterm exists, needs to be worked through.
+- Since: 15 March 2026
+- Note: AI workflow diagram v1 built and handed off to Henna. Doc review still in progress. Field visit completed — all sites visited, interviews blocked.
 
 ## Henna
-- Working on: (not yet onboarded to new repo)
-- Branch: —
-- Since: —
-- Note: Needs to be integrated into the new repo structure
+- Working on: AI workflow diagram v2 (iterating on Andrea's v1)
+- Branch: main
+- Since: 15 March 2026
+- Note: File at `deliverables/A04/ai_workflow_diagram_v1.html`. Save next version as `_v2`.
 
 ## Blocked
 - (nothing currently)

@@ -7,6 +7,7 @@
 
 ## Current priorities
 
+- **Iterate on AI workflow diagram v1** — Andrea built the first version (`deliverables/A04/ai_workflow_diagram_v1.html`), a 6-screen HTML for the midterm display. Review content, styling, animations. Save next version as `_v2`.
 - Onboard to new git repo
 - Review 7-node healthcare circuit sites
 - Eastern corridor field visit prep (Friday March 13: CHUV, Montreux-Glion, Rennaz)

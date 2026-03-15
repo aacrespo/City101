@@ -15,7 +15,7 @@ Teammate: Henna Rafik (transit ridership, psycho-comfort, thermal flows, gap hou
 - **A01** (data collection): ✅ complete
 - **A02** (data synchronicity): ✅ submitted March 3rd. Crit happened March 2nd.
 - **A03** (field data): ⚠️ due March 10. All 7 sites visited Monday March 10 (ahead of schedule — no eastern trip needed). On-site interviews blocked everywhere (staff referred to central offices). Deliverables partially complete, doc review in progress.
-- **A04** (forms of sentience): assigned March 10, due March 30 (midterm). Rhino MCP prototypology. Starting now.
+- **A04** (forms of sentience): assigned March 10, due March 30 (midterm). Rhino MCP prototypology. AI workflow diagram v1 built (6-screen HTML). Starting now.
 
 See `briefs/` for full assignment specs and PPTX template.
 

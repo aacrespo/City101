@@ -25,7 +25,10 @@
       "Bash(find /Users/andreacrespo/CLAUDE/City101_ClaudeCode/visualizations/site/maps -type f -exec ls -lh {} ;)",
       "Bash(test:*)",
       "WebSearch",
-      "Bash(open:*)"
+      "Bash(open:*)",
+      "Bash(find:*)",
+      "Read(//tmp/**)",
+      "Read(//tmp/city101_gtfs/**)"
     ]
   }
 }
