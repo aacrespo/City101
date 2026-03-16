@@ -1,10 +1,10 @@
 # Lockboard
 
 ## Andrea
-- Working on: A04 midterm prep, Transport Pulse v3 review
+- Working on: A04 midterm prep, healthcare chain v3 done, Transport Pulse v3 still needs review
 - Branch: main
-- Since: 15 March 2026
-- Note: Transport Pulse v3 built (output/transport_pulse_v2/). Needs browser test + basemap transparency fix before promotion. Doc review still in progress.
+- Since: 16 March 2026
+- Note: Healthcare supply chain diagram v3 complete (deliverables/A04/healthcare_chain_diagram_v3.html). Ready for PPTX screenshot. Transport Pulse v3 still needs browser test + basemap fix.
 
 ## Henna
 - Working on: AI workflow diagram v2 (iterating on Andrea's v1)

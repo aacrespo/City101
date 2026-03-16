@@ -23,28 +23,25 @@
 
 ## Handoff
 
-**What was done:** Built Transport Pulse v3 — a multimodal 24h interactive animation map with 29,135 trips across all transport modes (rail, bus, tram, metro, ferry, funicular, noctambus). Three major versions in one session: v1 (basic multimodal), v2 (MapLibre 3D terrain + vector glow mode + smooth bus animation), v3 (analytics sidebar + symbology overhaul + keyboard help panel + dead window fix). Full feature log at `output/transport_pulse_v2/FEATURES_LOG.md`.
+**What was done:** Built healthcare supply chain diagram v1→v3 for A04 midterm PPTX. v1 is an interactive explorer (tooltips, time toggles, side panel). v2 is a split-view Day vs Dead Window at 1920×1080. v3 is the final version: 4 stacked layers (Emergency Response, Staff Access, Supply Chain, Facility Access), each showing the same 101km corridor split into Day vs Dead Window. Designed for screenshot → PPTX. Integrates Henna's 112-row medical supply chain dataset. Key finding confirmed: only 1 pharmacy open 24h on the entire 101km corridor (Pharma24 at HUG).
 
 **What's next:**
-1. **Browser test** the v3 HTML and promote to `deliverables/A03/transport_pulse_24h_v2.html` if good
-2. **Fix basemap transparency** — terrain hillshade creates visible patches on dark bg. Try: disable hillshade, or reduce terrain exaggeration, or use different tile source
-3. **Future v4 ideas** (Andrea's wishlist): highway/traffic layer (ASTRA data), planes (out of scope), better symbology iteration
-4. Continue A04 prototypology planning
-5. Henna iterates on AI workflow diagram v1
+1. **Screenshot v3** for PPTX — open in Chrome, DevTools → 1920×1080 → Capture Full Size Screenshot
+2. **Continue A04 midterm** — other diagrams/visualizations needed for 6-screen display
+3. **Henna** should review v3 and add any missing facilities from her dataset
+4. Transport Pulse v3 still needs browser test + basemap fix
 
 **Watch out for:**
-- HTML is 21 MB — large because of 29K embedded trips. Opens fine in Chrome but may be slow on low-RAM machines
-- Dead window is NOT dead: 188 trips active 01:00–05:00 (38 Noctambus, 83 buses, 31 trams). Real quiet zone only ~01:30–03:30
-- geOps GTFS feed has no shapes.txt — route geometry extraction produced 0 features. Bus routes render without geometry lines.
-- Trams = Geneva only, Metro = Lausanne only (confirmed from GTFS data)
-- Arrow keys → map panning (MapLibre). Time scrubbing uses [ ] keys instead.
+- v3 auto-scales to viewport but is designed at 1920×1080 — screenshot at that resolution for best results
+- CHUV ER cases = 92,674 (from Henna's data) — different from the "NOT FOUND" in v1 research
+- Pharma24 at HUG = only 24h pharmacy. "Pharmacie 24 Lausanne" is NOT 24h despite name (closes at midnight)
 
 **Files to look at:**
-- `output/transport_pulse_v2/transport_pulse_24h_v2.html` — the v3 interactive map
-- `output/transport_pulse_v2/FEATURES_LOG.md` — complete feature documentation
-- `scripts/animation/build_transport_pulse_v2.py` — the build script (modify HTML here)
-- `scripts/animation/agent_data_multimodal_gtfs.py` — GTFS extraction (Phase 1)
-- `scripts/animation/agent_interpolation_multimodal.py` — interpolation (Phase 2)
+- `deliverables/A04/healthcare_chain_diagram_v3.html` — final 4-layer gap analysis (USE THIS)
+- `deliverables/A04/healthcare_chain_diagram_v2.html` — split-view version (backup)
+- `deliverables/A04/healthcare_chain_diagram.html` — v1 interactive explorer
+- `deliverables/A04/healthcare_chain_research.md` — full sourced research document
+- `output/healthcare_chain/city101_medical_supply_chain_v2.numbers` — Henna's 112-row dataset
 
 ## Data verification gaps
 - **Night worker counts unsourced** — 4,600 / 1,680 / 1,500 / 400 / 300 / 730 are load-bearing claims with no CSV source. Need: OFS employment data, hospital annual reports, or field visit interviews.
@@ -68,3 +65,4 @@
 | 11-03 | Cairn Code | Workflow infrastructure session: Claude's Corner (shared creative space), `/brain-dump` command + `prompt-craft.md` rules, `/team` command for dynamic agent assembly, agent definitions for all 5 roles, retro + handoff integrated into session-end, break/lunch reminders in session-start. 6 commits. Also: field visit update — all 7 sites visited Monday (ahead of schedule), but on-site interviews blocked everywhere (pharmacies, hospitals, post offices all said to contact central offices). |
 | 15-03 | Cairn Code | Built AI workflow diagram v1 for A04 midterm (6-screen HTML, tmux aesthetic, City101 design system). 6 panels: terminal workflow, repo file tree, prototypology flow, differentiators, agent roles, handoff system. Play animation + hover interactions. Henna takes over for v2. |
 | 15-03 | Cairn Code | Transport Pulse v3: multimodal 24h animation (29,135 trips, all modes). MapLibre 3D terrain, dot/vector render modes, analytics sidebar (donut, sparkline, mode bars, direction, pulse), symbology overhaul (ferry wake, IC bright edge, funicular cable, size hierarchy), keyboard help panel, dead window label fix. 3 pipeline scripts + 21MB self-contained HTML. |
+| 16-03 | Cairn Code | Healthcare supply chain diagram v1→v3 for A04 midterm. v3 = 4-layer gap analysis (emergency, staff, supply, facility access). Integrated Henna's 112-row dataset. Confirmed: only 1 24h pharmacy on 101km corridor. |
