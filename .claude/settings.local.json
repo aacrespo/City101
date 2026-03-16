@@ -1,0 +1,39 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//c/Users/Henna Rafik/Desktop/Huang - Sentient/data_henna/**)",
+      "Bash(ls -lah *.csv)",
+      "Bash(python -c \"import geopandas; print\\(f''geopandas {geopandas.__version__}''\\)\")",
+      "WebFetch(domain:www.informationisbeautifulawards.com)",
+      "Bash(python:*)",
+      "Bash(ls -lh \"/c/Users/Henna Rafik/Desktop/Huang - Sentient/data_henna/\"*.gpkg)",
+      "Bash(ogrinfo \"/c/Users/Henna Rafik/Desktop/Huang - Sentient/data_henna/City101_Streets.gpkg\")",
+      "Bash(gdalinfo \"/c/Users/Henna Rafik/Desktop/Huang - Sentient/data_henna/City101_Streets.gpkg\")",
+      "WebFetch(domain:darkhorseanalytics.com)",
+      "Bash(python3:*)",
+      "WebFetch(domain:darkhorsevisualization.com)",
+      "Bash(where python3)",
+      "Bash(where python)",
+      "Bash(where py)",
+      "Bash(ls /c/Python*/python.exe)",
+      "Read(//c/Users/Henna Rafik/AppData/Local/Programs/Python/**)",
+      "Bash(\"/c/Users/Henna Rafik/AppData/Local/Programs/Python/Python313/python.exe\" -c \":*)",
+      "WebSearch",
+      "WebFetch(domain:www.fastcompany.com)",
+      "WebFetch(domain:www.huffingtonpost.com)",
+      "WebFetch(domain:www.timeout.com)",
+      "Bash(PYTHON=\"/c/Users/Henna Rafik/AppData/Local/Programs/Python/Python313/python.exe\")",
+      "Bash(\"$PYTHON\" -c \"import geopandas; import pandas; import requests; import shapely; print\\(''geopandas:'', geopandas.__version__\\); print\\(''pandas:'', pandas.__version__\\); print\\(''shapely:'', shapely.__version__\\); print\\(''requests OK''\\)\")",
+      "Bash(\"$PYTHON\" -m pip install requests)",
+      "Bash(\"/c/Users/Henna Rafik/AppData/Local/Programs/Python/Python313/python.exe\" -m pip install requests)",
+      "Bash(\"/c/Users/Henna Rafik/AppData/Local/Programs/Python/Python313/python.exe\" -c \"import geopandas; import pandas; import requests; import shapely; print\\(''geopandas:'', geopandas.__version__\\); print\\(''pandas:'', pandas.__version__\\); print\\(''shapely:'', shapely.__version__\\); print\\(''requests OK''\\)\")",
+      "Bash(\"/c/Users/Henna Rafik/AppData/Local/Programs/Python/Python313/python.exe\" \"/c/Users/Henna Rafik/Desktop/Huang - Sentient/Claude Code/preprocess_buildings.py\")",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(\"/c/Users/Henna Rafik/AppData/Local/Programs/Python/Python313/python.exe\" \"/c/Users/Henna Rafik/Desktop/Huang - Sentient/Claude Code/enrich_buildings.py\")",
+      "Bash(\"/c/Users/Henna Rafik/AppData/Local/Programs/Python/Python313/python.exe\" \"/c/Users/Henna Rafik/Desktop/Huang - Sentient/Claude Code/bundle_standalone.py\")",
+      "Bash(grep -E \"\\\\.\\(qgz|md|txt|json\\)$\")",
+      "Bash(find 'c:\\\\Users\\\\Henna Rafik\\\\Desktop\\\\Huang - Sentient\\\\Claude Code' -name SPEC.md -o -name *design* -type f)",
+      "Bash(find 'c:\\\\Users\\\\Henna Rafik\\\\Desktop\\\\Huang - Sentient\\\\Claude Code\\\\City101' -type f \\\\\\(-name *.html -o -name *.css \\\\\\))"
+    ]
+  }
+}
