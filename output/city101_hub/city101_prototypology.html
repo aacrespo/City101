@@ -1,0 +1,1572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>City101 — Relay-Lock Prototypology Explorer</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --bg: #0a0a0f;
+  --bg2: #111118;
+  --bg3: #1a1a24;
+  --text: #e8e6e1;
+  --text-dim: #8a8880;
+  --text-bright: #ffffff;
+  --accent: #c9a84c;
+  --accent-dim: #8a7548;
+  --glass-bg: rgba(255,255,255,0.03);
+  --glass-border: rgba(255,255,255,0.06);
+  --glass-hover: rgba(255,255,255,0.08);
+  --cat-pharma: #7c4dff;
+  --cat-food: #ff9800;
+  --cat-staff: #29b6f6;
+  --cat-patient: #ef5350;
+  --cat-postal: #ffd54f;
+  --cat-blood: #e91e63;
+  --cat-waste: #78909c;
+  --cat-emergency: #ff1744;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* ─── TOP BAR ─── */
+.top-bar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 20px;
+  background: rgba(10,10,15,0.92);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--glass-border);
+  height: 56px;
+}
+
+.title-block h1 {
+  font-family: 'Instrument Serif', serif;
+  font-weight: 400;
+  font-size: 20px;
+  color: var(--text-bright);
+  letter-spacing: -0.3px;
+}
+.title-block .subtitle {
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-top: -2px;
+}
+.title-block .subtitle em {
+  color: var(--accent);
+  font-style: normal;
+  font-weight: 600;
+}
+
+.time-control {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.time-display {
+  font-family: 'DM Mono', monospace;
+  font-size: 28px;
+  font-weight: 500;
+  color: var(--accent);
+  min-width: 80px;
+  text-align: center;
+  letter-spacing: 1px;
+}
+
+.time-slider-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+#timeSlider {
+  width: 200px;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  background: var(--bg3);
+  border-radius: 2px;
+  outline: none;
+  cursor: pointer;
+}
+#timeSlider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: var(--accent);
+  cursor: pointer;
+  border: 2px solid var(--bg);
+}
+#timeSlider::-moz-range-thumb {
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: var(--accent);
+  cursor: pointer;
+  border: 2px solid var(--bg);
+}
+
+.play-btn {
+  background: none;
+  border: 1px solid var(--glass-border);
+  color: var(--text-dim);
+  width: 32px; height: 32px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+.play-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.play-btn.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--bg);
+}
+
+.dead-window-badge {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--cat-emergency);
+  background: rgba(255,23,68,0.12);
+  border: 1px solid rgba(255,23,68,0.3);
+  padding: 3px 10px;
+  border-radius: 4px;
+  opacity: 0;
+  transition: opacity 0.5s;
+  text-transform: uppercase;
+}
+.dead-window-badge.visible { opacity: 1; }
+
+.top-right-btns {
+  display: flex;
+  gap: 8px;
+}
+
+.nav-btn {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  color: var(--text-dim);
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.nav-btn:hover {
+  border-color: var(--accent);
+  color: var(--text);
+}
+.nav-btn.active {
+  background: rgba(201,168,76,0.15);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* ─── MAP ─── */
+#map {
+  position: fixed;
+  top: 56px; left: 0; right: 0; bottom: 0;
+  z-index: 1;
+}
+
+#particleCanvas {
+  position: fixed;
+  top: 56px; left: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* ─── FLOW TOGGLES ─── */
+.flow-panel {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 500;
+  display: flex;
+  gap: 6px;
+  padding: 8px 12px;
+  background: rgba(10,10,15,0.92);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.flow-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 11px;
+  font-family: 'DM Sans', sans-serif;
+  color: var(--text);
+  border: 1px solid transparent;
+  transition: all 0.2s;
+  user-select: none;
+}
+.flow-toggle:hover {
+  background: var(--glass-hover);
+}
+.flow-toggle.inactive {
+  opacity: 0.3;
+}
+.flow-toggle .dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* ─── KEY NUMBERS PANEL ─── */
+.stats-panel {
+  position: fixed;
+  bottom: 76px;
+  left: 16px;
+  z-index: 500;
+  background: rgba(10,10,15,0.92);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+  border-radius: 10px;
+  padding: 14px 16px;
+  width: 220px;
+}
+
+.stats-panel h3 {
+  font-family: 'Instrument Serif', serif;
+  font-weight: 400;
+  font-size: 14px;
+  color: var(--accent);
+  margin-bottom: 10px;
+}
+
+.stat-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 3px 0;
+  font-size: 11px;
+}
+.stat-label { color: var(--text-dim); }
+.stat-value {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--text);
+}
+.stat-value.accent { color: var(--accent); }
+.stat-value.danger { color: var(--cat-emergency); }
+
+/* ─── LOCK DETAIL PANEL ─── */
+.lock-panel {
+  position: fixed;
+  top: 56px;
+  right: -420px;
+  width: 400px;
+  bottom: 0;
+  z-index: 800;
+  background: rgba(10,10,15,0.96);
+  backdrop-filter: blur(30px);
+  border-left: 1px solid var(--glass-border);
+  overflow-y: auto;
+  transition: right 0.35s cubic-bezier(0.4,0,0.2,1);
+  padding: 0;
+}
+.lock-panel.open {
+  right: 0;
+}
+
+.lock-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--glass-border);
+  position: sticky;
+  top: 0;
+  background: rgba(10,10,15,0.96);
+  backdrop-filter: blur(30px);
+  z-index: 2;
+}
+
+.lock-panel-nav {
+  display: flex;
+  gap: 6px;
+}
+
+.lock-nav-btn {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  color: var(--text-dim);
+  width: 28px; height: 28px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+.lock-nav-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.lock-close-btn {
+  background: none;
+  border: 1px solid var(--glass-border);
+  color: var(--text-dim);
+  width: 28px; height: 28px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+.lock-close-btn:hover {
+  border-color: var(--cat-emergency);
+  color: var(--cat-emergency);
+}
+
+.lock-panel-body {
+  padding: 20px;
+}
+
+.lock-node-number {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--accent);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.lock-node-name {
+  font-family: 'Instrument Serif', serif;
+  font-size: 26px;
+  font-weight: 400;
+  color: var(--text-bright);
+  margin-bottom: 4px;
+  line-height: 1.2;
+}
+
+.lock-type-badge {
+  display: inline-block;
+  font-size: 11px;
+  font-family: 'DM Mono', monospace;
+  color: var(--accent);
+  border: 1px solid rgba(201,168,76,0.3);
+  background: rgba(201,168,76,0.08);
+  padding: 2px 10px;
+  border-radius: 4px;
+  margin-bottom: 16px;
+}
+
+.lock-km {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-left: 8px;
+}
+
+.lock-section {
+  margin-bottom: 20px;
+}
+
+.lock-section-title {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--text-dim);
+  margin-bottom: 8px;
+}
+
+.lock-description {
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--text);
+}
+
+.lock-states {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
+.lock-state {
+  flex: 1;
+  text-align: center;
+}
+.lock-state-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 13px;
+  color: var(--text);
+}
+.lock-state-arrow {
+  font-size: 18px;
+  color: var(--accent);
+}
+
+.lock-diagram-container {
+  width: 100%;
+  height: 180px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+
+.lock-analogy {
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--text-dim);
+  font-style: italic;
+  padding: 10px 14px;
+  border-left: 2px solid var(--accent-dim);
+}
+
+.lock-stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+
+.lock-stat-item {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 6px;
+  padding: 8px 10px;
+}
+.lock-stat-item .label {
+  font-size: 10px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.lock-stat-item .value {
+  font-family: 'DM Mono', monospace;
+  font-size: 13px;
+  color: var(--text);
+  margin-top: 2px;
+}
+
+.lock-flows {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.lock-flow-tag {
+  font-size: 10px;
+  font-family: 'DM Mono', monospace;
+  padding: 3px 8px;
+  border-radius: 4px;
+  border: 1px solid;
+}
+
+.lock-chamber {
+  font-size: 12px;
+  color: var(--text-dim);
+  font-family: 'DM Mono', monospace;
+  padding: 6px 10px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 6px;
+}
+
+/* ─── CONCEPT PANEL ─── */
+.concept-overlay {
+  position: fixed;
+  top: 56px; left: 0; right: 0; bottom: 0;
+  z-index: 900;
+  background: rgba(10,10,15,0.96);
+  backdrop-filter: blur(30px);
+  overflow-y: auto;
+  padding: 40px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s;
+}
+.concept-overlay.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.concept-content {
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.concept-content h2 {
+  font-family: 'Instrument Serif', serif;
+  font-size: 36px;
+  font-weight: 400;
+  color: var(--text-bright);
+  margin-bottom: 24px;
+}
+
+.concept-content h3 {
+  font-family: 'Instrument Serif', serif;
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--accent);
+  margin-top: 32px;
+  margin-bottom: 12px;
+}
+
+.concept-content p {
+  font-size: 14px;
+  line-height: 1.8;
+  color: var(--text);
+  margin-bottom: 16px;
+}
+
+.concept-content .highlight {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.concept-content .key-insight {
+  padding: 16px 20px;
+  border-left: 3px solid var(--accent);
+  background: rgba(201,168,76,0.06);
+  border-radius: 0 8px 8px 0;
+  margin: 20px 0;
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--text);
+  font-style: italic;
+}
+
+.concept-numbers {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin: 24px 0;
+}
+.concept-num-card {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 8px;
+  padding: 12px 14px;
+}
+.concept-num-card .num {
+  font-family: 'DM Mono', monospace;
+  font-size: 18px;
+  color: var(--accent);
+}
+.concept-num-card .desc {
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-top: 2px;
+}
+
+.concept-close {
+  position: fixed;
+  top: 72px;
+  right: 24px;
+  z-index: 910;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  color: var(--text-dim);
+  width: 36px; height: 36px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  opacity: 0;
+  pointer-events: none;
+}
+.concept-close.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+.concept-close:hover {
+  border-color: var(--cat-emergency);
+  color: var(--cat-emergency);
+}
+
+/* ─── DIMMING for dead window ─── */
+.dim-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0);
+  pointer-events: none;
+  z-index: 3;
+  transition: background 1s;
+}
+
+/* ─── LEAFLET OVERRIDES ─── */
+.leaflet-control-attribution { display: none !important; }
+.leaflet-control-zoom { display: none !important; }
+
+.node-tooltip {
+  background: rgba(10,10,15,0.92) !important;
+  border: 1px solid var(--glass-border) !important;
+  color: var(--text) !important;
+  font-family: 'DM Sans', sans-serif !important;
+  font-size: 12px !important;
+  padding: 6px 10px !important;
+  border-radius: 6px !important;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.5) !important;
+}
+.node-tooltip .leaflet-tooltip-arrow { display: none; }
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 768px) {
+  .top-bar { padding: 8px 12px; height: auto; flex-wrap: wrap; gap: 8px; }
+  .title-block h1 { font-size: 16px; }
+  .time-display { font-size: 22px; }
+  #timeSlider { width: 120px; }
+  .stats-panel { bottom: auto; top: 60px; left: 10px; font-size: 10px; padding: 8px 10px; max-width: 140px; }
+  .flow-panel { bottom: 10px; padding: 6px 8px; gap: 4px; }
+  .flow-toggle { padding: 4px 6px; font-size: 10px; }
+  .lock-panel { width: 100%; right: -100%; }
+  .concept-overlay { padding: 20px; }
+  .concept-content h2 { font-size: 26px; }
+  .concept-numbers { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 480px) {
+  .time-slider-wrap { display: none; }
+  .dead-window-badge { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="top-bar">
+  <div class="title-block">
+    <h1>The Relay-Lock</h1>
+    <div class="subtitle"><em>7 nodes</em> &middot; Geneva&ndash;Villeneuve, 101 km</div>
+  </div>
+  <div class="time-control">
+    <button class="play-btn" id="playBtn" title="Play/Pause">&#9654;</button>
+    <div class="time-slider-wrap">
+      <span style="font-family:'DM Mono',monospace;font-size:10px;color:var(--text-dim)">00:00</span>
+      <input type="range" id="timeSlider" min="0" max="1440" value="480" step="1">
+      <span style="font-family:'DM Mono',monospace;font-size:10px;color:var(--text-dim)">24:00</span>
+    </div>
+    <div class="time-display" id="timeDisplay">08:00</div>
+    <div class="dead-window-badge" id="deadBadge">DEAD WINDOW</div>
+  </div>
+  <div class="top-right-btns">
+    <button class="nav-btn" id="resetViewBtn" title="Reset map view">&#x2302;</button>
+    <button class="nav-btn" id="aboutBtn">About</button>
+  </div>
+</div>
+
+<!-- MAP -->
+<div id="map"></div>
+<canvas id="particleCanvas"></canvas>
+
+<!-- DIM OVERLAY -->
+<div class="dim-overlay" id="dimOverlay"></div>
+
+<!-- FLOW TOGGLES -->
+<div class="flow-panel" id="flowPanel"></div>
+
+<!-- KEY NUMBERS PANEL -->
+<div class="stats-panel" id="statsPanel">
+  <h3>Corridor</h3>
+  <div class="stat-row"><span class="stat-label">Length</span><span class="stat-value accent">101 km</span></div>
+  <div class="stat-row"><span class="stat-label">Hospital workers</span><span class="stat-value">32,000+</span></div>
+  <div class="stat-row"><span class="stat-label">Night shift</span><span class="stat-value danger">4,600&ndash;6,300</span></div>
+  <div class="stat-row"><span class="stat-label">Cross-border</span><span class="stat-value">7,200</span></div>
+  <div class="stat-row"><span class="stat-label">Dead window</span><span class="stat-value danger">00:30&ndash;05:00</span></div>
+  <div class="stat-row"><span class="stat-label">Night transit</span><span class="stat-value danger">ZERO</span></div>
+  <div class="stat-row"><span class="stat-label">ERs on corridor</span><span class="stat-value">5</span></div>
+  <div class="stat-row"><span class="stat-label">Galexis packs/day</span><span class="stat-value">100k</span></div>
+</div>
+
+<!-- LOCK DETAIL PANEL -->
+<div class="lock-panel" id="lockPanel">
+  <div class="lock-panel-header">
+    <div class="lock-panel-nav">
+      <button class="lock-nav-btn" id="lockPrev" title="Previous node">&#8592;</button>
+      <button class="lock-nav-btn" id="lockNext" title="Next node">&#8594;</button>
+    </div>
+    <button class="lock-close-btn" id="lockClose">&times;</button>
+  </div>
+  <div class="lock-panel-body" id="lockBody"></div>
+</div>
+
+<!-- CONCEPT PANEL -->
+<div class="concept-overlay" id="conceptOverlay">
+  <div class="concept-content">
+    <h2>The Relay-Lock</h2>
+    <p>A prototypology for the 24-hour healthcare supply chain along the Geneva&ndash;Villeneuve corridor.</p>
+
+    <h3>Two concepts, one system</h3>
+    <p><span class="highlight">Relay</span> &mdash; system level. A chain of 7 nodes along the corridor. Remove any node and the chain breaks. Each node depends on the others to keep the 24-hour city running.</p>
+    <p><span class="highlight">Lock</span> &mdash; building level. Architecture managing a threshold between two incompatible states, borrowed from canal lock logic. A chamber where transition happens.</p>
+
+    <div class="key-insight">
+      The occupant is stationary &mdash; the space transitions around them. Like a canal lock where the boat stays still while water levels change.
+    </div>
+
+    <h3>Three scales</h3>
+    <p><span class="highlight">Infrastructure</span> (Nodes 1, 4) &mdash; where healthcare cargo meets the city. Logistics hubs, sorting centers, the invisible backbone.</p>
+    <p><span class="highlight">Staff access</span> (Nodes 2, 3, 5, 7) &mdash; how 32,000 workers reach their shifts. The gap between transit and hospital.</p>
+    <p><span class="highlight">Patient access</span> (Nodes 2, 5, 6) &mdash; transfers, referrals, family visits. The human side of the chain.</p>
+
+    <h3>The dead window</h3>
+    <p>Between <span class="highlight">00:30 and 05:00</span>, there is zero weekday public transport on the entire 101 km corridor. All 8 supply chain categories become 100% road-dependent. 4,600&ndash;6,300 healthcare workers are stranded or driving. The chamber &mdash; the architectural space of the lock &mdash; is most needed precisely when the city shuts down.</p>
+
+    <div class="concept-numbers">
+      <div class="concept-num-card"><div class="num">101 km</div><div class="desc">Corridor length</div></div>
+      <div class="concept-num-card"><div class="num">7</div><div class="desc">Relay-Lock nodes</div></div>
+      <div class="concept-num-card"><div class="num">32,000+</div><div class="desc">Hospital workers</div></div>
+      <div class="concept-num-card"><div class="num">4.5 hrs</div><div class="desc">Dead window duration</div></div>
+      <div class="concept-num-card"><div class="num">8</div><div class="desc">Supply chain flows</div></div>
+      <div class="concept-num-card"><div class="num">ZERO</div><div class="desc">Night transit service</div></div>
+    </div>
+  </div>
+</div>
+<button class="concept-close" id="conceptClose">&times;</button>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+// DATA — inlined from JSON
+// ═══════════════════════════════════════════════════════════════
+
+const NODES = [
+  {id:1,name:"Geneva North Industrial Belt",short_name:"Cargo Lock",km:8,lat:46.222,lon:6.097,lock_type:"Cargo Lock",state_a:"Cargo",state_b:"City",chamber_program:"Logistics interface + worker rest",description:"ZIMEYSA industrial zone \u2014 380+ hectares, 500+ companies. Where healthcare cargo meets the city. Swiss Post, pharma sorting, medical device manufacturing. Workers invisible despite being the backbone of the supply chain.",vertical_transport_analogy:"Freight elevator \u2014 moves goods between incompatible floors. The cargo lock mediates between industrial logistics (trucks, pallets, cold chain) and urban fabric (streets, people, civic life).",key_stats:{zone_area:"380+ ha",companies:"500+",detail:"ZIMEYSA + RUBIX"},flows:["pharma","food","postal","waste","staff"]},
+  {id:2,name:"Nyon Hospital + Genolier",short_name:"Vertical Connector",km:25,lat:46.384,lon:6.236,lock_type:"Vertical Connector",state_a:"Valley",state_b:"Hilltop",chamber_program:"Vertical connector + staff/patient dual use",description:"GHOL Nyon in the valley (1,000 staff, 103k catchment), Clinique de Genolier on the hilltop (358 staff + 230 doctors). Last NStCM train to Genolier at 21:29 \u2014 after that, car-only. Two healthcare worlds separated by 400m of altitude.",vertical_transport_analogy:"Funicular \u2014 connects two altitudes with a single mechanical system. The vertical connector links valley public hospital to hilltop private clinic, bridging the gap when the last train leaves at 21:29.",key_stats:{ghol_staff:"~1,000",genolier:"358+230",catchment:"103,000",last_train:"21:29"},flows:["staff","patient","blood","emergency","pharma"]},
+  {id:3,name:"Morges Hospital Gap",short_name:"Temporal Lock",km:48,lat:46.511,lon:6.494,lock_type:"Temporal Lock",state_a:"Last train",state_b:"First train",chamber_program:"Night shelter + elderly mobility hub",description:"EHC Morges \u2014 2,000 staff, 150k catchment. The purest lock concept: the station exists, the hospital exists, but between 00:30 and 05:00 there is no connection. 300\u2013400 night workers face a 4.5-hour void. The temporal lock bridges two moments in time.",vertical_transport_analogy:"Airlock \u2014 a chamber that holds you while the environment changes. The temporal lock holds night-shift workers in a viable space while time transitions from \u2018last service\u2019 to \u2018first service\u2019.",key_stats:{staff:"~2,000",night:"300\u2013400",catchment:"150,000",gap:"23/17 km"},flows:["staff","patient","pharma","food","emergency"]},
+  {id:4,name:"Crissier-Bussigny Night Belt",short_name:"Visibility Lock",km:58,lat:46.548,lon:6.552,lock_type:"Visibility Lock",state_a:"Invisible",state_b:"Visible",chamber_program:"Supply chain civic space + worker visibility",description:"The densest healthcare logistics concentration on the corridor. PLEXUS-Sant\u00e9 (3,500 orders/day), CHUV food production (6,800 meals/day), Galexis pharma (100k packs/day), B. Braun (12M medical devices/year). Thousands of workers, zero civic presence.",vertical_transport_analogy:"Service elevator \u2014 the one nobody sees, running behind the walls. The visibility lock reveals the hidden infrastructure that keeps hospitals running.",key_stats:{plexus:"3,500/day",meals:"6,800+/day",galexis:"100k/day",bbraun:"12M/yr"},flows:["pharma","food","postal","waste","staff","blood"]},
+  {id:5,name:"Lausanne CHUV",short_name:"Gradient Dispatcher",km:65,lat:46.517,lon:6.629,lock_type:"Gradient Dispatcher",state_a:"Uphill",state_b:"Downhill",chamber_program:"Gradient connector + equity corrector",description:"CHUV \u2014 12,844 staff, 800k referral catchment. Best-connected hospital (M2 metro direct). But Lausanne's extreme topography creates an equity gradient: the M2 runs vertically, but the hospital\u2019s supply chain runs horizontally.",vertical_transport_analogy:"Elevator bank \u2014 multiple cars serving different floors simultaneously. The gradient dispatcher routes multiple supply chain flows across Lausanne\u2019s steep terrain.",key_stats:{staff:"12,844",catchment:"800,000",transfers:">10k/yr",night:"1,900\u20132,600"},flows:["pharma","food","staff","patient","blood","waste","emergency","postal"]},
+  {id:6,name:"Montreux\u2013Glion",short_name:"Altitude Lock",km:85,lat:46.436,lon:6.910,lock_type:"Altitude Lock",state_a:"Mountain",state_b:"Lake",chamber_program:"Altitude connector + family/rehab access",description:"Montreux at lake level, Glion rehabilitation clinics at 700m altitude. The MOB and funicular connect two healthcare ecosystems \u2014 acute care below, long-term rehabilitation above.",vertical_transport_analogy:"Mountain railway \u2014 a mechanical system that makes altitude accessible. The altitude lock connects lake-level acute care with mountain rehabilitation.",key_stats:{altitude:"\u0394700m",laundry:"LBG Chailly",gap:"20 km no ambulance",response:"20\u201325 min"},flows:["patient","staff","food","waste","emergency"]},
+  {id:7,name:"Rennaz Hospital Island",short_name:"Bridge Lock",km:89,lat:46.398,lon:6.927,lock_type:"Bridge Lock",state_a:"Rail",state_b:"Off-rail",chamber_program:"Rail bridge + emergency access",description:"HRC Rennaz \u2014 2,500 staff, 180k catchment. 2 km from Villeneuve station. 2.75\u00d7 slower by public transport than car. The newest major hospital, yet the most disconnected from rail.",vertical_transport_analogy:"Skybridge \u2014 a horizontal connector between two buildings that would otherwise require going down and back up. The bridge lock spans the 2 km gap between rail and hospital.",key_stats:{staff:"~2,500",catchment:"180,000",distance:"2 km",penalty:"2.75\u00d7 slower"},flows:["patient","staff","pharma","emergency","food","blood"]}
+];
+
+const FLOWS = [
+  {id:"pharma",name:"Medication / Pharma",color:"#7c4dff",nodes:[1,3,4,5,7]},
+  {id:"food",name:"Food / Catering",color:"#ff9800",nodes:[1,3,4,5,6,7]},
+  {id:"staff",name:"Staff Circulation",color:"#29b6f6",nodes:[1,2,3,4,5,6,7]},
+  {id:"patient",name:"Patient Flows",color:"#ef5350",nodes:[2,3,5,6,7]},
+  {id:"postal",name:"Postal / Logistics",color:"#ffd54f",nodes:[1,4,5]},
+  {id:"blood",name:"Blood / Lab Samples",color:"#e91e63",nodes:[2,4,5,7]},
+  {id:"waste",name:"Waste / Sterile",color:"#78909c",nodes:[1,4,5,6]},
+  {id:"emergency",name:"Emergency / Ambulance",color:"#ff1744",nodes:[2,3,5,6,7]}
+];
+
+const FLOW_PATHS = [
+  {flow:"pharma",path:[4,1,3,5,7]},
+  {flow:"food",path:[4,5,3,1,6,7]},
+  {flow:"staff",path:[1,2,3,4,5,6,7]},
+  {flow:"patient",path:[2,3,5,6,7]},
+  {flow:"postal",path:[4,1,5]},
+  {flow:"blood",path:[5,2,4,7]},
+  {flow:"waste",path:[1,4,5,6]},
+  {flow:"emergency",path:[2,3,5,6,7]}
+];
+
+const STATIONS = [
+  {name:"Gen\u00e8ve-A\u00e9roport",lat:46.2325,lon:6.1120},
+  {name:"Vernier-Blandonnet",lat:46.2219,lon:6.0972},
+  {name:"Gen\u00e8ve",lat:46.2102,lon:6.1424},
+  {name:"Gen\u00e8ve-S\u00e9cheron",lat:46.2225,lon:6.1445},
+  {name:"Genthod-Bellevue",lat:46.2567,lon:6.1539},
+  {name:"Versoix",lat:46.2797,lon:6.1657},
+  {name:"Coppet",lat:46.3174,lon:6.1878},
+  {name:"Founex",lat:46.3348,lon:6.1949},
+  {name:"Tannay",lat:46.3077,lon:6.1811},
+  {name:"Mies",lat:46.2985,lon:6.1676},
+  {name:"Nyon",lat:46.3844,lon:6.2360},
+  {name:"Prangins",lat:46.3930,lon:6.2541},
+  {name:"Gland",lat:46.4200,lon:6.2691},
+  {name:"Begnins",lat:46.4402,lon:6.2477},
+  {name:"Rolle",lat:46.4628,lon:6.3364},
+  {name:"Perroy",lat:46.4639,lon:6.3529},
+  {name:"Allaman",lat:46.4758,lon:6.3997},
+  {name:"Aubonne",lat:46.4938,lon:6.3929},
+  {name:"St-Prex",lat:46.4823,lon:6.4559},
+  {name:"Morges",lat:46.5111,lon:6.4940},
+  {name:"Lonay-Pr\u00e9verenges",lat:46.5231,lon:6.5195},
+  {name:"Denges-Echandens",lat:46.5291,lon:6.5405},
+  {name:"Bussigny",lat:46.5476,lon:6.5518},
+  {name:"Renens VD",lat:46.5370,lon:6.5789},
+  {name:"Prilly-Malley",lat:46.5267,lon:6.6026},
+  {name:"Lausanne",lat:46.5168,lon:6.6291},
+  {name:"Lausanne-Flon",lat:46.5208,lon:6.6303},
+  {name:"La Conversion",lat:46.5131,lon:6.6783},
+  {name:"Bossi\u00e8re",lat:46.5098,lon:6.6993},
+  {name:"Grandvaux",lat:46.4969,lon:6.7226},
+  {name:"Cully",lat:46.4886,lon:6.7271},
+  {name:"Epesses",lat:46.4893,lon:6.7452},
+  {name:"Rivaz",lat:46.4742,lon:6.7846},
+  {name:"St-Saphorin",lat:46.4727,lon:6.7981},
+  {name:"Vevey",lat:46.4630,lon:6.8434},
+  {name:"La Tour-de-Peilz",lat:46.4555,lon:6.8595},
+  {name:"Burier",lat:46.4479,lon:6.8771},
+  {name:"Clarens",lat:46.4427,lon:6.8958},
+  {name:"Montreux",lat:46.4359,lon:6.9104},
+  {name:"Territet",lat:46.4264,lon:6.9227},
+  {name:"Villeneuve VD",lat:46.3984,lon:6.9270},
+  {name:"Aigle",lat:46.3169,lon:6.9637},
+  {name:"Bex",lat:46.2515,lon:7.0007},
+  {name:"Pal\u00e9zieux",lat:46.5428,lon:6.8379},
+  {name:"Puidoux",lat:46.4938,lon:6.7657},
+  {name:"Gen\u00e8ve-Eaux-Vives",lat:46.2015,lon:6.1665},
+  {name:"Gen\u00e8ve-Champel",lat:46.1922,lon:6.1535},
+  {name:"Lancy-Bachet",lat:46.1743,lon:6.1293},
+  {name:"Lancy-Pont-Rouge",lat:46.1860,lon:6.1249}
+];
+
+const TEMPORAL = {
+  0:0.15,1:0.05,2:0.02,3:0.02,4:0.03,5:0.15,
+  6:0.50,7:0.85,8:1.00,9:0.95,10:0.90,11:0.90,
+  12:0.85,13:0.85,14:0.90,15:0.90,16:0.95,17:1.00,
+  18:0.90,19:0.80,20:0.60,21:0.45,22:0.30,23:0.20
+};
+
+// ═══════════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════════
+
+const state = {
+  currentMinute: 480, // 08:00
+  playing: false,
+  flowVisibility: {},
+  selectedNode: null,
+  particles: [],
+  nodeMarkers: [],
+  nodePulsePhase: Math.random() * Math.PI * 2
+};
+
+FLOWS.forEach(f => state.flowVisibility[f.id] = true);
+
+// ═══════════════════════════════════════════════════════════════
+// MAP SETUP
+// ═══════════════════════════════════════════════════════════════
+
+const map = L.map('map', {
+  center: [46.4, 6.5],
+  zoom: 10,
+  zoomControl: false,
+  attributionControl: false
+});
+
+L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+  subdomains: 'abcd',
+  maxZoom: 19,
+  opacity: 0.6
+}).addTo(map);
+
+// Station dots
+STATIONS.forEach(s => {
+  L.circleMarker([s.lat, s.lon], {
+    radius: 2,
+    fillColor: '#ffffff',
+    fillOpacity: 0.15,
+    stroke: false
+  }).addTo(map);
+});
+
+// Flow path polylines (curved through nodes)
+const flowPolylines = {};
+FLOW_PATHS.forEach(fp => {
+  const flow = FLOWS.find(f => f.id === fp.flow);
+  const coords = fp.path.map(nid => {
+    const n = NODES.find(nd => nd.id === nid);
+    return [n.lat, n.lon];
+  });
+  const polyline = L.polyline(coords, {
+    color: flow.color,
+    weight: 1.5,
+    opacity: 0.15,
+    dashArray: '4 8',
+    smoothFactor: 1.5
+  }).addTo(map);
+  flowPolylines[fp.flow] = polyline;
+});
+
+// Node markers
+NODES.forEach(node => {
+  // Outer ring (gold accent)
+  const outer = L.circleMarker([node.lat, node.lon], {
+    radius: 16,
+    fillColor: '#c9a84c',
+    fillOpacity: 0.08,
+    color: '#c9a84c',
+    weight: 1.5,
+    opacity: 0.6
+  }).addTo(map);
+
+  // Inner dot
+  const inner = L.circleMarker([node.lat, node.lon], {
+    radius: 6,
+    fillColor: '#c9a84c',
+    fillOpacity: 0.7,
+    color: '#c9a84c',
+    weight: 0,
+    opacity: 1
+  }).addTo(map);
+
+  // Label
+  const label = L.tooltip({
+    permanent: true,
+    direction: 'right',
+    offset: [20, 0],
+    className: 'node-tooltip'
+  });
+  label.setContent(`<span style="font-family:'DM Mono',monospace;font-size:10px;color:#c9a84c;letter-spacing:1px">${node.id}</span> ${node.short_name}`);
+  inner.bindTooltip(label);
+
+  // Click handler
+  inner.on('click', () => openLockPanel(node.id));
+  outer.on('click', () => openLockPanel(node.id));
+
+  state.nodeMarkers.push({ node, outer, inner });
+});
+
+// ═══════════════════════════════════════════════════════════════
+// CANVAS SETUP for particles
+// ═══════════════════════════════════════════════════════════════
+
+const canvas = document.getElementById('particleCanvas');
+const ctx = canvas.getContext('2d');
+
+function resizeCanvas() {
+  const rect = document.getElementById('map').getBoundingClientRect();
+  canvas.width = rect.width;
+  canvas.height = rect.height;
+  canvas.style.width = rect.width + 'px';
+  canvas.style.height = rect.height + 'px';
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+map.on('move zoom resize', resizeCanvas);
+
+// ═══════════════════════════════════════════════════════════════
+// PARTICLE SYSTEM
+// ═══════════════════════════════════════════════════════════════
+
+function latLonToCanvas(lat, lon) {
+  const pt = map.latLngToContainerPoint([lat, lon]);
+  return { x: pt.x, y: pt.y };
+}
+
+function getNodePos(nodeId) {
+  const n = NODES.find(nd => nd.id === nodeId);
+  return latLonToCanvas(n.lat, n.lon);
+}
+
+function createParticle(flowId) {
+  const fp = FLOW_PATHS.find(f => f.flow === flowId);
+  const flow = FLOWS.find(f => f.id === flowId);
+  if (!fp || fp.path.length < 2) return null;
+
+  const segIdx = Math.floor(Math.random() * (fp.path.length - 1));
+  const progress = Math.random();
+  const speed = 0.003 + Math.random() * 0.004; // varied speed
+  const reverse = Math.random() > 0.5;
+
+  return {
+    flowId,
+    color: flow.color,
+    path: reverse ? [...fp.path].reverse() : fp.path,
+    segIdx,
+    progress,
+    speed,
+    alpha: 0.6 + Math.random() * 0.4,
+    size: 2 + Math.random() * 1.5
+  };
+}
+
+function initParticles() {
+  state.particles = [];
+  FLOW_PATHS.forEach(fp => {
+    const count = Math.max(3, fp.path.length * 4);
+    for (let i = 0; i < count; i++) {
+      const p = createParticle(fp.flow);
+      if (p) state.particles.push(p);
+    }
+  });
+}
+
+function getActivityMultiplier() {
+  const hour = Math.floor(state.currentMinute / 60);
+  const nextHour = (hour + 1) % 24;
+  const frac = (state.currentMinute % 60) / 60;
+  const a = TEMPORAL[hour] || 0.1;
+  const b = TEMPORAL[nextHour] || 0.1;
+  return a + (b - a) * frac;
+}
+
+function isDeadWindow() {
+  const mins = state.currentMinute;
+  return mins >= 30 && mins < 300; // 00:30 to 05:00
+}
+
+function updateParticles(dt) {
+  const activity = getActivityMultiplier();
+  const speedMult = isDeadWindow() ? 0.05 : activity;
+
+  state.particles.forEach(p => {
+    if (!state.flowVisibility[p.flowId]) return;
+
+    p.progress += p.speed * speedMult * (dt / 16);
+
+    if (p.progress >= 1) {
+      p.progress = 0;
+      p.segIdx++;
+      if (p.segIdx >= p.path.length - 1) {
+        p.segIdx = 0;
+      }
+    }
+  });
+}
+
+function drawParticles() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  const activity = getActivityMultiplier();
+
+  state.particles.forEach(p => {
+    if (!state.flowVisibility[p.flowId]) return;
+
+    const fromId = p.path[p.segIdx];
+    const toId = p.path[p.segIdx + 1];
+    if (!fromId || !toId) return;
+
+    const from = getNodePos(fromId);
+    const to = getNodePos(toId);
+    const x = from.x + (to.x - from.x) * p.progress;
+    const y = from.y + (to.y - from.y) * p.progress;
+
+    // Fade at endpoints
+    let alpha = p.alpha * activity;
+    const edgeFade = Math.min(p.progress, 1 - p.progress) * 4;
+    alpha *= Math.min(1, edgeFade);
+
+    if (isDeadWindow()) alpha *= 0.3;
+
+    ctx.beginPath();
+    ctx.arc(x, y, p.size, 0, Math.PI * 2);
+    ctx.fillStyle = p.color;
+    ctx.globalAlpha = Math.max(0, Math.min(1, alpha));
+    ctx.fill();
+
+    // Glow
+    ctx.beginPath();
+    ctx.arc(x, y, p.size * 2.5, 0, Math.PI * 2);
+    ctx.fillStyle = p.color;
+    ctx.globalAlpha = Math.max(0, Math.min(1, alpha * 0.15));
+    ctx.fill();
+  });
+
+  ctx.globalAlpha = 1;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// NODE BREATHING
+// ═══════════════════════════════════════════════════════════════
+
+function updateNodePulse(time) {
+  const activity = getActivityMultiplier();
+  const dead = isDeadWindow();
+
+  state.nodeMarkers.forEach((nm, i) => {
+    const phase = time * 0.002 + i * 1.2;
+    const pulse = 0.5 + 0.5 * Math.sin(phase);
+    const baseRadius = dead ? 10 : 14 + pulse * 4;
+    const baseOpacity = dead ? 0.03 : 0.05 + pulse * 0.06;
+
+    nm.outer.setRadius(baseRadius);
+    nm.outer.setStyle({
+      fillOpacity: baseOpacity * activity,
+      opacity: (dead ? 0.2 : 0.4 + pulse * 0.3) * activity
+    });
+
+    nm.inner.setStyle({
+      fillOpacity: dead ? 0.3 : 0.5 + pulse * 0.3
+    });
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// TIME CONTROL
+// ═══════════════════════════════════════════════════════════════
+
+const timeSlider = document.getElementById('timeSlider');
+const timeDisplay = document.getElementById('timeDisplay');
+const playBtn = document.getElementById('playBtn');
+const deadBadge = document.getElementById('deadBadge');
+const dimOverlay = document.getElementById('dimOverlay');
+
+function formatTime(mins) {
+  const h = Math.floor(mins / 60) % 24;
+  const m = Math.floor(mins % 60);
+  return String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0');
+}
+
+function updateTimeUI() {
+  timeDisplay.textContent = formatTime(state.currentMinute);
+  timeSlider.value = state.currentMinute;
+
+  const dead = isDeadWindow();
+  deadBadge.classList.toggle('visible', dead);
+  dimOverlay.style.background = dead ? 'rgba(0,0,0,0.35)' : 'rgba(0,0,0,0)';
+
+  // Update flow line opacity based on activity
+  const activity = getActivityMultiplier();
+  FLOW_PATHS.forEach(fp => {
+    const pl = flowPolylines[fp.flow];
+    if (pl) {
+      pl.setStyle({
+        opacity: state.flowVisibility[fp.flow] ? (dead ? 0.04 : 0.1 + activity * 0.12) : 0
+      });
+    }
+  });
+}
+
+timeSlider.addEventListener('input', () => {
+  state.currentMinute = parseInt(timeSlider.value);
+  updateTimeUI();
+});
+
+playBtn.addEventListener('click', () => {
+  state.playing = !state.playing;
+  playBtn.classList.toggle('active', state.playing);
+  playBtn.innerHTML = state.playing ? '&#10074;&#10074;' : '&#9654;';
+});
+
+// ═══════════════════════════════════════════════════════════════
+// FLOW TOGGLES
+// ═══════════════════════════════════════════════════════════════
+
+const flowPanel = document.getElementById('flowPanel');
+FLOWS.forEach(f => {
+  const btn = document.createElement('div');
+  btn.className = 'flow-toggle';
+  btn.dataset.flow = f.id;
+  btn.innerHTML = `<span class="dot" style="background:${f.color}"></span>${f.name}`;
+  btn.addEventListener('click', () => {
+    state.flowVisibility[f.id] = !state.flowVisibility[f.id];
+    btn.classList.toggle('inactive', !state.flowVisibility[f.id]);
+    flowPolylines[f.id].setStyle({
+      opacity: state.flowVisibility[f.id] ? 0.15 : 0
+    });
+  });
+  flowPanel.appendChild(btn);
+});
+
+// ═══════════════════════════════════════════════════════════════
+// LOCK DETAIL PANEL
+// ═══════════════════════════════════════════════════════════════
+
+const lockPanel = document.getElementById('lockPanel');
+const lockBody = document.getElementById('lockBody');
+
+function openLockPanel(nodeId) {
+  state.selectedNode = nodeId;
+  const node = NODES.find(n => n.id === nodeId);
+  if (!node) return;
+
+  const flowColors = {
+    pharma:'#7c4dff',food:'#ff9800',staff:'#29b6f6',patient:'#ef5350',
+    postal:'#ffd54f',blood:'#e91e63',waste:'#78909c',emergency:'#ff1744'
+  };
+
+  const statsHtml = Object.entries(node.key_stats).map(([k, v]) =>
+    `<div class="lock-stat-item"><div class="label">${k.replace(/_/g,' ')}</div><div class="value">${v}</div></div>`
+  ).join('');
+
+  const flowsHtml = node.flows.map(f => {
+    const c = flowColors[f] || '#888';
+    return `<span class="lock-flow-tag" style="color:${c};border-color:${c}44;background:${c}15">${f}</span>`;
+  }).join('');
+
+  lockBody.innerHTML = `
+    <div class="lock-node-number">NODE ${node.id} &middot; KM ${node.km}</div>
+    <div class="lock-node-name">${node.name}</div>
+    <div class="lock-type-badge">${node.lock_type}</div>
+
+    <div class="lock-states">
+      <div class="lock-state"><div class="lock-state-label">${node.state_a}</div></div>
+      <div class="lock-state-arrow">&harr;</div>
+      <div class="lock-state"><div class="lock-state-label">${node.state_b}</div></div>
+    </div>
+
+    <div class="lock-diagram-container" id="lockDiagram"></div>
+
+    <div class="lock-section">
+      <div class="lock-section-title">Description</div>
+      <div class="lock-description">${node.description}</div>
+    </div>
+
+    <div class="lock-section">
+      <div class="lock-section-title">Chamber Program</div>
+      <div class="lock-chamber">${node.chamber_program}</div>
+    </div>
+
+    <div class="lock-section">
+      <div class="lock-section-title">Vertical Transport Analogy</div>
+      <div class="lock-analogy">${node.vertical_transport_analogy}</div>
+    </div>
+
+    <div class="lock-section">
+      <div class="lock-section-title">Key Stats</div>
+      <div class="lock-stats-grid">${statsHtml}</div>
+    </div>
+
+    <div class="lock-section">
+      <div class="lock-section-title">Supply Chain Flows</div>
+      <div class="lock-flows">${flowsHtml}</div>
+    </div>
+  `;
+
+  lockPanel.classList.add('open');
+
+  // Draw lock diagram
+  requestAnimationFrame(() => drawLockDiagram(node));
+}
+
+function closeLockPanel() {
+  lockPanel.classList.remove('open');
+  state.selectedNode = null;
+}
+
+document.getElementById('lockClose').addEventListener('click', closeLockPanel);
+document.getElementById('lockPrev').addEventListener('click', () => {
+  if (!state.selectedNode) return;
+  const idx = NODES.findIndex(n => n.id === state.selectedNode);
+  const prev = idx > 0 ? NODES[idx - 1].id : NODES[NODES.length - 1].id;
+  openLockPanel(prev);
+});
+document.getElementById('lockNext').addEventListener('click', () => {
+  if (!state.selectedNode) return;
+  const idx = NODES.findIndex(n => n.id === state.selectedNode);
+  const next = idx < NODES.length - 1 ? NODES[idx + 1].id : NODES[0].id;
+  openLockPanel(next);
+});
+
+// ═══════════════════════════════════════════════════════════════
+// LOCK DIAGRAMS (SVG animations)
+// ═══════════════════════════════════════════════════════════════
+
+function drawLockDiagram(node) {
+  const container = document.getElementById('lockDiagram');
+  if (!container) return;
+
+  const w = container.clientWidth;
+  const h = container.clientHeight;
+  const accent = '#c9a84c';
+  const dimColor = '#8a8880';
+  const bgDark = '#0a0a0f';
+
+  let svg = '';
+  const cx = w / 2;
+  const cy = h / 2;
+
+  switch (node.lock_type) {
+    case 'Cargo Lock':
+      svg = `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">
+        <defs>
+          <linearGradient id="cargoGrad" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="#78909c" stop-opacity="0.3"/>
+            <stop offset="1" stop-color="${accent}" stop-opacity="0.3"/>
+          </linearGradient>
+        </defs>
+        <!-- Left chamber: industrial -->
+        <rect x="${cx-160}" y="${cy-50}" width="140" height="100" rx="4" fill="none" stroke="${dimColor}" stroke-width="1" stroke-dasharray="4 4"/>
+        <text x="${cx-90}" y="${cy+4}" text-anchor="middle" fill="${dimColor}" font-family="DM Mono" font-size="10">CARGO</text>
+        <!-- Right chamber: city -->
+        <rect x="${cx+20}" y="${cy-50}" width="140" height="100" rx="4" fill="none" stroke="${accent}" stroke-width="1"/>
+        <text x="${cx+90}" y="${cy+4}" text-anchor="middle" fill="${accent}" font-family="DM Mono" font-size="10">CITY</text>
+        <!-- Gate -->
+        <rect x="${cx-10}" y="${cy-40}" width="20" height="80" rx="2" fill="url(#cargoGrad)" stroke="${accent}" stroke-width="1">
+          <animate attributeName="height" values="80;40;80" dur="3s" repeatCount="indefinite"/>
+          <animate attributeName="y" values="${cy-40};${cy-20};${cy-40}" dur="3s" repeatCount="indefinite"/>
+        </rect>
+        <!-- Moving box -->
+        <rect width="14" height="10" rx="1" fill="${accent}" opacity="0.7">
+          <animate attributeName="x" values="${cx-120};${cx+80}" dur="4s" repeatCount="indefinite"/>
+          <animate attributeName="y" values="${cy+20};${cy+20}" dur="4s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0.7;0.7;0.7;0" dur="4s" repeatCount="indefinite"/>
+        </rect>
+      </svg>`;
+      break;
+
+    case 'Vertical Connector':
+      svg = `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">
+        <!-- Valley -->
+        <rect x="${cx-120}" y="${cy+10}" width="100" height="50" rx="4" fill="none" stroke="${dimColor}" stroke-width="1"/>
+        <text x="${cx-70}" y="${cy+40}" text-anchor="middle" fill="${dimColor}" font-family="DM Mono" font-size="10">VALLEY</text>
+        <!-- Hilltop -->
+        <rect x="${cx+20}" y="${cy-60}" width="100" height="50" rx="4" fill="none" stroke="${accent}" stroke-width="1"/>
+        <text x="${cx+70}" y="${cy-30}" text-anchor="middle" fill="${accent}" font-family="DM Mono" font-size="10">HILLTOP</text>
+        <!-- Track line -->
+        <line x1="${cx-20}" y1="${cy+35}" x2="${cx+20}" y2="${cy-35}" stroke="${accent}" stroke-width="1.5" stroke-dasharray="6 3" opacity="0.5"/>
+        <!-- Moving car -->
+        <circle r="5" fill="${accent}" opacity="0.8">
+          <animate attributeName="cx" values="${cx-15};${cx+15};${cx-15}" dur="3s" repeatCount="indefinite"/>
+          <animate attributeName="cy" values="${cy+30};${cy-30};${cy+30}" dur="3s" repeatCount="indefinite"/>
+        </circle>
+        <!-- 400m label -->
+        <text x="${cx}" y="${cy+75}" text-anchor="middle" fill="${dimColor}" font-family="DM Mono" font-size="9" opacity="0.5">\u0394 400m</text>
+      </svg>`;
+      break;
+
+    case 'Temporal Lock':
+      svg = `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">
+        <!-- Left: last train -->
+        <rect x="${cx-150}" y="${cy-40}" width="120" height="80" rx="4" fill="none" stroke="${dimColor}" stroke-width="1"/>
+        <text x="${cx-90}" y="${cy-10}" text-anchor="middle" fill="${dimColor}" font-family="DM Mono" font-size="9">LAST TRAIN</text>
+        <text x="${cx-90}" y="${cy+8}" text-anchor="middle" fill="${dimColor}" font-family="DM Mono" font-size="11">00:30</text>
+        <!-- Right: first train -->
+        <rect x="${cx+30}" y="${cy-40}" width="120" height="80" rx="4" fill="none" stroke="${accent}" stroke-width="1"/>
+        <text x="${cx+90}" y="${cy-10}" text-anchor="middle" fill="${accent}" font-family="DM Mono" font-size="9">FIRST TRAIN</text>
+        <text x="${cx+90}" y="${cy+8}" text-anchor="middle" fill="${accent}" font-family="DM Mono" font-size="11">05:00</text>
+        <!-- Time gate (clock) -->
+        <circle cx="${cx}" cy="${cy}" r="22" fill="none" stroke="${accent}" stroke-width="1.5" opacity="0.6"/>
+        <line x1="${cx}" y1="${cy}" x2="${cx}" y2="${cy-16}" stroke="${accent}" stroke-width="1.5" opacity="0.8">
+          <animateTransform attributeName="transform" type="rotate" from="0 ${cx} ${cy}" to="360 ${cx} ${cy}" dur="4s" repeatCount="indefinite"/>
+        </line>
+        <line x1="${cx}" y1="${cy}" x2="${cx+10}" y2="${cy}" stroke="${accent}" stroke-width="1" opacity="0.5">
+          <animateTransform attributeName="transform" type="rotate" from="0 ${cx} ${cy}" to="360 ${cx} ${cy}" dur="12s" repeatCount="indefinite"/>
+        </line>
+        <circle cx="${cx}" cy="${cy}" r="2" fill="${accent}"/>
+        <!-- Void label -->
+        <text x="${cx}" y="${cy+55}" text-anchor="middle" fill="#ff1744" font-family="DM Mono" font-size="9" opacity="0.7">4.5 HOUR VOID</text>
+      </svg>`;
+      break;
+
+    case 'Visibility Lock':
+      svg = `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">
+        <defs>
+          <mask id="revealMask">
+            <rect width="${w}" height="${h}" fill="black"/>
+            <circle cx="${cx}" cy="${cy}" r="0" fill="white">
+              <animate attributeName="r" values="0;60;60;0" dur="4s" repeatCount="indefinite"/>
+            </circle>
+          </mask>
+        </defs>
+        <!-- Invisible layer -->
+        <g opacity="0.2">
+          <rect x="${cx-80}" y="${cy-30}" width="40" height="20" rx="2" fill="${dimColor}"/>
+          <rect x="${cx-30}" y="${cy-30}" width="40" height="20" rx="2" fill="${dimColor}"/>
+          <rect x="${cx+20}" y="${cy-30}" width="40" height="20" rx="2" fill="${dimColor}"/>
+          <rect x="${cx-80}" y="${cy}" width="40" height="20" rx="2" fill="${dimColor}"/>
+          <rect x="${cx-30}" y="${cy}" width="40" height="20" rx="2" fill="${dimColor}"/>
+          <rect x="${cx+20}" y="${cy}" width="40" height="20" rx="2" fill="${dimColor}"/>
+          <text x="${cx}" y="${cy-45}" text-anchor="middle" fill="${dimColor}" font-family="DM Mono" font-size="9">INVISIBLE</text>
+        </g>
+        <!-- Revealed layer -->
+        <g mask="url(#revealMask)">
+          <rect x="${cx-80}" y="${cy-30}" width="40" height="20" rx="2" fill="${accent}" opacity="0.8"/>
+          <rect x="${cx-30}" y="${cy-30}" width="40" height="20" rx="2" fill="#7c4dff" opacity="0.8"/>
+          <rect x="${cx+20}" y="${cy-30}" width="40" height="20" rx="2" fill="#ff9800" opacity="0.8"/>
+          <rect x="${cx-80}" y="${cy}" width="40" height="20" rx="2" fill="#29b6f6" opacity="0.8"/>
+          <rect x="${cx-30}" y="${cy}" width="40" height="20" rx="2" fill="#e91e63" opacity="0.8"/>
+          <rect x="${cx+20}" y="${cy}" width="40" height="20" rx="2" fill="#78909c" opacity="0.8"/>
+          <text x="${cx}" y="${cy-45}" text-anchor="middle" fill="${accent}" font-family="DM Mono" font-size="9">VISIBLE</text>
+        </g>
+        <!-- Scan line -->
+        <circle cx="${cx}" cy="${cy-5}" r="3" fill="${accent}" opacity="0.9">
+          <animate attributeName="opacity" values="0.9;0.3;0.9" dur="2s" repeatCount="indefinite"/>
+        </circle>
+      </svg>`;
+      break;
+
+    case 'Gradient Dispatcher':
+      svg = `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">
+        <!-- Angled terrain -->
+        <line x1="${cx-120}" y1="${cy+30}" x2="${cx+120}" y2="${cy-40}" stroke="${dimColor}" stroke-width="1" stroke-dasharray="4 4" opacity="0.4"/>
+        <!-- Uphill chamber -->
+        <polygon points="${cx-100},${cy+20} ${cx-40},${cy-5} ${cx-40},${cy+35} ${cx-100},${cy+60}" fill="none" stroke="${dimColor}" stroke-width="1"/>
+        <text x="${cx-70}" y="${cy+45}" text-anchor="middle" fill="${dimColor}" font-family="DM Mono" font-size="9">UPHILL</text>
+        <!-- Downhill chamber -->
+        <polygon points="${cx+40},${cy-15} ${cx+100},${cy-40} ${cx+100},${cy} ${cx+40},${cy+25}" fill="none" stroke="${accent}" stroke-width="1"/>
+        <text x="${cx+70}" y="${cy+15}" text-anchor="middle" fill="${accent}" font-family="DM Mono" font-size="9">DOWNHILL</text>
+        <!-- Dispatcher hub -->
+        <circle cx="${cx}" cy="${cy}" r="14" fill="none" stroke="${accent}" stroke-width="1.5"/>
+        <circle cx="${cx}" cy="${cy}" r="3" fill="${accent}"/>
+        <!-- Routing arrows -->
+        <line x1="${cx-14}" y1="${cy}" x2="${cx-35}" y2="${cy+10}" stroke="${accent}" stroke-width="1" opacity="0.5"/>
+        <line x1="${cx+14}" y1="${cy}" x2="${cx+35}" y2="${cy-10}" stroke="${accent}" stroke-width="1" opacity="0.5"/>
+        <line x1="${cx}" y1="${cy-14}" x2="${cx}" y2="${cy-35}" stroke="${accent}" stroke-width="1" opacity="0.5"/>
+        <!-- Rotating element -->
+        <g>
+          <animateTransform attributeName="transform" type="rotate" from="0 ${cx} ${cy}" to="360 ${cx} ${cy}" dur="6s" repeatCount="indefinite"/>
+          <circle cx="${cx}" cy="${cy-10}" r="2" fill="${accent}" opacity="0.7"/>
+          <circle cx="${cx+8.66}" cy="${cy+5}" r="2" fill="#7c4dff" opacity="0.7"/>
+          <circle cx="${cx-8.66}" cy="${cy+5}" r="2" fill="#29b6f6" opacity="0.7"/>
+        </g>
+      </svg>`;
+      break;
+
+    case 'Altitude Lock':
+      svg = `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">
+        <!-- Mountain profile -->
+        <polyline points="${cx-130},${cy+50} ${cx-60},${cy+50} ${cx},${cy-40} ${cx+60},${cy+50} ${cx+130},${cy+50}" fill="none" stroke="${dimColor}" stroke-width="1" opacity="0.3"/>
+        <!-- Lake level -->
+        <line x1="${cx-130}" y1="${cy+50}" x2="${cx+130}" y2="${cy+50}" stroke="#29b6f6" stroke-width="1" opacity="0.2"/>
+        <text x="${cx+110}" y="${cy+45}" text-anchor="end" fill="#29b6f6" font-family="DM Mono" font-size="8" opacity="0.5">LAKE</text>
+        <!-- Mountain label -->
+        <text x="${cx}" y="${cy-48}" text-anchor="middle" fill="${accent}" font-family="DM Mono" font-size="8">MOUNTAIN 700m</text>
+        <!-- Lower platform -->
+        <rect x="${cx-100}" y="${cy+35}" width="50" height="15" rx="2" fill="none" stroke="${dimColor}" stroke-width="1"/>
+        <text x="${cx-75}" y="${cy+46}" text-anchor="middle" fill="${dimColor}" font-family="DM Mono" font-size="7">ACUTE</text>
+        <!-- Upper platform -->
+        <rect x="${cx+10}" y="${cy-30}" width="50" height="15" rx="2" fill="none" stroke="${accent}" stroke-width="1"/>
+        <text x="${cx+35}" y="${cy-19}" text-anchor="middle" fill="${accent}" font-family="DM Mono" font-size="7">REHAB</text>
+        <!-- Rail track -->
+        <line x1="${cx-75}" y1="${cy+35}" x2="${cx+35}" y2="${cy-30}" stroke="${accent}" stroke-width="1.5" stroke-dasharray="5 3" opacity="0.4"/>
+        <!-- Moving car -->
+        <rect width="12" height="8" rx="2" fill="${accent}" opacity="0.8">
+          <animate attributeName="x" values="${cx-80};${cx+30};${cx-80}" dur="4s" repeatCount="indefinite"/>
+          <animate attributeName="y" values="${cy+28};${cy-35};${cy+28}" dur="4s" repeatCount="indefinite"/>
+        </rect>
+      </svg>`;
+      break;
+
+    case 'Bridge Lock':
+      svg = `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">
+        <!-- Rail platform -->
+        <rect x="${cx-140}" y="${cy-15}" width="100" height="30" rx="4" fill="none" stroke="${dimColor}" stroke-width="1"/>
+        <text x="${cx-90}" y="${cy+4}" text-anchor="middle" fill="${dimColor}" font-family="DM Mono" font-size="9">RAIL</text>
+        <!-- Rail tracks -->
+        <line x1="${cx-140}" y1="${cy+20}" x2="${cx-40}" y2="${cy+20}" stroke="${dimColor}" stroke-width="2" opacity="0.3"/>
+        <line x1="${cx-140}" y1="${cy+24}" x2="${cx-40}" y2="${cy+24}" stroke="${dimColor}" stroke-width="2" opacity="0.3"/>
+        <!-- Hospital -->
+        <rect x="${cx+40}" y="${cy-15}" width="100" height="30" rx="4" fill="none" stroke="${accent}" stroke-width="1"/>
+        <text x="${cx+90}" y="${cy+4}" text-anchor="middle" fill="${accent}" font-family="DM Mono" font-size="9">HOSPITAL</text>
+        <!-- Bridge span -->
+        <line x1="${cx-40}" y1="${cy}" x2="${cx+40}" y2="${cy}" stroke="${accent}" stroke-width="2" stroke-dasharray="8 4">
+          <animate attributeName="stroke-dashoffset" values="0;24" dur="2s" repeatCount="indefinite"/>
+        </line>
+        <!-- 2km label -->
+        <text x="${cx}" y="${cy-25}" text-anchor="middle" fill="${accent}" font-family="DM Mono" font-size="9" opacity="0.7">2 km gap</text>
+        <!-- Moving dot -->
+        <circle r="4" fill="${accent}" opacity="0.8">
+          <animate attributeName="cx" values="${cx-35};${cx+35};${cx-35}" dur="3s" repeatCount="indefinite"/>
+          <animate attributeName="cy" values="${cy};${cy};${cy}" dur="3s" repeatCount="indefinite"/>
+        </circle>
+      </svg>`;
+      break;
+
+    default:
+      svg = `<svg width="${w}" height="${h}"><text x="${cx}" y="${cy}" text-anchor="middle" fill="${dimColor}" font-family="DM Mono" font-size="11">${node.lock_type}</text></svg>`;
+  }
+
+  container.innerHTML = svg;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// CONCEPT PANEL
+// ═══════════════════════════════════════════════════════════════
+
+const conceptOverlay = document.getElementById('conceptOverlay');
+const conceptClose = document.getElementById('conceptClose');
+const aboutBtn = document.getElementById('aboutBtn');
+const resetViewBtn = document.getElementById('resetViewBtn');
+
+resetViewBtn.addEventListener('click', () => { map.setView([46.4, 6.5], 10); });
+
+aboutBtn.addEventListener('click', () => {
+  const isOpen = conceptOverlay.classList.contains('open');
+  conceptOverlay.classList.toggle('open');
+  conceptClose.classList.toggle('open');
+  aboutBtn.classList.toggle('active');
+  if (!isOpen) closeLockPanel();
+});
+
+conceptClose.addEventListener('click', () => {
+  conceptOverlay.classList.remove('open');
+  conceptClose.classList.remove('open');
+  aboutBtn.classList.remove('active');
+});
+
+// ═══════════════════════════════════════════════════════════════
+// ANIMATION LOOP
+// ═══════════════════════════════════════════════════════════════
+
+let lastTime = 0;
+
+function animate(time) {
+  const dt = lastTime ? time - lastTime : 16;
+  lastTime = time;
+
+  // Auto-play time
+  if (state.playing) {
+    state.currentMinute += dt * 0.02; // ~1 min per 50ms real time
+    if (state.currentMinute >= 1440) state.currentMinute = 0;
+    updateTimeUI();
+  }
+
+  updateParticles(dt);
+  drawParticles();
+  updateNodePulse(time);
+
+  requestAnimationFrame(animate);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════════
+
+initParticles();
+updateTimeUI();
+requestAnimationFrame(animate);
+
+// Redraw particles on map move
+map.on('moveend zoomend', () => {
+  resizeCanvas();
+});
+
+// Keyboard shortcuts
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    closeLockPanel();
+    conceptOverlay.classList.remove('open');
+    conceptClose.classList.remove('open');
+    aboutBtn.classList.remove('active');
+  }
+  if (e.key === ' ' && document.activeElement.tagName !== 'INPUT') {
+    e.preventDefault();
+    playBtn.click();
+  }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,204 @@
+{
+  "meta": {
+    "title": "The Relay-Lock",
+    "subtitle": "A Prototypology for the 24h Healthcare Supply Chain",
+    "corridor": "Geneva–Villeneuve, 101 km",
+    "studio": "AR-302k Studio Huang — Sentient Cities, EPFL BA6",
+    "author": "Andrea Crespo",
+    "description": "7-node healthcare chain along the Geneva–Villeneuve corridor. Each node is a 'Lock' managing a threshold between two incompatible states. The relay chain keeps the 24h city running — when one lock closes, the next must open."
+  },
+  "concept": {
+    "relay": "System level — chain of 7 nodes along the corridor. Remove any node and the chain breaks.",
+    "lock": "Building level — architecture managing a threshold between two incompatible states, borrowed from canal lock logic.",
+    "chamber": "The architectural space where transition happens. Active during the 01:00–05:00 dead window when the corridor shuts down.",
+    "key_insight": "The occupant is stationary — the space transitions around them. Like a canal lock where the boat stays still while water levels change.",
+    "dead_window": "00:30–05:00: zero weekday public transport on the entire 101km corridor. 4,600–6,300 healthcare workers stranded or car-dependent.",
+    "three_scales": "Infrastructure (nodes 1, 4), Staff access (nodes 2, 3, 5, 7), Patient access (nodes 2, 5, 6)"
+  },
+  "nodes": [
+    {
+      "id": 1,
+      "name": "Geneva North Industrial Belt",
+      "short_name": "Cargo Lock",
+      "km": 8,
+      "lat": 46.222,
+      "lon": 6.097,
+      "lock_type": "Cargo Lock",
+      "state_a": "Cargo",
+      "state_b": "City",
+      "chamber_program": "Logistics interface + worker rest",
+      "description": "ZIMEYSA industrial zone — 380+ hectares, 500+ companies. Where healthcare cargo meets the city. Swiss Post, pharma sorting, medical device manufacturing. Workers invisible despite being the backbone of the supply chain.",
+      "vertical_transport_analogy": "Freight elevator — moves goods between incompatible floors. The cargo lock mediates between industrial logistics (trucks, pallets, cold chain) and urban fabric (streets, people, civic life).",
+      "key_stats": {
+        "zone_area": "380+ hectares",
+        "companies": "500+",
+        "description": "ZIMEYSA/ZIMEYSAVER + RUBIX medical/R&D"
+      },
+      "flows": ["pharma", "food", "postal", "waste", "staff"]
+    },
+    {
+      "id": 2,
+      "name": "Nyon Hospital + Genolier",
+      "short_name": "Vertical Connector",
+      "km": 25,
+      "lat": 46.384,
+      "lon": 6.236,
+      "lock_type": "Vertical Connector",
+      "state_a": "Valley",
+      "state_b": "Hilltop",
+      "chamber_program": "Vertical connector + staff/patient dual use",
+      "description": "GHOL Nyon in the valley (1,000 staff, 103k catchment), Clinique de Genolier on the hilltop (358 staff + 230 doctors). Last NStCM train to Genolier at 21:29 — after that, car-only. Two healthcare worlds separated by 400m of altitude.",
+      "vertical_transport_analogy": "Funicular — connects two altitudes with a single mechanical system. The vertical connector links valley public hospital to hilltop private clinic, bridging the gap when the last train leaves at 21:29.",
+      "key_stats": {
+        "ghol_staff": "~1,000",
+        "genolier_staff": "358 + 230 doctors",
+        "catchment": "103,000",
+        "last_train": "21:29",
+        "er_visits": "30,000+/year"
+      },
+      "flows": ["staff", "patient", "blood", "emergency", "pharma"]
+    },
+    {
+      "id": 3,
+      "name": "Morges Hospital Gap",
+      "short_name": "Temporal Lock",
+      "km": 48,
+      "lat": 46.511,
+      "lon": 6.494,
+      "lock_type": "Temporal Lock",
+      "state_a": "Last train",
+      "state_b": "First train",
+      "chamber_program": "Night shelter + elderly mobility hub",
+      "description": "EHC Morges — 2,000 staff, 150k catchment. The purest lock concept: the station exists, the hospital exists, but between 00:30 and 05:00 there is no connection. 300–400 night workers face a 4.5-hour void. The temporal lock bridges two moments in time.",
+      "vertical_transport_analogy": "Airlock — a chamber that holds you while the environment changes. The temporal lock holds night-shift workers in a viable space while time transitions from 'last service' to 'first service'. The occupant waits; the city restarts around them.",
+      "key_stats": {
+        "staff": "~2,000",
+        "night_workers": "300–400",
+        "catchment": "150,000",
+        "gap_to_next_er": "23 km (Nyon) / 17 km (CHUV)",
+        "taxi_cost": "CHF 55–80"
+      },
+      "flows": ["staff", "patient", "pharma", "food", "emergency"]
+    },
+    {
+      "id": 4,
+      "name": "Crissier-Bussigny Night Belt",
+      "short_name": "Visibility Lock",
+      "km": 58,
+      "lat": 46.548,
+      "lon": 6.552,
+      "lock_type": "Visibility Lock",
+      "state_a": "Invisible",
+      "state_b": "Visible",
+      "chamber_program": "Supply chain civic space + worker visibility",
+      "description": "The densest healthcare logistics concentration on the corridor. PLEXUS-Santé (3,500 orders/day), CHUV food production (6,800 meals/day), Galexis pharma (100k packs/day), B. Braun (12M medical devices/year). Thousands of workers, zero civic presence. The visibility lock makes the invisible backbone legible.",
+      "vertical_transport_analogy": "Service elevator — the one nobody sees, running behind the walls. The visibility lock reveals the hidden infrastructure that keeps hospitals running. It turns the service corridor into a civic space.",
+      "key_stats": {
+        "plexus_orders": "3,500/day",
+        "chuv_meals": "6,800+/day",
+        "galexis_packs": "100,000/day",
+        "bbraun_units": "12M/year",
+        "la_poste_parcels": "165,000/day (Daillens)"
+      },
+      "flows": ["pharma", "food", "postal", "waste", "staff", "blood"]
+    },
+    {
+      "id": 5,
+      "name": "Lausanne CHUV",
+      "short_name": "Gradient Dispatcher",
+      "km": 65,
+      "lat": 46.517,
+      "lon": 6.629,
+      "lock_type": "Gradient Dispatcher",
+      "state_a": "Uphill",
+      "state_b": "Downhill",
+      "chamber_program": "Gradient connector + equity corrector",
+      "description": "CHUV — 12,844 staff, 800k referral catchment. Best-connected hospital (M2 metro direct). But Lausanne's extreme topography creates an equity gradient: the M2 runs vertically, but the hospital's supply chain runs horizontally. The gradient dispatcher resolves the perpendicular conflict between the city's vertical movement and the corridor's horizontal flow.",
+      "vertical_transport_analogy": "Elevator bank — multiple cars serving different floors simultaneously. The gradient dispatcher routes multiple supply chain flows across Lausanne's steep terrain. Unlike a single elevator, it must sort pharma, patients, staff, and emergency flows to different gradient levels.",
+      "key_stats": {
+        "staff": "12,844",
+        "catchment": "800,000 (referral)",
+        "transfers": ">10,000/year",
+        "night_workers": "1,900–2,600",
+        "cross_border": "7,200 healthcare frontaliers",
+        "hotel_des_patients": "108 rooms"
+      },
+      "flows": ["pharma", "food", "staff", "patient", "blood", "waste", "emergency", "postal"]
+    },
+    {
+      "id": 6,
+      "name": "Montreux–Glion",
+      "short_name": "Altitude Lock",
+      "km": 85,
+      "lat": 46.436,
+      "lon": 6.910,
+      "lock_type": "Altitude Lock",
+      "state_a": "Mountain",
+      "state_b": "Lake",
+      "chamber_program": "Altitude connector + family/rehab access",
+      "description": "Montreux at lake level, Glion rehabilitation clinics at 700m altitude. The MOB and funicular connect two healthcare ecosystems — acute care below, long-term rehabilitation above. Families visiting rehab patients face a vertical journey the corridor doesn't acknowledge.",
+      "vertical_transport_analogy": "Mountain railway — a mechanical system that makes altitude accessible. The altitude lock connects lake-level acute care with mountain rehabilitation, translating the vertical distance into an architectural threshold.",
+      "key_stats": {
+        "altitude_difference": "~700m",
+        "laundry_facility": "LBG Chailly-Montreux",
+        "lavaux_gap": "20 km, no ambulance base",
+        "response_time_estimate": "20–25 min"
+      },
+      "flows": ["patient", "staff", "food", "waste", "emergency"]
+    },
+    {
+      "id": 7,
+      "name": "Rennaz Hospital Island",
+      "short_name": "Bridge Lock",
+      "km": 89,
+      "lat": 46.398,
+      "lon": 6.927,
+      "lock_type": "Bridge Lock",
+      "state_a": "Rail",
+      "state_b": "Off-rail",
+      "chamber_program": "Rail bridge + emergency access",
+      "description": "HRC Rennaz — 2,500 staff, 180k catchment. 2 km from Villeneuve station. 2.75× slower by public transport than car. A proposed monorail was never built. The newest major hospital on the corridor, yet the most disconnected from rail. PHEL pharmacy with global dispensing robot. The bridge lock spans the last-mile gap.",
+      "vertical_transport_analogy": "Skybridge — a horizontal connector between two buildings that would otherwise require going down and back up. The bridge lock spans the 2km gap between rail corridor and hospital, a horizontal threshold that the system never resolved.",
+      "key_stats": {
+        "staff": "~2,500",
+        "catchment": "180,000",
+        "distance_to_station": "2 km",
+        "transit_penalty": "2.75× slower than car",
+        "phel_pharmacy": "Global dispensing robot",
+        "meals": "~3,000/day"
+      },
+      "flows": ["patient", "staff", "pharma", "emergency", "food", "blood"]
+    }
+  ],
+  "flows": [
+    {"id": "pharma", "name": "Medication / Pharma", "color": "#7c4dff", "description": "Galexis, Alloga, Swiss Post Innight Medica. 100k packs/day from Ecublens hub.", "nodes": [1, 3, 4, 5, 7]},
+    {"id": "food", "name": "Food / Catering", "color": "#ff9800", "description": "Hospital kitchens, CHUV CPA Bussigny, Eldora SA. 20,000+ meals/day across corridor.", "nodes": [1, 3, 4, 5, 6, 7]},
+    {"id": "staff", "name": "Staff Circulation", "color": "#29b6f6", "description": "32,000+ hospital workers. 7,200 cross-border. 4,600–6,300 on night shifts.", "nodes": [1, 2, 3, 4, 5, 6, 7]},
+    {"id": "patient", "name": "Patient Flows", "color": "#ef5350", "description": ">10,000 CHUV transfers/year. 5 ERs for 101 km. Walk-in clinics close at night.", "nodes": [2, 3, 5, 6, 7]},
+    {"id": "postal", "name": "Postal / Logistics", "color": "#ffd54f", "description": "Eclépens 24h (400+ staff), Daillens until 03:00. PLEXUS 3,500 orders/day.", "nodes": [1, 4, 5]},
+    {"id": "blood", "name": "Blood / Lab Samples", "color": "#e91e63", "description": "HUG CTS 14,500 bags/year. TIR 700+ mobile drives. SwissConnect couriers.", "nodes": [2, 4, 5, 7]},
+    {"id": "waste", "name": "Waste / Sterile", "color": "#78909c", "description": "5,200+ tonnes HUG waste/year. TRIDEL, Cheneviers, SATOM incineration. CHUV sterilization.", "nodes": [1, 4, 5, 6]},
+    {"id": "emergency", "name": "Emergency / Ambulance", "color": "#ff1744", "description": "Two independent 144 dispatch systems. REGA 2 bases. Night crew reduction across corridor.", "nodes": [2, 3, 5, 6, 7]}
+  ],
+  "key_numbers": {
+    "corridor_length": "101 km",
+    "total_hospital_workers": "32,000–33,000",
+    "night_shift_workers": "4,600–6,300",
+    "cross_border_workers": "7,200",
+    "dead_window": "00:30–05:00 (4.5 hours)",
+    "weekday_night_transit": "ZERO",
+    "chuv_transfers": ">10,000/year",
+    "galexis_packs": "100,000/day",
+    "plexus_orders": "3,500/day",
+    "hug_meals": "10,000+/day",
+    "chuv_meals": "6,800+/day",
+    "er_count": "5 hospitals for 101 km",
+    "medication_shortages": "700+ nationally"
+  },
+  "temporal_states": {
+    "day": {"hours": "06:00–22:00", "description": "Full system — all 8 flow categories active, trains running, all nodes connected"},
+    "evening": {"hours": "22:00–00:30", "description": "Reduced — last trains, shift changes, Innight Medica trucks loading, ambulance crew reduction begins"},
+    "dead_window": {"hours": "00:30–05:00", "description": "All supply chains 100% road-dependent. Zero public transport. 4,600–6,300 workers stranded or driving."},
+    "dawn": {"hours": "05:00–06:00", "description": "System restart — first trains, dawn deliveries arrive, night shift ends at 07:00–07:15"}
+  }
+}
