@@ -66,6 +66,9 @@ Critical: MCP access (filesystem, QGIS, Rhino) comes from the desktop app, not t
 ### MCP = full machine access
 QGIS and Rhino MCP execute Python directly on Andrea's Mac with full user-level privileges. No sandbox. This means any Claude instance with MCP connected can do everything Claude Code can do (and more, since it's already inside the spatial tools). Safety rules are in the project instructions.
 
+### Claude desktop MCP ≠ Claude Code MCP
+MCP servers configured in `~/Library/Application Support/Claude/claude_desktop_config.json` only work in the Claude desktop app. Claude Code needs its own `.mcp.json` in the project root (or `~/.claude/mcp.json` globally). Same `uvx rhinomcp` command, different config file. Added `.mcp.json` to project root on 2026-03-16.
+
 ### Persistent context > handoffs
 Rather than hunting through dated handoff files, maintain living state files (CONTEXT.md, LEARNINGS.md) in the CLAUDE folder. Any instance reads these at session start. Handoffs still exist for traceability but the living files are the primary context source.
 

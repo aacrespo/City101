@@ -28,7 +28,12 @@
       "Bash(open:*)",
       "Bash(find:*)",
       "Read(//tmp/**)",
-      "Read(//tmp/city101_gtfs/**)"
+      "Read(//tmp/city101_gtfs/**)",
+      "Bash(shasum:*)",
+      "Bash(git status:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git stash:*)"
     ]
   }
 }

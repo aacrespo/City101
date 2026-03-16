@@ -23,25 +23,29 @@
 
 ## Handoff
 
-**What was done:** Built healthcare supply chain diagram v1→v3 for A04 midterm PPTX. v1 is an interactive explorer (tooltips, time toggles, side panel). v2 is a split-view Day vs Dead Window at 1920×1080. v3 is the final version: 4 stacked layers (Emergency Response, Staff Access, Supply Chain, Facility Access), each showing the same 101km corridor split into Day vs Dead Window. Designed for screenshot → PPTX. Integrates Henna's 112-row medical supply chain dataset. Key finding confirmed: only 1 pharmacy open 24h on the entire 101km corridor (Pharma24 at HUG).
+**What was done:** Built Relay-Lock Prototypology Explorer v1 — full interactive HTML app (60KB, standalone) with Leaflet corridor map, canvas particle animation for 8 supply chain flows, time slider with dead window dimming, lock detail panels with animated SVG diagrams per lock type, and concept overlay. Also generated 3 Rhino Python scripts at LOG 200-300 for nodes 3 (Morges Temporal Lock), 5 (CHUV Gradient Dispatcher), 7 (Rennaz Bridge Lock). Configured Rhino MCP for Claude Code (`.mcp.json`). Presented to teachers — they liked it. Plan approved for v2: LOG 400 upgrade + site context + point cloud pipeline research.
 
 **What's next:**
-1. **Screenshot v3** for PPTX — open in Chrome, DevTools → 1920×1080 → Capture Full Size Screenshot
-2. **Continue A04 midterm** — other diagrams/visualizations needed for 6-screen display
-3. **Henna** should review v3 and add any missing facilities from her dataset
+1. **Restart Claude Code** to pick up `.mcp.json` (Rhino MCP)
+2. **Run v2 plan** — see `~/.claude/plans/elegant-humming-stream.md`
+   - Session A (research): terrain data + point cloud deep dive + build skills/agents/rules
+   - Session B (Rhino MCP): test scripts → LOG 400 upgrade with 5-reviewer panel
+3. **Open the HTML** to test it: `open output/city101_hub/city101_prototypology.html`
 4. Transport Pulse v3 still needs browser test + basemap fix
 
 **Watch out for:**
-- v3 auto-scales to viewport but is designed at 1920×1080 — screenshot at that resolution for best results
-- CHUV ER cases = 92,674 (from Henna's data) — different from the "NOT FOUND" in v1 research
-- Pharma24 at HUG = only 24h pharmacy. "Pharmacie 24 Lausanne" is NOT 24h despite name (closes at midnight)
+- Rhino MCP needs a restart to activate — `.mcp.json` loaded at session start only
+- Scripts are in `output/city101_hub/rhino_scripts/` — can also run manually in Rhino's Python editor
+- HTML works from file:// but needs internet for CDN libs (D3, Leaflet) and map tiles
+- `source/00-datasets 2/lhiamrossier/GPKG/` may have building heights — inspect in next session
 
 **Files to look at:**
-- `deliverables/A04/healthcare_chain_diagram_v3.html` — final 4-layer gap analysis (USE THIS)
-- `deliverables/A04/healthcare_chain_diagram_v2.html` — split-view version (backup)
-- `deliverables/A04/healthcare_chain_diagram.html` — v1 interactive explorer
-- `deliverables/A04/healthcare_chain_research.md` — full sourced research document
-- `output/healthcare_chain/city101_medical_supply_chain_v2.numbers` — Henna's 112-row dataset
+- `output/city101_hub/city101_prototypology.html` — Relay-Lock Explorer v1
+- `output/city101_hub/prototypology_content.json` — 7 node definitions + concepts
+- `output/city101_hub/prototypology_data.json` — station coords + temporal frequency
+- `output/city101_hub/rhino_scripts/` — 3 lock chamber scripts (LOG 200-300)
+- `.mcp.json` — Rhino MCP config (NEW)
+- `~/.claude/plans/elegant-humming-stream.md` — v2 plan (approved)
 
 ## Data verification gaps
 - **Night worker counts unsourced** — 4,600 / 1,680 / 1,500 / 400 / 300 / 730 are load-bearing claims with no CSV source. Need: OFS employment data, hospital annual reports, or field visit interviews.
@@ -66,3 +70,4 @@
 | 15-03 | Cairn Code | Built AI workflow diagram v1 for A04 midterm (6-screen HTML, tmux aesthetic, City101 design system). 6 panels: terminal workflow, repo file tree, prototypology flow, differentiators, agent roles, handoff system. Play animation + hover interactions. Henna takes over for v2. |
 | 15-03 | Cairn Code | Transport Pulse v3: multimodal 24h animation (29,135 trips, all modes). MapLibre 3D terrain, dot/vector render modes, analytics sidebar (donut, sparkline, mode bars, direction, pulse), symbology overhaul (ferry wake, IC bright edge, funicular cable, size hierarchy), keyboard help panel, dead window label fix. 3 pipeline scripts + 21MB self-contained HTML. |
 | 16-03 | Cairn Code | Healthcare supply chain diagram v1→v3 for A04 midterm. v3 = 4-layer gap analysis (emergency, staff, supply, facility access). Integrated Henna's 112-row dataset. Confirmed: only 1 24h pharmacy on 101km corridor. |
+| 16-03 | Cairn Code | Relay-Lock Prototypology Explorer v1: HTML app (60KB, 7 nodes, 8 flows, particle animation, time slider, lock detail panels). 3 Rhino scripts at LOG 200-300 (Morges, CHUV, Rennaz). Configured Rhino MCP for Claude Code. Presented to teachers. v2 plan approved (LOG 400 + site context + point cloud pipeline). |

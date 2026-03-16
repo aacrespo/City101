@@ -1,10 +1,10 @@
 # Lockboard
 
 ## Andrea
-- Working on: A04 midterm prep, healthcare chain v3 done, Transport Pulse v3 still needs review
+- Working on: A04 midterm — Relay-Lock Prototypology v2 (LOG 400 + site context)
 - Branch: main
 - Since: 16 March 2026
-- Note: Healthcare supply chain diagram v3 complete (deliverables/A04/healthcare_chain_diagram_v3.html). Ready for PPTX screenshot. Transport Pulse v3 still needs browser test + basemap fix.
+- Note: v1 done (HTML explorer + 3 Rhino scripts). v2 plan at `~/.claude/plans/elegant-humming-stream.md`. Needs Claude Code restart to activate Rhino MCP. Transport Pulse v3 still pending browser test.
 
 ## Henna
 - Working on: AI workflow diagram v2 (iterating on Andrea's v1)
