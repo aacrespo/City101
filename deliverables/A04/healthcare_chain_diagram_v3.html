@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>City101 — Healthcare Gap Analysis: 4 Layers</title>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;600;700&display=swap');
+
+  :root {
+    --bg: #0a0a0f;
+    --bg2: #111118;
+    --bg3: #1a1a24;
+    --text: #e8e6e1;
+    --text-dim: #8a8880;
+    --text-bright: #ffffff;
+    --accent: #c9a84c;
+    --danger: #ff1744;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html {
+    background: #000;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    width: 1920px;
+    height: 1080px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transform-origin: top left;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 32px;
+    background: var(--bg2);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    height: 56px;
+    flex-shrink: 0;
+  }
+  .header h1 {
+    font-size: 24px;
+    font-family: 'Instrument Serif', serif;
+    font-weight: 400;
+    color: var(--text-bright);
+    letter-spacing: -0.3px;
+  }
+  .header .subtitle {
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-top: 1px;
+  }
+  .header .subtitle em {
+    color: var(--accent);
+    font-style: normal;
+    font-weight: 600;
+  }
+  .header-right {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    font-size: 12px;
+  }
+  .header-right .time-day {
+    padding: 4px 12px;
+    border-radius: 12px;
+    background: rgba(201,168,76,0.15);
+    border: 1px solid rgba(201,168,76,0.3);
+    color: var(--accent);
+    font-family: 'DM Mono', monospace;
+    font-weight: 600;
+    font-size: 11px;
+  }
+  .header-right .time-dead {
+    padding: 4px 12px;
+    border-radius: 12px;
+    background: rgba(255,23,68,0.12);
+    border: 1px solid rgba(255,23,68,0.25);
+    color: var(--danger);
+    font-family: 'DM Mono', monospace;
+    font-weight: 600;
+    font-size: 11px;
+  }
+
+  /* ── ROW CONTAINER ── */
+  .rows {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 6px 0;
+    gap: 4px;
+    min-height: 0;
+  }
+
+  .row {
+    flex: 1;
+    display: flex;
+    min-height: 0;
+    background: var(--bg);
+    border-top: 1px solid rgba(255,255,255,0.04);
+  }
+
+  /* Left label area */
+  .row-label {
+    width: 190px;
+    min-width: 190px;
+    padding: 10px 16px 8px 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-right: 1px solid rgba(255,255,255,0.06);
+    background: var(--bg2);
+  }
+  .row-label .row-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--text-dim);
+    margin-bottom: 2px;
+    letter-spacing: 1px;
+  }
+  .row-label .row-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-bright);
+    line-height: 1.2;
+    margin-bottom: 6px;
+  }
+  .row-label .row-question {
+    font-size: 11px;
+    font-style: italic;
+    color: var(--text-dim);
+    line-height: 1.3;
+    margin-bottom: 8px;
+  }
+  .row-label .row-stat {
+    font-family: 'DM Mono', monospace;
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 1;
+  }
+  .row-label .row-stat-label {
+    font-size: 10px;
+    color: var(--text-dim);
+    margin-top: 2px;
+  }
+
+  /* SVG area */
+  .row-svg {
+    flex: 1;
+    min-width: 0;
+  }
+
+  /* ── FOOTER ── */
+  .footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px 32px;
+    background: var(--bg2);
+    border-top: 1px solid rgba(255,255,255,0.08);
+    height: 38px;
+    flex-shrink: 0;
+  }
+  .legend-row {
+    display: flex;
+    gap: 14px;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 10px;
+    color: var(--text-dim);
+  }
+  .legend-swatch {
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+  .footer-source {
+    font-size: 8px;
+    color: #555;
+    text-align: right;
+    max-width: 400px;
+  }
+
+  svg text { user-select: none; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <h1>Where the Healthcare Chain Breaks</h1>
+    <p class="subtitle"><em>101 km</em> Geneva–Villeneuve &middot; 4 layers of gap analysis &middot; day vs dead window (01:00–05:00)</p>
+  </div>
+  <div class="header-right">
+    <div class="time-day">DAY 06–22h</div>
+    <span style="color:var(--text-dim);font-size:11px">vs</span>
+    <div class="time-dead">DEAD 01–05h</div>
+    <span style="color:var(--text-dim);font-size:10px;max-width:160px;line-height:1.2">
+      Gold = active &middot; Red = gap or failure &middot; Dim = reduced
+    </span>
+  </div>
+</div>
+
+<div class="rows">
+  <!-- ROW 1: Emergency -->
+  <div class="row" id="row-emergency">
+    <div class="row-label">
+      <div class="row-num">LAYER 01</div>
+      <div class="row-title">Emergency<br>Response</div>
+      <div class="row-question">Who responds at 3 AM?</div>
+      <div class="row-stat" style="color:var(--danger)">2 gaps</div>
+      <div class="row-stat-label">with no coverage</div>
+    </div>
+    <div class="row-svg"><svg id="svg-emergency"></svg></div>
+  </div>
+
+  <!-- ROW 2: Staff -->
+  <div class="row" id="row-staff">
+    <div class="row-label">
+      <div class="row-num">LAYER 02</div>
+      <div class="row-title">Staff<br>Access</div>
+      <div class="row-question">Who can get to work at night?</div>
+      <div class="row-stat" style="color:var(--danger)">ZERO</div>
+      <div class="row-stat-label">night transit on corridor</div>
+    </div>
+    <div class="row-svg"><svg id="svg-staff"></svg></div>
+  </div>
+
+  <!-- ROW 3: Supply -->
+  <div class="row" id="row-supply">
+    <div class="row-label">
+      <div class="row-num">LAYER 03</div>
+      <div class="row-title">Supply<br>Chain</div>
+      <div class="row-question">What still moves at night?</div>
+      <div class="row-stat" style="color:#ff9800">ROAD</div>
+      <div class="row-stat-label">only — all rail stops</div>
+    </div>
+    <div class="row-svg"><svg id="svg-supply"></svg></div>
+  </div>
+
+  <!-- ROW 4: Access -->
+  <div class="row" id="row-access">
+    <div class="row-label">
+      <div class="row-num">LAYER 04</div>
+      <div class="row-title">Facility<br>Access</div>
+      <div class="row-question">What's open at 3 AM?</div>
+      <div class="row-stat" style="color:#7c4dff">1</div>
+      <div class="row-stat-label">pharmacy on 101 km</div>
+    </div>
+    <div class="row-svg"><svg id="svg-access"></svg></div>
+  </div>
+</div>
+
+<div class="footer">
+  <div class="legend-row">
+    <div class="legend-item"><div class="legend-swatch" style="background:var(--accent)"></div>Active / covered</div>
+    <div class="legend-item"><div class="legend-swatch" style="background:var(--danger)"></div>Gap / failure</div>
+    <div class="legend-item"><div class="legend-swatch" style="background:#555"></div>Reduced / dimmed</div>
+    <div class="legend-item" style="margin-left:8px"><div class="legend-swatch" style="background:#ff1744"></div>Emergency</div>
+    <div class="legend-item"><div class="legend-swatch" style="background:#29b6f6"></div>Staff</div>
+    <div class="legend-item"><div class="legend-swatch" style="background:#7c4dff"></div>Pharma</div>
+    <div class="legend-item"><div class="legend-swatch" style="background:#ffd54f"></div>Logistics</div>
+    <div class="legend-item"><div class="legend-swatch" style="background:#ff9800"></div>Food</div>
+    <div class="legend-item"><div class="legend-swatch" style="background:#e91e63"></div>Blood</div>
+    <div class="legend-item" style="margin-left:8px"><div style="width:10px;height:10px;border-radius:50%;border:2px solid var(--accent);flex-shrink:0"></div>Node</div>
+    <div class="legend-item"><div style="width:12px;height:0;border-top:2px dashed var(--danger);flex-shrink:0"></div>Gap zone</div>
+  </div>
+  <div class="footer-source">
+    HUG/CHUV/GHOL/EHC/HRC 2024 reports · Galenica · Swiss Post · REGA · SBB · TIR CRS · City101 EPFL AR-302k — Crespo &amp; Rafik 2026
+  </div>
+</div>
+
+<script>
+// ============================================================
+// SHARED
+// ============================================================
+
+const MAJOR_STATIONS = [
+  { name: 'Genève', km: 0 },
+  { name: 'Nyon', km: 25 },
+  { name: 'Morges', km: 48 },
+  { name: 'Lausanne', km: 63 },
+  { name: 'Vevey', km: 80 },
+  { name: 'Montreux', km: 85 },
+  { name: 'Rennaz', km: 97 }
+];
+
+const MINOR_STATIONS = [
+  { km: 5 }, { km: 14 }, { km: 18 }, { km: 33 }, { km: 38 },
+  { km: 44 }, { km: 52 }, { km: 56 }, { km: 59 }, { km: 66 },
+  { km: 73 }, { km: 82 }, { km: 95 }
+];
+
+function setupRow(svgId) {
+  const container = document.getElementById(svgId).parentElement;
+  const W = container.clientWidth;
+  const H = container.clientHeight;
+  const svg = d3.select(`#${svgId}`).attr('width', W).attr('height', H);
+  const margin = { left: 16, right: 16 };
+  const midY = H / 2;
+  const x = d3.scaleLinear().domain([0, 101]).range([margin.left, W - margin.right]);
+
+  // Background
+  svg.append('rect').attr('width', W).attr('height', H).attr('fill', '#0a0a0f');
+
+  // Divider line at midpoint — this is the "day | dead" split
+  const splitX = W / 2;
+  svg.append('line')
+    .attr('x1', splitX).attr('y1', 0)
+    .attr('x2', splitX).attr('y2', H)
+    .attr('stroke', 'rgba(255,255,255,0.06)')
+    .attr('stroke-width', 1);
+
+  // Day / Dead labels (small, top)
+  svg.append('text')
+    .attr('x', splitX / 2).attr('y', 12)
+    .attr('text-anchor', 'middle')
+    .attr('font-size', 9).attr('font-family', "'DM Mono', monospace")
+    .attr('fill', '#c9a84c').attr('opacity', 0.5)
+    .text('DAY');
+  svg.append('text')
+    .attr('x', splitX + (W - splitX) / 2).attr('y', 12)
+    .attr('text-anchor', 'middle')
+    .attr('font-size', 9).attr('font-family', "'DM Mono', monospace")
+    .attr('fill', '#ff1744').attr('opacity', 0.5)
+    .text('DEAD WINDOW');
+
+  return { svg, W, H, midY, x, splitX };
+}
+
+// Draw the backbone with station ticks for one half
+function drawBackbone(svg, x, midY, startPx, endPx, isDead, kmRange) {
+  const [kmStart, kmEnd] = kmRange;
+  const xHalf = d3.scaleLinear().domain([kmStart, kmEnd]).range([startPx, endPx]);
+
+  // Backbone line
+  svg.append('line')
+    .attr('x1', startPx).attr('y1', midY)
+    .attr('x2', endPx).attr('y2', midY)
+    .attr('stroke', isDead ? '#1a1015' : '#3a3a45')
+    .attr('stroke-width', isDead ? 1.5 : 2);
+
+  // Station ticks
+  MAJOR_STATIONS.forEach(s => {
+    if (s.km < kmStart || s.km > kmEnd) return;
+    const sx = xHalf(s.km);
+    svg.append('line')
+      .attr('x1', sx).attr('y1', midY - 5)
+      .attr('x2', sx).attr('y2', midY + 5)
+      .attr('stroke', isDead ? '#444' : '#8a8880')
+      .attr('stroke-width', 1.5);
+    svg.append('text')
+      .attr('x', sx).attr('y', midY + 16)
+      .attr('text-anchor', 'middle')
+      .attr('font-size', 9).attr('font-family', "'DM Sans', sans-serif")
+      .attr('font-weight', 600)
+      .attr('fill', isDead ? '#444' : '#8a8880')
+      .text(s.name);
+  });
+
+  MINOR_STATIONS.forEach(s => {
+    if (s.km < kmStart || s.km > kmEnd) return;
+    svg.append('line')
+      .attr('x1', xHalf(s.km)).attr('y1', midY - 3)
+      .attr('x2', xHalf(s.km)).attr('y2', midY + 3)
+      .attr('stroke', isDead ? '#1a1a24' : '#2a2a35')
+      .attr('stroke-width', 1);
+  });
+
+  return xHalf;
+}
+
+// Draw a gap zone
+function drawGap(svg, xScale, midY, from, to, label, isDead, height) {
+  const h = height || 50;
+  const x1 = xScale(from), x2 = xScale(to);
+  const opacity = isDead ? 0.22 : 0.07;
+
+  svg.append('rect')
+    .attr('x', x1).attr('y', midY - h/2)
+    .attr('width', x2 - x1).attr('height', h)
+    .attr('fill', `rgba(255,23,68,${opacity})`)
+    .attr('rx', 3);
+
+  svg.append('line')
+    .attr('x1', x1).attr('y1', midY)
+    .attr('x2', x2).attr('y2', midY)
+    .attr('stroke', '#ff1744')
+    .attr('stroke-width', isDead ? 2 : 1.5)
+    .attr('stroke-dasharray', '6 4')
+    .attr('opacity', isDead ? 0.9 : 0.5);
+
+  if (label) {
+    svg.append('text')
+      .attr('x', (x1 + x2) / 2).attr('y', midY - h/2 - 3)
+      .attr('text-anchor', 'middle')
+      .attr('font-size', isDead ? 10 : 9)
+      .attr('font-family', "'DM Mono', monospace")
+      .attr('font-weight', 700)
+      .attr('fill', '#ff1744')
+      .attr('opacity', isDead ? 1 : 0.7)
+      .text(label);
+  }
+}
+
+// Draw a facility dot
+function drawDot(svg, xScale, midY, km, yOff, color, label, opts = {}) {
+  const cx = xScale(km);
+  const cy = midY + yOff;
+  const r = opts.r || 5;
+  const filled = opts.filled !== false;
+  const dimFactor = opts.dim || 1;
+
+  svg.append('circle')
+    .attr('cx', cx).attr('cy', cy)
+    .attr('r', r)
+    .attr('fill', filled ? color : 'none')
+    .attr('stroke', color)
+    .attr('stroke-width', filled ? 0 : 1.5)
+    .attr('opacity', 0.8 * dimFactor);
+
+  if (label) {
+    svg.append('text')
+      .attr('x', cx).attr('y', cy + (yOff < 0 ? -(r + 3) : (r + 10)))
+      .attr('text-anchor', 'middle')
+      .attr('font-size', opts.fontSize || 10)
+      .attr('font-family', "'DM Sans', sans-serif")
+      .attr('font-weight', opts.bold ? 700 : 500)
+      .attr('fill', opts.labelColor || '#8a8880')
+      .attr('opacity', dimFactor)
+      .text(label);
+  }
+}
+
+// Draw a coverage arc
+function drawArc(svg, xScale, midY, from, to, color, opts = {}) {
+  const x1 = xScale(Math.min(from, to));
+  const x2 = xScale(Math.max(from, to));
+  const dist = Math.abs(to - from);
+  const arcH = opts.arcH || (12 + dist * 0.3);
+  const side = opts.below ? 1 : -1;
+  const mX = (x1 + x2) / 2;
+  const mY = midY + side * arcH;
+
+  svg.append('path')
+    .attr('d', `M ${x1} ${midY} Q ${mX} ${mY} ${x2} ${midY}`)
+    .attr('fill', 'none')
+    .attr('stroke', color)
+    .attr('stroke-width', opts.width || 2)
+    .attr('stroke-opacity', opts.opacity || 0.4)
+    .attr('stroke-dasharray', opts.dashed ? '4 3' : 'none');
+}
+
+// Callout card
+function drawCallout(svg, xScale, km, y, text, sub, color, opts = {}) {
+  const cx = xScale(km);
+  const w = opts.w || 56;
+  const subLines = sub.split('\n');
+  const h = 16 + subLines.length * 10 + 2;
+
+  svg.append('rect')
+    .attr('x', cx - w/2).attr('y', y - 12)
+    .attr('width', w).attr('height', h)
+    .attr('rx', 4)
+    .attr('fill', 'rgba(10,10,15,0.9)')
+    .attr('stroke', color)
+    .attr('stroke-width', 0.6)
+    .attr('stroke-opacity', 0.5);
+
+  svg.append('text')
+    .attr('x', cx).attr('y', y + 1)
+    .attr('text-anchor', 'middle')
+    .attr('font-size', 14).attr('font-family', "'DM Mono', monospace")
+    .attr('font-weight', 700).attr('fill', color)
+    .text(text);
+
+  subLines.forEach((line, i) => {
+    svg.append('text')
+      .attr('x', cx).attr('y', y + 12 + i * 10)
+      .attr('text-anchor', 'middle')
+      .attr('font-size', 8).attr('font-family', "'DM Sans', sans-serif")
+      .attr('fill', '#8a8880')
+      .text(line);
+  });
+}
+
+
+// ============================================================
+// ROW 1: EMERGENCY RESPONSE
+// ============================================================
+function renderEmergency() {
+  const { svg, W, H, midY, splitX } = setupRow('svg-emergency');
+  const ers = [
+    { name: 'HUG', km: 2, visits: '146k' },
+    { name: 'GHOL', km: 25, visits: '30k' },
+    { name: 'EHC', km: 48 },
+    { name: 'CHUV', km: 65, visits: '93k' },
+    { name: 'HRC', km: 89 }
+  ];
+
+  // --- DAY ---
+  const xDay = drawBackbone(svg, null, midY, 16, splitX - 8, false, [0, 101]);
+
+  // ER dots above backbone with name + visits on one line
+  ers.forEach(e => {
+    svg.append('circle').attr('cx', xDay(e.km)).attr('cy', midY - 18).attr('r', 5)
+      .attr('fill', '#ff1744').attr('opacity', 0.8);
+    const label = e.visits ? `${e.name} ${e.visits}` : e.name;
+    svg.append('text').attr('x', xDay(e.km)).attr('y', midY - 27)
+      .attr('text-anchor', 'middle').attr('font-size', 9)
+      .attr('font-family', "'DM Sans', sans-serif").attr('font-weight', 700)
+      .attr('fill', '#ff1744').text(label);
+  });
+
+  // Ambulance coverage arcs below — no text labels, just arcs
+  [[1,15],[24,38],[47,60],[65,73],[82,89]].forEach(([a,b]) => {
+    drawArc(svg, xDay, midY, a, b, '#ff1744', { below: true, opacity: 0.25, width: 2 });
+  });
+
+  // Gap zones
+  drawGap(svg, xDay, midY, 25, 48, '23 km NO ER', false, 44);
+  drawGap(svg, xDay, midY, 63, 82, '~20 km NO AMBULANCE', false, 44);
+
+  // --- DEAD ---
+  const xDead = drawBackbone(svg, null, midY, splitX + 8, W - 16, true, [0, 101]);
+
+  ers.forEach(e => {
+    svg.append('circle').attr('cx', xDead(e.km)).attr('cy', midY - 18).attr('r', 5)
+      .attr('fill', '#ff1744').attr('opacity', 0.35);
+    svg.append('text').attr('x', xDead(e.km)).attr('y', midY - 27)
+      .attr('text-anchor', 'middle').attr('font-size', 9)
+      .attr('font-family', "'DM Sans', sans-serif").attr('font-weight', 700)
+      .attr('fill', '#ff1744').attr('opacity', 0.4).text(e.name);
+  });
+
+  // Reduced arcs
+  [[1,15],[24,38],[47,60],[65,73],[82,89]].forEach(([a,b]) => {
+    drawArc(svg, xDead, midY, a, b, '#ff1744', { below: true, opacity: 0.1, width: 1.5 });
+  });
+
+  // Gap zones prominent
+  drawGap(svg, xDead, midY, 25, 48, '23 km NO ER', true, 44);
+  drawGap(svg, xDead, midY, 63, 82, '~20 km NO AMBULANCE', true, 44);
+
+  // Crew reduction — compact labels below arcs, well-spaced
+  const crewData = [
+    { km: 8, text: 'SIS 3→1', color: '#ff1744' },
+    { km: 55, text: 'SPSL ⅓ absent', color: '#ff1744' },
+    { km: 92, text: 'Riviera 4→2', color: '#ff1744' }
+  ];
+  crewData.forEach(c => {
+    svg.append('text').attr('x', xDead(c.km)).attr('y', midY + 32)
+      .attr('text-anchor', 'middle').attr('font-size', 8)
+      .attr('font-family', "'DM Mono', monospace").attr('font-weight', 600)
+      .attr('fill', c.color).attr('opacity', 0.6).text(c.text);
+  });
+}
+
+
+// ============================================================
+// ROW 2: STAFF ACCESS
+// ============================================================
+function renderStaff() {
+  const { svg, W, H, midY, splitX } = setupRow('svg-staff');
+  const hospitals = [
+    { name: 'HUG', km: 2, workers: '13k', nightW: '~2.2k' },
+    { name: 'GHOL', km: 25, workers: '1k', nightW: '~175' },
+    { name: 'EHC', km: 48, workers: '2k', nightW: '~350' },
+    { name: 'CHUV', km: 65, workers: '12.8k', nightW: '~2.2k' },
+    { name: 'HRC', km: 89, workers: '2.5k', nightW: '~440' }
+  ];
+
+  // --- DAY ---
+  const xDay = drawBackbone(svg, null, midY, 16, splitX - 8, false, [0, 101]);
+
+  // Hospital dots above backbone — name + count on one line
+  hospitals.forEach(h => {
+    svg.append('circle').attr('cx', xDay(h.km)).attr('cy', midY - 16).attr('r', 5)
+      .attr('fill', '#29b6f6').attr('opacity', 0.8);
+    svg.append('text').attr('x', xDay(h.km)).attr('y', midY - 25)
+      .attr('text-anchor', 'middle').attr('font-size', 9)
+      .attr('font-family', "'DM Sans', sans-serif").attr('font-weight', 700)
+      .attr('fill', '#29b6f6').text(`${h.name} ${h.workers}`);
+  });
+
+  // Full rail corridor arc
+  drawArc(svg, xDay, midY, 0, 97, '#29b6f6', { below: true, opacity: 0.15, width: 2.5, arcH: 28 });
+  svg.append('text').attr('x', xDay(50)).attr('y', midY + 36)
+    .attr('text-anchor', 'middle').attr('font-size', 8)
+    .attr('font-family', "'DM Mono', monospace")
+    .attr('fill', '#29b6f6').attr('opacity', 0.35).text('RAIL — FULL SERVICE');
+
+  // 60% callout — positioned clear of Genève station label
+  drawCallout(svg, xDay, 8, midY - 42, '60%', 'HUG nurses\nfrom France', '#29b6f6', { w: 56 });
+
+  // --- DEAD ---
+  const xDead = drawBackbone(svg, null, midY, splitX + 8, W - 16, true, [0, 101]);
+
+  hospitals.forEach(h => {
+    svg.append('circle').attr('cx', xDead(h.km)).attr('cy', midY - 16).attr('r', 5)
+      .attr('fill', '#29b6f6').attr('opacity', 0.3);
+    svg.append('text').attr('x', xDead(h.km)).attr('y', midY - 25)
+      .attr('text-anchor', 'middle').attr('font-size', 9)
+      .attr('font-family', "'DM Sans', sans-serif").attr('font-weight', 700)
+      .attr('fill', '#ff1744').attr('opacity', 0.5).text(`${h.name} ${h.nightW}`);
+  });
+
+  // ZERO transit banner — below backbone, clear of station names
+  svg.append('rect').attr('x', xDead(0)).attr('y', midY + 26)
+    .attr('width', xDead(101) - xDead(0)).attr('height', 18)
+    .attr('fill', 'rgba(255,23,68,0.08)').attr('rx', 3);
+  svg.append('text').attr('x', xDead(50)).attr('y', midY + 38)
+    .attr('text-anchor', 'middle').attr('font-size', 10)
+    .attr('font-family', "'DM Mono', monospace").attr('font-weight', 700)
+    .attr('fill', '#ff1744').text('ZERO PUBLIC TRANSPORT — 101 KM — CAR OR STRANDED');
+
+  // Callouts — above hospitals, well-spaced, no overlap with names
+  drawCallout(svg, xDead, 15, midY - 48, '21:29', 'last train\nGenolier', '#ff1744', { w: 52 });
+  drawCallout(svg, xDead, 40, midY - 48, 'CHF 55', 'taxi Morges\nto Nyon', '#ff1744', { w: 56 });
+  drawCallout(svg, xDead, 75, midY - 48, 'CHF 80', 'taxi Lsne\nto Vevey', '#ff1744', { w: 56 });
+  drawCallout(svg, xDead, 96, midY - 48, '2.75×', 'slower to\nRennaz', '#ff1744', { w: 52 });
+}
+
+
+// ============================================================
+// ROW 3: SUPPLY CHAIN
+// ============================================================
+function renderSupply() {
+  const { svg, W, H, midY, splitX } = setupRow('svg-supply');
+
+  // --- DAY ---
+  const xDay = drawBackbone(svg, null, midY, 16, splitX - 8, false, [0, 101]);
+
+  // Hospital destination dots on backbone
+  [2, 25, 48, 65, 89].forEach(km => {
+    svg.append('circle').attr('cx', xDay(km)).attr('cy', midY).attr('r', 3.5)
+      .attr('fill', '#555');
+  });
+
+  // Airport Cargo — isolated, left side
+  svg.append('circle').attr('cx', xDay(5)).attr('cy', midY - 20).attr('r', 4)
+    .attr('fill', '#7c4dff').attr('opacity', 0.8);
+  svg.append('text').attr('x', xDay(5)).attr('y', midY - 28)
+    .attr('text-anchor', 'middle').attr('font-size', 8)
+    .attr('font-family', "'DM Sans', sans-serif").attr('font-weight', 600)
+    .attr('fill', '#8a8880').text('Airport Cargo');
+
+  // TIR Blood — isolated, right of nexus
+  svg.append('circle').attr('cx', xDay(70)).attr('cy', midY - 20).attr('r', 4)
+    .attr('fill', '#e91e63').attr('opacity', 0.8);
+  svg.append('text').attr('x', xDay(70)).attr('y', midY - 28)
+    .attr('text-anchor', 'middle').attr('font-size', 8)
+    .attr('font-family', "'DM Sans', sans-serif").attr('font-weight', 600)
+    .attr('fill', '#8a8880').text('TIR Blood');
+
+  // NEXUS — single box with 4 colored dots inside, ONE combined label
+  const nx1 = xDay(53), nx2 = xDay(63);
+  const nxMid = (nx1 + nx2) / 2;
+  svg.append('rect').attr('x', nx1).attr('y', midY - 40)
+    .attr('width', nx2 - nx1).attr('height', 36)
+    .attr('fill', 'rgba(201,168,76,0.04)')
+    .attr('stroke', '#c9a84c').attr('stroke-width', 1)
+    .attr('stroke-dasharray', '4 3').attr('stroke-opacity', 0.3).attr('rx', 4);
+
+  // 4 dots inside the box — evenly spaced
+  const nexus = [
+    { km: 55, color: '#ff9800' },   // CPA
+    { km: 57.5, color: '#ffd54f' }, // PLEXUS
+    { km: 60, color: '#7c4dff' },   // Galexis
+    { km: 62, color: '#7c4dff' }    // B.Braun
+  ];
+  nexus.forEach(n => {
+    svg.append('circle').attr('cx', xDay(n.km)).attr('cy', midY - 22).attr('r', 4)
+      .attr('fill', n.color).attr('opacity', 0.8);
+  });
+
+  // Combined nexus label — above box
+  svg.append('text').attr('x', nxMid).attr('y', midY - 46)
+    .attr('text-anchor', 'middle').attr('font-size', 8)
+    .attr('font-family', "'DM Mono', monospace").attr('font-weight', 600)
+    .attr('fill', '#c9a84c')
+    .text('BUSSIGNY NEXUS — 100k packs · 3,500 orders · 6.8k meals/day');
+
+  // Supply flow arcs below backbone
+  const supplyFlows = [
+    { from: 58, to: 2, color: '#7c4dff', w: 2.5 },
+    { from: 58, to: 25, color: '#7c4dff', w: 1.5 },
+    { from: 58, to: 48, color: '#7c4dff', w: 1.5 },
+    { from: 58, to: 65, color: '#7c4dff', w: 2 },
+    { from: 58, to: 89, color: '#7c4dff', w: 1.5 },
+    { from: 56, to: 65, color: '#ff9800', w: 1.5 },
+    { from: 57, to: 2, color: '#ffd54f', w: 1.5 },
+    { from: 57, to: 65, color: '#ffd54f', w: 1.5 },
+    { from: 70, to: 48, color: '#e91e63', w: 1 },
+    { from: 70, to: 89, color: '#e91e63', w: 1 }
+  ];
+  supplyFlows.forEach(f => {
+    drawArc(svg, xDay, midY, f.from, f.to, f.color, { below: true, opacity: 0.3, width: f.w });
+  });
+
+  // --- DEAD ---
+  const xDead = drawBackbone(svg, null, midY, splitX + 8, W - 16, true, [0, 101]);
+
+  // Dimmed hospital dots
+  [2, 25, 48, 65, 89].forEach(km => {
+    svg.append('circle').attr('cx', xDead(km)).attr('cy', midY).attr('r', 3)
+      .attr('fill', '#222');
+  });
+
+  // Dimmed nexus dots
+  nexus.forEach(n => {
+    svg.append('circle').attr('cx', xDead(n.km)).attr('cy', midY - 22).attr('r', 3)
+      .attr('fill', n.color).attr('opacity', 0.15);
+  });
+
+  // Only Innight postal arcs
+  [[57,2],[57,65],[57,89]].forEach(([a,b]) => {
+    drawArc(svg, xDead, midY, a, b, '#ffd54f', { below: true, opacity: 0.25, width: 1.5, dashed: true });
+  });
+
+  // Faded other flows
+  supplyFlows.filter(f => f.color !== '#ffd54f').forEach(f => {
+    drawArc(svg, xDead, midY, f.from, f.to, f.color, { below: true, opacity: 0.04, width: 0.5 });
+  });
+
+  // Labels
+  svg.append('text').attr('x', xDead(50)).attr('y', midY + 38)
+    .attr('text-anchor', 'middle').attr('font-size', 8)
+    .attr('font-family', "'DM Mono', monospace")
+    .attr('fill', '#ffd54f').attr('opacity', 0.5)
+    .text('INNIGHT MEDICA — 220+ hospitals by 06:00');
+
+  svg.append('text').attr('x', xDead(50)).attr('y', midY - 40)
+    .attr('text-anchor', 'middle').attr('font-size', 9)
+    .attr('font-family', "'DM Mono', monospace").attr('font-weight', 700)
+    .attr('fill', '#ff9800').attr('opacity', 0.6)
+    .text('ALL SUPPLY CHAINS 100% ROAD-DEPENDENT');
+}
+
+
+// ============================================================
+// ROW 4: FACILITY ACCESS (WHAT'S OPEN AT 3AM)
+// ============================================================
+function renderAccess() {
+  const { svg, W, H, midY, splitX } = setupRow('svg-access');
+
+  // Pharmacy positions (simplified from Henna's 65 entries)
+  const pharmacies = [
+    { km: 0.5, type: '24h' },
+    { km: 1.5, type: 'ext' }, { km: 2.5, type: 'reg' }, { km: 3.5, type: 'reg' },
+    { km: 14, type: 'reg' }, { km: 18, type: 'reg' },
+    { km: 24.5, type: 'reg' }, { km: 25.5, type: 'reg' }, { km: 26, type: 'reg' },
+    { km: 33, type: 'reg' }, { km: 34, type: 'reg' },
+    { km: 38, type: 'reg' }, { km: 39, type: 'reg' },
+    { km: 42, type: 'reg' }, { km: 45, type: 'reg' },
+    { km: 47.5, type: 'ext' }, { km: 48.5, type: 'reg' }, { km: 49.5, type: 'reg' },
+    { km: 53, type: 'reg' }, { km: 56, type: 'reg' }, { km: 57, type: 'reg' },
+    { km: 59, type: 'reg' }, { km: 59.5, type: 'reg' },
+    { km: 62.5, type: 'ext' }, { km: 63.5, type: 'ext' }, { km: 64.5, type: 'reg' },
+    { km: 66, type: 'reg' }, { km: 69.5, type: 'reg' }, { km: 73, type: 'reg' },
+    { km: 80, type: 'ext' }, { km: 82, type: 'reg' }, { km: 82.5, type: 'reg' },
+    { km: 85, type: 'reg' }, { km: 85.5, type: 'reg' },
+    { km: 95, type: 'reg' }, { km: 97, type: 'ext' }
+  ];
+
+  const ers = [
+    { name: 'HUG', km: 2 }, { name: 'GHOL', km: 25 }, { name: 'EHC', km: 48 },
+    { name: 'CHUV', km: 65 }, { name: 'HRC', km: 89 }
+  ];
+
+  // --- DAY ---
+  const xDay = drawBackbone(svg, null, midY, 16, splitX - 8, false, [0, 101]);
+
+  // Pharmacy dots — on a strip above backbone
+  pharmacies.forEach(p => {
+    const r = p.type === '24h' ? 3.5 : (p.type === 'ext' ? 2 : 1.5);
+    const op = p.type === '24h' ? 0.9 : (p.type === 'ext' ? 0.45 : 0.25);
+    svg.append('circle').attr('cx', xDay(p.km)).attr('cy', midY - 12).attr('r', r)
+      .attr('fill', '#7c4dff').attr('opacity', op);
+  });
+  svg.append('text').attr('x', xDay(50)).attr('y', midY - 22)
+    .attr('text-anchor', 'middle').attr('font-size', 7)
+    .attr('font-family', "'DM Mono', monospace")
+    .attr('fill', '#7c4dff').attr('opacity', 0.35)
+    .text('~65 PHARMACIES');
+
+  // ERs below backbone — just dots + names, no "ER" suffix to save space
+  ers.forEach(h => {
+    svg.append('circle').attr('cx', xDay(h.km)).attr('cy', midY + 18).attr('r', 5)
+      .attr('fill', '#ef5350').attr('opacity', 0.7);
+    svg.append('text').attr('x', xDay(h.km)).attr('y', midY + 32)
+      .attr('text-anchor', 'middle').attr('font-size', 9)
+      .attr('font-family', "'DM Sans', sans-serif").attr('font-weight', 700)
+      .attr('fill', '#ef5350').text(h.name);
+  });
+
+  // Walk-in clinics — just tiny dots, no label
+  [8, 25, 48, 63, 82, 89].forEach(km => {
+    svg.append('circle').attr('cx', xDay(km)).attr('cy', midY + 42).attr('r', 1.5)
+      .attr('fill', '#c9a84c').attr('opacity', 0.3);
+  });
+
+  // --- DEAD ---
+  const xDead = drawBackbone(svg, null, midY, splitX + 8, W - 16, true, [0, 101]);
+
+  // ALL pharmacies off except Pharma24
+  pharmacies.forEach(p => {
+    if (p.type === '24h') {
+      svg.append('circle').attr('cx', xDead(p.km)).attr('cy', midY - 12).attr('r', 5)
+        .attr('fill', '#7c4dff').attr('opacity', 0.9);
+      svg.append('circle').attr('cx', xDead(p.km)).attr('cy', midY - 12).attr('r', 9)
+        .attr('fill', 'none').attr('stroke', '#7c4dff')
+        .attr('stroke-width', 1).attr('stroke-opacity', 0.4);
+      svg.append('text').attr('x', xDead(p.km + 8)).attr('y', midY - 16)
+        .attr('text-anchor', 'start').attr('font-size', 9)
+        .attr('font-family', "'DM Mono', monospace").attr('font-weight', 700)
+        .attr('fill', '#7c4dff').text('PHARMA24 — only 24h');
+    } else {
+      svg.append('circle').attr('cx', xDead(p.km)).attr('cy', midY - 12).attr('r', 1.5)
+        .attr('fill', '#7c4dff').attr('opacity', 0.03);
+    }
+  });
+
+  svg.append('text').attr('x', xDead(55)).attr('y', midY - 22)
+    .attr('text-anchor', 'middle').attr('font-size', 8)
+    .attr('font-family', "'DM Mono', monospace").attr('font-weight', 700)
+    .attr('fill', '#ff1744').attr('opacity', 0.4).text('64 PHARMACIES CLOSED');
+
+  // ERs — still open
+  ers.forEach(h => {
+    svg.append('circle').attr('cx', xDead(h.km)).attr('cy', midY + 18).attr('r', 5)
+      .attr('fill', '#ef5350').attr('opacity', 0.4);
+    svg.append('text').attr('x', xDead(h.km)).attr('y', midY + 32)
+      .attr('text-anchor', 'middle').attr('font-size', 9)
+      .attr('font-family', "'DM Sans', sans-serif").attr('font-weight', 700)
+      .attr('fill', '#ef5350').attr('opacity', 0.5).text(h.name);
+  });
+
+  // Summary label
+  svg.append('text').attr('x', xDead(50)).attr('y', midY + 46)
+    .attr('text-anchor', 'middle').attr('font-size', 8)
+    .attr('font-family', "'DM Mono', monospace")
+    .attr('fill', '#ef5350').attr('opacity', 0.4)
+    .text('5 ERs for 101 km — all walk-in clinics closed');
+}
+
+
+// ============================================================
+// INIT
+// ============================================================
+renderEmergency();
+renderStaff();
+renderSupply();
+renderAccess();
+
+// Auto-scale to fit viewport
+function scaleToFit() {
+  const sx = window.innerWidth / 1920;
+  const sy = window.innerHeight / 1080;
+  const s = Math.min(sx, sy);
+  document.body.style.transform = `scale(${s})`;
+}
+scaleToFit();
+window.addEventListener('resize', scaleToFit);
+</script>
+</body>
+</html>
