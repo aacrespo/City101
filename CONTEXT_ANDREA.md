@@ -23,28 +23,25 @@
 
 ## Handoff
 
-**What was done:** Built Relay-Lock Prototypology Explorer v1 — full interactive HTML app (60KB, standalone) with Leaflet corridor map, canvas particle animation for 8 supply chain flows, time slider with dead window dimming, lock detail panels with animated SVG diagrams per lock type, and concept overlay. Also generated 3 Rhino Python scripts at LOG 200-300 for nodes 3 (Morges Temporal Lock), 5 (CHUV Gradient Dispatcher), 7 (Rennaz Bridge Lock). Configured Rhino MCP for Claude Code (`.mcp.json`). Presented to teachers — they liked it. Plan approved for v2: LOG 400 upgrade + site context + point cloud pipeline research.
+**What was done:** Strategic session — researched Huang's current work (Blue City digital twin, generative AI publications, "Artificial Architecture" exhibition). Key insight: the project should be framed as a **skill environment / human-AI collaboration methodology**, not as "an agentic workflow." The term ages fast; the design principle doesn't. Saved to memory for midterm framing.
 
 **What's next:**
-1. **Restart Claude Code** to pick up `.mcp.json` (Rhino MCP)
-2. **Run v2 plan** — see `~/.claude/plans/elegant-humming-stream.md`
+1. **Run v2 plan** — see `~/.claude/plans/elegant-humming-stream.md`
    - Session A (research): terrain data + point cloud deep dive + build skills/agents/rules
    - Session B (Rhino MCP): test scripts → LOG 400 upgrade with 5-reviewer panel
-3. **Open the HTML** to test it: `open output/city101_hub/city101_prototypology.html`
-4. Transport Pulse v3 still needs browser test + basemap fix
+2. **Open the HTML** to test it: `open output/city101_hub/city101_prototypology.html`
+3. Transport Pulse v3 still needs browser test + basemap fix
+4. **Midterm framing**: lead with design methodology and knowledge architecture, not AI buzzwords
 
 **Watch out for:**
-- Rhino MCP needs a restart to activate — `.mcp.json` loaded at session start only
+- Rhino MCP is configured (`.mcp.json`) — restart Claude Code to activate
 - Scripts are in `output/city101_hub/rhino_scripts/` — can also run manually in Rhino's Python editor
 - HTML works from file:// but needs internet for CDN libs (D3, Leaflet) and map tiles
 - `source/00-datasets 2/lhiamrossier/GPKG/` may have building heights — inspect in next session
 
 **Files to look at:**
 - `output/city101_hub/city101_prototypology.html` — Relay-Lock Explorer v1
-- `output/city101_hub/prototypology_content.json` — 7 node definitions + concepts
-- `output/city101_hub/prototypology_data.json` — station coords + temporal frequency
 - `output/city101_hub/rhino_scripts/` — 3 lock chamber scripts (LOG 200-300)
-- `.mcp.json` — Rhino MCP config (NEW)
 - `~/.claude/plans/elegant-humming-stream.md` — v2 plan (approved)
 
 ## Data verification gaps
@@ -71,3 +68,4 @@
 | 15-03 | Cairn Code | Transport Pulse v3: multimodal 24h animation (29,135 trips, all modes). MapLibre 3D terrain, dot/vector render modes, analytics sidebar (donut, sparkline, mode bars, direction, pulse), symbology overhaul (ferry wake, IC bright edge, funicular cable, size hierarchy), keyboard help panel, dead window label fix. 3 pipeline scripts + 21MB self-contained HTML. |
 | 16-03 | Cairn Code | Healthcare supply chain diagram v1→v3 for A04 midterm. v3 = 4-layer gap analysis (emergency, staff, supply, facility access). Integrated Henna's 112-row dataset. Confirmed: only 1 24h pharmacy on 101km corridor. |
 | 16-03 | Cairn Code | Relay-Lock Prototypology Explorer v1: HTML app (60KB, 7 nodes, 8 flows, particle animation, time slider, lock detail panels). 3 Rhino scripts at LOG 200-300 (Morges, CHUV, Rennaz). Configured Rhino MCP for Claude Code. Presented to teachers. v2 plan approved (LOG 400 + site context + point cloud pipeline). |
+| 17-03 | Cairn Code | Strategic session: Huang research (Blue City, generative AI, digital twins). Framing insight — project is a skill environment, not "agentic workflow." No code/data work. |
