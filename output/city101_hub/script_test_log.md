@@ -175,6 +175,19 @@ All three scripts used `{:.0f}` format specifiers for naming objects. This works
 | Lock 05 | 200-300 | 200-300 | Volumes, floors, columns, openings, ramps, terrain, void |
 | Lock 07 | 200-300 | 200-350 | Volumes, decks, columns, beams, posts, openings, lane dividers, tactile strips, guardrails |
 
+### Screenshot Protocol (Lesson Learned)
+
+Initial screenshots were taken with all 3 locks visible simultaneously — cluttered and hard to read. Recaptured with proper layer management:
+
+1. **Isolate each lock** — hide the other two locks' layers before capturing
+2. **Component breakdowns** — toggle layer groups (Volumes only, Structure+FloorPlates, etc.)
+3. **Current layer gotcha** — Rhino won't hide the active layer; must switch `rs.CurrentLayer()` before hiding
+
+Best views per lock type:
+- **Lock 03** (Temporal): Front elevation shows the height difference between chambers and gate
+- **Lock 05** (Gradient): Right/side view shows the stepped levels ascending with terrain
+- **Lock 07** (Bridge): Right/side view shows the bridge profile — elevated deck, columns, descending ramp
+
 ### Ready for Wave 4 (LOG Upgrade)
 All 3 scripts provide a solid LOG 200-300 base. For LOG 400:
 - Add wall thicknesses and facade panels
