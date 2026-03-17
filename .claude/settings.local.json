@@ -33,7 +33,21 @@
       "Bash(git status:*)",
       "Bash(git add:*)",
       "Bash(git commit:*)",
-      "Bash(git stash:*)"
+      "Bash(git stash:*)",
+      "Bash(git checkout:*)",
+      "Bash(mv:*)",
+      "Bash(git pull:*)",
+      "mcp__rhino__get_document_summary",
+      "mcp__rhino__execute_rhinoscript_python_code",
+      "mcp__rhino__capture_viewport",
+      "Bash(cp /Users/andreacrespo/CLAUDE/city101/output/city101_hub/rhino_scripts/lock_05_chuv_gradient.py /Users/andreacrespo/CLAUDE/city101/output/city101_hub/rhino_scripts/lock_05_chuv_gradient_v2.py)",
+      "Bash(cp /Users/andreacrespo/CLAUDE/city101/output/city101_hub/rhino_scripts/lock_07_rennaz_bridge.py /Users/andreacrespo/CLAUDE/city101/output/city101_hub/rhino_scripts/lock_07_rennaz_bridge_v2.py)",
+      "WebFetch(domain:data.geo.admin.ch)",
+      "Read(//Users/andreacrespo/.claude/plans/**)"
     ]
-  }
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "rhino"
+  ]
 }

@@ -1,48 +1,51 @@
 # Andrea — Working Context
 
 **Owner**: Andrea (Cairn, Cairn Code, Lumen)
-**Last updated:** 2026-03-10
+**Last updated:** 2026-03-18
 
 ---
 
 ## Current priorities
 
-### A03 deliverables (due March 10)
-1. **Investigation report** — text, images, updated maps from field visit. ⚠️ [NEEDS: field visit findings, photos, verification table]
-2. **Combined path dataset** — CSV/GeoJSON of investigated sites. ⚠️ [NEEDS: GPS coordinates from field visit, verified claims]
-3. **Networked intervention concept** — the relay-lock as strategy. 🟡 [Concept exists, needs writeup]
-4. Submit path dataset to Drive: [00-student-paths-datasets](https://drive.google.com/drive/folders/1excOP2HKgnr9jiqCYVhdgHcd3y33cdin?usp=drive_link)
+### A04 — midterm (due March 30)
+1. **Rhino modeling**: LOG 400 upgrades for lock scripts. 3 scripts verified (Morges, CHUV, Rennaz) at LOG 200-300. 9 nodes defined in v2 paper — need to decide which to model at what LOD for midterm.
+2. **App/interface architecture**: Design the typology generator system — Mermaid diagram, module definitions, data flow. Prompt written for systems architect session.
+3. **CONTEXT.md + repo cleanup**: Context updated (March 18). Repo needs restructuring — promote files from output/, reorganize folders, apply CLAUDE.md-as-map pattern.
+4. **Midterm PPTX** — 6-screen template (see `briefs/Templates/`)
+5. **v2 research paper**: `output/city101_vertical_transport_research_v2.md` — defines 9 nodes, scoring framework, full concept. Canonical reference.
 
-### A03 remaining fieldwork
-5. **Friday March 13** — eastern corridor visit: CHUV, Montreux-Glion, Rennaz (3 sites)
-
-### A04 (due March 30 — midterm)
-6. **Rhino MCP prototypology** — siteless project adaptable to different sites
-7. **Midterm PPTX** — 6-screen template (see `briefs/Templates/`)
-8. **Point-cloud sections** of potential sites (A03 requirement, not yet done)
+### Completed
+- ✅ A03 deliverables submitted
+- ✅ All 7 field sites visited (March 10)
+- ✅ March 16 crit — green light from Huang, funding offered
+- ✅ v2 research paper written
+- ✅ Brain dump captured (`output/braindump_2026-03-17_three-things.md`)
 
 ## Handoff
 
-**What was done:** Strategic session — researched Huang's current work (Blue City digital twin, generative AI publications, "Artificial Architecture" exhibition). Key insight: the project should be framed as a **skill environment / human-AI collaboration methodology**, not as "an agentic workflow." The term ages fast; the design principle doesn't. Saved to memory for midterm framing.
+**What was done (March 17-18):**
+- Brain dump session: captured evolved concept, app vision, modeling status assessment
+- Updated CONTEXT.md with 9-node system from v2 paper, "holds the gap" framing, crit outcome
+- Committed all pending output files and research
+- Wrote prompt for systems architect session (app architecture Mermaid diagram)
 
 **What's next:**
-1. **Run v2 plan** — see `~/.claude/plans/elegant-humming-stream.md`
-   - Session A (research): terrain data + point cloud deep dive + build skills/agents/rules
-   - Session B (Rhino MCP): test scripts → LOG 400 upgrade with 5-reviewer panel
-2. **Open the HTML** to test it: `open output/city101_hub/city101_prototypology.html`
-3. Transport Pulse v3 still needs browser test + basemap fix
+1. **Repo restructuring session** — promote files from output/, reorganize folders, apply CLAUDE.md-as-map pattern, Henna task split
+2. **Systems architect session** — app architecture diagram in Mermaid (prompt ready in `prompts/`)
+3. **Rhino modeling sessions** — LOG 400 upgrades, review panel execution (Wave 4)
 4. **Midterm framing**: lead with design methodology and knowledge architecture, not AI buzzwords
 
 **Watch out for:**
 - Rhino MCP is configured (`.mcp.json`) — restart Claude Code to activate
 - Scripts are in `output/city101_hub/rhino_scripts/` — can also run manually in Rhino's Python editor
-- HTML works from file:// but needs internet for CDN libs (D3, Leaflet) and map tiles
-- `source/00-datasets 2/lhiamrossier/GPKG/` may have building heights — inspect in next session
+- Wave 3 tooling (skills + review agents) is scaffolded but untested
+- Ramp grades in existing scripts too steep for SIA 500 (35% and 26.7% vs 6% limit)
 
-**Files to look at:**
-- `output/city101_hub/city101_prototypology.html` — Relay-Lock Explorer v1
+**Key files:**
+- `output/braindump_2026-03-17_three-things.md` — full brain dump (concept, app vision, modeling)
+- `output/city101_vertical_transport_research_v2.md` — v2 paper (9 nodes, scoring, concept)
 - `output/city101_hub/rhino_scripts/` — 3 lock chamber scripts (LOG 200-300)
-- `~/.claude/plans/elegant-humming-stream.md` — v2 plan (approved)
+- `~/.claude/plans/humming-wishing-minsky.md` — modeling pipeline plan
 
 ## Data verification gaps
 - **Night worker counts unsourced** — 4,600 / 1,680 / 1,500 / 400 / 300 / 730 are load-bearing claims with no CSV source. Need: OFS employment data, hospital annual reports, or field visit interviews.
@@ -69,3 +72,4 @@
 | 16-03 | Cairn Code | Healthcare supply chain diagram v1→v3 for A04 midterm. v3 = 4-layer gap analysis (emergency, staff, supply, facility access). Integrated Henna's 112-row dataset. Confirmed: only 1 24h pharmacy on 101km corridor. |
 | 16-03 | Cairn Code | Relay-Lock Prototypology Explorer v1: HTML app (60KB, 7 nodes, 8 flows, particle animation, time slider, lock detail panels). 3 Rhino scripts at LOG 200-300 (Morges, CHUV, Rennaz). Configured Rhino MCP for Claude Code. Presented to teachers. v2 plan approved (LOG 400 + site context + point cloud pipeline). |
 | 17-03 | Cairn Code | Strategic session: Huang research (Blue City, generative AI, digital twins). Framing insight — project is a skill environment, not "agentic workflow." No code/data work. |
+| 18-03 | Cairn Code | Brain dump session: captured evolved concept (9 nodes, "holds the gap", anti-urban), app interface vision, modeling status assessment. Updated CONTEXT.md + CONTEXT_ANDREA.md. Wrote systems architect prompt. Committed all pending files. |
