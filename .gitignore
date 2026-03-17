@@ -35,6 +35,9 @@ output/tmp/
 *.tif
 *.tiff
 
+# swissBUILDINGS3D extracted DXFs (can be >100MB, keep .dxf.zip instead)
+output/city101_hub/context/*swissbuildings3d.dxf
+
 # Credentials — never commit these
 *.key
 *.pem

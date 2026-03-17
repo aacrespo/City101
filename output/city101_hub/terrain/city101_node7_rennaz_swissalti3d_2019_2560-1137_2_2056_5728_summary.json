@@ -1,0 +1,22 @@
+{
+  "source_tif": "city101_node7_rennaz_swissalti3d_2019_2560-1137_2_2056_5728.tif",
+  "site": "node7_rennaz",
+  "crs": "EPSG:2056",
+  "resolution_m": 2.0,
+  "bounds_lv95": {
+    "min_E": 2560000.0,
+    "max_E": 2561000.0,
+    "min_N": 1137000.0,
+    "max_N": 1138000.0
+  },
+  "elevation_range": {
+    "min_m": 371.94818115234375,
+    "max_m": 380.8166809082031
+  },
+  "grid_shape": [
+    500,
+    500
+  ],
+  "valid_points": 250000,
+  "xyz_file": "city101_node7_rennaz_swissalti3d_2019_2560-1137_2_2056_5728_xyz.csv"
+}

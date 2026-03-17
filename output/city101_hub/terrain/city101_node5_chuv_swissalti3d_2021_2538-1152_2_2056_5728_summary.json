@@ -1,0 +1,22 @@
+{
+  "source_tif": "city101_node5_chuv_swissalti3d_2021_2538-1152_2_2056_5728.tif",
+  "site": "node5_chuv",
+  "crs": "EPSG:2056",
+  "resolution_m": 2.0,
+  "bounds_lv95": {
+    "min_E": 2538000.0,
+    "max_E": 2539000.0,
+    "min_N": 1152000.0,
+    "max_N": 1153000.0
+  },
+  "elevation_range": {
+    "min_m": 445.02606201171875,
+    "max_m": 576.9983520507812
+  },
+  "grid_shape": [
+    500,
+    500
+  ],
+  "valid_points": 250000,
+  "xyz_file": "city101_node5_chuv_swissalti3d_2021_2538-1152_2_2056_5728_xyz.csv"
+}

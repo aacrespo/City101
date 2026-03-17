@@ -1,0 +1,20 @@
+{
+  "node3_morges": {
+    "stac_id": "swissbuildings3d_2_2021-09_1242-42",
+    "url": "https://data.geo.admin.ch/ch.swisstopo.swissbuildings3d_2/swissbuildings3d_2_2021-09_1242-42/swissbuildings3d_2_2021-09_1242-42_2056_5728.dxf.zip",
+    "local_file": "city101_node3_morges_swissbuildings3d.dxf.zip",
+    "size_mb": 1.2
+  },
+  "node5_chuv": {
+    "stac_id": "swissbuildings3d_2_2021-09_1243-14",
+    "url": "https://data.geo.admin.ch/ch.swisstopo.swissbuildings3d_2/swissbuildings3d_2_2021-09_1243-14/swissbuildings3d_2_2021-09_1243-14_2056_5728.dxf.zip",
+    "local_file": "city101_node5_chuv_swissbuildings3d.dxf.zip",
+    "size_mb": 11.1
+  },
+  "node7_rennaz": {
+    "stac_id": "swissbuildings3d_2_2021-09_1264-43",
+    "url": "https://data.geo.admin.ch/ch.swisstopo.swissbuildings3d_2/swissbuildings3d_2_2021-09_1264-43/swissbuildings3d_2_2021-09_1264-43_2056_5728.dxf.zip",
+    "local_file": "city101_node7_rennaz_swissbuildings3d.dxf.zip",
+    "size_mb": 1.0
+  }
+}
