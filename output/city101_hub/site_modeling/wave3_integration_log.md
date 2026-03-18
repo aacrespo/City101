@@ -124,6 +124,7 @@
 ### Issues
 - **Hospital is outside terrain tile:** HRC Rennaz at N 1,138,644 is ~644m north of tile boundary. Lock placed within tile, oriented toward hospital.
 - No rail data in context DXF for this tile
+- **QA issues found and fixed** — see "QA Pass: Rennaz Site Context Fix" section below
 
 ### Screenshots
 1. **Perspective — isolated lock:** Full 90m bridge from station to hospital ramp
@@ -132,6 +133,38 @@
 ### Performance
 - ~1,600 total objects — very light
 - File size: 11MB
+
+---
+
+## QA Pass: Rennaz Site Context Fix (2026-03-18)
+
+Visual inspection revealed several issues in the Rennaz model. All fixed via Rhino MCP.
+
+### Issues found & fixed
+
+| # | Severity | Issue | Fix |
+|---|----------|-------|-----|
+| 1 | CRITICAL | Roads + Context_2D at Z=0 (374m below terrain) | Moved 360 polylines by (0, 0, 374) |
+| 2 | MAJOR | 1,215 buildings scattered across 4km tile, only 18 near terrain | Deleted 1,197 buildings outside terrain extent (+50m buffer) |
+| 3 | MODERATE | 20 empty DXF import + default layers cluttering panel | Deleted all 20 empty layers |
+| 4 | MINOR | Text dot at (0, 0, 0) | Moved to terrain center (496, 0, 374) |
+| 5 | MINOR | No 500m boundary circle (CHUV had one) | Added 500m circle at (496, 0, 374) on CONTEXT_2D |
+
+### Not fixed (deferred)
+- **Terrain X not centered:** E offset used tile edge (2,560,000) not center (2,560,500). Terrain bbox X is [0, 992] instead of [-496, 496]. Cosmetic — all data is consistent and metadata documents the offset. Fixing would require moving terrain + buildings + roads + lock all by (-496, 0, 0).
+
+### After fix
+- **Objects:** 499 (was 1,695) — 18 buildings, 360 polylines, 118 lock breps, 2 terrain, 1 circle, 1 textdot
+- **Layers:** 12 clean layers (Rennaz_Site hierarchy + Lock_07 hierarchy)
+- **Model Z range:** 371–390m (everything at terrain level)
+
+### Root cause for future sites
+- 2D context DXFs from SwissTLM3D have `has_height: false` — polylines import at Z=0. Must move to terrain Z after import.
+- swissBUILDINGS3D tiles cover ~4km x 4km, much larger than the 1km terrain tile. Must cull buildings outside terrain extent.
+- DXF import creates one layer per Swiss building type. These should be purged after reassigning objects.
+
+### Still to check: CHUV and Morges
+Same issues likely exist (especially buildings outside terrain, empty layers). CHUV roads may already be at correct Z if context DXF was also scaled from km.
 
 ---
 
