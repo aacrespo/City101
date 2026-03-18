@@ -24,7 +24,16 @@ LOG 200-300 → LOG 400 ("full assembly detail, materiality")
 - Gate Threshold: x [-2, 2], 4m wide, 8m tall
 - Dawn Chamber: x [2, 17], 15m wide, 6m tall
 - Y range: [-5, 5] (10m depth)
-- SITE_ORIGIN: (0, 15, 392.0)
+- SITE_ORIGIN: (-60, 0, 381.5) — re-sited from (0, 15, 392.0)
+
+### Siting Fix
+Original v3 placement at (0, 15, 392) landed the lock on top of buildings near the
+terrain text dot. Re-sited to (-60, 0, 381.5):
+- **15m north of rail tracks** — on the hospital-approach side (uphill)
+- **Terrain Z=381.5** — ground level, 1.4m elevation range across footprint
+- **Clear of all buildings** — verified no overlap within 2m margin
+- **On the path** between EHC Morges hospital (uphill/north) and the station (at tracks)
+- LV95: E 2,527,440, N 1,151,500
 
 ### Layer Hierarchy (v4)
 ```
@@ -53,7 +62,7 @@ Lock_03::
 
 ### Verification
 - Total objects: 138 (target was 120-130, slightly over due to wall segmentation)
-- All geometry at correct Z (SITE_ORIGIN Z=392.0)
+- All geometry at correct Z (SITE_ORIGIN Z=381.5, ground level)
 - Wall thickness: 0.3m
 - Stair treads individually visible (0.18m run × 0.05m thick)
 - Facade frames create depth in perspective view
