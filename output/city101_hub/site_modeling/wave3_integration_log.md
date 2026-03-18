@@ -163,8 +163,38 @@ Visual inspection revealed several issues in the Rennaz model. All fixed via Rhi
 - swissBUILDINGS3D tiles cover ~4km x 4km, much larger than the 1km terrain tile. Must cull buildings outside terrain extent.
 - DXF import creates one layer per Swiss building type. These should be purged after reassigning objects.
 
-### Still to check: CHUV and Morges
-Same issues likely exist (especially buildings outside terrain, empty layers). CHUV roads may already be at correct Z if context DXF was also scaled from km.
+### Still to check: ~~CHUV and~~ Morges
+~~Same issues likely exist (especially buildings outside terrain, empty layers). CHUV roads may already be at correct Z if context DXF was also scaled from km.~~
+CHUV done — see below. Morges next.
+
+---
+
+## QA Pass: CHUV Site Context Fix (2026-03-18)
+
+Same root causes as Rennaz confirmed. All fixed via Rhino MCP.
+
+### Issues found & fixed
+
+| # | Severity | Issue | Fix |
+|---|----------|-------|-----|
+| 1 | CRITICAL | Roads (680) at Z=0 (451m below terrain) | Moved all 680 polylines by (0, 0, 451) |
+| 2 | CRITICAL | Context_2D (1,075) at Z=0 | Moved all 1,075 polylines by (0, 0, 451) |
+| 3 | CRITICAL | Rail (7) at Z=0 | Moved all 7 polylines by (0, 0, 451) |
+| 4 | MAJOR | 9,355 buildings scattered across 7km, only 1,316 near terrain | Deleted 8,039 buildings outside terrain extent (+50m buffer) |
+| 5 | MODERATE | 26 empty DXF import + default layers | Deleted all 26 empty layers |
+| 6 | MINOR | Text dot at (0, 0, 400) — below terrain | Moved to lock position (-450, -400, 451) |
+| 7 | MINOR | Boundary circle at Z=500 — inconsistent with other 2D linework | Moved to Z=451 (matching roads/context reference plane) |
+| 8 | MINOR | 1 rail polyline spanning 4km (X: -4493 to -497) ruining zoom-to-fit | Deleted — too extreme for site context |
+
+### CHUV-specific notes
+- **Terrain Z range is 447–577m** (130m elevation change, very hilly). Unlike Rennaz (flat, 372–381m), no single Z perfectly matches all terrain. Used Z=451 (lock elevation, near terrain min) as reference plane for all 2D linework.
+- **Roads were also at Z=0** despite being imported via the DXF-in-km workflow. The km→m scaling preserved XY but Z was still 0 (has_height: false in source DXF).
+- **4 remaining polylines extend 100–1100m beyond terrain** (2 rail, 2 road) — these are real infrastructure corridors approaching the site. Left in place as context.
+
+### After fix
+- **Objects:** ~3,162 (was 11,202) — 1,316 buildings, 1,761 polylines, 82 lock breps, 2 terrain, 1 circle, 1 textdot
+- **Layers:** 14 clean layers (Default + CHUV_Site hierarchy + Lock_05 hierarchy)
+- **Model Z range:** 439–625m (everything at terrain level)
 
 ---
 
