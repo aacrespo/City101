@@ -14,4 +14,13 @@
 - Wednesday 03:08
 - Wednesday 03:15
 - Wednesday 03:18
-- Wednesday 03:21 [break] session saved
+- Wednesday 03:21 [handoff] continuing Wave 3 in new session
+- Wednesday 03:22
+- Wednesday 03:26
+- Wednesday 03:30
+- Wednesday 03:31
+- Wednesday 03:34
+- Wednesday 03:35
+- Wednesday 03:40
+- Wednesday 03:41
+- Wednesday 03:40 [break] session saved
