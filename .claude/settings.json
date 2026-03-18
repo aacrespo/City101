@@ -1,0 +1,37 @@
+{
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo \"[$(date '+%A %Y-%m-%d %H:%M')]\" >&2"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "TODAY=$(date '+%Y-%m-%d'); NOW=$(date '+%A %H:%M'); LOG=/Users/andreacrespo/CLAUDE/city101/state/session-log.md; mkdir -p /Users/andreacrespo/CLAUDE/city101/state; if [ ! -f \"$LOG\" ] || ! head -1 \"$LOG\" | grep -q \"$TODAY\"; then echo \"# Session Log — $TODAY\" > \"$LOG\"; fi; echo \"- $NOW\" >> \"$LOG\"; /Users/andreacrespo/CLAUDE/city101/scripts/hooks/break-check.sh"
+          }
+        ]
+      }
+    ],
+    "PreCompact": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "STATE=/Users/andreacrespo/CLAUDE/city101/state/pre-compact-snapshot.md; LOCK=/Users/andreacrespo/CLAUDE/city101/LOCKBOARD.md; mkdir -p /Users/andreacrespo/CLAUDE/city101/state; echo '---' >> \"$STATE\" && echo \"Compaction at: $(date '+%Y-%m-%d %H:%M')\" >> \"$STATE\" && echo \"Branch: $(git -C /Users/andreacrespo/CLAUDE/city101 branch --show-current 2>/dev/null)\" >> \"$STATE\" && echo '' >> \"$STATE\" && echo '## Lockboard snapshot' >> \"$STATE\" && cat \"$LOCK\" >> \"$STATE\" 2>/dev/null && echo '' >> \"$STATE\" && echo '## Recent git' >> \"$STATE\" && git -C /Users/andreacrespo/CLAUDE/city101 log --oneline -5 >> \"$STATE\" 2>/dev/null && echo '' >> \"$STATE\" && echo '## Uncommitted' >> \"$STATE\" && git -C /Users/andreacrespo/CLAUDE/city101 status --short >> \"$STATE\" 2>/dev/null"
+          }
+        ]
+      }
+    ]
+  }
+}

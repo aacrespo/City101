@@ -25,8 +25,11 @@ You're reading this now. Three more files load automatically from `.claude/rules
 | `/builder` | design_system/SPEC.md, deliverables/ | site-deploy, narrative-assembly |
 | `/session-start` | CONTEXT.md, CONTEXT_ANDREA.md, CONTEXT_HENNA.md, LOCKBOARD.md | session-management |
 | `/session-end` | CONTEXT.md, CONTEXT_ANDREA.md, CONTEXT_HENNA.md, LOCKBOARD.md | session-management |
+| `/save-session` | state/sessions/, LOCKBOARD.md | — |
+| `/resume-session` | state/sessions/ (latest), git state | — |
 | `/verify-data` | (target file) | data-verification |
 | `/brain-dump` | prompt-craft.md (auto-loaded from rules) | — |
+| `/unlock` | (target PDF) | — |
 | `/team` | all role commands, prompt-craft.md | dynamic team assembly |
 
 ### Layer 3: Reference (loaded on demand)
@@ -97,7 +100,8 @@ city101/
 ├── handoffs/                  ← all session handoffs + brain dumps
 ├── prompts/                   ← Claude/LLM execution prompts
 ├── briefs/                    ← assignment specs (A01–A04) + PPTX template
-├── scripts/                   ← ad-hoc processing (animation pipeline, data scripts)
+├── state/                     ← session logs, saved sessions (auto-managed by hooks)
+├── scripts/                   ← ad-hoc processing (animation pipeline, hooks)
 ├── tools/                     ← reusable scripts (data/, maps/, git/, util/)
 ├── workflows/                 ← step-by-step SOPs
 ├── design_system/             ← SPEC.md — visual identity
