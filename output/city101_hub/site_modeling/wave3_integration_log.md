@@ -220,18 +220,24 @@ Same root causes as Rennaz/CHUV, plus a **building tile mismatch** discovery.
 - **Action needed:** Download the correct building tile covering E ~2,526,000–2,528,000 and re-import.
 - Kept 31 nearest buildings (within 200m of terrain east edge) as minimal edge context.
 
-### Re-import attempt: tile 1242-42 (2026-03-18)
+### Re-import attempt 1: tile 1242-42 (2026-03-18)
 - Imported `SWISSBUILDINGS3D_2_0_CHLV95LN02_1242-42.dxf` (21MB, Morges map sheet)
 - **Same coverage as original wrong tile** — buildings span E 2,528,100–2,532,500 (local X 610–5013)
-- Processed: scaled 1000x, offset, culled 1,334 outside 200m buffer → **32 buildings kept** (edge context only)
-- 8 DXF import layers cleaned
-- The other available tile (`1243-14`, 199MB) is the Lausanne sheet — even further east
-- **Still needed:** tile covering E ~2,526,000–2,528,000 for buildings over terrain/lock
+- This is sub-tile row 4, column 2 — one column too far east
+
+### Re-import attempt 2: tile 1242-41 — SUCCESS (2026-03-18)
+- **Tile grid decoded:** `XXXX-RC` where XXXX = 1:25k map sheet, R = row (1–4), C = column (1–4). Sheet 1242 = Morges. Sub-tile 41 = bottom-left, 42 = bottom-right.
+- Downloaded `SWISSBUILDINGS3D_2_0_CHLV95LN02_1242-41.dxf` (61MB) from data.geo.admin.ch
+- 3,402 buildings imported, covers E 2,523,744–2,528,136 — **fully overlaps terrain**
+- Processed: scaled 1000x, offset E-2527500/N-1151500, culled to terrain+50m buffer
+- **1,127 buildings kept** — dense urban fabric covering entire terrain tile
+- 15 DXF import layers cleaned
+- Building types: Einzelhaus (majority), Offenes Gebaeude, Hochhaus, Sakrales Gebaeude, Im Bau, Flugdach, Lagertank, etc.
 
 ### After fix
-- **Objects:** 1,609 (32 buildings, 1,533 polylines, 41 lock breps, 2 terrain, 1 circle, 1 textdot)
+- **Objects:** ~2,704 (1,127 buildings, 1,533 polylines, 41 lock breps, 2 terrain, 1 circle, 1 textdot)
 - **Layers:** 13 clean layers (Default + Morges_Site hierarchy + Lock_03 hierarchy)
-- **Model Z range:** 366–412m (everything at terrain level)
+- **Model Z range:** 364–505m (buildings + terrain)
 
 ---
 
