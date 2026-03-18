@@ -1,0 +1,1549 @@
+▗ ▗   ▖ ▖  Claude Code v2.1.76
+           Opus 4.6 (1M context) · Claude Max
+  ▘▘ ▝▝    ~/CLAUDE/city101
+
+╭─────────────────────────────────────────────────────────────────────────────╮
+│ Plan to implement                                                           │
+│                                                                             │
+│ Lock Prototypology v2 — Rhino MCP + Site Context                            │
+│                                                                             │
+│ Context                                                                     │
+│                                                                             │
+│ v1 delivered: interactive HTML explorer (QC passed) + 3 Rhino Python        │
+│ scripts at LOG 200-300 (nodes 3, 5, 7). Huang saw it, liked it. Rhino MCP   │
+│ now configured in .mcp.json — 18 tools available.                           │
+│                                                                             │
+│ Goal: Test scripts via MCP, upgrade to LOG 400, place in real site context, │
+│  build the full tooling pipeline (skills, agents, rules, review panel), and │
+│  learn what works through full-complexity execution.                        │
+│                                                                             │
+│ Midterm deliverable (March 30): Rhino file + live demo (likely). Layer      │
+│ organization and model navigability are top priority.                       │
+│                                                                             │
+│ Scope: 2 locks at LOG 400 (03-Morges, 05-CHUV), 1 at LOG 300 (07-Rennaz —   │
+│ structural gesture reads well without full detail).                         │
+│                                                                             │
+│ Philosophy: This is a test run / soft launch of the full pipeline. Full     │
+│ scope, full review panel, full depth. Mistakes are expected and valuable —  │
+│ they teach us what to improve.                                              │
+│                                                                             │
+│ ---                                                                         │
+│ SAFETY (auto-accept mode)                                                   │
+│                                                                             │
+│ - NEVER delete any file, directory, or content                              │
+│ - NEVER overwrite existing files — always write to new paths                │
+│ - NEVER spend money — no paid API calls, no cloud services                  │
+│ - NEVER run destructive commands (rm, git reset --hard, git clean,          │
+│ force-push)                                                                 │
+│ - Triple-check every bash command for unintended side effects               │
+│ - All new output goes to output/ as new files                               │
+│ - When in doubt, ask before acting                                          │
+│                                                                             │
+│ GIT STRATEGY                                                                │
+│                                                                             │
+│ Branch: andrea/prototypology-v2 (create at start of first execution         │
+│ session)                                                                    │
+│                                                                             │
+│ Commit checkpoints:                                                         │
+│ - After Wave 1: [DATA] Terrain + point cloud research for 3 lock sites      │
+│ - After Wave 2: [MODEL] Verify 3 lock scripts via Rhino MCP                 │
+│ - After Wave 3: [BUILD] Skills, agents, rules for prototypology pipeline    │
+│ - After each lock reaches target LOG: [MODEL] Lock XX at LOG YYY with       │
+│ review panel pass                                                           │
+│ - After site context placed: [MODEL] Site context for 3 lock nodes          │
+│ - Final: [BUILD] Prototypology v2 — demo-ready Rhino file                   │
+│                                                                             │
+│ Merge to main when Andrea is satisfied with the result.                     │
+│                                                                             │
+│ ---                                                                         │
+│ THIS SESSION: Prompt Design + Deployment Order                              │
+│                                                                             │
+│ Session goal: Design the prompts for each agent/role, define the order of   │
+│ deployment, and configure the agent teams. No execution yet — just the      │
+│ playbook.                                                                   │
+│                                                                             │
+│ Deliverables for this session:                                              │
+│                                                                             │
+│ 1. Deployment sequence — which agents run when, dependencies, handoffs      │
+│ 2. Review panel protocol — the 5-reviewer format, pass/fail criteria        │
+│ 3. Agent prompts — detailed prompts for each agent in the pipeline          │
+│ 4. New files to create — skills, agents, rules (specs only, built in        │
+│ execution sessions)                                                         │
+│                                                                             │
+│ ---                                                                         │
+│ PART 1: DEPLOYMENT SEQUENCE                                                 │
+│                                                                             │
+│ Overview — 4 Waves                                                          │
+│                                                                             │
+│ WAVE 1: Research (parallel, no Rhino)                                       │
+│ ├── Agent: Terrain/GIS Researcher                                           │
+│ └── Agent: Point Cloud Pipeline Researcher                                  │
+│                                                                             │
+│ WAVE 2: Script Testing (needs Rhino MCP, no dependency on Wave 1)           │
+│ └── Agent: Script Runner                                                    │
+│                                                                             │
+│ WAVE 3: Tooling (after Wave 1 completes)                                    │
+│ ├── Build: /site-context skill                                              │
+│ ├── Build: /import-terrain skill                                            │
+│ ├── Build: /rhino-review skill                                              │
+│ ├── Build: 6 agents (site-context-builder + 5 review panel)                 │
+│ ├── Build: point-cloud-protocol rule                                        │
+│ ├── Build: log-400-checklist rule                                           │
+│ └── Test: Run /site-context on node 3                                       │
+│                                                                             │
+│ WAVE 4: Modeling + Review (after Waves 2+3, needs Rhino MCP)                │
+│ ├── For each lock (03 → 05 → 07):                                           │
+│ │   ├── Agent: Modeler (LOG upgrade)                                        │
+│ │   ├── Agent: Review Panel (5 lenses) — after each LOG stage               │
+│ │   └── Loop: fix → re-review until all PASS                                │
+│ ├── Agent: Site Context Builder (places terrain + buildings)                │
+│ └── Final: viewport captures, layer audit                                   │
+│                                                                             │
+│ Dependencies                                                                │
+│                                                                             │
+│ ┌──────┬───────────────┬─────────────────────┬──────────────────────────┐   │
+│ │ Wave │     Needs     │      Produces       │          Blocks          │   │
+│ ├──────┼───────────────┼─────────────────────┼──────────────────────────┤   │
+│ │ 1    │ Internet      │ Terrain DXFs,       │ Wave 3 (tooling specs)   │   │
+│ │      │ access        │ pipeline research   │                          │   │
+│ ├──────┼───────────────┼─────────────────────┼──────────────────────────┤   │
+│ │ 2    │ Rhino MCP     │ Verified base       │ Wave 4 (modeling starts  │   │
+│ │      │ running       │ geometry            │ from verified base)      │   │
+│ ├──────┼───────────────┼─────────────────────┼──────────────────────────┤   │
+│ │ 3    │ Wave 1        │ Skills, agents,     │ Wave 4 (review panel     │   │
+│ │      │ research      │ rules               │ needs checklist)         │   │
+│ ├──────┼───────────────┼─────────────────────┼──────────────────────────┤   │
+│ │ 4    │ Waves 2+3,    │ Final models,       │ —                        │   │
+│ │      │ Rhino MCP     │ screenshots         │                          │   │
+│ └──────┴───────────────┴─────────────────────┴──────────────────────────┘   │
+│                                                                             │
+│ Waves 1 and 2 can run in parallel (different sessions — one doesn't need    │
+│ Rhino).                                                                     │
+│ Wave 3 can start partially alongside Wave 2 — rule/agent writing doesn't    │
+│ need Rhino.                                                                 │
+│ Wave 4 is sequential — each lock goes through the full LOG upgrade + review │
+│  cycle.                                                                     │
+│                                                                             │
+│ Handoff Formats                                                             │
+│                                                                             │
+│ From → To: Terrain Researcher → Site Context Builder                        │
+│ Format: DXF + metadata JSON                                                 │
+│ Location: output/city101_hub/terrain/                                       │
+│ ────────────────────────────────────────                                    │
+│ From → To: Point Cloud Researcher → Tooling                                 │
+│ Format: Research report (md)                                                │
+│ Location: output/city101_hub/point_cloud_pipeline_research.md               │
+│ ────────────────────────────────────────                                    │
+│ From → To: Script Runner → Modeler                                          │
+│ Format: Verified .3dm state + error log                                     │
+│ Location: Rhino file + output/city101_hub/script_test_log.md                │
+│ ────────────────────────────────────────                                    │
+│ From → To: Modeler → Review Panel                                           │
+│ Format: Viewport screenshots + layer list + geometry summary                │
+│ Location: output/city101_hub/reviews/                                       │
+│ ────────────────────────────────────────                                    │
+│ From → To: Review Panel → Modeler                                           │
+│ Format: PASS/FAIL per reviewer + fix instructions                           │
+│ Location: output/city101_hub/reviews/                                       │
+│                                                                             │
+│ ---                                                                         │
+│ PART 2: REVIEW PANEL PROTOCOL                                               │
+│                                                                             │
+│ Format                                                                      │
+│                                                                             │
+│ After each LOG stage (300, 350, 400), the modeler pauses and the review     │
+│ panel runs. The panel is 5 separate agents spawned as a team — they can     │
+│ interact, challenge each other, and surface tensions between their domains  │
+│ (e.g., structural says "add column" but accessibility says "that blocks the │
+│  turning radius"). This inter-agent dialogue is where the real value        │
+│ emerges.                                                                    │
+│                                                                             │
+│ All 5 reviewers are permanent agents in .claude/agents/ — reusable for any  │
+│ future lock, building, or architectural review.                             │
+│                                                                             │
+│ Input to Review Panel                                                       │
+│                                                                             │
+│ The modeler provides:                                                       │
+│ 1. Viewport screenshots (4 views: perspective, plan, section, detail)       │
+│ 2. Layer tree listing                                                       │
+│ 3. Geometry summary (object count per layer, bounding box, key dimensions)  │
+│ 4. Current LOG target and what was just added                               │
+│ 5. The lock's concept description (from prototypology_content.json)         │
+│                                                                             │
+│ The 5 Lenses                                                                │
+│                                                                             │
+│ Lens 1: Concept Critic                                                      │
+│ - Question: "Does this still read as a lock/threshold?"                     │
+│ - Checks: Two states visually distinct? Gate identifiable from any angle?   │
+│ Chamber program legible?                                                    │
+│ - PASS if: A stranger could identify the two states and the transition      │
+│ mechanism                                                                   │
+│ - FAIL example: "The gate merges visually with the night chamber — no       │
+│ threshold legible"                                                          │
+│                                                                             │
+│ Lens 2: Structural Reviewer                                                 │
+│ - Question: "Could this stand up?"                                          │
+│ - Checks: Continuous load paths? Column-beam connections logical? Spans     │
+│ appropriate for material? Slab depths reasonable?                           │
+│ - Reference: Material-span rules (timber ≤8m, steel ≤15m, concrete ≤12m for │
+│  simple spans)                                                              │
+│ - PASS if: Load can be traced from roof to ground without interruption      │
+│ - FAIL example: "Cantilevered slab at 6m with no visible support — add      │
+│ column or reduce span"                                                      │
+│                                                                             │
+│ Lens 3: Envelope Reviewer                                                   │
+│ - Question: "Does the skin make sense?"                                     │
+│ - Checks: Mullion grid regular? Material transitions at logical breaks?     │
+│ Weathering details (drip edges, flashings at LOG 400)? Glass-to-opaque      │
+│ ratios buildable?                                                           │
+│ - PASS if: A façade consultant wouldn't flag major issues                   │
+│ - FAIL example: "Glass wraps around corner without a mullion — add corner   │
+│ post or detail the connection"                                              │
+│                                                                             │
+│ Lens 4: Accessibility Reviewer                                              │
+│ - Question: "Can everyone use this?"                                        │
+│ - Checks: Ramp grades ≤6% (SIA 500)? Doors ≥900mm clear? Level thresholds   │
+│ at entries? Turning radii ≥1500mm? Tactile guidance paths? Elevator present │
+│  if multi-story?                                                            │
+│ - Reference: Swiss SIA 500 norms                                            │
+│ - PASS if: A wheelchair user could navigate the entire building             │
+│ independently                                                               │
+│ - FAIL example: "Ramp between chambers is 8% grade — reduce to 6% max or    │
+│ add intermediate landing"                                                   │
+│                                                                             │
+│ Lens 5: LOG Compliance                                                      │
+│ - Question: "Is this the right level of detail?"                            │
+│ - Reference: 00_Workflow_v04.md Section 3.2 LOG table                       │
+│ - At LOG 300: façade divisions, structural elements, all openings present?  │
+│ - At LOG 350: mullions, railings, stairs with runs/landings, key details?   │
+│ - At LOG 400: material breaks, connections, hardware, panel joints?         │
+│ - PASS if: All elements listed for the target LOG level are present         │
+│ - FAIL example: "LOG 400 target but no panel joints on curtain wall — add   │
+│ joint lines at 1200mm module"                                               │
+│                                                                             │
+│ Output Format                                                               │
+│                                                                             │
+│ ## Review: Lock XX — LOG YYY                                                │
+│                                                                             │
+│ ### Concept Critic: [PASS/FAIL]                                             │
+│ [1-2 sentence assessment]                                                   │
+│ [If FAIL: specific fix instruction]                                         │
+│                                                                             │
+│ ### Structural: [PASS/FAIL]                                                 │
+│ [1-2 sentence assessment]                                                   │
+│ [If FAIL: specific fix instruction with dimensions]                         │
+│                                                                             │
+│ ### Envelope: [PASS/FAIL]                                                   │
+│ [1-2 sentence assessment]                                                   │
+│ [If FAIL: specific fix instruction]                                         │
+│                                                                             │
+│ ### Accessibility: [PASS/FAIL]                                              │
+│ [1-2 sentence assessment with measurements]                                 │
+│ [If FAIL: specific fix instruction with SIA 500 reference]                  │
+│                                                                             │
+│ ### LOG Compliance: [PASS/FAIL]                                             │
+│ [Missing elements list]                                                     │
+│ [If FAIL: specific elements to add]                                         │
+│                                                                             │
+│ ### Summary                                                                 │
+│ - Total: X/5 PASS                                                           │
+│ - Critical fixes (must do): [list]                                          │
+│ - Suggested improvements (nice to have): [list]                             │
+│ - Ready to advance to next LOG stage: YES/NO                                │
+│                                                                             │
+│ Iteration Rules                                                             │
+│                                                                             │
+│ - All 5 PASS → advance to next LOG stage                                    │
+│ - Any FAIL → modeler fixes, re-runs ONLY the failed lenses (not all 5)      │
+│ - Max 3 iterations per LOG stage — if still failing, flag for human review  │
+│ - Critical vs suggested: only critical fixes block advancement              │
+│                                                                             │
+│ ---                                                                         │
+│ PART 3: AGENT PROMPTS                                                       │
+│                                                                             │
+│ Agent 1: Terrain + GIS Data Researcher                                      │
+│                                                                             │
+│ Role: Analyst (existing)                                                    │
+│ Spawned in: Wave 1                                                          │
+│ Runs in parallel with: Agent 2                                              │
+│                                                                             │
+│ You are researching terrain and GIS data for 3 lock sites along the         │
+│ Geneva–Villeneuve corridor.                                                 │
+│                                                                             │
+│ SITES:                                                                      │
+│ - Node 3 (Morges): lat 46.511, lon 6.494, LV95 ~2'527'500 / 1'151'500       │
+│ - Node 5 (CHUV Lausanne): lat 46.525, lon 6.642, LV95 ~2'538'500 /          │
+│ 1'152'500                                                                   │
+│ - Node 7 (Rennaz): lat 46.389, lon 6.912, LV95 ~2'560'000 / 1'137'500       │
+│                                                                             │
+│ TASKS:                                                                      │
+│ 1. Inspect source/00-datasets                                               │
+│ 2/lhiamrossier/GPKG/190226_TLM3D_City101_v3_EN.gpkg                         │
+│    — List all layers and their attributes                                   │
+│    — Check for building height fields (HOEHE, HEIGHT, GEBAEUDE_HOEHE, etc.) │
+│    — Extract buildings within 500m of each site                             │
+│                                                                             │
+│ 2. Inspect source/WORK copy/ and source/Documents copy/                     │
+│    — List all GIS-relevant files (shp, gpkg, geojson, tif, asc)             │
+│    — Note any elevation/height/terrain data                                 │
+│                                                                             │
+│ 3. Research swissALTI3D on data.geo.admin.ch                                │
+│    — Find download URLs for 2m DTM tiles covering each site                 │
+│    — Document the tile naming system and format (GeoTIFF)                   │
+│    — Download tiles if accessible via REST API                              │
+│                                                                             │
+│ 4. For each site, extract 500m-radius context:                              │
+│    — Buildings with heights (if available)                                  │
+│    — Rail lines                                                             │
+│    — Roads                                                                  │
+│    — Export as DXF for Rhino import (layers: Buildings, Rail, Roads,        │
+│ Terrain)                                                                    │
+│                                                                             │
+│ OUTPUT:                                                                     │
+│ - output/city101_hub/terrain/ — one DXF per site + GeoTIFF tiles            │
+│ - output/city101_hub/context/ — metadata JSON per site (source, CRS, layer  │
+│ list, feature counts)                                                       │
+│ - Print full summary: what was found, what's missing, quality assessment    │
+│                                                                             │
+│ Agent 2: Point Cloud Pipeline Researcher                                    │
+│                                                                             │
+│ Role: Analyst (existing)                                                    │
+│ Spawned in: Wave 1                                                          │
+│ Runs in parallel with: Agent 1                                              │
+│                                                                             │
+│ You are researching the complete pipeline from raw LiDAR point clouds to    │
+│ Rhino 3D site models, for an architecture studio project.                   │
+│                                                                             │
+│ RESEARCH QUESTIONS (investigate all):                                       │
+│                                                                             │
+│ 1. DATA SOURCE: swissSURFACE3D (swisstopo)                                  │
+│    — What is it? (density, classification, format, CRS)                     │
+│    — How to download? (REST API, STAC, manual)                              │
+│    — Tile system and coverage for Geneva–Villeneuve corridor                │
+│    — File sizes and processing requirements                                 │
+│                                                                             │
+│ 2. IMPORT TO RHINO                                                          │
+│    — Native Rhino point cloud support (formats, limits)                     │
+│    — Cockroach plugin (capabilities, installation)                          │
+│    — Volvox for Grasshopper                                                 │
+│    — CloudCompare as preprocessing bridge                                   │
+│    — Which approach do architecture firms actually use?                     │
+│                                                                             │
+│ 3. SEMANTIC SEGMENTATION                                                    │
+│    — Classifying raw points into: buildings, terrain, vegetation,           │
+│ infrastructure, water                                                       │
+│    — LAS classification codes (what's already classified in                 │
+│ swissSURFACE3D?)                                                            │
+│    — Open3D Python for custom classification                                │
+│    — QGIS point cloud tools (3.32+)                                         │
+│    — Machine learning approaches (PointNet, etc.) — feasible or overkill?   │
+│                                                                             │
+│ 4. PREPROCESSING PIPELINE                                                   │
+│    — Raw LAS → filtered → classified → meshed → Rhino                       │
+│    — Which steps need which tools?                                          │
+│    — CloudCompare MCP — does it exist?                                      │
+│    — QGIS MCP — does it exist?                                              │
+│    — What can be scripted vs manual?                                        │
+│                                                                             │
+│ 5. PROFESSIONAL PRACTICE                                                    │
+│    — How do architecture firms go from site survey to digital site model?   │
+│    — What's the typical pipeline (survey company → point cloud → model)?    │
+│    — What specialist roles review 3D models at LOG 400?                     │
+│    — Time/cost benchmarks for point cloud → model workflows                 │
+│                                                                             │
+│ 6. TOOLS & AUTOMATION POTENTIAL                                             │
+│    — Which steps could become Claude Code tools/skills?                     │
+│    — Which need human judgment?                                             │
+│    — Recommended agents, skills, and rules to build                         │
+│                                                                             │
+│ OUTPUT: output/city101_hub/point_cloud_pipeline_research.md                 │
+│ Structure:                                                                  │
+│ 1. Pipeline diagram (ASCII: steps → tools → formats at each stage)          │
+│ 2. Data source assessment (swissSURFACE3D availability + alternatives)      │
+│ 3. Tool recommendations (ranked by practicality)                            │
+│ 4. Agent/skill/rule specs (what to build, what each does)                   │
+│ 5. Effort estimates per pipeline step                                       │
+│ 6. Recommended next steps (ordered by priority)                             │
+│                                                                             │
+│ Agent 3: Script Runner                                                      │
+│                                                                             │
+│ Role: Modeler (existing)                                                    │
+│ Spawned in: Wave 2                                                          │
+│ Needs: Rhino MCP running                                                    │
+│                                                                             │
+│ You are testing 3 existing Rhino Python scripts via MCP to verify they      │
+│ produce correct geometry.                                                   │
+│                                                                             │
+│ Read the workflow: workflows/rhino-modeling.md                              │
+│ Read LOG conventions: 00_Workflow_v04.md Section 3.2                        │
+│                                                                             │
+│ SCRIPTS TO TEST (run each via execute_rhinoscript_python_code):             │
+│ 1. output/city101_hub/rhino_scripts/lock_03_morges_temporal.py              │
+│ 2. output/city101_hub/rhino_scripts/lock_05_chuv_gradient.py                │
+│ 3. output/city101_hub/rhino_scripts/lock_07_rennaz_bridge.py                │
+│                                                                             │
+│ FOR EACH SCRIPT:                                                            │
+│ 1. Read the script first — understand the spatial plan in the docstring     │
+│ 2. Run it via MCP                                                           │
+│ 3. If errors: document the error, diagnose, fix, re-run                     │
+│ 4. After successful run:                                                    │
+│    — capture_viewport from 4 angles (perspective, top, front, side)         │
+│    — List all layers created (get_document_summary)                         │
+│    — Count objects per layer                                                │
+│    — Verify bounding box matches the spatial plan dimensions                │
+│ 5. Check LOG level: scripts claim LOG 200-300. Verify:                      │
+│    — Volumes present? (LOG 200 ✓)                                           │
+│    — Floor plates? (LOG 200 ✓)                                              │
+│    — Structural elements (columns)? (LOG 300 ✓)                             │
+│    — Openings? (LOG 300 ✓)                                                  │
+│                                                                             │
+│ OUTPUT:                                                                     │
+│ - Verified geometry in Rhino (3 locks)                                      │
+│ - output/city101_hub/script_test_log.md with:                               │
+│   — Per script: success/fail, errors encountered, fixes applied             │
+│   — Screenshots (saved or described)                                        │
+│   — Layer/object inventory                                                  │
+│   — LOG compliance check                                                    │
+│   — Any issues for the modeler to know about                                │
+│                                                                             │
+│ Agent 4: Modeler (LOG Upgrade)                                              │
+│                                                                             │
+│ Role: Modeler (existing, extended)                                          │
+│ Spawned in: Wave 4                                                          │
+│ Needs: Rhino MCP, verified base geometry from Wave 2, log-400-checklist     │
+│ rule                                                                        │
+│                                                                             │
+│ You are upgrading lock models from LOG 200-300 to their target LOG levels   │
+│ via Rhino MCP.                                                              │
+│                                                                             │
+│ Read first:                                                                 │
+│ - 00_Workflow_v04.md Section 3.2 (LOG levels, box() helper)                 │
+│ - workflows/rhino-modeling.md                                               │
+│ - .claude/rules/log-400-checklist.md (built in Wave 3)                      │
+│ - output/city101_hub/prototypology_content.json (node definitions)          │
+│ - output/city101_hub/script_test_log.md (known issues from Wave 2)          │
+│                                                                             │
+│ LOCK ASSIGNMENTS:                                                           │
+│ - Lock 03 (Morges) → LOG 400                                                │
+│ - Lock 05 (CHUV) → LOG 400                                                  │
+│ - Lock 07 (Rennaz) → LOG 300 (refine only)                                  │
+│                                                                             │
+│ PROCESS (for each LOG-400 lock):                                            │
+│ Work in stages. After each stage, STOP and provide review materials.        │
+│                                                                             │
+│ Stage 1: LOG 300 (if not already there)                                     │
+│ - Façade divisions on all faces                                             │
+│ - Structural elements: columns, beams, slabs with correct dimensions        │
+│ - All openings: doors, windows, voids with exact coordinates                │
+│ - Layer: Lock_XX::L300_Structure                                            │
+│                                                                             │
+│ Stage 2: LOG 350                                                            │
+│ - Mullion grids on glazed façades (module from concept)                     │
+│ - Railings (height 1100mm, post spacing ≤1500mm)                            │
+│ - Stairs: runs + landings + correct rise/run (170mm/290mm)                  │
+│ - Key architectural details from the concept                                │
+│ - Layer: Lock_XX::L350_Detail                                               │
+│                                                                             │
+│ Stage 3: LOG 400                                                            │
+│ - Material breaks (concrete panel joints, timber stud lines, steel splice   │
+│ plates)                                                                     │
+│ - Connections (column-beam, wall-slab, foundation)                          │
+│ - Hardware (hinges, handles, gate mechanisms from concept)                  │
+│ - Panel joints on curtain walls (module grid)                               │
+│ - Layer: Lock_XX::L400_Material                                             │
+│                                                                             │
+│ AFTER EACH STAGE:                                                           │
+│ Produce for review panel:                                                   │
+│ 1. 4 viewport captures (perspective, plan, section through gate, detail)    │
+│ 2. Layer tree listing                                                       │
+│ 3. Object count per layer                                                   │
+│ 4. Bounding box dimensions                                                  │
+│ 5. What was added in this stage                                             │
+│ 6. Any design decisions you made and why                                    │
+│                                                                             │
+│ FOR LOCK 07 (LOG 300 only):                                                 │
+│ 1. Verify existing geometry                                                 │
+│ 2. Clean up: proper layers, named objects, correct dimensions               │
+│ 3. Add any missing LOG 300 elements                                         │
+│ 4. Single review pass                                                       │
+│ 5. Done                                                                     │
+│                                                                             │
+│ LAYER CONVENTION:                                                           │
+│ Lock_XX::L200_Volumes                                                       │
+│ Lock_XX::L300_Structure                                                     │
+│ Lock_XX::L350_Detail                                                        │
+│ Lock_XX::L400_Material                                                      │
+│ Site_XX::Terrain                                                            │
+│ Site_XX::Buildings                                                          │
+│ Site_XX::Rail                                                               │
+│                                                                             │
+│ LOCK-SPECIFIC DETAIL (LOG 400):                                             │
+│                                                                             │
+│ Lock 03 (Morges — Temporal Lock):                                           │
+│ - Night chamber: timber-frame shelter. Model stud spacing (600mm OC),       │
+│ header beams, plate connections                                             │
+│ - Gate threshold: concrete. Formwork lines at 2400mm lifts, tie holes at    │
+│ 600mm grid                                                                  │
+│ - Dawn chamber: glass wall facing east. Mullion grid (1200mm module),       │
+│ transom at floor levels                                                     │
+│ - Furniture: bench seating in night chamber (seat height 450mm, depth       │
+│ 400mm)                                                                      │
+│ - Gate mechanism: steel sliding gate, track rail, wheel assembly            │
+│                                                                             │
+│ Lock 05 (CHUV — Gradient Lock):                                             │
+│ - Waffle slab: concrete, 600mm module, 400mm depth, ribs 150mm wide         │
+│ - Ramp: steel with anti-slip deck plates, expansion joints every 6m,        │
+│ handrails both sides                                                        │
+│ - Curtain wall: aluminum mullion grid (1500mm module), vision glass +       │
+│ spandrel panels                                                             │
+│ - Mechanical shaft: louver panels (45° blade angle, 100mm spacing)          │
+│ - Elevator: car dimensions (1100×1400mm clear), door 900mm, control panel   │
+│ height 900-1200mm                                                           │
+│                                                                             │
+│ MATERIALS (for visual clarity in model):                                    │
+│ Use layer colors to distinguish:                                            │
+│ - Concrete: (180, 180, 175)                                                 │
+│ - Steel: (140, 150, 160)                                                    │
+│ - Glass: (200, 220, 240)                                                    │
+│ - Timber: (200, 170, 130)                                                   │
+│ - Aluminum: (190, 195, 200)                                                 │
+│                                                                             │
+│ Agents 5a-5e: Review Panel (5 separate permanent agents)                    │
+│                                                                             │
+│ All spawned as a team in Wave 4 after each modeler stage. They can read     │
+│ each other's reviews and respond — this is where tensions surface.          │
+│                                                                             │
+│ Spawned in: Wave 4, after each modeler stage                                │
+│ Input: Modeler's review materials (screenshots, layer list, geometry        │
+│ summary)                                                                    │
+│ Interaction: Each reviewer writes to                                        │
+│ output/city101_hub/reviews/lock_XX_logYYY/. Later reviewers can read        │
+│ earlier reviews and respond to them.                                        │
+│                                                                             │
+│ Common preamble (all 5 agents read):                                        │
+│ Read first:                                                                 │
+│ - 00_Workflow_v04.md Section 3.2 (LOG definitions)                          │
+│ - .claude/rules/log-400-checklist.md                                        │
+│ - output/city101_hub/prototypology_content.json (the lock's concept)        │
+│ - The modeler's review materials in output/city101_hub/reviews/             │
+│ - Any reviews already written by other panel members (respond to tensions)  │
+│                                                                             │
+│ Agent 5a: Concept Critic → .claude/agents/concept-critic.md (permanent)     │
+│ You are a concept critic reviewing a lock model.                            │
+│                                                                             │
+│ Question: "Does this still read as a lock/threshold?"                       │
+│ - Are the two states (state_a / state_b from concept) visually distinct?    │
+│ - Can you identify the gate/threshold from any angle?                       │
+│ - Is the chamber program legible in the geometry?                           │
+│ - PASS if a stranger could identify the two states and transition mechanism │
+│                                                                             │
+│ If other reviewers have already posted, check whether their suggested fixes │
+│ would affect concept legibility. Flag any conflicts.                        │
+│                                                                             │
+│ OUTPUT: PASS/FAIL + assessment + fix instructions if FAIL                   │
+│ Write to: output/city101_hub/reviews/lock_XX_logYYY/concept_critic.md       │
+│                                                                             │
+│ Agent 5b: Structural Reviewer → .claude/agents/structural-reviewer.md       │
+│ (permanent)                                                                 │
+│ You are a structural reviewer checking a lock model.                        │
+│                                                                             │
+│ Question: "Could this stand up?"                                            │
+│ - Trace load paths: roof → beams → columns → ground. Any breaks?            │
+│ - Column-beam connections: do they meet? Are joints logical?                │
+│ - Spans: timber ≤8m, steel ≤15m, concrete ≤12m (simple span)                │
+│ - Slab depths: concrete ~span/30, steel ~span/25, timber ~span/20           │
+│ - PASS if load can be traced continuously from top to bottom                │
+│                                                                             │
+│ If other reviewers suggest changes (e.g., removing a column for             │
+│ accessibility),                                                             │
+│ evaluate whether the structure can accommodate it and propose alternatives. │
+│                                                                             │
+│ OUTPUT: PASS/FAIL + assessment with dimensions + fix instructions if FAIL   │
+│ Write to: output/city101_hub/reviews/lock_XX_logYYY/structural.md           │
+│                                                                             │
+│ Agent 5c: Envelope Reviewer → .claude/agents/envelope-reviewer.md           │
+│ (permanent)                                                                 │
+│ You are an envelope reviewer checking a lock model's skin and facades.      │
+│                                                                             │
+│ Question: "Does the skin make sense?"                                       │
+│ - Mullion grid: regular spacing? Corner conditions resolved?                │
+│ - Material transitions: at logical breaks (floor levels, structural bays)?  │
+│ - At LOG 400: drip edges, flashings, gaskets at glass-to-frame?             │
+│ - Glass ratios: <70% per façade (thermal), supported at each floor          │
+│ - PASS if a façade consultant wouldn't flag major issues                    │
+│                                                                             │
+│ Check structural reviewer's assessment — do your mullion locations align    │
+│ with the structural grid? Flag any misalignments.                           │
+│                                                                             │
+│ OUTPUT: PASS/FAIL + assessment + fix instructions if FAIL                   │
+│ Write to: output/city101_hub/reviews/lock_XX_logYYY/envelope.md             │
+│                                                                             │
+│ Agent 5d: Accessibility Reviewer → .claude/agents/accessibility-reviewer.md │
+│  (permanent)                                                                │
+│ You are an accessibility reviewer checking universal access compliance.     │
+│                                                                             │
+│ Question: "Can everyone use this?"                                          │
+│ - Ramps: ≤6% grade, landings every 6m of run, min 1200mm wide               │
+│ - Doors: ≥900mm clear width, level threshold (≤25mm)                        │
+│ - Turning radii: ≥1500mm at direction changes and in front of doors         │
+│ - Tactile guidance: path from entry to key destinations                     │
+│ - Elevator: if multi-story, min 1100×1400mm car, 900mm door                 │
+│ - Handrails: both sides of ramps/stairs, 850-900mm height                   │
+│ - Reference: Swiss SIA 500                                                  │
+│ - PASS if a wheelchair user could navigate the entire building              │
+│                                                                             │
+│ If structural reviewer placed columns that block circulation, propose       │
+│ relocations that satisfy both structural and accessibility needs.           │
+│                                                                             │
+│ OUTPUT: PASS/FAIL + assessment with measurements + fix instructions if FAIL │
+│ Write to: output/city101_hub/reviews/lock_XX_logYYY/accessibility.md        │
+│                                                                             │
+│ Agent 5e: LOG Compliance Reviewer →                                         │
+│ .claude/agents/log-compliance-reviewer.md (permanent)                       │
+│ You are a LOG compliance reviewer checking detail level against the         │
+│ standard.                                                                   │
+│                                                                             │
+│ Question: "Is this the right level of detail?"                              │
+│ Compare against 00_Workflow_v04.md LOG table:                               │
+│ - LOG 300: façade divisions ✓, structural elements ✓, openings ✓            │
+│ - LOG 350: mullions ✓, railings ✓, stairs (runs+landings) ✓, key details ✓  │
+│ - LOG 400: material breaks ✓, connections ✓, hardware ✓, panel joints ✓     │
+│ List each expected element as present or missing.                           │
+│ - PASS if all elements for the target LOG level are present                 │
+│                                                                             │
+│ Read all other reviewer reports. Compile a final summary:                   │
+│                                                                             │
+│ ## Review Summary: Lock XX — LOG YYY                                        │
+│ - Concept Critic: [PASS/FAIL]                                               │
+│ - Structural: [PASS/FAIL]                                                   │
+│ - Envelope: [PASS/FAIL]                                                     │
+│ - Accessibility: [PASS/FAIL]                                                │
+│ - LOG Compliance: [PASS/FAIL]                                               │
+│ - Cross-reviewer tensions: [list any conflicts between reviewers]           │
+│ - Critical fixes: [must-do, with priority order]                            │
+│ - Suggested improvements: [nice-to-have]                                    │
+│ - Ready to advance: YES/NO                                                  │
+│                                                                             │
+│ Write to:                                                                   │
+│ output/city101_hub/reviews/lock_XX_logYYY/log_compliance_and_summary.md     │
+│                                                                             │
+│ Review Panel Interaction Flow                                               │
+│                                                                             │
+│ Modeler produces review materials                                           │
+│         │                                                                   │
+│         ▼                                                                   │
+│ ┌─── Spawn all 5 reviewers as team ───┐                                     │
+│ │                                      │                                    │
+│ │  5a Concept Critic ──writes──┐       │                                    │
+│ │  5b Structural ──────writes──┤       │                                    │
+│ │  5c Envelope ────────writes──┤ (parallel, but can read each other)        │
+│ │  5d Accessibility ───writes──┤       │                                    │
+│ │  5e LOG Compliance ──reads all──► compiles summary                        │
+│ │                                      │                                    │
+│ └──────────────────────────────────────┘                                    │
+│         │                                                                   │
+│         ▼                                                                   │
+│ Summary → Modeler (fix list)                                                │
+│         │                                                                   │
+│         ▼                                                                   │
+│ Modeler fixes → re-run ONLY failed lenses                                   │
+│ (max 3 iterations, then escalate to human)                                  │
+│                                                                             │
+│ Agent 6: Site Context Builder                                               │
+│                                                                             │
+│ Role: New agent (to be created in .claude/agents/)                          │
+│ Spawned in: Wave 4, after terrain data is ready                             │
+│ Needs: Rhino MCP, DXF files from Wave 1                                     │
+│                                                                             │
+│ You are placing real site context around the 3 lock models in Rhino.        │
+│                                                                             │
+│ Read first:                                                                 │
+│ - output/city101_hub/context/ — metadata JSONs from terrain researcher      │
+│ - output/city101_hub/terrain/ — DXF files per site                          │
+│                                                                             │
+│ FOR EACH SITE (nodes 3, 5, 7):                                              │
+│ 1. Import the site DXF via Rhino MCP                                        │
+│ 2. Position correctly relative to the lock model:                           │
+│    — Lock models are at local origin (0,0,0)                                │
+│    — Site context uses real LV95 coordinates                                │
+│    — Calculate the offset: lock's real-world LV95 coords minus model origin │
+│    — Apply offset so the lock sits in its real position within the context  │
+│ 3. Organize into layers:                                                    │
+│    — Site_XX::Terrain (mesh/surface, locked layer, dimmed 50%)              │
+│    — Site_XX::Buildings (extruded footprints with heights, locked, dimmed   │
+│ 30%)                                                                        │
+│    — Site_XX::Rail (rail lines, locked, dimmed 50%)                         │
+│    — Site_XX::Roads (road edges, locked, dimmed 70%)                        │
+│ 4. Lock all Site layers (reference only, not editable)                      │
+│ 5. Capture viewport: lock model in context from aerial perspective          │
+│ 6. Verify alignment: buildings/rail should be at correct positions relative │
+│  to lock                                                                    │
+│                                                                             │
+│ OUTPUT:                                                                     │
+│ - Site context in Rhino file on proper layers                               │
+│ - Alignment verification screenshots                                        │
+│ - Notes on any issues (missing data, offset problems)                       │
+│                                                                             │
+│ ---                                                                         │
+│ PART 4: NEW FILES TO CREATE                                                 │
+│                                                                             │
+│ Skills (.claude/commands/)                                                  │
+│                                                                             │
+│ /site-context — Extract site context for a lock node                        │
+│ - Input: node ID (1-7)                                                      │
+│ - Reads: prototypology_content.json for coordinates, source GIS data        │
+│ - Does: extract 500m radius buildings/rail/roads, convert to DXF            │
+│ - Output: DXF + metadata JSON in output/city101_hub/                        │
+│                                                                             │
+│ /import-terrain — Import terrain into Rhino                                 │
+│ - Input: node ID                                                            │
+│ - Reads: terrain DXF/GeoTIFF from output/city101_hub/terrain/               │
+│ - Does: import via Rhino MCP, create terrain mesh, set up layers            │
+│ - Output: terrain in Rhino on Site_XX::Terrain layer                        │
+│                                                                             │
+│ /rhino-review — Run review panel on current model state                     │
+│ - Input: lock number, LOG target                                            │
+│ - Reads: Rhino state via MCP, prototypology_content.json, log-400-checklist │
+│ - Does: capture viewports, run 5-lens review                                │
+│ - Output: review report in output/city101_hub/reviews/                      │
+│                                                                             │
+│ Agents (.claude/agents/) — all permanent                                    │
+│                                                                             │
+│ site-context-builder.md                                                     │
+│ - Prompt: see Agent 6 above                                                 │
+│ - On spawn reads: terrain data, context metadata                            │
+│ - Produces: placed site context in Rhino                                    │
+│                                                                             │
+│ concept-critic.md (Review Panel)                                            │
+│ - Reviews lock/threshold legibility                                         │
+│ - On spawn reads: prototypology_content.json, modeler review materials,     │
+│ other reviews                                                               │
+│ - Produces: concept assessment in output/city101_hub/reviews/               │
+│                                                                             │
+│ structural-reviewer.md (Review Panel)                                       │
+│ - Checks load paths, connections, material-appropriate spans                │
+│ - On spawn reads: 00_Workflow_v04.md, modeler review materials, other       │
+│ reviews                                                                     │
+│ - Produces: structural assessment with dimensions                           │
+│                                                                             │
+│ envelope-reviewer.md (Review Panel)                                         │
+│ - Checks skin coherence, mullion grids, material transitions                │
+│ - On spawn reads: modeler review materials, structural review               │
+│ - Produces: envelope assessment                                             │
+│                                                                             │
+│ accessibility-reviewer.md (Review Panel)                                    │
+│ - Swiss SIA 500 compliance: ramps, doors, turning radii                     │
+│ - On spawn reads: modeler review materials, structural review               │
+│ - Produces: accessibility compliance report                                 │
+│                                                                             │
+│ log-compliance-reviewer.md (Review Panel)                                   │
+│ - Checks detail level against LOG table + compiles panel summary            │
+│ - On spawn reads: 00_Workflow_v04.md, ALL other reviews                     │
+│ - Produces: LOG checklist + cross-reviewer summary with tensions            │
+│                                                                             │
+│ Rules (.claude/rules/)                                                      │
+│                                                                             │
+│ point-cloud-protocol.md                                                     │
+│ - LAS/LAZ file handling conventions                                         │
+│ - Classification code reference                                             │
+│ - CRS requirements (LV95)                                                   │
+│ - Storage location: output/city101_hub/point_cloud/                         │
+│ - Never modify raw point cloud files                                        │
+│                                                                             │
+│ log-400-checklist.md                                                        │
+│ - Element checklist per LOG level (what must be present)                    │
+│ - Material-span reference table                                             │
+│ - Accessibility minimums (SIA 500 summary)                                  │
+│ - Layer naming convention                                                   │
+│ - Review panel trigger points                                               │
+│                                                                             │
+│ ---                                                                         │
+│ PART 5: SESSION PLAN (how to execute across sessions)                       │
+│                                                                             │
+│ Session 1: Wave 1 + Wave 2 (parallel)                                       │
+│                                                                             │
+│ Team: Analyst × 2 (terrain + point cloud) in one session, Modeler × 1       │
+│ (script testing) if Rhino is available                                      │
+│ Duration: ~1 session                                                        │
+│ Output: Research complete, scripts verified                                 │
+│                                                                             │
+│ Session 2: Wave 3 (tooling)                                                 │
+│                                                                             │
+│ Team: Direct work (no agents needed — writing skill/agent/rule files)       │
+│ Duration: ~1 session                                                        │
+│ Output: All skills, agents, rules created and tested                        │
+│                                                                             │
+│ Session 3-4: Wave 4 (modeling + review)                                     │
+│                                                                             │
+│ Team: Modeler + Review Panel, Site Context Builder                          │
+│ Duration: ~2 sessions (one per LOG-400 lock, plus Lock 07 cleanup)          │
+│ Output: Final models with site context                                      │
+│                                                                             │
+│ Session 5: Polish + Demo Prep                                               │
+│                                                                             │
+│ Team: Modeler (final touches), Builder (if presentation materials needed)   │
+│ Duration: ~1 session                                                        │
+│ Output: Demo-ready Rhino file with saved views                              │
+│                                                                             │
+│ ---                                                                         │
+│ Full Pipeline (from original plan)                                          │
+│                                                                             │
+│ Session A: Research + Tooling (no Rhino needed)                             │
+│                                                                             │
+│ Phase A1: Parallel Research                                                 │
+│                                                                             │
+│ Agent 1: Terrain + GIS Data Researcher                                      │
+│ - Inspect source/00-datasets                                                │
+│ 2/lhiamrossier/GPKG/190226_TLM3D_City101_v3_EN.gpkg for building height     │
+│ attributes                                                                  │
+│ - Inspect source/WORK copy/ and source/Documents copy/ for additional GIS   │
+│ layers                                                                      │
+│ - Download swissALTI3D elevation tiles for 3 sites from data.geo.admin.ch   │
+│ - Extract 500m-radius context per node: buildings (with heights), rail,     │
+│ roads → DXF for Rhino import                                                │
+│ - Output: output/city101_hub/terrain/ and output/city101_hub/context/       │
+│                                                                             │
+│ Agent 2: Point Cloud Deep Dive                                              │
+│ - Full pipeline research: raw LiDAR → identified elements → Rhino model     │
+│ - Investigate:                                                              │
+│   - swissSURFACE3D (swisstopo LiDAR): availability, download, formats, tile │
+│  system                                                                     │
+│   - Rhino import: native vs Cockroach vs Volvox vs CloudCompare bridge      │
+│   - Semantic segmentation: buildings/terrain/vegetation/infrastructure from │
+│  raw points                                                                 │
+│   - MCPs: CloudCompare MCP, QGIS MCP, Open3D Python                         │
+│   - QGIS preprocessing: filtering, classification, meshing                  │
+│   - How architecture firms actually do it: survey → site model pipeline     │
+│   - What specialist roles review 3D models at LOG 400 (structural, façade,  │
+│ landscape, accessibility)                                                   │
+│ - Output: output/city101_hub/point_cloud_pipeline_research.md               │
+│                                                                             │
+│ Phase A2: Tooling Implementation                                            │
+│                                                                             │
+│ Skills to build (in .claude/commands/):                                     │
+│ - /site-context — automated site context extraction from GIS data for a     │
+│ given node                                                                  │
+│ - /import-terrain — terrain mesh import pipeline (swissALTI3D → Rhino)      │
+│ - /rhino-review — automated LOG compliance check + architectural review     │
+│ protocol                                                                    │
+│                                                                             │
+│ Agents to build (in .claude/agents/):                                       │
+│ - site-context-builder.md — extracts + processes GIS data → Rhino-ready     │
+│ context                                                                     │
+│ - structural-reviewer.md — checks load paths, connections,                  │
+│ material-appropriate spans                                                  │
+│ - accessibility-reviewer.md — Swiss SIA 500 norms, ramp grades, door widths │
+│                                                                             │
+│ Rules to add (in .claude/rules/):                                           │
+│ - point-cloud-protocol.md — conventions for handling LiDAR/point cloud data │
+│ - log-400-checklist.md — what must be present at each LOG level             │
+│                                                                             │
+│ Test each tool: run against one of the 3 nodes to verify before Session B.  │
+│                                                                             │
+│ ---                                                                         │
+│ Session B: Rhino Modeling (needs Rhino MCP)                                 │
+│                                                                             │
+│ Phase B1: Script Testing                                                    │
+│                                                                             │
+│ - Run each of 3 scripts via execute_rhinoscript_python_code                 │
+│ - Capture viewport screenshots                                              │
+│ - Document errors                                                           │
+│ - Output: verified base geometry in Rhino                                   │
+│                                                                             │
+│ Phase B2: LOG Upgrade — Modeler + Full Review Panel                         │
+│                                                                             │
+│ Iterative per lock, with review at EACH LOG stage:                          │
+│                                                                             │
+│ For LOG-400 locks (03-Morges, 05-CHUV):                                     │
+│ 1. Start from verified LOG 200-300                                          │
+│ 2. Add LOG 300: façade divisions, structural elements, all openings         │
+│ 3. → Review Panel (5 reviewers) → fixes                                     │
+│ 4. Add LOG 350: mullions, railings, stairs with runs/landings, key details  │
+│ 5. → Review Panel → fixes                                                   │
+│ 6. Add LOG 400: material breaks, connections, hardware, panel joints        │
+│ 7. → Review Panel → fixes                                                   │
+│ 8. Place site context (terrain + buildings from Session A)                  │
+│ 9. Final viewport captures                                                  │
+│                                                                             │
+│ For LOG-300 lock (07-Rennaz):                                               │
+│ 1. Verify LOG 200-300 base                                                  │
+│ 2. Refine LOG 300: clean geometry, proper layer structure                   │
+│ 3. → Review Panel → done                                                    │
+│ 4. Place site context                                                       │
+│ 5. Final viewport captures                                                  │
+│                                                                             │
+│ LOG 400 specifics:                                                          │
+│ - Lock 03 (Morges): Timber-frame night shelter (stud spacing), concrete     │
+│ gate with formwork lines, glass dawn wall with mullion grid, bench          │
+│ furniture, steel gate mechanism                                             │
+│ - Lock 05 (CHUV): Concrete waffle slab, steel ramp with expansion joints,   │
+│ curtain wall mullion grid, mechanical shaft louvers, elevator car           │
+│                                                                             │
+│ Review Panel — 5 Specialist Lenses (at each LOG stage):                     │
+│                                                                             │
+│ ┌─────────────────┬───────────────────┬──────────────────────────────────┐  │
+│ │    Reviewer     │       Focus       │              Checks              │  │
+│ ├─────────────────┼───────────────────┼──────────────────────────────────┤  │
+│ │                 │ Lock/threshold    │ Two states distinct, gate        │  │
+│ │ Concept Critic  │ legibility        │ identifiable, chamber program    │  │
+│ │                 │                   │ clear                            │  │
+│ ├─────────────────┼───────────────────┼──────────────────────────────────┤  │
+│ │ Structural      │ Connection logic  │ Load paths, column-beam joints,  │  │
+│ │ Reviewer        │                   │ material-appropriate spans       │  │
+│ ├─────────────────┼───────────────────┼──────────────────────────────────┤  │
+│ │ Envelope        │ Skin coherence    │ Mullion regularity, material     │  │
+│ │ Reviewer        │                   │ transitions, weathering logic    │  │
+│ ├─────────────────┼───────────────────┼──────────────────────────────────┤  │
+│ │ Accessibility   │                   │ Ramps ≤6%, doors ≥900mm, SIA     │  │
+│ │ Reviewer        │ Universal access  │ 500, tactile guidance, turning   │  │
+│ │                 │                   │ radii                            │  │
+│ ├─────────────────┼───────────────────┼──────────────────────────────────┤  │
+│ │ LOG Compliance  │ Detail level      │ Compare against                  │  │
+│ │                 │                   │ 00_Workflow_v04.md LOG table     │  │
+│ └─────────────────┴───────────────────┴──────────────────────────────────┘  │
+│                                                                             │
+│ Each produces PASS/FAIL + specific fix instructions. Modeler iterates until │
+│  all pass.                                                                  │
+│                                                                             │
+│ Layer convention: Lock_XX::L200_Volumes, Lock_XX::L300_Structure,           │
+│ Lock_XX::L350_Detail, Lock_XX::L400_Material, Site_XX::Terrain,             │
+│ Site_XX::Buildings, Site_XX::Rail                                           │
+│                                                                             │
+│ Phase B3: Point Cloud Integration                                           │
+│                                                                             │
+│ If Session A data is ready:                                                 │
+│ - Import terrain mesh / point cloud into Rhino                              │
+│ - Align with lock models (LV95 coordinates)                                 │
+│ - Set as reference layer (locked, dimmed)                                   │
+│ - Document workflow for remaining 4 nodes                                   │
+│                                                                             │
+│ ---                                                                         │
+│ Execution Flow                                                              │
+│                                                                             │
+│ SESSION A (research + tooling):               SESSION B (Rhino MCP):        │
+│ ┌──────────────────────────────┐                                            │
+│ ┌──────────────────────────────┐                                            │
+│ │ Phase A1 (parallel):         │              │ Phase B1: [Script Runner]   │
+│   │                                                                         │
+│ │  [Terrain/GIS Researcher]    │              │   Test 3 existing scripts   │
+│   │                                                                         │
+│ │  [Point Cloud Deep Dive]     │              │                             │
+│   │                                                                         │
+│ │         │                    │              │ Phase B2: for each lock:    │
+│   │                                                                         │
+│ │         ▼                    │              │   [Modeler] → LOG 300       │
+│   │                                                                         │
+│ │ Phase A2 (tooling):          │              │   [Review Panel 5x] → fixes │
+│   │                                                                         │
+│ │  Build skills/agents/rules   │──tools───▶   │   [Modeler] → LOG 350       │
+│   │                                                                         │
+│ │  Test against node 3         │              │   [Review Panel 5x] → fixes │
+│   │                                                                         │
+│ │         │                    │──data────▶   │   [Modeler] → LOG 400       │
+│   │                                                                         │
+│ │  Produces:                   │              │   [Review Panel 5x] → fixes │
+│   │                                                                         │
+│ │  • terrain + context data    │              │                             │
+│   │                                                                         │
+│ │  • pipeline research report  │              │ Phase B3: [Point Cloud]     │
+│   │                                                                         │
+│ │  • 3 skills, 6 agents, 2 rules│             │   Import + align            │
+│   │                                                                         │
+│ └──────────────────────────────┘                                            │
+│ └──────────────────────────────┘                                            │
+│                                                                             │
+│ ---                                                                         │
+│ Critical Files                                                              │
+│                                                                             │
+│ - output/city101_hub/rhino_scripts/lock_03_morges_temporal.py               │
+│ - output/city101_hub/rhino_scripts/lock_05_chuv_gradient.py                 │
+│ - output/city101_hub/rhino_scripts/lock_07_rennaz_bridge.py                 │
+│ - output/city101_hub/prototypology_content.json                             │
+│ - 00_Workflow_v04.md Sec 3.2 — LOG levels, box() helper                     │
+│ - workflows/rhino-modeling.md                                               │
+│ - source/00-datasets 2/lhiamrossier/GPKG/190226_TLM3D_City101_v3_EN.gpkg    │
+│ - source/WORK copy/ and source/Documents copy/                              │
+│ - .mcp.json — Rhino MCP config                                              │
+│                                                                             │
+│ Data Gaps to Resolve                                                        │
+│                                                                             │
+│ 1. TLM3D building heights: Inspect GeoPackage + source folders              │
+│ 2. swissALTI3D: Download 2m elevation grid for 3 sites                      │
+│ 3. swissSURFACE3D: LiDAR availability + download for corridor               │
+│ 4. Rhino point cloud import: Plugin landscape                               │
+│ 5. Semantic segmentation: Automated element classification                  │
+│                                                                             │
+│ Verification Checklist                                                      │
+│                                                                             │
+│ - All 3 scripts run via Rhino MCP without errors                            │
+│ - Viewport screenshots at each LOG stage (300, 350, 400)                    │
+│ - 2 locks at LOG 400: material breaks, connections, mullions, hardware      │
+│ - 1 lock at LOG 300: clean geometry, proper structure                       │
+│ - Site context: terrain + buildings with heights + rail                     │
+│ - Review panel PASS at each stage (5 reviewers × 3 stages × 2 locks + 5 × 1 │
+│  × 1)                                                                       │
+│ - Accessibility: ramps ≤6%, doors ≥900mm, turning radii per SIA 500         │
+│ - Materials legible: concrete vs steel vs glass vs timber                   │
+│ - Layer convention: Lock_XX::LXXX_Category                                  │
+│ - All skills/agents/rules built and tested                                  │
+│ - Point cloud pipeline documented with implementation plan                  │
+│ - Rhino file navigable for live demo (layers organized, views saved)        │
+╰─────────────────────────────────────────────────────────────────────────────╯
+
+⏺ I'll implement this plan by creating all the files: 2 rules, 6 agents, and 3
+  skills. Let me first check the existing directory structure and key reference
+   files.
+
+⏺ Read 3 files (ctrl+o to expand)
+
+⏺ Good, I have the context I need. Let me also read the existing modeler
+  command to understand the format.
+
+⏺ Read 3 files (ctrl+o to expand)
+
+⏺ Now I'll create the branch and all the files. Let me start with the branch
+  and output directories.
+
+⏺ Bash(git checkout -b andrea/prototypology-v2)
+  ⎿  Switched to a new branch 'andrea/prototypology-v2'
+
+⏺ Bash(mkdir -p /Users/andreacrespo/CLAUDE/city101/output/city101_hub/{terrain,
+      context,reviews,point_cloud})
+  ⎿  Done
+
+⏺ Branch created. Now writing all files in parallel — 2 rules, 6 agents, 3
+  skills.
+
+⏺ Write(.claude/rules/log-400-checklist.md)
+  ⎿  Wrote 90 lines to .claude/rules/log-400-checklist.md
+       1 # LOG Level Checklist — 3D Model Review
+       2
+       3 Element checklist per LOG level. Used by the review panel and
+     modeler to verify completeness.
+       4
+       5 ## LOG 300 — Defined
+       6
+       7 All of these must be present:
+       8 - [ ] Façade divisions on all faces (opaque vs glazed zones)
+       9 - [ ] Structural elements: columns, beams, slabs with correct
+     cross-sections
+      10 - [ ] All openings: doors (≥900mm clear), windows, voids with
+     exact positions
+     … +80 lines (ctrl+o to expand)
+
+⏺ Write(.claude/rules/point-cloud-protocol.md)
+  ⎿  Wrote 66 lines to .claude/rules/point-cloud-protocol.md
+       1 # Point Cloud Protocol
+       2
+       3 Conventions for handling LiDAR and point cloud data in the
+     City101 project.
+       4
+       5 ## File Formats
+       6
+       7 | Format | Extension | Use |
+       8 |--------|-----------|-----|
+       9 | LAS | .las | Raw point cloud (uncompressed) |
+      10 | LAZ | .laz | Raw point cloud (compressed) — preferred for
+     storage |
+     … +56 lines (ctrl+o to expand)
+
+⏺ Write(.claude/agents/site-context-builder.md)
+  ⎿  Wrote 39 lines to .claude/agents/site-context-builder.md
+      1 # Agent: Site Context Builder
+      2
+      3 Places real site context (terrain, buildings, rail, roads) around
+     lock models in Rhino via MCP.
+      4
+      5 ## On spawn, read:
+      6 - `output/city101_hub/context/` — metadata JSONs from terrain
+     researcher
+      7 - `output/city101_hub/terrain/` — DXF files per site
+      8 - `output/city101_hub/prototypology_content.json` — node
+     definitions with coordinates
+      9 - `.claude/rules/log-400-checklist.md` — layer convention
+     … +29 lines (ctrl+o to expand)
+
+⏺ Write(.claude/agents/concept-critic.md)
+  ⎿  Wrote 46 lines to .claude/agents/concept-critic.md
+       1 # Agent: Concept Critic
+       2
+       3 Reviews architectural models for lock/threshold legibility. Part
+     of the 5-lens review panel.
+       4
+       5 ## On spawn, read:
+       6 - `00_Workflow_v04.md` Section 3.2 — LOG definitions
+       7 - `.claude/rules/log-400-checklist.md`
+       8 - `output/city101_hub/prototypology_content.json` — the lock's
+     concept (state_a, state_b, gate mechanism)
+       9 - The modeler's review materials in `output/city101_hub/reviews/`
+      10 - Any reviews already written by other panel members
+     … +36 lines (ctrl+o to expand)
+
+⏺ Write(.claude/agents/structural-reviewer.md)
+  ⎿  Wrote 53 lines to .claude/agents/structural-reviewer.md
+       1 # Agent: Structural Reviewer
+       2
+       3 Reviews architectural models for structural plausibility. Part of
+      the 5-lens review panel.
+       4
+       5 ## On spawn, read:
+       6 - `00_Workflow_v04.md` Section 3.2 — LOG definitions
+       7 - `.claude/rules/log-400-checklist.md` — material-span reference,
+      element checklist
+       8 - `output/city101_hub/prototypology_content.json` — the lock's
+     concept
+       9 - The modeler's review materials in `output/city101_hub/reviews/`
+      10 - Any reviews already written by other panel members
+     … +43 lines (ctrl+o to expand)
+
+⏺ Write(.claude/agents/envelope-reviewer.md)
+  ⎿  Wrote 46 lines to .claude/agents/envelope-reviewer.md
+       1 # Agent: Envelope Reviewer
+       2
+       3 Reviews architectural models for skin and façade coherence. Part
+     of the 5-lens review panel.
+       4
+       5 ## On spawn, read:
+       6 - `00_Workflow_v04.md` Section 3.2 — LOG definitions
+       7 - `.claude/rules/log-400-checklist.md` — element checklist
+       8 - `output/city101_hub/prototypology_content.json` — the lock's
+     concept
+       9 - The modeler's review materials in `output/city101_hub/reviews/`
+      10 - Any reviews already written by other panel members (especially
+     structural)
+     … +36 lines (ctrl+o to expand)
+
+⏺ Write(.claude/agents/accessibility-reviewer.md)
+  ⎿  Wrote 50 lines to .claude/agents/accessibility-reviewer.md
+       1 # Agent: Accessibility Reviewer
+       2
+       3 Reviews architectural models for universal access compliance
+     (Swiss SIA 500). Part of the 5-lens review panel.
+       4
+       5 ## On spawn, read:
+       6 - `00_Workflow_v04.md` Section 3.2 — LOG definitions
+       7 - `.claude/rules/log-400-checklist.md` — SIA 500 minimums
+       8 - `output/city101_hub/prototypology_content.json` — the lock's
+     concept
+       9 - The modeler's review materials in `output/city101_hub/reviews/`
+      10 - Any reviews already written by other panel members (especially
+     structural)
+     … +40 lines (ctrl+o to expand)
+
+⏺ Write(.claude/agents/log-compliance-reviewer.md)
+  ⎿  Wrote 80 lines to .claude/agents/log-compliance-reviewer.md
+       1 # Agent: LOG Compliance Reviewer
+       2
+       3 Reviews architectural models for detail level compliance and
+     compiles the full panel summary. Part of the 5-lens review panel —
+     runs last.
+       4
+       5 ## On spawn, read:
+       6 - `00_Workflow_v04.md` Section 3.2 — LOG definitions (the
+     authoritative reference)
+       7 - `.claude/rules/log-400-checklist.md` — element checklist per
+     LOG level
+       8 - `output/city101_hub/prototypology_content.json` — the lock's
+     concept
+       9 - The modeler's review materials in `output/city101_hub/reviews/`
+      10 - **ALL other reviewer reports** for this lock/LOG stage
+     … +70 lines (ctrl+o to expand)
+
+❯ but do u think the rules is the best place to put these?                     
+
+⏺ Write(.claude/commands/site-context.md)
+  ⎿  Wrote 43 lines to .claude/commands/site-context.md
+       1 # Skill: Site Context
+       2
+       3 Extract site context (buildings, rail, roads, terrain) for a lock
+      node.
+       4
+       5 ## Input
+       6 Argument: node ID (1–7). If not provided, ask.
+       7
+       8 ## Process
+       9
+      10 1. **Read coordinates** from
+     `output/city101_hub/prototypology_content.json` for the given node.
+     … +33 lines (ctrl+o to expand)
+
+⏺ Write(.claude/commands/import-terrain.md)
+  ⎿  Wrote 52 lines to .claude/commands/import-terrain.md
+       1 # Skill: Import Terrain
+       2
+       3 Import terrain and site context into Rhino via MCP for a given
+     lock node.
+       4
+       5 ## Input
+       6 Argument: node ID (1–7). If not provided, ask.
+       7
+       8 ## Prerequisites
+       9 - Rhino MCP must be running
+      10 - Site context DXF must exist:
+     `output/city101_hub/terrain/node_XX_context.dxf`
+     … +42 lines (ctrl+o to expand)
+
+⏺ Write(.claude/commands/rhino-review.md)
+  ⎿  Wrote 70 lines to .claude/commands/rhino-review.md
+       1 # Skill: Rhino Review
+       2
+       3 Run the 5-lens review panel on a lock model's current state in
+     Rhino.
+       4
+       5 ## Input
+       6 Arguments: `<lock_number> <log_target>`
+       7 Example: `03 400` or `07 300`
+       8 If not provided, ask for both.
+       9
+      10 ## Prerequisites
+     … +60 lines (ctrl+o to expand)
+
+⏺ Good question. .claude/rules/ auto-loads into every conversation, which means
+   every session — even a quick data query or a map fix — will carry the LOG
+  400 checklist and point cloud protocol in context. That's wasteful for most
+  tasks.
+
+  Better homes for these:
+
+  File: log-400-checklist.md
+  Current: .claude/rules/
+  Better place: workflows/ or standalone reference
+  Why: Only needed during modeling + review — agents already read it explicitly
+
+    by path
+  ────────────────────────────────────────
+  File: point-cloud-protocol.md
+  Current: .claude/rules/
+  Better place: workflows/ or docs/
+  Why: Only relevant during point cloud work — Wave 1 and later pipeline
+    sessions
+
+  The agents and skills already specify "read
+  .claude/rules/log-400-checklist.md" — that path reference works regardless of
+   where the file lives. So moving them to workflows/ costs nothing in terms of
+   agent access, but saves context tokens in every other session.
+
+  Want me to move them to workflows/ (e.g., workflows/log-400-checklist.md and
+  workflows/point-cloud-protocol.md) and update the agent/skill references?
+
+✻ Brewed for 1m 18s
+
+❯ yes pls                                                                      
+
+⏺ Bash(mv /Users/andreacrespo/CLAUDE/city101/.claude/rules/log-400-checklist.md
+       /Users/andreacrespo/CLAUDE/city101/workflows/log-400-checklist.md && mv
+      /Users/andreacr…)
+  ⎿  Done
+
+⏺ Now update all references in agents and skills. Let me find and fix them all.
+
+⏺ Searched for 2 patterns (ctrl+o to expand)
+
+⏺ Update(.claude/commands/rhino-review.md)
+  ⎿  Added 1 line, removed 1 line
+      10  ## Prerequisites
+      11  - Rhino MCP must be running
+      12  - Lock geometry must exist in Rhino
+      13 -- `.claude/rules/log-400-checklist.md` must exist             
+      13 +- `workflows/log-400-checklist.md` must exist                 
+      14  
+      15  ## Process
+      16  
+
+⏺ Update(.claude/agents/log-compliance-reviewer.md)
+  ⎿  Added 1 line, removed 1 line
+       4  
+       5  ## On spawn, read:
+       6  - `00_Workflow_v04.md` Section 3.2 — LOG definitions (the auth
+          oritative reference)
+       7 -- `.claude/rules/log-400-checklist.md` — element checklist per
+         - LOG level                                                    
+       7 +- `workflows/log-400-checklist.md` — element checklist per LOG
+         + level                                                        
+       8  - `output/city101_hub/prototypology_content.json` — the lock's
+           concept
+       9  - The modeler's review materials in `output/city101_hub/review
+          s/`
+      10  - **ALL other reviewer reports** for this lock/LOG stage
+
+⏺ Update(.claude/agents/accessibility-reviewer.md)
+  ⎿  Added 1 line, removed 1 line
+       4  
+       5  ## On spawn, read:
+       6  - `00_Workflow_v04.md` Section 3.2 — LOG definitions
+       7 -- `.claude/rules/log-400-checklist.md` — SIA 500 minimums     
+       7 +- `workflows/log-400-checklist.md` — SIA 500 minimums         
+       8  - `output/city101_hub/prototypology_content.json` — the lock's
+           concept
+       9  - The modeler's review materials in `output/city101_hub/review
+          s/`
+      10  - Any reviews already written by other panel members (especial
+          ly structural)
+
+⏺ Update(.claude/agents/envelope-reviewer.md)
+  ⎿  Added 1 line, removed 1 line
+       4  
+       5  ## On spawn, read:
+       6  - `00_Workflow_v04.md` Section 3.2 — LOG definitions
+       7 -- `.claude/rules/log-400-checklist.md` — element checklist    
+       7 +- `workflows/log-400-checklist.md` — element checklist        
+       8  - `output/city101_hub/prototypology_content.json` — the lock's
+           concept
+       9  - The modeler's review materials in `output/city101_hub/review
+          s/`
+      10  - Any reviews already written by other panel members (especial
+          ly structural)
+
+⏺ Update(.claude/agents/structural-reviewer.md)
+  ⎿  Added 1 line, removed 1 line
+       4  
+       5  ## On spawn, read:
+       6  - `00_Workflow_v04.md` Section 3.2 — LOG definitions
+       7 -- `.claude/rules/log-400-checklist.md` — material-span referen
+         -ce, element checklist                                         
+       7 +- `workflows/log-400-checklist.md` — material-span reference, 
+         +element checklist                                             
+       8  - `output/city101_hub/prototypology_content.json` — the lock's
+           concept
+       9  - The modeler's review materials in `output/city101_hub/review
+          s/`
+      10  - Any reviews already written by other panel members
+
+⏺ Update(.claude/agents/concept-critic.md)
+  ⎿  Added 1 line, removed 1 line
+       4  
+       5  ## On spawn, read:
+       6  - `00_Workflow_v04.md` Section 3.2 — LOG definitions
+       7 -- `.claude/rules/log-400-checklist.md`                        
+       7 +- `workflows/log-400-checklist.md`                            
+       8  - `output/city101_hub/prototypology_content.json` — the lock's
+           concept (state_a, state_b, gate mechanism)
+       9  - The modeler's review materials in `output/city101_hub/review
+          s/`
+      10  - Any reviews already written by other panel members
+
+⏺ Update(.claude/agents/site-context-builder.md)
+  ⎿  Added 1 line, removed 1 line
+       6  - `output/city101_hub/context/` — metadata JSONs from terrain
+          researcher
+       7  - `output/city101_hub/terrain/` — DXF files per site
+       8  - `output/city101_hub/prototypology_content.json` — node defin
+          itions with coordinates
+       9 -- `.claude/rules/log-400-checklist.md` — layer convention     
+       9 +- `workflows/log-400-checklist.md` — layer convention         
+      10  
+      11  ## You produce:
+      12  - Site context geometry in Rhino on proper layers
+
+⏺ Done. Moved both files to workflows/ and updated all 7 references across
+  agents and skills. Now they'll only load when explicitly needed by the
+  modeling/review pipeline, not in every session.
+
+❯ perfect, what now?                                                           
+
+⏺ Let me check where we stand.
+
+⏺ Bash(git status --short)
+  ⎿   M .claude/settings.local.json
+     ?? .claude/agents/accessibility-reviewer.md
+     ?? .claude/agents/concept-critic.md
+     … +14 lines (ctrl+o to expand)
+
+⏺ Everything's built and on the andrea/prototypology-v2 branch. Here's the
+  scorecard:
+
+  Created this session:
+  - 6 agents (5 review panel + site-context-builder)
+  - 3 skills (/site-context, /import-terrain, /rhino-review)
+  - 2 reference docs (log-400-checklist, point-cloud-protocol — in workflows/)
+  - Output directories (terrain/, context/, reviews/, point_cloud/)
+
+  Next steps — the 4 waves:
+
+  ┌──────┬─────────────────────────────┬────────────┬──────────────────────┐
+  │ Wave │            What             │   Needs    │        Status        │
+  │      │                             │   Rhino?   │                      │
+  ├──────┼─────────────────────────────┼────────────┼──────────────────────┤
+  │ 1    │ Terrain + point cloud       │ No         │ Ready to run         │
+  │      │ research                    │            │                      │
+  ├──────┼─────────────────────────────┼────────────┼──────────────────────┤
+  │ 2    │ Test 3 lock scripts via MCP │ Yes        │ Ready when Rhino is  │
+  │      │                             │            │ open                 │
+  ├──────┼─────────────────────────────┼────────────┼──────────────────────┤
+  │ 3    │ Tooling already done this   │ —          │ Done                 │
+  │      │ session                     │            │                      │
+  ├──────┼─────────────────────────────┼────────────┼──────────────────────┤
+  │ 4    │ LOG upgrade + review panel  │ Yes        │ Blocked by Waves 1+2 │
+  └──────┴─────────────────────────────┴────────────┴──────────────────────┘
+
+  Waves 1 and 2 can run in parallel (different dependencies). So:
+
+  - If Rhino is open now → run Wave 1 (research, no Rhino) and Wave 2 (script
+  testing, Rhino MCP) in parallel
+  - If Rhino is not open → run Wave 1 research now, Wave 2 when you open Rhino
+
+  Want to commit what we have first, then kick off Wave 1? Or jump straight
+  into execution?
+
+❯ lets keep this session as the project manager pls. so that u can help me     
+think through the steps. And yea commit them to this new branch. and how do i  
+start a new session in that branch? Basically tell me what to do right now,    
+i'm slightly tired                                                             
+
+⏺ Bash(git log --oneline -5)
+  ⎿  ef11fd2 [SYNC] Session end — Prototypology Explorer v1, Rhino scripts
+     , MCP config
+     d1cc1ee [BUILD] Add Rhino MCP server config for Claude Code
+     … +5 lines (ctrl+o to expand)
+
+⏺ Bash(git add .claude/agents/accessibility-reviewer.md
+      .claude/agents/concept-critic.md .claude/agents/envelope-reviewer.md
+      .claude/agents/log-compliance-reviewer.md…)
+  ⎿  (No output)
+
+⏺ Bash(git commit -m "$(cat <<'EOF'
+      [BUILD] Prototypology v2 pipeline — 6 agents, 3 skills, 2 reference
+      docs…)
+  ⎿  [andrea/prototypology-v2 87a06a4] [BUILD] Prototypology v2 pipeline —
+      6 agents, 3 skills, 2 reference docs
+      11 files changed, 635 insertions(+)
+     … +11 lines (ctrl+o to expand)
+
+⏺ Committed. Here's your cheat sheet:
+
+  ---
+  Right now, you're on branch andrea/prototypology-v2. New sessions will start
+  on whatever branch is checked out, so you don't need to do anything special —
+   just open a new Claude Code session in this same directory.
+
+  What to do next (pick one, both are ~1 session each):
+
+  Option A: Wave 1 — Research (no Rhino needed)
+  Open a new session and say:
+  ▎ /team — Run Wave 1: terrain + point cloud research. Two parallel agents.
+  See the plan at prompts/ or just follow the agent prompts in the plan file.
+
+  Option B: Wave 2 — Script testing (needs Rhino open)
+  Open Rhino first, then a new session and say:
+  ▎ /modeler — Test the 3 lock scripts via MCP. Follow the Wave 2 script runner
+   process.
+
+  Both can run as separate sessions in parallel if you want two terminals open.
+
+  ---
+  But if you're tired: close the laptop. This branch isn't going anywhere. Wave
+   1 is the best first move because it doesn't need Rhino and produces research
+   you'll want to read before modeling. Do it fresh tomorrow.
+
+✻ Baked for 31s
+
+❯ yea ok. i'll do it tomorrow. but do i just write those simple lines for the  
+start of both sessions? or do we need to reference this plan?                  
+
+⏺ The plan has a lot of detail that a fresh session won't have context for.
+  Those one-liners won't be enough.
+
+  Two options:
+
+  Option 1: Save the plan to a file (I'd recommend this)
+  I write the full Wave 1 and Wave 2 prompts to files in prompts/. Tomorrow you
+   open a session and say:
+  ▎ Read prompts/PROMPT_wave1_research.md and execute it.
+
+  Everything the agent needs is in the file. No context lost between sessions.
+
+  Option 2: Reference the plan file
+  The plan is already saved at
+  /Users/andreacrespo/.claude/plans/humming-wishing-minsky.md. Tomorrow you
+  could say:
+  ▎ Read the plan at .claude/plans/humming-wishing-minsky.md, then execute Wave
+   1.
+
+  But that file is huge — it's the entire plan. A focused prompt per wave is
+  cleaner.
+
+  Want me to write the two prompt files? One for Wave 1 (research, no Rhino),
+  one for Wave 2 (script testing, needs Rhino).
+
+❯ yes pls                                                                      
+
+⏺ Write(prompts/PROMPT_wave1_research.md)
+  ⎿  Wrote 124 lines to prompts/PROMPT_wave1_research.md
+       1 # Wave 1: Terrain + Point Cloud Research
+       2
+       3 **Branch:** `andrea/prototypology-v2` (confirm you're on it)
+       4 **Rhino needed:** No
+       5 **Duration:** ~1 session
+       6 **Commit when done:** `[DATA] Terrain + point cloud research for
+     3 lock sites`
+       7
+       8 ---
+       9
+      10 ## What to do
+     … +114 lines (ctrl+o to expand)
+
+⏺ Write(prompts/PROMPT_wave2_script_testing.md)
+  ⎿  Wrote 82 lines to prompts/PROMPT_wave2_script_testing.md
+       1 # Wave 2: Script Testing via Rhino MCP
+       2
+       3 **Branch:** `andrea/prototypology-v2` (confirm you're on it)
+       4 **Rhino needed:** YES — open Rhino before starting
+       5 **Duration:** ~1 session
+       6 **Commit when done:** `[MODEL] Verify 3 lock scripts via Rhino
+     MCP`
+       7
+       8 ---
+       9
+      10 ## What to do
+     … +72 lines (ctrl+o to expand)
+
+⏺ Bash(git add prompts/PROMPT_wave1_research.md
+      prompts/PROMPT_wave2_script_testing.md && git commit -m "$(cat <<'EOF'
+      [BUILD] Wave 1 + Wave 2 execution prompts for ne…)
+  ⎿  [andrea/prototypology-v2 c6c8da6] [BUILD] Wave 1 + Wave 2 execution p
+     rompts for next sessions
+      2 files changed, 206 insertions(+)
+     … +2 lines (ctrl+o to expand)
+
+⏺ Done. Tomorrow:
+
+  Wave 1 (no Rhino, do this first):
+  ▎ Read prompts/PROMPT_wave1_research.md and execute it.
+
+  Wave 2 (open Rhino first):
+  ▎ Read prompts/PROMPT_wave2_script_testing.md and execute it.
+
+  You're already on the right branch. Go rest.
+
+✻ Cooked for 1m 6s
+
+❯ good morning. i have just sent the 2 waves                                   
+
+⏺ Good morning! Nice, both waves running. This session stays as project manager
+   — I'm here when you need to think through anything or when the waves come
+  back with results.
+
+  What to expect:
+  - Wave 1 (research) will take a while — GIS inspection + web research
+  - Wave 2 (script testing) depends on Rhino being responsive via MCP
+
+  Let me know when either finishes or if you hit any issues.
+
+❯ hi testing                                                                   
+  ⎿  API Error: 401
+     {"type":"error","error":{"type":"authentication_error","message":"OAuth
+     token has expired. Please obtain a new token or refresh your existing
+     token."},"request_id":"req_011CZ8SUApqRP7Gprch6YNTQ"} · Please run /login
+
+❯ hello                                                                        
+  ⎿  API Error: 401 
+     {"type":"error","error":{"type":"authentication_error","message":"OAuth 
+     token has expired. Please obtain a new token or refresh your existing 
+     token."},"request_id":"req_011CZ8TfmCUrjJERwjUVNqZS"} · Please run /login 
+   
+───────────────────────────────────────────────────────────────────────────────
+❯                                                           
+───────────────────────────────────────────────────────────────────────────────
+  ⏵⏵ accept edits on (shift+tab to cycle) · hold Space to speak
+   Remote Control reconnecting                                                 
+

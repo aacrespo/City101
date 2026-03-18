@@ -6,9 +6,7 @@
 
 ## What is this project?
 
-EPFL BA6 Architecture studio (AR-302k, Studio Huang — "Sentient Cities"). Andrea analyzes the Geneva–Villeneuve corridor (City101) through the lens of "flow of people" — what makes people stop, where infrastructure creates behavior, and whether this 101km strip functions as one continuous city.
-
-Teammate: Henna Rafik (transit ridership, psycho-comfort, thermal flows, gap hours, healthcare sites). She also uses the handoff system.
+EPFL BA6 Architecture studio (AR-302k, Studio Huang — "Sentient Cities"). Andrea Crespo and Henna Rafik analyze the Geneva–Villeneuve corridor (City101) through the lens of "flow of people" — what makes people stop, where infrastructure creates behavior, and whether this 101km strip functions as one continuous city. Claude is the third team member (across multiple accounts).
 
 ## Current phase
 
