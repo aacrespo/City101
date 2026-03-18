@@ -1,16 +1,26 @@
 # Lockboard
 **Updated**: 2026-03-18
 
+## Both — Review app architecture docs
+
+**Read and discuss together before next Claude Code session:**
+- `output/app_architecture/` — 7 files (v1: 6 engine docs + v2: tool/presentation strategy)
+- Key docs: `architecture_overview.md` (system diagram), `open_questions.md` (decisions needed), `v2_tool_and_presentation.md` (two-tab structure + midterm show)
+- Come back with comments, disagreements, decisions on the open questions (especially Q1.1 chamber schema, Q1.2 transport vs place, Q3.3 story vs tool)
+
+---
+
 ## Andrea — A04 midterm
 
 ### Active now
-- **App architecture**: feasibility, parameters, prototypes, constraints, limits, resources needed, logic. Shifting/creating tasks based on findings.
+- **App architecture**: v1 engine docs + v2 tool/presentation strategy complete. Waiting on joint review before implementation.
 - **Repo cleanup + context updates**: restructure files, update CLAUDE.md/CONTEXT.md, organize research for Henna's access.
 - **Finalize project concept**: lock down the narrative so Henna can prompt slides from it.
 
 ### Next
 - **LOG 400 modeling upgrades**: training round / first iterations on the scaffolding. Testing the review pipeline, integrating learnings back into app/software dev steps. Goal = template scripts for prototypology scalability.
 - **Check other repo** (`~/CLAUDE/???`) for useful commands, automations, hooks to import.
+- **Implement scoring engine** once arch docs are reviewed and decisions made.
 
 Branch: andrea/prototypology-v2
 Since: 18 March 2026
