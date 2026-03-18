@@ -220,8 +220,16 @@ Same root causes as Rennaz/CHUV, plus a **building tile mismatch** discovery.
 - **Action needed:** Download the correct building tile covering E ~2,526,000–2,528,000 and re-import.
 - Kept 31 nearest buildings (within 200m of terrain east edge) as minimal edge context.
 
+### Re-import attempt: tile 1242-42 (2026-03-18)
+- Imported `SWISSBUILDINGS3D_2_0_CHLV95LN02_1242-42.dxf` (21MB, Morges map sheet)
+- **Same coverage as original wrong tile** — buildings span E 2,528,100–2,532,500 (local X 610–5013)
+- Processed: scaled 1000x, offset, culled 1,334 outside 200m buffer → **32 buildings kept** (edge context only)
+- 8 DXF import layers cleaned
+- The other available tile (`1243-14`, 199MB) is the Lausanne sheet — even further east
+- **Still needed:** tile covering E ~2,526,000–2,528,000 for buildings over terrain/lock
+
 ### After fix
-- **Objects:** ~1,650 (was 2,942) — 31 buildings, 1,533 polylines, 41 lock breps, 2 terrain, 1 circle, 1 textdot
+- **Objects:** 1,609 (32 buildings, 1,533 polylines, 41 lock breps, 2 terrain, 1 circle, 1 textdot)
 - **Layers:** 13 clean layers (Default + Morges_Site hierarchy + Lock_03 hierarchy)
 - **Model Z range:** 366–412m (everything at terrain level)
 
