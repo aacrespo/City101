@@ -246,46 +246,7 @@ Rail noise day/night, road noise day/night, EV 2035 projections (3 scenarios), h
 
 ## Repo structure
 
-```
-city101/                              (git-tracked, GitHub: aacrespo/City101)
-├── CLAUDE.md                         ← router (auto-loaded)
-├── CONTEXT.md                        ← YOU ARE HERE — living project state
-├── LEARNINGS.md                      ← accumulated pitfalls
-├── LOCKBOARD.md                      ← who's doing what
-├── CITY101_WORKING.qgz               ← QGIS project (60 layers, EPSG:2056)
-├── 00_Workflow_v04.md                ← scale conventions, Rhino rules
-├── briefs/                           ← assignment specs (A01-A04) + PPTX template
-├── datasets/                         ← verified production data (INVENTORY.md inside)
-│   ├── corridor_analysis/
-│   ├── ev_charging/
-│   ├── remote_work/
-│   ├── transit/
-│   ├── stations/
-│   └── zurich_comparison/
-├── source/                           ← FROZEN inputs (classmate data, GeoPackages, animation data)
-│   ├── 00-datasets 2/               ← classmate datasets
-│   ├── animation/                    ← promoted animation pipeline data (v2/v3)
-│   └── ...
-├── deliverables/                     ← submission documents
-│   ├── A02_NARRATIVE_DRAFT.md
-│   ├── A02_SPEECH_UNIFIED.md
-│   └── A03/                          ← field visit materials, JSX artifacts, maps
-├── handoffs/                         ← all session handoffs (Andrea S1-S11, Henna, team)
-├── prompts/                          ← Claude/LLM execution prompts
-├── scripts/                          ← processing scripts
-│   ├── animation/                    ← 12 agent pipeline scripts
-│   └── *.py                          ← ad-hoc processing
-├── visualizations/                   ← all interactive viz
-│   ├── site/                         ← scrollytelling site (index_v2.html)
-│   └── viz_01 through viz_09 + diagrams
-├── observations/                     ← INDEX.md + research/ subfolder
-├── design_system/                    ← SPEC.md — visual identity
-├── tools/                            ← reusable scripts
-├── workflows/                        ← step-by-step SOPs
-├── output/                           ← staging (hospital research, vertical transport)
-├── archive/                          ← historical (system architecture, old outputs, screenshots, QA logs)
-└── .claude/                          ← commands, rules, agents
-```
+See CLAUDE.md for the full repo tree (kept in sync there as the single source of truth).
 
 ## Infrastructure — how we work
 
