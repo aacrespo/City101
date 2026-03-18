@@ -163,9 +163,8 @@ Visual inspection revealed several issues in the Rennaz model. All fixed via Rhi
 - swissBUILDINGS3D tiles cover ~4km x 4km, much larger than the 1km terrain tile. Must cull buildings outside terrain extent.
 - DXF import creates one layer per Swiss building type. These should be purged after reassigning objects.
 
-### Still to check: ~~CHUV and~~ Morges
-~~Same issues likely exist (especially buildings outside terrain, empty layers). CHUV roads may already be at correct Z if context DXF was also scaled from km.~~
-CHUV done — see below. Morges next.
+### ~~Still to check: CHUV and Morges~~
+All three sites QA'd — see sections below.
 
 ---
 
@@ -195,6 +194,36 @@ Same root causes as Rennaz confirmed. All fixed via Rhino MCP.
 - **Objects:** ~3,162 (was 11,202) — 1,316 buildings, 1,761 polylines, 82 lock breps, 2 terrain, 1 circle, 1 textdot
 - **Layers:** 14 clean layers (Default + CHUV_Site hierarchy + Lock_05 hierarchy)
 - **Model Z range:** 439–625m (everything at terrain level)
+
+---
+
+## QA Pass: Morges Site Context Fix (2026-03-18)
+
+Same root causes as Rennaz/CHUV, plus a **building tile mismatch** discovery.
+
+### Issues found & fixed
+
+| # | Severity | Issue | Fix |
+|---|----------|-------|-----|
+| 1 | CRITICAL | Roads (503) at Z=0 (392m below terrain) | Moved all 503 polylines by (0, 0, 392) |
+| 2 | CRITICAL | Context_2D (956) at Z=0 | Moved all 956 polylines by (0, 0, 392) |
+| 3 | CRITICAL | Rail (74) at Z=0 | Moved all 74 polylines by (0, 0, 392) |
+| 4 | MAJOR | 1,366 buildings — **none overlapping terrain tile** (see below) | Deleted 1,335 outside 200m buffer, kept 31 nearest |
+| 5 | MODERATE | 17 empty DXF import + default layers | Deleted all 17 empty layers |
+| 6 | MINOR | Text dot at (0, 0, 0) | Moved to lock position (0, 15, 392) |
+| 7 | MINOR | No 500m boundary circle | Added 500m circle at (0, 0, 392) on CONTEXT_2D |
+
+### Building tile mismatch (Morges-specific)
+- **All 1,366 buildings** are at local X [626, 5000] — the terrain ends at X=492.
+- The building DXF tile is offset **~134m east** of the terrain tile. Zero buildings actually overlap with the terrain.
+- This means the **wrong swissBUILDINGS3D tile was imported** for Morges. The hospital (LV95 E 2,527,500) is west of the building tile coverage.
+- **Action needed:** Download the correct building tile covering E ~2,526,000–2,528,000 and re-import.
+- Kept 31 nearest buildings (within 200m of terrain east edge) as minimal edge context.
+
+### After fix
+- **Objects:** ~1,650 (was 2,942) — 31 buildings, 1,533 polylines, 41 lock breps, 2 terrain, 1 circle, 1 textdot
+- **Layers:** 13 clean layers (Default + Morges_Site hierarchy + Lock_03 hierarchy)
+- **Model Z range:** 366–412m (everything at terrain level)
 
 ---
 
