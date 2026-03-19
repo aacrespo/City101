@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>City101 — Map Layout Template</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=Instrument+Serif&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #0c0c14;
+    --surface: rgba(12,12,20,0.8);
+    --gold: #c9a84c;
+    --gold-dim: rgba(201,168,76,0.12);
+    --text: #e8e6e1;
+    --text-muted: #9a9690;
+    --copper: #b87a56;
+    --teal: #5b8fa8;
+    --font-display: 'Instrument Serif', serif;
+    --font-body: 'DM Sans', sans-serif;
+    --font-mono: 'DM Mono', monospace;
+    --radius-sm: 6px;
+  }
+
+  html, body {
+    width: 100%;
+    height: 100%;
+    font-family: var(--font-body);
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+    overflow: hidden;
+    background: #0d1926;
+  }
+
+  /* ─── Map area (full viewport, place your map here) ─── */
+  .map-container {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    /* Replace this background with your actual map (Leaflet, MapLibre, etc.) */
+    background:
+      linear-gradient(180deg, #0d1926 0%, #162233 40%, #1a2332 60%, #0d1926 100%);
+  }
+
+  /* Grid texture to simulate a map in the template */
+  .map-container::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      repeating-linear-gradient(0deg, transparent, transparent 30px, rgba(255,255,255,0.015) 30px, rgba(255,255,255,0.015) 31px),
+      repeating-linear-gradient(90deg, transparent, transparent 30px, rgba(255,255,255,0.015) 30px, rgba(255,255,255,0.015) 31px);
+    pointer-events: none;
+  }
+
+  /* ─── Header strip ─── */
+  .map-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+    height: 48px;
+    background: var(--surface);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--gold-dim);
+  }
+
+  .map-header .mh-brand {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+    flex-shrink: 0;
+  }
+  .map-header .mh-brand .b-city {
+    font-family: var(--font-display);
+    font-size: 16px;
+    color: var(--text);
+  }
+  .map-header .mh-brand .b-101 {
+    font-family: var(--font-mono);
+    font-size: 16px;
+    color: var(--gold);
+    font-weight: 500;
+  }
+
+  .map-header .mh-title {
+    font-family: var(--font-display);
+    font-size: 18px;
+    color: var(--text);
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+  }
+
+  .map-header .mh-meta {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-muted);
+    opacity: 0.7;
+    display: flex;
+    gap: 16px;
+    flex-shrink: 0;
+  }
+
+  /* ─── Footer strip ─── */
+  .map-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+    height: 44px;
+    background: var(--surface);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-top: 1px solid var(--gold-dim);
+  }
+
+  .map-footer .mf-legend {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  .map-footer .leg {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+  .map-footer .leg .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .map-footer .leg .line {
+    width: 16px;
+    height: 2px;
+    border-radius: 1px;
+    flex-shrink: 0;
+  }
+
+  /* Gradient legend */
+  .map-footer .gradient-legend {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-muted);
+  }
+  .map-footer .gradient-legend .gl-bar {
+    width: 80px;
+    height: 6px;
+    border-radius: 3px;
+    background: linear-gradient(90deg, #c45d4a, #c9a84c, #5a9e6f);
+  }
+
+  .map-footer .mf-scale {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-muted);
+    opacity: 0.6;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .map-footer .mf-scale .scale-bar {
+    width: 60px;
+    height: 1px;
+    background: var(--text-muted);
+    position: relative;
+  }
+  .map-footer .mf-scale .scale-bar::before,
+  .map-footer .mf-scale .scale-bar::after {
+    content: '';
+    position: absolute;
+    width: 1px;
+    height: 6px;
+    background: var(--text-muted);
+    top: -3px;
+  }
+  .map-footer .mf-scale .scale-bar::before { left: 0; }
+  .map-footer .mf-scale .scale-bar::after { right: 0; }
+
+  .map-footer .mf-attr {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-muted);
+    opacity: 0.4;
+    text-align: right;
+  }
+
+  /* ─── Optional: floating info panel ─── */
+  .info-panel {
+    position: fixed;
+    top: 64px;
+    right: 16px;
+    z-index: 10;
+    width: 260px;
+    background: var(--surface);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--gold-dim);
+    border-radius: var(--radius-sm);
+    padding: 16px;
+  }
+  .info-panel h3 {
+    font-family: var(--font-display);
+    font-size: 18px;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+  .info-panel .ip-subtitle {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--gold);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    opacity: 0.8;
+    margin-bottom: 12px;
+  }
+  .info-panel .ip-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    font-size: 13px;
+  }
+  .info-panel .ip-row:last-child { border-bottom: none; }
+  .info-panel .ip-key { color: var(--text-muted); }
+  .info-panel .ip-val { font-family: var(--font-mono); color: var(--text); font-weight: 500; }
+
+  /* ─── Print styles ─── */
+  @media print {
+    .map-container::after { display: none; }
+    .map-header, .map-footer, .info-panel {
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+      backdrop-filter: none;
+      background: rgba(12,12,20,0.95);
+    }
+    @page {
+      size: A3 landscape;
+      margin: 0;
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- Map goes here (Leaflet, MapLibre, or static image) -->
+<div class="map-container" id="map">
+  <!-- Replace with your map initialization -->
+</div>
+
+<!-- Header -->
+<div class="map-header">
+  <div class="mh-brand">
+    <span class="b-city">CITY</span><span class="b-101">101</span>
+  </div>
+  <div class="mh-title">Map Title Here</div>
+  <div class="mh-meta">
+    <span>EPSG:2056</span>
+    <span>2026-03-19</span>
+  </div>
+</div>
+
+<!-- Footer -->
+<div class="map-footer">
+  <div class="mf-legend">
+    <div class="leg"><span class="dot" style="background: var(--gold);"></span> IC lines</div>
+    <div class="leg"><span class="line" style="background: var(--copper);"></span> S-Bahn</div>
+    <div class="leg"><span class="dot" style="background: var(--teal);"></span> Stations</div>
+    <div class="gradient-legend">
+      <span>0.0</span>
+      <div class="gl-bar"></div>
+      <span>1.0</span>
+      WCI
+    </div>
+  </div>
+  <div class="mf-scale">
+    <div class="scale-bar"></div>
+    <span>5 km</span>
+  </div>
+  <div class="mf-attr">
+    Swiss Federal Railways &middot; CartoDB Dark Matter<br>
+    EPFL Studio Huang &middot; City101
+  </div>
+</div>
+
+<!-- Optional: Info panel -->
+<div class="info-panel">
+  <h3>Lausanne</h3>
+  <div class="ip-subtitle">Corridor Node</div>
+  <div class="ip-row"><span class="ip-key">Frequency</span><span class="ip-val">28.5/hr</span></div>
+  <div class="ip-row"><span class="ip-key">Shannon H</span><span class="ip-val">1.84</span></div>
+  <div class="ip-row"><span class="ip-key">Features</span><span class="ip-val">142</span></div>
+  <div class="ip-row"><span class="ip-key">WCI</span><span class="ip-val">0.72</span></div>
+</div>
+
+</body>
+</html>
