@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CITY 101 — The Breathing Corridor</title>
+<link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.5.0/dist/maplibre-gl.css">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap');
+
+/* ── FONT VARIABLES (change these 3 lines to retheme typography) ── */
+:root {
+  --font-heading: 'Inter', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --bg: #0a0e1a;
+  --glass: rgba(10,14,26,0.88);
+  --border: rgba(255,255,255,0.08);
+  --txt: #e5e7eb;
+  --txt2: #9ca3af;
+  --txt3: #6b7280;
+  --day: #f59e0b;
+  --night: #818cf8;
+  --home: #22d3ee;
+  --mix: #a78bfa;
+}
+
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;font-family:var(--font-body);background:var(--bg);color:var(--txt);overflow:hidden;transition:background-color 1.5s}
+.app{display:flex;flex-direction:column;height:100vh;position:relative}
+#map{flex:1;width:100%}
+
+/* HEADER */
+.hdr{position:absolute;top:0;left:0;right:0;z-index:10;padding:14px 20px 0;pointer-events:none;display:flex;align-items:flex-start;justify-content:space-between}
+.title-block{pointer-events:auto}
+.title{font-family:var(--font-heading);font-size:26px;font-weight:900;letter-spacing:5px;text-transform:uppercase;color:#fff;text-shadow:0 2px 16px rgba(0,0,0,.5)}
+.subtitle{font-size:9px;font-weight:500;letter-spacing:3.5px;color:var(--txt2);margin-top:3px;text-transform:uppercase}
+.tabs{display:flex;gap:2px;background:var(--glass);backdrop-filter:blur(20px);border-radius:10px;padding:3px;pointer-events:auto;border:1px solid var(--border)}
+.tab{padding:7px 16px;border:none;background:0;color:var(--txt2);font:600 10.5px/1 var(--font-body);letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;border-radius:7px;transition:.3s;white-space:nowrap}
+.tab:hover{color:var(--txt)}
+.tab.on{background:rgba(255,255,255,.1);color:#fff;box-shadow:0 2px 6px rgba(0,0,0,.3)}
+.tab.on[data-v="work"]{color:var(--day)}.tab.on[data-v="res"]{color:var(--home)}.tab.on[data-v="breath"]{color:#fff}
+
+/* PANELS */
+.panel{position:absolute;z-index:10;background:var(--glass);backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:11px;padding:14px 18px}
+.panel-title{font-size:8.5px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--txt3);margin-bottom:10px}
+
+/* DESCRIPTION */
+.desc{top:72px;left:20px;max-width:260px}
+.desc h3{font-family:var(--font-heading);font-size:13px;font-weight:700;margin-bottom:3px}
+.desc p{font-size:10.5px;color:var(--txt2);line-height:1.5}
+
+/* STATS */
+.stats{bottom:94px;left:20px;min-width:210px}
+.sr{display:flex;justify-content:space-between;align-items:center;padding:4px 0}
+.sl{font-size:10.5px;color:var(--txt2);display:flex;align-items:center;gap:5px}
+.sd{width:5px;height:5px;border-radius:50%;flex-shrink:0}
+.sv{font-family:var(--font-mono);font-size:12.5px;font-weight:500;color:#fff}
+.divider{height:1px;background:var(--border);margin:6px 0}
+
+/* LEGEND */
+.legend{bottom:94px;right:20px;min-width:170px}
+.li{display:flex;align-items:center;gap:7px;margin-bottom:7px}
+.lg{width:50px;height:7px;border-radius:3px;flex-shrink:0}
+.lt{font-size:10.5px;color:var(--txt2)}
+
+/* TIME CONTROLS */
+.time{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);z-index:10;background:var(--glass);backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:14px;padding:14px 22px;display:flex;align-items:center;gap:14px;min-width:540px}
+.pbtn{width:34px;height:34px;border-radius:50%;border:1.5px solid rgba(255,255,255,.2);background:rgba(255,255,255,.05);color:#fff;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.2s;flex-shrink:0}
+.pbtn:hover{background:rgba(255,255,255,.15)}
+.sc{flex:1;display:flex;flex-direction:column;gap:3px}
+.tl{display:flex;justify-content:space-between}.tl span{font:400 7.5px var(--font-mono);color:var(--txt3)}
+input[type=range]{-webkit-appearance:none;width:100%;height:3px;border-radius:2px;background:rgba(255,255,255,.1);outline:0;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:#fff;cursor:pointer;box-shadow:0 0 8px rgba(255,255,255,.3)}
+.clock{font:500 26px var(--font-mono);color:#fff;min-width:75px;text-align:center;flex-shrink:0;text-shadow:0 0 16px rgba(255,255,255,.2)}
+.spd{padding:3px 9px;border-radius:5px;border:1px solid var(--border);background:0;color:var(--txt2);font:11px var(--font-mono);cursor:pointer;transition:.2s;flex-shrink:0}
+.spd:hover{color:#fff;border-color:rgba(255,255,255,.3)}
+
+/* LOADING */
+.loader{position:absolute;inset:0;z-index:100;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .6s}
+.loader.done{opacity:0;pointer-events:none}
+.loader h2{font-family:var(--font-heading);font-size:20px;font-weight:700;letter-spacing:4px;margin-bottom:8px}
+.loader p{font-size:12px;color:var(--txt2)}
+.spin{width:40px;height:40px;border:3px solid var(--border);border-top-color:var(--day);border-radius:50%;animation:spin 1s linear infinite;margin-bottom:16px}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* SKY */
+.sky{position:absolute;top:16px;right:20px;z-index:10;font-size:28px;opacity:.5;pointer-events:none}
+
+/* POPUP overrides */
+.maplibregl-popup-content{background:rgba(10,14,26,0.95)!important;color:#e5e7eb!important;border:1px solid rgba(255,255,255,0.1)!important;border-radius:8px!important;padding:10px 14px!important;font:12px/1.5 var(--font-body)!important;box-shadow:0 4px 20px rgba(0,0,0,0.5)!important;max-width:280px!important}
+.maplibregl-popup-content b{color:#fff;font-size:13px}
+.maplibregl-popup-content .pop-row{display:flex;justify-content:space-between;gap:12px;margin-top:3px}
+.maplibregl-popup-content .pop-label{color:#9ca3af;font-size:10.5px}
+.maplibregl-popup-content .pop-val{color:#fff;font-family:var(--font-mono);font-size:11px}
+.maplibregl-popup-tip{border-top-color:rgba(10,14,26,0.95)!important}
+.maplibregl-popup-anchor-bottom .maplibregl-popup-tip{border-top-color:rgba(10,14,26,0.95)!important}
+.maplibregl-popup-anchor-top .maplibregl-popup-tip{border-bottom-color:rgba(10,14,26,0.95)!important}
+
+/* LAYER TOGGLE */
+.layer-toggle{position:absolute;top:72px;right:20px;z-index:10}
+.ltog{display:flex;flex-direction:column;gap:4px;background:var(--glass);backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:8px;padding:8px 10px}
+.ltog label{display:flex;align-items:center;gap:6px;font-size:9.5px;color:var(--txt2);cursor:pointer;white-space:nowrap}
+.ltog label:hover{color:var(--txt)}
+.ltog input{accent-color:var(--day);width:12px;height:12px}
+
+/* ZOOM HINT */
+.zoom-hint{position:absolute;bottom:100px;left:50%;transform:translateX(-50%);z-index:10;background:var(--glass);backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:8px;padding:6px 14px;font-size:10px;color:var(--txt2);transition:opacity .3s;pointer-events:none}
+.zoom-hint.hidden{opacity:0}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="loader" id="loader"><div class="spin"></div><h2>CITY 101</h2><p id="loadMsg">Loading 192,270 building footprints&hellip;</p></div>
+  <div class="hdr">
+    <div class="title-block"><div class="title">City 101</div><div class="subtitle">The Breathing Corridor &mdash; Gen&egrave;ve to Villeneuve</div></div>
+    <div class="tabs">
+      <button class="tab on" data-v="work">Workplaces</button>
+      <button class="tab" data-v="res">Residences</button>
+      <button class="tab" data-v="breath">Breathing City</button>
+    </div>
+  </div>
+  <div id="map"></div>
+  <div class="sky" id="sky"></div>
+  <div class="panel desc" id="desc"><h3 id="dT">Workplaces</h3><p id="dP"></p></div>
+  <div class="panel stats" id="statsP">
+    <div class="panel-title">Population Flow</div>
+    <div class="sr"><span class="sl"><span class="sd" style="background:var(--day)"></span>Day Workers</span><span class="sv" id="sD">0</span></div>
+    <div class="sr"><span class="sl"><span class="sd" style="background:var(--night)"></span>Night Workers</span><span class="sv" id="sN">0</span></div>
+    <div class="divider"></div>
+    <div class="sr"><span class="sl"><span class="sd" style="background:var(--home)"></span>At Home</span><span class="sv" id="sH">0</span></div>
+    <div class="divider"></div>
+    <div class="sr"><span class="sl"><span class="sd" style="background:#fff"></span>Total Present</span><span class="sv" id="sT">0</span></div>
+  </div>
+  <div class="panel legend" id="leg"><div class="panel-title">Legend</div><div id="legC"></div></div>
+  <div class="layer-toggle" id="layerToggle">
+    <div class="ltog">
+      <label><input type="checkbox" id="togComm" checked> Commune borders</label>
+      <label><input type="checkbox" id="togLabels" checked> City labels</label>
+    </div>
+  </div>
+  <div class="time">
+    <button class="pbtn" id="play">&#9654;</button>
+    <div class="sc">
+      <input type="range" id="slider" min="0" max="1439" value="480" step="1">
+      <div class="tl"><span>00:00</span><span>06:00</span><span>12:00</span><span>18:00</span><span>23:59</span></div>
+    </div>
+    <div class="clock" id="clk">08:00</div>
+    <button class="spd" id="spd">1x</button>
+  </div>
+  <div class="zoom-hint hidden" id="zoomHint">Zoom in to see building footprints</div>
+</div>
+
+<script src="https://unpkg.com/maplibre-gl@4.5.0/dist/maplibre-gl.js"></script>
+<script src="https://unpkg.com/deck.gl@9.1.7/dist.min.js"></script>
+<script>
+(function(){
+'use strict';
+
+// ─── GLOBALS ───
+let currentView = 'work';
+let currentHour = 8;
+let isPlaying = false;
+let animSpeed = 1;
+let lastFrame = 0;
+const MPS = 30;
+let buildingsGeoJSON = null;
+let buildingMeta = null;
+let pop24h = null;
+let deckOverlay = null;
+let curvesArray = null;    // curves[curveTypeIndex][hour] -> 0-1
+let currentZoom = 10;
+
+// ─── MAP ───
+window._map = null;
+const map = window._map = new maplibregl.Map({
+  container: 'map',
+  style: 'https://basemaps.cartocdn.com/gl/dark-matter-nolabels-gl-style/style.json',
+  center: [6.50, 46.38],
+  zoom: 10,
+  minZoom: 9,
+  maxZoom: 18,
+  attributionControl: false,
+  antialias: true,
+});
+map.addControl(new maplibregl.AttributionControl({compact:true}), 'bottom-right');
+map.addControl(new maplibregl.NavigationControl({showCompass:false}), 'bottom-right');
+
+// ─── BACKGROUND COLORS ───
+const bgKeys = [
+  [0,[8,10,22]],[4,[10,14,30]],[5,[18,18,40]],[6,[35,22,45]],[7,[55,30,40]],
+  [8,[60,40,28]],[10,[50,38,22]],[12,[55,42,20]],[15,[50,38,22]],[17,[58,32,25]],
+  [18,[50,22,30]],[19,[35,18,38]],[20,[22,14,35]],[22,[12,12,28]],[24,[8,10,22]]
+];
+function bgColor(h){
+  let lo=bgKeys[0],hi=bgKeys[bgKeys.length-1];
+  for(let i=0;i<bgKeys.length-1;i++){if(h>=bgKeys[i][0]&&h<=bgKeys[i+1][0]){lo=bgKeys[i];hi=bgKeys[i+1];break}}
+  const t=hi[0]===lo[0]?0:(h-lo[0])/(hi[0]-lo[0]);
+  return`rgb(${Math.round(lo[1][0]+(hi[1][0]-lo[1][0])*t)},${Math.round(lo[1][1]+(hi[1][1]-lo[1][1])*t)},${Math.round(lo[1][2]+(hi[1][2]-lo[1][2])*t)})`;
+}
+function skyEmoji(h){if(h>=6&&h<8)return'\u{1F305}';if(h>=8&&h<18)return'\u2600\uFE0F';if(h>=18&&h<20)return'\u{1F307}';return'\u{1F319}'}
+
+// ─── TIME FACTORS (for stats) ───
+function dayWork(h){if(h<6)return.02;if(h<7)return.02+.18*(h-6);if(h<8)return.2+.4*(h-7);if(h<9)return.6+.3*(h-8);if(h<12)return.9;if(h<13)return.9-.15*(h-12);if(h<14)return.75+.15*(h-13);if(h<17)return.9;if(h<18)return.9-.4*(h-17);if(h<19)return.5-.3*(h-18);if(h<20)return.2-.12*(h-19);if(h<21)return.08-.04*(h-20);return.04}
+function nightWork(h){if(h<5)return.85;if(h<6)return.85-.35*(h-5);if(h<7)return.5-.3*(h-6);if(h<8)return.2-.1*(h-7);if(h<19)return.08;if(h<20)return.08+.17*(h-19);if(h<21)return.25+.25*(h-20);if(h<22)return.5+.2*(h-21);if(h<23)return.7+.15*(h-22);return.85}
+function homeFac(h){if(h<5)return.95;if(h<6)return.95-.1*(h-5);if(h<7)return.85-.25*(h-6);if(h<8)return.6-.15*(h-7);if(h<9)return.45-.1*(h-8);if(h<12)return.35;if(h<13)return.35+.1*(h-12);if(h<14)return.45-.1*(h-13);if(h<17)return.35;if(h<18)return.35+.15*(h-17);if(h<19)return.5+.15*(h-18);if(h<20)return.65+.12*(h-19);if(h<21)return.77+.08*(h-20);if(h<22)return.85+.05*(h-21);if(h<23)return.9+.03*(h-22);return.93}
+
+// ─── POPULATION INTERPOLATION ───
+const POP_MIDS = [3, 6, 8, 10.5, 15.5, 20.5, 23.5];
+function interpPop(commune, hour){
+  const h = commune.h;
+  if(!h || h.length < 7) return commune.pop;
+  let hr = ((hour % 24) + 24) % 24;
+  for(let i = 0; i < POP_MIDS.length; i++){
+    let next = (i + 1) % POP_MIDS.length;
+    let m0 = POP_MIDS[i], m1 = POP_MIDS[next];
+    let v0 = h[i], v1 = h[next];
+    if(m1 < m0) m1 += 24;
+    let testHr = hr;
+    if(testHr < m0 && m1 > 24) testHr += 24;
+    if(testHr >= m0 && testHr <= m1){
+      const t = (testHr - m0) / (m1 - m0);
+      return Math.round(v0 + (v1 - v0) * t);
+    }
+  }
+  return commune.pop;
+}
+
+// ─── OCCUPANCY ───
+// Get interpolated occupancy for a curve type at fractional hour
+function getOccupancy(curveTypeIdx, hour) {
+  if (!curvesArray || curveTypeIdx >= curvesArray.length) return 0.5;
+  const curve = curvesArray[curveTypeIdx];
+  const h = ((hour % 24) + 24) % 24;
+  const lo = Math.floor(h) % 24;
+  const hi = (lo + 1) % 24;
+  const frac = h - Math.floor(h);
+  return curve[lo] + (curve[hi] - curve[lo]) * frac;
+}
+
+// ─── COLOR FUNCTIONS ───
+function lerp(a, b, t) { return a + (b - a) * t; }
+
+function workplaceColor(cat, nightStatus, occupancy, hour) {
+  // cat: 0=other, 1=residential, 2=work
+  // nightStatus: 0=res, 1=closed_night, 2=open24h, 3=open_late, 4=night_shift
+  const isDark = hour < 6 || hour >= 20;
+
+  if (cat === 1) {
+    // Residential: nearly invisible
+    return [20, 20, 30, 12];
+  }
+
+  // Work buildings
+  if (nightStatus === 4 || (isDark && (nightStatus === 2 || nightStatus === 3))) {
+    // Night workers / active at night: indigo gradient
+    const t = occupancy;
+    return [
+      Math.round(lerp(15, 129, t)),
+      Math.round(lerp(12, 140, t)),
+      Math.round(lerp(50, 248, t)),
+      Math.round(lerp(30, 220, t))
+    ];
+  }
+
+  // Day workers: amber gradient
+  const t = occupancy;
+  return [
+    Math.round(lerp(40, 245, t)),
+    Math.round(lerp(20, 158, t)),
+    Math.round(lerp(3, 11, t)),
+    Math.round(lerp(25, 220, t))
+  ];
+}
+
+function residenceColor(cat, occupancy) {
+  if (cat !== 1) {
+    // Non-residential: nearly invisible
+    return [20, 20, 30, 8];
+  }
+  // Cyan gradient
+  const t = occupancy;
+  return [
+    Math.round(lerp(5, 34, t)),
+    Math.round(lerp(30, 211, t)),
+    Math.round(lerp(40, 238, t)),
+    Math.round(lerp(25, 220, t))
+  ];
+}
+
+function breathingColor(cat, occupancy) {
+  const alpha = Math.round(lerp(20, 230, occupancy));
+  if (cat === 1) {
+    // Residential: blue gradient
+    return [
+      Math.round(lerp(8, 59, occupancy)),
+      Math.round(lerp(15, 130, occupancy)),
+      Math.round(lerp(60, 246, occupancy)),
+      alpha
+    ];
+  }
+  // Work: amber gradient
+  return [
+    Math.round(lerp(35, 245, occupancy)),
+    Math.round(lerp(15, 158, occupancy)),
+    Math.round(lerp(3, 11, occupancy)),
+    alpha
+  ];
+}
+
+// ─── GET FILL COLOR for current state ───
+function getBuildingColor(feature) {
+  const p = feature.properties;
+  const occ = getOccupancy(p.ct, currentHour);
+
+  switch (currentView) {
+    case 'work': return workplaceColor(p.c, p.n, occ, currentHour);
+    case 'res': return residenceColor(p.c, occ);
+    case 'breath': return breathingColor(p.c, occ);
+    default: return [50, 50, 50, 50];
+  }
+}
+
+// ─── DECK.GL LAYERS ───
+function createBuildingPolygonLayer() {
+  return new deck.GeoJsonLayer({
+    id: 'buildings-poly',
+    data: buildingsGeoJSON,
+    filled: true,
+    stroked: false,
+    extruded: false,
+    getFillColor: getBuildingColor,
+    pickable: true,
+    autoHighlight: true,
+    highlightColor: [255, 255, 255, 60],
+    updateTriggers: {
+      getFillColor: [currentHour, currentView]
+    },
+    parameters: { depthTest: false },
+    // Only show at zoom >= 12
+    visible: currentZoom >= 12,
+  });
+}
+
+function createBuildingCircleLayer() {
+  return new deck.GeoJsonLayer({
+    id: 'buildings-circles',
+    data: buildingsGeoJSON,
+    filled: true,
+    stroked: false,
+    extruded: false,
+    pointType: 'circle',
+    getPointRadius: f => Math.max(3, Math.sqrt(f.properties.a) * 0.4),
+    getFillColor: getBuildingColor,
+    pickable: true,
+    autoHighlight: true,
+    highlightColor: [255, 255, 255, 60],
+    updateTriggers: {
+      getFillColor: [currentHour, currentView]
+    },
+    pointRadiusUnits: 'meters',
+    pointRadiusMinPixels: 0.5,
+    pointRadiusMaxPixels: 8,
+    // Only show at zoom < 12
+    visible: currentZoom < 12,
+  });
+}
+
+function updateDeckLayers() {
+  if (!deckOverlay || !buildingsGeoJSON) return;
+  deckOverlay.setProps({
+    layers: [
+      createBuildingPolygonLayer(),
+      createBuildingCircleLayer(),
+    ]
+  });
+}
+
+// ─── LOAD DATA ───
+async function loadAll(){
+  const base = 'data/';
+
+  document.getElementById('loadMsg').textContent = 'Loading building metadata...';
+  const [metaRes, popRes] = await Promise.all([
+    fetch(base + 'building_meta.json').then(r => r.json()),
+    fetch(base + 'population_24h.json').then(r => r.json()),
+  ]);
+  buildingMeta = metaRes;
+  pop24h = popRes;
+
+  // Build curves lookup array
+  curvesArray = metaRes.curve_keys.map(k => metaRes.curves[k]);
+
+  document.getElementById('loadMsg').textContent = 'Loading 192,270 building footprints...';
+  const geoRes = await fetch(base + 'buildings_polygons.geojson');
+  buildingsGeoJSON = await geoRes.json();
+}
+
+// ─── MAPLIBRE LAYERS (communes, city labels) ───
+function setupMapLayers() {
+  // Hide basemap building layers to avoid visual confusion with our colored polygons
+  // (Basemap uses OSM buildings; our data is Swiss TLM3D — slightly different footprints)
+  if (map.getLayer('building')) map.setLayoutProperty('building', 'visibility', 'none');
+  if (map.getLayer('building-top')) map.setLayoutProperty('building-top', 'visibility', 'none');
+
+  // Commune boundaries
+  map.addSource('communes', {type: 'geojson', data: 'data/communes.geojson'});
+  map.addLayer({
+    id: 'commune-borders', type: 'line', source: 'communes',
+    paint: {
+      'line-color': 'rgba(255,255,255,0.12)',
+      'line-width': ['interpolate',['linear'],['zoom'],9,0.3,12,0.8,15,1.2],
+    }
+  });
+
+  // City labels
+  const cities = [
+    {n:'GENEVE',lt:46.204,ln:6.146,mj:1},{n:'NYON',lt:46.383,ln:6.240},{n:'ROLLE',lt:46.460,ln:6.335},
+    {n:'MORGES',lt:46.512,ln:6.500},{n:'LAUSANNE',lt:46.522,ln:6.635,mj:1},
+    {n:'VEVEY',lt:46.462,ln:6.843,mj:1},{n:'MONTREUX',lt:46.432,ln:6.915,mj:1},
+    {n:'VILLENEUVE',lt:46.397,ln:6.930}
+  ];
+  map.addSource('cities', {type: 'geojson', data: {type:'FeatureCollection',features:cities.map(c=>({
+    type:'Feature',geometry:{type:'Point',coordinates:[c.ln,c.lt]},properties:{name:c.n,major:c.mj||0}
+  }))}});
+  map.addLayer({
+    id: 'city-labels', type: 'symbol', source: 'cities',
+    layout: {
+      'text-field': ['get','name'],
+      'text-size': ['match',['get','major'],1,14,10],
+      'text-font': ['Open Sans Bold','Arial Unicode MS Bold'],
+      'text-letter-spacing': 0.2
+    },
+    paint: {
+      'text-color': ['match',['get','major'],1,'rgba(255,255,255,0.7)','rgba(255,255,255,0.4)'],
+      'text-halo-color': 'rgba(0,0,0,0.8)', 'text-halo-width': 2
+    }
+  });
+}
+
+// ─── UPDATE TIME ───
+function updateTime(hour) {
+  currentHour = hour;
+  const dw = dayWork(hour);
+  const nw = nightWork(hour);
+  const hf = homeFac(hour);
+
+  // Update Deck.gl layers
+  updateDeckLayers();
+
+  // Stats from real population data
+  let totalResPop = 0;
+  let totalNowPop = 0;
+  if (pop24h) {
+    Object.values(pop24h).forEach(c => {
+      totalResPop += c.pop;
+      totalNowPop += interpPop(c, hour);
+    });
+  }
+  const atWork = Math.round(totalResPop * 0.55 * dw);
+  const atNight = Math.round(totalResPop * 0.12 * nw);
+  const atHome = Math.round(totalNowPop * hf);
+  document.getElementById('sD').textContent = atWork.toLocaleString();
+  document.getElementById('sN').textContent = atNight.toLocaleString();
+  document.getElementById('sH').textContent = atHome.toLocaleString();
+  document.getElementById('sT').textContent = totalNowPop.toLocaleString();
+
+  // Clock
+  const hh = Math.floor(hour) % 24, mm = Math.floor((hour % 1) * 60);
+  document.getElementById('clk').textContent = String(hh).padStart(2,'0') + ':' + String(mm).padStart(2,'0');
+
+  // Background
+  document.body.style.backgroundColor = bgColor(hour);
+  document.getElementById('sky').textContent = skyEmoji(hour);
+
+  // Slider track
+  const sl = document.getElementById('slider');
+  const pct = (hour / 24) * 100;
+  const tc = hour >= 6 && hour < 19 ? 'rgba(245,158,11,0.4)' : 'rgba(129,140,248,0.4)';
+  sl.style.background = `linear-gradient(90deg,${tc} ${pct}%,rgba(255,255,255,.1) ${pct}%)`;
+}
+
+// ─── VIEW SWITCHING ───
+const viewInfo = {
+  work: {
+    title: 'Workplaces: Day & Night',
+    text: '192K classified buildings along the corridor. Amber = daytime workplaces (offices, retail, education, industry). Indigo = night-shift operations (hospitals, hotels, infrastructure). Building footprints colored by occupancy at current hour.'
+  },
+  res: {
+    title: 'Where People Live',
+    text: 'Residential density across 150 communes from Geneva to Villeneuve. Cyan = residential buildings. Brightness tracks how many people are home — bright at night, dim during commute hours. ~600K residents.'
+  },
+  breath: {
+    title: 'The Breathing City',
+    text: 'Watch 600,000+ people flow through 24 hours. Blue = people at home. Amber = people at work. The corridor breathes as commuters move between residential suburbs and employment centers along Lake Geneva.'
+  }
+};
+
+function setView(v) {
+  currentView = v;
+  document.getElementById('dT').textContent = viewInfo[v].title;
+  document.getElementById('dP').textContent = viewInfo[v].text;
+
+  if (v === 'work') {
+    document.getElementById('legC').innerHTML = `
+      <div class="li"><div class="lg" style="background:linear-gradient(90deg,#451a03,#d97706,#fde68a)"></div><span class="lt">Day workers</span></div>
+      <div class="li"><div class="lg" style="background:linear-gradient(90deg,#1e1b4b,#4338ca,#c7d2fe)"></div><span class="lt">Night workers</span></div>
+      <div class="li"><div style="width:7px;height:7px;border-radius:2px;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2)"></div><span class="lt">Commune border</span></div>`;
+  } else if (v === 'res') {
+    document.getElementById('legC').innerHTML = `
+      <div class="li"><div class="lg" style="background:linear-gradient(90deg,#042f2e,#0891b2,#a5f3fc)"></div><span class="lt">Residential</span></div>
+      <div class="li"><div style="width:7px;height:7px;border-radius:2px;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2)"></div><span class="lt">Commune border</span></div>`;
+  } else {
+    document.getElementById('legC').innerHTML = `
+      <div class="li"><div class="lg" style="background:linear-gradient(90deg,#0c1445,#2563eb,#93c5fd)"></div><span class="lt">People at home</span></div>
+      <div class="li"><div class="lg" style="background:linear-gradient(90deg,#451a03,#d97706,#fef3c7)"></div><span class="lt">People at work</span></div>`;
+  }
+  updateTime(currentHour);
+}
+
+// ─── LAYER TOGGLES ───
+function setupToggles() {
+  document.getElementById('togComm').addEventListener('change', function() {
+    if (map.getLayer('commune-borders')) {
+      map.setLayoutProperty('commune-borders', 'visibility', this.checked ? 'visible' : 'none');
+    }
+  });
+  document.getElementById('togLabels').addEventListener('change', function() {
+    if (map.getLayer('city-labels')) {
+      map.setLayoutProperty('city-labels', 'visibility', this.checked ? 'visible' : 'none');
+    }
+  });
+}
+
+// ─── ANIMATION ───
+function animate(ts) {
+  if (!isPlaying) return;
+  if (!lastFrame) lastFrame = ts;
+  const dt = (ts - lastFrame) / 1000;
+  lastFrame = ts;
+  currentHour += dt * MPS * animSpeed / 60;
+  if (currentHour >= 24) currentHour -= 24;
+  document.getElementById('slider').value = Math.round(currentHour * 60);
+  updateTime(currentHour);
+  requestAnimationFrame(animate);
+}
+
+// ─── EVENTS ───
+document.getElementById('play').onclick = function() {
+  isPlaying = !isPlaying;
+  this.innerHTML = isPlaying ? '&#10074;&#10074;' : '&#9654;';
+  if (isPlaying) { lastFrame = 0; requestAnimationFrame(animate); }
+};
+document.getElementById('slider').oninput = function() {
+  currentHour = parseInt(this.value) / 60;
+  updateTime(currentHour);
+};
+const speeds = [.5, 1, 2, 4]; let si = 1;
+document.getElementById('spd').onclick = function() {
+  si = (si + 1) % 4;
+  animSpeed = speeds[si];
+  this.textContent = speeds[si] + 'x';
+};
+document.querySelectorAll('.tab').forEach(b => {
+  b.onclick = function() {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('on'));
+    this.classList.add('on');
+    setView(this.dataset.v);
+  };
+});
+
+// ─── ZOOM TRACKING ───
+map.on('zoom', () => {
+  const newZoom = map.getZoom();
+  const wasPolygon = currentZoom >= 12;
+  const isPolygon = newZoom >= 12;
+  currentZoom = newZoom;
+
+  // Show/hide zoom hint
+  const hint = document.getElementById('zoomHint');
+  if (newZoom < 12 && newZoom >= 10) {
+    hint.classList.remove('hidden');
+  } else {
+    hint.classList.add('hidden');
+  }
+
+  // Only re-render deck layers if crossing the threshold
+  if (wasPolygon !== isPolygon) {
+    updateDeckLayers();
+  }
+});
+
+// ─── CLICK HANDLER (via Deck.gl) ───
+function onBuildingClick(info) {
+  if (!info.object || !info.object.properties) return;
+  const p = info.object.properties;
+  const meta = buildingMeta;
+  const catName = meta.cat_labels[p.c] || 'Building';
+  const secName = meta.sectors[p.s] || 'Unknown';
+  const comName = meta.communes[p.ci] || 'Unknown';
+  const nsName = meta.ns_labels[p.n] || 'Unknown';
+  const occ = getOccupancy(p.ct, currentHour);
+  const occPct = Math.round(occ * 100);
+
+  // Estimate capacity
+  const densityFactor = p.c === 1 ? 0.03 : 0.05;
+  const capacity = Math.max(1, Math.round(p.a * densityFactor));
+
+  new maplibregl.Popup({closeButton: true, maxWidth: '280px'})
+    .setLngLat(info.coordinate)
+    .setHTML(`<b>${catName}</b>
+      <div class="pop-row"><span class="pop-label">Commune</span><span class="pop-val">${comName}</span></div>
+      <div class="pop-row"><span class="pop-label">Sector</span><span class="pop-val">${secName}</span></div>
+      <div class="pop-row"><span class="pop-label">Area</span><span class="pop-val">${p.a.toLocaleString()} m&sup2;</span></div>
+      <div class="pop-row"><span class="pop-label">Night status</span><span class="pop-val">${nsName}</span></div>
+      <div class="pop-row"><span class="pop-label">Est. capacity</span><span class="pop-val">${capacity} people</span></div>
+      <div class="pop-row"><span class="pop-label">Occupancy now</span><span class="pop-val">${occPct}%</span></div>`)
+    .addTo(map);
+}
+
+// ─── INIT ───
+map.on('load', async () => {
+  try {
+    await loadAll();
+  } catch(e) {
+    document.getElementById('loadMsg').textContent = 'Error loading data: ' + e.message;
+    console.error(e);
+    return;
+  }
+
+  setupMapLayers();
+  setupToggles();
+
+  // Initialize Deck.gl overlay
+  deckOverlay = new deck.MapboxOverlay({
+    interleaved: true,
+    layers: [],
+    onClick: (info) => {
+      if (info.layer && (info.layer.id === 'buildings-poly' || info.layer.id === 'buildings-circles')) {
+        onBuildingClick(info);
+      }
+    },
+    getTooltip: (info) => {
+      if (!info.object || !info.object.properties) return null;
+      const p = info.object.properties;
+      const catName = buildingMeta.cat_labels[p.c] || 'Building';
+      const secName = buildingMeta.sectors[p.s] || '';
+      return {
+        html: `<b>${catName}</b>${secName ? ' — ' + secName : ''}`,
+        style: {
+          backgroundColor: 'rgba(10,14,26,0.9)',
+          color: '#e5e7eb',
+          fontSize: '11px',
+          padding: '4px 8px',
+          borderRadius: '4px',
+          border: '1px solid rgba(255,255,255,0.1)',
+        }
+      };
+    },
+  });
+  map.addControl(deckOverlay);
+
+  // Fit to corridor
+  map.fitBounds([[6.05, 46.17], [6.96, 46.56]], {
+    padding: {top: 80, bottom: 100, left: 280, right: 40}
+  });
+
+  setView('work');
+  updateTime(currentHour);
+  document.getElementById('loader').classList.add('done');
+
+  // Auto-play after short delay
+  setTimeout(() => {
+    isPlaying = true;
+    document.getElementById('play').innerHTML = '&#10074;&#10074;';
+    lastFrame = 0;
+    requestAnimationFrame(animate);
+  }, 1500);
+});
+
+})();
+</script>
+</body>
+</html>

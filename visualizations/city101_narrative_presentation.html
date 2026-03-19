@@ -1,0 +1,1388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>City101 — Still on the Line</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@400;500;700&family=Instrument+Serif&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --chrome-bg: #0a0a0f;
+    --chrome-text: #e8e6e1;
+    --chrome-accent: #c9a84c;
+    --chrome-muted: #8a8880;
+    --chrome-cyan: #4cc9b0;
+    --chrome-green: #4caf50;
+    --chrome-red: #e05555;
+    --chrome-purple: #a88beb;
+    --chrome-blue: #5b9bd5;
+    --chrome-orange: #e8a84c;
+    --font-display: 'Instrument Serif', serif;
+    --font-body: 'DM Sans', sans-serif;
+    --font-mono: 'DM Mono', monospace;
+    --panel-border: rgba(201, 168, 76, 0.25);
+    --glass-bg: rgba(10, 10, 15, 0.85);
+    --glass-border: rgba(201, 168, 76, 0.15);
+  }
+
+  html, body {
+    width: 100%; height: 100%;
+    background: var(--chrome-bg);
+    color: var(--chrome-text);
+    font-family: var(--font-body);
+    overflow: hidden;
+  }
+
+  /* —— MAIN LAYOUT —— */
+  .canvas {
+    width: 100vw;
+    height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: auto 1fr 1fr auto;
+    gap: 0;
+  }
+
+  /* —— TOP STATUS BAR —— */
+  .status-bar {
+    grid-column: 1 / -1;
+    background: rgba(201, 168, 76, 0.08);
+    border-bottom: 1px solid var(--panel-border);
+    padding: 6px 20px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--chrome-muted);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .status-bar .left { display: flex; gap: 24px; align-items: center; }
+  .status-bar .session-tag {
+    background: rgba(201, 168, 76, 0.15);
+    color: var(--chrome-accent);
+    padding: 2px 8px;
+    border-radius: 2px;
+    font-weight: 500;
+  }
+  .status-bar .slide-tag {
+    background: rgba(76, 201, 176, 0.1);
+    color: var(--chrome-cyan);
+    padding: 2px 8px;
+    border-radius: 2px;
+    font-size: 9px;
+  }
+  .status-bar .right { display: flex; gap: 16px; align-items: center; }
+
+  /* —— PLAY BUTTON —— */
+  .play-btn {
+    background: rgba(201, 168, 76, 0.12);
+    border: 1px solid var(--chrome-accent);
+    color: var(--chrome-accent);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    padding: 3px 12px;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: all 0.2s;
+  }
+  .play-btn:hover { background: rgba(201, 168, 76, 0.25); }
+  .play-btn.playing { color: var(--chrome-green); border-color: var(--chrome-green); }
+
+  /* —— PANELS —— */
+  .panel {
+    border: 1px solid var(--panel-border);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: border-color 0.5s, box-shadow 0.5s;
+  }
+  .panel.highlight {
+    border-color: var(--chrome-accent);
+    box-shadow: inset 0 0 30px rgba(201, 168, 76, 0.06);
+  }
+  .panel-header {
+    background: rgba(201, 168, 76, 0.06);
+    border-bottom: 1px solid var(--glass-border);
+    padding: 10px 16px 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-shrink: 0;
+  }
+  .panel-header h2 {
+    font-family: var(--font-display);
+    font-size: 20px;
+    color: var(--chrome-accent);
+    font-weight: 400;
+  }
+  .panel-header .panel-tag {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: var(--chrome-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .panel-body {
+    flex: 1;
+    padding: 14px 16px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* —— BOTTOM STATUS BAR —— */
+  .bottom-bar {
+    grid-column: 1 / -1;
+    background: rgba(201, 168, 76, 0.06);
+    border-top: 1px solid var(--panel-border);
+    padding: 5px 20px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--chrome-muted);
+    display: flex;
+    justify-content: space-between;
+  }
+
+  /* —— SCAN LINE —— */
+  .canvas::after {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.03) 2px,
+      rgba(0,0,0,0.03) 4px
+    );
+    z-index: 100;
+  }
+
+  /* —— CURSOR BLINK —— */
+  .cursor {
+    display: inline-block;
+    width: 7px; height: 14px;
+    background: var(--chrome-accent);
+    animation: blink 1s step-end infinite;
+    vertical-align: text-bottom;
+    margin-left: 2px;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  /* ================================================
+     SCREEN 1: STILL ON THE LINE — stat grid
+  ================================================ */
+  .s1-question {
+    font-family: var(--font-display);
+    font-size: 13px;
+    color: var(--chrome-muted);
+    font-style: italic;
+    margin-bottom: 14px;
+    line-height: 1.5;
+    border-left: 2px solid var(--chrome-accent);
+    padding-left: 10px;
+  }
+  .s1-corridor-label {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: var(--chrome-muted);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 8px;
+  }
+  .s1-route {
+    font-family: var(--font-display);
+    font-size: 26px;
+    color: var(--chrome-text);
+    margin-bottom: 16px;
+    line-height: 1.1;
+  }
+  .s1-route span { color: var(--chrome-accent); }
+  .stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+  }
+  .stat-cell {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid var(--glass-border);
+    border-radius: 3px;
+    padding: 8px 10px;
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity 0.4s, transform 0.4s;
+  }
+  .stat-cell.visible { opacity: 1; transform: translateY(0); }
+  .stat-num {
+    font-family: var(--font-mono);
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--chrome-accent);
+    line-height: 1;
+    margin-bottom: 3px;
+  }
+  .stat-num.cyan { color: var(--chrome-cyan); }
+  .stat-num.red { color: var(--chrome-red); }
+  .stat-num.green { color: var(--chrome-green); }
+  .stat-num.purple { color: var(--chrome-purple); }
+  .stat-num.orange { color: var(--chrome-orange); }
+  .stat-label {
+    font-family: var(--font-body);
+    font-size: 9px;
+    color: var(--chrome-muted);
+    line-height: 1.3;
+  }
+
+  /* ================================================
+     SCREEN 2: THE ARCHIPELAGO
+  ================================================ */
+  .corridor-strip-wrap {
+    position: relative;
+    margin-bottom: 12px;
+  }
+  .corridor-strip-label {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: var(--chrome-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+    display: flex;
+    justify-content: space-between;
+  }
+  .corridor-strip {
+    display: flex;
+    gap: 2px;
+    align-items: flex-end;
+    height: 32px;
+    position: relative;
+  }
+  .st-dot {
+    flex: 1;
+    border-radius: 1px;
+    position: relative;
+    transition: opacity 0.3s;
+    cursor: default;
+  }
+  .st-dot:hover::after {
+    content: attr(data-name);
+    position: absolute;
+    bottom: 38px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(10,10,15,0.95);
+    border: 1px solid var(--panel-border);
+    color: var(--chrome-text);
+    font-family: var(--font-mono);
+    font-size: 8px;
+    padding: 2px 5px;
+    border-radius: 2px;
+    white-space: nowrap;
+    z-index: 50;
+    pointer-events: none;
+  }
+  .gap-zone {
+    position: absolute;
+    bottom: -18px;
+    height: 14px;
+    border-left: 1px dashed rgba(229, 85, 85, 0.5);
+    border-right: 1px dashed rgba(229, 85, 85, 0.5);
+    border-bottom: 1px dashed rgba(229, 85, 85, 0.5);
+    font-family: var(--font-mono);
+    font-size: 7px;
+    color: var(--chrome-red);
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding-bottom: 1px;
+  }
+  .findings-list {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  .finding-row {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    padding: 5px 8px;
+    border-left: 2px solid transparent;
+    transition: border-color 0.2s, background 0.2s;
+    border-radius: 0 2px 2px 0;
+  }
+  .finding-row:hover {
+    border-left-color: var(--chrome-accent);
+    background: rgba(201, 168, 76, 0.04);
+  }
+  .finding-n {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: var(--chrome-accent);
+    flex-shrink: 0;
+    min-width: 18px;
+  }
+  .finding-title {
+    font-family: var(--font-body);
+    font-size: 11px;
+    color: var(--chrome-text);
+    font-weight: 500;
+    flex-shrink: 0;
+  }
+  .finding-data {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: var(--chrome-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* ================================================
+     SCREEN 3: COMIC BOOK PANEL
+  ================================================ */
+  .comic-outer {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .comic-label {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: var(--chrome-muted);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0;
+  }
+  .comic-label .status-pill {
+    background: rgba(229, 85, 85, 0.1);
+    border: 1px solid rgba(229, 85, 85, 0.3);
+    color: var(--chrome-red);
+    padding: 1px 6px;
+    border-radius: 10px;
+    font-size: 8px;
+  }
+  .comic-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 4px;
+    flex: 1;
+    min-height: 0;
+  }
+  .comic-panel {
+    border: 2px solid rgba(201, 168, 76, 0.35);
+    position: relative;
+    overflow: hidden;
+    background: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 6px,
+      rgba(201, 168, 76, 0.025) 6px,
+      rgba(201, 168, 76, 0.025) 7px
+    );
+    transition: border-color 0.3s;
+    cursor: pointer;
+  }
+  .comic-panel:hover {
+    border-color: rgba(201, 168, 76, 0.7);
+    background: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 6px,
+      rgba(201, 168, 76, 0.05) 6px,
+      rgba(201, 168, 76, 0.05) 7px
+    );
+  }
+  .comic-panel-inner {
+    position: absolute;
+    inset: 5px;
+    border: 1px dashed rgba(201, 168, 76, 0.2);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 6px;
+  }
+  .comic-panel-num {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 500;
+    color: rgba(201, 168, 76, 0.5);
+    line-height: 1;
+  }
+  .comic-panel-placeholder {
+    font-family: var(--font-mono);
+    font-size: 8px;
+    color: rgba(201, 168, 76, 0.25);
+    text-align: center;
+    align-self: center;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .comic-caption-bar {
+    flex-shrink: 0;
+    background: rgba(201, 168, 76, 0.05);
+    border: 1px solid var(--glass-border);
+    border-radius: 2px;
+    padding: 5px 10px;
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: var(--chrome-muted);
+    display: flex;
+    gap: 12px;
+  }
+  .comic-caption-bar span { color: var(--chrome-accent); }
+
+  /* Wide panel variant */
+  .comic-panel.wide {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+
+  /* ================================================
+     SCREEN 4: THE ZURICH MIRROR
+  ================================================ */
+  .zh-topo-split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5px;
+    margin-bottom: 5px;
+  }
+  .zh-topo-card {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid var(--glass-border);
+    border-radius: 3px;
+    padding: 5px 8px;
+    position: relative;
+    overflow: hidden;
+  }
+  .zh-topo-card.zurich { border-color: rgba(91, 155, 213, 0.35); }
+  .zh-topo-card.city101 { border-color: rgba(229, 85, 85, 0.25); }
+  .zh-topo-label {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    font-weight: 500;
+    margin-bottom: 2px;
+  }
+  .zh-topo-card.zurich .zh-topo-label { color: var(--chrome-blue); }
+  .zh-topo-card.city101 .zh-topo-label { color: var(--chrome-red); }
+  .zh-topo-stat {
+    font-family: var(--font-body);
+    font-size: 8px;
+    color: var(--chrome-muted);
+    line-height: 1.4;
+  }
+  .zh-topo-stat b { color: var(--chrome-text); font-weight: 500; }
+  .zh-topo-icon {
+    position: absolute;
+    top: 4px;
+    right: 6px;
+    opacity: 0.12;
+  }
+  .zh-section-label {
+    font-family: var(--font-mono);
+    font-size: 7.5px;
+    color: var(--chrome-muted);
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    margin-bottom: 3px;
+  }
+  .zh-pair-row {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    margin-bottom: 2px;
+  }
+  .zh-pair-name {
+    font-family: var(--font-mono);
+    font-size: 7px;
+    min-width: 54px;
+    flex-shrink: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .zh-pair-bars {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+  .zh-bar-track {
+    height: 4px;
+    background: rgba(255,255,255,0.03);
+    border-radius: 1px;
+    overflow: hidden;
+  }
+  .zh-bar-fill {
+    height: 100%;
+    border-radius: 1px;
+    transition: width 1s ease;
+  }
+  .zh-pair-freq {
+    font-family: var(--font-mono);
+    font-size: 7px;
+    min-width: 28px;
+    text-align: right;
+    flex-shrink: 0;
+  }
+  .zh-floor-callout {
+    margin-top: 4px;
+    padding: 4px 7px;
+    border: 1px dashed rgba(229, 85, 85, 0.3);
+    border-radius: 3px;
+    background: rgba(229, 85, 85, 0.03);
+    font-family: var(--font-mono);
+    font-size: 7.5px;
+    color: var(--chrome-muted);
+    line-height: 1.5;
+  }
+  .zh-floor-callout .hl { color: var(--chrome-accent); }
+  .zh-floor-callout .zh { color: var(--chrome-blue); }
+  .zh-floor-callout .c1 { color: var(--chrome-red); }
+  .zh-pulse-wrap {
+    margin-top: 4px;
+    border-top: 1px solid var(--glass-border);
+    padding-top: 4px;
+  }
+  .zh-pulse-canvas-wrap {
+    position: relative;
+    height: 30px;
+    margin-top: 2px;
+  }
+  .zh-pulse-canvas-wrap canvas {
+    width: 100%;
+    height: 100%;
+  }
+  .zh-pulse-legend {
+    display: flex;
+    gap: 10px;
+    font-family: var(--font-mono);
+    font-size: 6.5px;
+    color: var(--chrome-muted);
+    margin-top: 1px;
+  }
+  .zh-pulse-legend .dot {
+    display: inline-block;
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    margin-right: 2px;
+    vertical-align: middle;
+  }
+
+  /* ================================================
+     SCREEN 5: HEALTHCARE CIRCUIT
+  ================================================ */
+  .relay-chain {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    justify-content: center;
+    gap: 0;
+    position: relative;
+    padding-left: 24px;
+  }
+  .relay-chain::before {
+    content: '';
+    position: absolute;
+    left: 10px;
+    top: 12px;
+    bottom: 12px;
+    width: 1px;
+    border-left: 1px dashed rgba(201, 168, 76, 0.3);
+  }
+  .relay-node {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 4px 0;
+    position: relative;
+  }
+  .relay-node::before {
+    content: '';
+    position: absolute;
+    left: -18px;
+    top: 10px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    border: 1.5px solid var(--chrome-accent);
+    background: var(--chrome-bg);
+    flex-shrink: 0;
+  }
+  .relay-node.critical::before {
+    background: rgba(201, 168, 76, 0.3);
+    box-shadow: 0 0 6px rgba(201, 168, 76, 0.4);
+  }
+  .relay-node-num {
+    font-family: var(--font-mono);
+    font-size: 8px;
+    color: var(--chrome-accent);
+    min-width: 14px;
+    margin-top: 2px;
+    flex-shrink: 0;
+  }
+  .relay-node-content { flex: 1; min-width: 0; }
+  .relay-node-name {
+    font-family: var(--font-body);
+    font-size: 10.5px;
+    color: var(--chrome-text);
+    font-weight: 500;
+    line-height: 1.2;
+  }
+  .relay-node-gap {
+    font-family: var(--font-mono);
+    font-size: 8.5px;
+    color: var(--chrome-muted);
+    margin-top: 1px;
+  }
+  .relay-node-gap .gap-arrow { color: var(--chrome-orange); }
+  .relay-footer {
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px dashed rgba(201, 168, 76, 0.15);
+    font-family: var(--font-display);
+    font-size: 11px;
+    color: var(--chrome-muted);
+    font-style: italic;
+    line-height: 1.4;
+  }
+  .relay-footer em { color: var(--chrome-accent); font-style: normal; }
+
+  /* ================================================
+     SCREEN 6: THE PROPOSITION
+  ================================================ */
+  .prop-title {
+    font-family: var(--font-display);
+    font-size: 18px;
+    color: var(--chrome-text);
+    margin-bottom: 12px;
+    line-height: 1.2;
+  }
+  .prop-title span { color: var(--chrome-accent); }
+  .timeline-slots {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 12px;
+  }
+  .time-slot {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 7px 10px;
+    border: 1px solid var(--glass-border);
+    border-radius: 3px;
+    background: rgba(255,255,255,0.015);
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .time-slot:hover {
+    border-color: var(--chrome-accent);
+    background: rgba(201, 168, 76, 0.04);
+  }
+  .time-slot.dead-window {
+    border-color: rgba(229, 85, 85, 0.25);
+    background: rgba(229, 85, 85, 0.03);
+  }
+  .time-slot.dead-window:hover {
+    border-color: rgba(229, 85, 85, 0.6);
+  }
+  .time-hour {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: var(--chrome-accent);
+    min-width: 76px;
+    flex-shrink: 0;
+  }
+  .time-slot.dead-window .time-hour { color: var(--chrome-red); }
+  .time-program {
+    font-family: var(--font-body);
+    font-size: 11px;
+    color: var(--chrome-text);
+    font-weight: 500;
+    flex-shrink: 0;
+    min-width: 100px;
+  }
+  .time-desc {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: var(--chrome-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .prop-principles {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    border-top: 1px solid var(--glass-border);
+    padding-top: 10px;
+  }
+  .prop-principle {
+    display: flex;
+    gap: 8px;
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: var(--chrome-muted);
+    line-height: 1.5;
+  }
+  .prop-principle .pp-label { color: var(--chrome-cyan); flex-shrink: 0; }
+  .dead-pulse {
+    display: inline-block;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--chrome-red);
+    animation: pulse-red 2s ease-in-out infinite;
+    margin-right: 4px;
+    vertical-align: middle;
+  }
+  @keyframes pulse-red {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.3; transform: scale(0.7); }
+  }
+</style>
+</head>
+<body>
+<div class="canvas">
+
+  <!-- —— TOP STATUS BAR —— -->
+  <div class="status-bar">
+    <div class="left">
+      <span class="session-tag">city101</span>
+      <span>narrative — still on the line</span>
+      <span class="slide-tag">slide 2 / 2</span>
+      <span>A04 midterm</span>
+      <span>march 2026</span>
+    </div>
+    <div class="right">
+      <button class="play-btn" id="playBtn" onclick="togglePlay()">&#9654; play sequence</button>
+      <span>AR-302k Studio Huang</span>
+      <span>Sentient Cities</span>
+    </div>
+  </div>
+
+  <!-- —— SCREEN 1: STILL ON THE LINE —— -->
+  <div class="panel" id="screen1">
+    <div class="panel-header">
+      <h2>Still on the Line</h2>
+      <span class="panel-tag">101km · 49 stations · one question</span>
+    </div>
+    <div class="panel-body">
+      <div class="s1-corridor-label">Geneva — Villeneuve · A03 healthcare supply chain</div>
+      <div class="s1-route"><span>Where</span> does the chain break?</div>
+      <div class="s1-question">"The hospital doesn't end at its walls. A nurse finishing at 02:00 at CHUV and a pharma sorter at 04:00 in Crissier are part of the same system. Neither can get home."</div>
+      <div style="display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap;">
+        <div style="font-family:var(--font-mono);font-size:9px;padding:3px 8px;border:1px solid rgba(76,201,176,0.4);border-radius:2px;color:var(--chrome-cyan);">cargo worker</div>
+        <div style="font-family:var(--font-mono);font-size:9px;padding:3px 8px;border:1px solid rgba(201,168,76,0.4);border-radius:2px;color:var(--chrome-accent);">healthcare staff</div>
+        <div style="font-family:var(--font-mono);font-size:9px;padding:3px 8px;border:1px solid rgba(168,139,235,0.4);border-radius:2px;color:var(--chrome-purple);">patient-in-transit</div>
+        <div style="font-family:var(--font-mono);font-size:9px;padding:3px 8px;border:1px solid rgba(229,85,85,0.3);border-radius:2px;color:var(--chrome-muted);">01:00–05:00 · zero trains</div>
+      </div>
+      <div class="stats-grid" id="statsGrid">
+        <div class="stat-cell">
+          <div class="stat-num">101<span style="font-size:12px">km</span></div>
+          <div class="stat-label">corridor length<br>Geneva → Villeneuve</div>
+        </div>
+        <div class="stat-cell">
+          <div class="stat-num cyan">46–48k</div>
+          <div class="stat-label">healthcare workers<br>across all corridor layers</div>
+        </div>
+        <div class="stat-cell">
+          <div class="stat-num red">5–8k</div>
+          <div class="stat-label">workers on shift<br>during 01:00–05:00</div>
+        </div>
+        <div class="stat-cell">
+          <div class="stat-num orange">1</div>
+          <div class="stat-label">24h pharmacy<br>for the entire 101km</div>
+        </div>
+        <div class="stat-cell">
+          <div class="stat-num purple">7,200</div>
+          <div class="stat-label">frontalier nurses<br>crossing daily from France</div>
+        </div>
+        <div class="stat-cell">
+          <div class="stat-num green">100k</div>
+          <div class="stat-label">pharma packs/day<br>from Galexis Ecublens</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- —— SCREEN 2: THE ARCHIPELAGO —— -->
+  <div class="panel" id="screen2">
+    <div class="panel-header">
+      <h2>The Archipelago</h2>
+      <span class="panel-tag">WCI · connectivity index · 5 findings</span>
+    </div>
+    <div class="panel-body">
+      <div class="corridor-strip-wrap">
+        <div class="corridor-strip-label">
+          <span>Geneva</span>
+          <span>Working Continuity Index — 49 stations</span>
+          <span>Villeneuve</span>
+        </div>
+        <div class="corridor-strip" id="corridorStrip">
+          <!-- JS will populate -->
+        </div>
+        <div id="gapZones" style="position:relative; height:22px;"></div>
+      </div>
+      <div class="findings-list">
+        <div class="finding-row">
+          <span class="finding-n">01</span>
+          <span class="finding-title">Three structural gaps</span>
+          <span class="finding-data">Nyon→Gland 19.3km · Gland→Morges 20km · Lavaux 17.5km</span>
+        </div>
+        <div class="finding-row">
+          <span class="finding-n">02</span>
+          <span class="finding-title">Two corridors, one track</span>
+          <span class="finding-data">IC = workable · S-Bahn = fragmented · 85% not workable</span>
+        </div>
+        <div class="finding-row">
+          <span class="finding-n">03</span>
+          <span class="finding-title">Different city per person</span>
+          <span class="finding-data">GA CHF 10.50/day · full CHF 26 · frontaliers: CHF 0</span>
+        </div>
+        <div class="finding-row">
+          <span class="finding-n">04</span>
+          <span class="finding-title">Diversity creates unity</span>
+          <span class="finding-data">4 Shannon indices r=0.63–0.71 · phase transition at 1.0</span>
+        </div>
+        <div class="finding-row">
+          <span class="finding-n">05</span>
+          <span class="finding-title">160,000 ghost citizens</span>
+          <span class="finding-data">frontaliers exceed Lausanne pop · invisible in every metric</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- —— SCREEN 3: COMIC BOOK PANEL —— -->
+  <div class="panel" id="screen3">
+    <div class="panel-header">
+      <h2>The Comic Strip</h2>
+      <span class="panel-tag">artwork in progress · panel sequence</span>
+    </div>
+    <div class="panel-body" style="padding: 12px;">
+      <div class="comic-outer">
+        <div class="comic-label">
+          <span>corridor narrative — sequential panels</span>
+          <span class="status-pill">artwork pending</span>
+        </div>
+        <div class="comic-grid">
+          <div class="comic-panel">
+            <div class="comic-panel-inner">
+              <div class="comic-panel-num">01</div>
+              <div class="comic-panel-placeholder">panel artwork</div>
+              <div style="font-family:var(--font-mono);font-size:7px;color:rgba(201,168,76,0.3);text-align:right;">caption ↓</div>
+            </div>
+          </div>
+          <div class="comic-panel">
+            <div class="comic-panel-inner">
+              <div class="comic-panel-num">02</div>
+              <div class="comic-panel-placeholder">panel artwork</div>
+              <div style="font-family:var(--font-mono);font-size:7px;color:rgba(201,168,76,0.3);text-align:right;">caption ↓</div>
+            </div>
+          </div>
+          <div class="comic-panel">
+            <div class="comic-panel-inner">
+              <div class="comic-panel-num">03</div>
+              <div class="comic-panel-placeholder">panel artwork</div>
+              <div style="font-family:var(--font-mono);font-size:7px;color:rgba(201,168,76,0.3);text-align:right;">caption ↓</div>
+            </div>
+          </div>
+          <div class="comic-panel">
+            <div class="comic-panel-inner">
+              <div class="comic-panel-num">04</div>
+              <div class="comic-panel-placeholder">panel artwork</div>
+              <div style="font-family:var(--font-mono);font-size:7px;color:rgba(201,168,76,0.3);text-align:right;">caption ↓</div>
+            </div>
+          </div>
+        </div>
+        <div class="comic-caption-bar">
+          <span>seq</span> 01–04 &nbsp;·&nbsp;
+          <span>format</span> 2×2 grid &nbsp;·&nbsp;
+          <span>theme</span> the archipelago · relay-lock · the gap
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- —— SCREEN 4: THE ZURICH MIRROR —— -->
+  <div class="panel" id="screen4">
+    <div class="panel-header">
+      <h2>The Zurich Mirror</h2>
+      <span class="panel-tag">S8 lakeside vs City101 · frequency floor · 12 station pairs</span>
+    </div>
+    <div class="panel-body">
+      <!-- Topology comparison -->
+      <div class="zh-topo-split">
+        <div class="zh-topo-card zurich">
+          <svg class="zh-topo-icon" width="28" height="28" viewBox="0 0 32 32"><circle cx="16" cy="16" r="4" stroke="#5b9bd5" fill="none" stroke-width="1.5"/><line x1="16" y1="4" x2="16" y2="12" stroke="#5b9bd5" stroke-width="1" opacity="0.5"/><line x1="16" y1="20" x2="16" y2="28" stroke="#5b9bd5" stroke-width="1" opacity="0.5"/><line x1="4" y1="16" x2="12" y2="16" stroke="#5b9bd5" stroke-width="1" opacity="0.5"/><line x1="20" y1="16" x2="28" y2="16" stroke="#5b9bd5" stroke-width="1" opacity="0.5"/></svg>
+          <div class="zh-topo-label">Z&uuml;rich S8</div>
+          <div class="zh-topo-stat"><b>radial</b> &middot; 32km &middot; 12 sta &middot; 16 lines overlap<br>floor <b style="color:var(--chrome-blue)">2/hr</b> &middot; range <b>12&times;</b></div>
+        </div>
+        <div class="zh-topo-card city101">
+          <svg class="zh-topo-icon" width="28" height="28" viewBox="0 0 32 32"><line x1="2" y1="16" x2="30" y2="16" stroke="#e05555" stroke-width="1.5" opacity="0.5"/><circle cx="4" cy="16" r="2.5" stroke="#e05555" fill="none" stroke-width="1"/><circle cx="16" cy="16" r="2.5" stroke="#e05555" fill="none" stroke-width="1"/><circle cx="28" cy="16" r="2.5" stroke="#e05555" fill="none" stroke-width="1"/></svg>
+          <div class="zh-topo-label">City101</div>
+          <div class="zh-topo-stat"><b>linear</b> &middot; 101km &middot; 49 sta &middot; 1 trunk line<br>floor <b style="color:var(--chrome-red)">0/hr</b> &middot; range <b style="color:var(--chrome-red)">42&times;</b></div>
+        </div>
+      </div>
+
+      <!-- Station pair frequency comparison -->
+      <div class="zh-section-label">frequency comparison &mdash; <span style="color:var(--chrome-blue)">Z&uuml;rich</span> vs <span style="color:var(--chrome-red)">City101</span> (trains/hr)</div>
+      <div id="zhPairChart">
+        <div class="zh-pair-row">
+          <span class="zh-pair-name" style="color:var(--chrome-text)">Hub</span>
+          <div class="zh-pair-bars">
+            <div class="zh-bar-track"><div class="zh-bar-fill" style="width:86%;background:var(--chrome-blue);opacity:0.7;"></div></div>
+            <div class="zh-bar-track"><div class="zh-bar-fill" style="width:100%;background:var(--chrome-red);opacity:0.5;"></div></div>
+          </div>
+          <span class="zh-pair-freq"><span style="color:var(--chrome-blue)">24</span>/<span style="color:var(--chrome-red)">28</span></span>
+        </div>
+        <div class="zh-pair-row">
+          <span class="zh-pair-name" style="color:var(--chrome-muted)">Junction</span>
+          <div class="zh-pair-bars">
+            <div class="zh-bar-track"><div class="zh-bar-fill" style="width:29%;background:var(--chrome-blue);opacity:0.7;"></div></div>
+            <div class="zh-bar-track"><div class="zh-bar-fill" style="width:39%;background:var(--chrome-red);opacity:0.5;"></div></div>
+          </div>
+          <span class="zh-pair-freq"><span style="color:var(--chrome-blue)">8</span>/<span style="color:var(--chrome-red)">11</span></span>
+        </div>
+        <div class="zh-pair-row">
+          <span class="zh-pair-name" style="color:var(--chrome-text);font-weight:500;">Minimum</span>
+          <div class="zh-pair-bars">
+            <div class="zh-bar-track"><div class="zh-bar-fill" style="width:7%;background:var(--chrome-blue);opacity:0.9;"></div></div>
+            <div class="zh-bar-track"><div class="zh-bar-fill" style="width:0%;background:var(--chrome-red);opacity:0.9;"></div></div>
+          </div>
+          <span class="zh-pair-freq"><span style="color:var(--chrome-blue)">2</span>/<span style="color:var(--chrome-red)">0</span></span>
+        </div>
+        <div class="zh-pair-row">
+          <span class="zh-pair-name" style="color:var(--chrome-muted)">Outer hub</span>
+          <div class="zh-pair-bars">
+            <div class="zh-bar-track"><div class="zh-bar-fill" style="width:43%;background:var(--chrome-blue);opacity:0.7;"></div></div>
+            <div class="zh-bar-track"><div class="zh-bar-fill" style="width:50%;background:var(--chrome-red);opacity:0.5;"></div></div>
+          </div>
+          <span class="zh-pair-freq"><span style="color:var(--chrome-blue)">12</span>/<span style="color:var(--chrome-red)">14</span></span>
+        </div>
+      </div>
+
+      <!-- Frequency floor callout -->
+      <div class="zh-floor-callout">
+        <span class="hl">The floor:</span> Z&uuml;rich worst (<span class="zh">Oberrieden 2/hr</span>) beats City101 worst (<span class="c1">St-Saphorin 0/hr</span>)<br>
+        <span class="zh">83%</span> ZH &ge;4/hr vs <span class="c1">45%</span> City101 &ge;4/hr &mdash; <span class="hl">1.8&times; coverage gap</span>
+      </div>
+
+      <!-- 24h Transport Pulse mini-chart -->
+      <div class="zh-pulse-wrap">
+        <div class="zh-section-label">24h transport pulse</div>
+        <div class="zh-pulse-canvas-wrap">
+          <canvas id="zhPulseCanvas"></canvas>
+        </div>
+        <div class="zh-pulse-legend">
+          <span><span class="dot" style="background:var(--chrome-blue);"></span>Z&uuml;rich S8</span>
+          <span><span class="dot" style="background:var(--chrome-red);"></span>City101</span>
+          <span><span class="dot" style="background:rgba(229,85,85,0.3);"></span>dead window</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- —— SCREEN 5: HEALTHCARE CIRCUIT —— -->
+  <div class="panel" id="screen5">
+    <div class="panel-header">
+      <h2>Healthcare Circuit</h2>
+      <span class="panel-tag">A03 · relay-lock · 5 nodes</span>
+    </div>
+    <div class="panel-body">
+      <div class="relay-chain">
+        <div class="relay-node">
+          <span class="relay-node-num">01</span>
+          <div class="relay-node-content">
+            <div class="relay-node-name">Nyon Hospital + Genolier <span style="font-family:var(--font-mono);font-size:7px;color:var(--chrome-blue);margin-left:6px;">inclined elevator</span></div>
+            <div class="relay-node-gap">valley <span class="gap-arrow">↔</span> hilltop — 350m altitude split</div>
+            <div class="relay-node-gap" style="color:rgba(138,136,128,0.6)">GHOL 162 beds · Genolier 3.6km from rail · 0 nocturnal hilltop buses</div>
+            <div class="relay-node-gap" style="color:rgba(76,201,176,0.5);font-size:7.5px;">&#10003; visited — "lost in countryside" · 20min on foot from funicular · everyone drives</div>
+          </div>
+        </div>
+        <div class="relay-node critical">
+          <span class="relay-node-num">02</span>
+          <div class="relay-node-content">
+            <div class="relay-node-name">Morges Hospital Gap <span style="font-family:var(--font-mono);font-size:7px;color:var(--chrome-orange);margin-left:6px;">temporal lock</span></div>
+            <div class="relay-node-gap"><span class="gap-arrow">last train 01:07 ↔ first train 05:12</span></div>
+            <div class="relay-node-gap" style="color:rgba(138,136,128,0.6)">EHC 3,500 missions/yr · 4,750 elderly in catchment</div>
+            <div class="relay-node-gap" style="color:rgba(76,201,176,0.5);font-size:7.5px;">&#10003; visited — ~80min by public transport from station · higher on hillside</div>
+          </div>
+        </div>
+        <div class="relay-node critical">
+          <span class="relay-node-num">03</span>
+          <div class="relay-node-content">
+            <div class="relay-node-name">Crissier-Bussigny Night Belt <span style="font-family:var(--font-mono);font-size:7px;color:var(--chrome-purple);margin-left:6px;">visibility lock</span></div>
+            <div class="relay-node-gap">invisible <span class="gap-arrow">↔</span> visible — supply chain has no public face</div>
+            <div class="relay-node-gap" style="color:rgba(138,136,128,0.6)">Galexis 100k packs/day · 1,680 night workers · zero public space</div>
+            <div class="relay-node-gap" style="color:rgba(76,201,176,0.5);font-size:7.5px;">&#10003; visited — pharma/cargo: "confidential" · residential contrast confirmed</div>
+          </div>
+        </div>
+        <div class="relay-node">
+          <span class="relay-node-num">04</span>
+          <div class="relay-node-content">
+            <div class="relay-node-name">Montreux-Glion Altitude <span style="font-family:var(--font-mono);font-size:7px;color:var(--chrome-cyan);margin-left:6px;">altitude lock</span></div>
+            <div class="relay-node-gap">mountain <span class="gap-arrow">↔</span> lake — funicular stops at night</div>
+            <div class="relay-node-gap" style="color:rgba(138,136,128,0.6)">Valmont rehab at 600m+ · 23% elderly · 6,137 pop · Rolls-Royce access</div>
+            <div class="relay-node-gap" style="color:rgba(76,201,176,0.5);font-size:7.5px;">&#10003; visited — funicular ends · 20min on foot to clinic · massive parking · no night bus</div>
+          </div>
+        </div>
+        <div class="relay-node">
+          <span class="relay-node-num">05</span>
+          <div class="relay-node-content">
+            <div class="relay-node-name">Rennaz Hospital Island <span style="font-family:var(--font-mono);font-size:7px;color:var(--chrome-green);margin-left:6px;">bridge lock</span></div>
+            <div class="relay-node-gap">rail <span class="gap-arrow">↔</span> off-rail — built 2.1km from Villeneuve in 2019</div>
+            <div class="relay-node-gap" style="color:rgba(138,136,128,0.6)">HRC 2,500 staff · 2.6★ · industrial site · staff parking dominant</div>
+            <div class="relay-node-gap" style="color:rgba(76,201,176,0.5);font-size:7.5px;">&#10003; visited — new bus stops (recently added) · 30min on foot · "mostly by car"</div>
+          </div>
+        </div>
+        <div class="relay-footer">
+          Between <em>midnight and 8am</em>, one pharmacy serves the corridor.<br>
+          55km east of Geneva has <em>zero pharmacy access</em>. The chain doesn't stop.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- —— SCREEN 6: THE PROPOSITION —— -->
+  <div class="panel" id="screen6">
+    <div class="panel-header">
+      <h2>The Proposition</h2>
+      <span class="panel-tag">A04 · connectivity interface · 3 users · adaptive prototype</span>
+    </div>
+    <div class="panel-body">
+      <div class="prop-title">The <span>Connectivity</span> Interface</div>
+      <div style="font-family:var(--font-mono);font-size:9px;color:var(--chrome-muted);margin-bottom:10px;border-left:2px solid var(--chrome-accent);padding-left:8px;line-height:1.6;">
+        Not a capsule hotel. Not a waiting room.<br>
+        Hospitals become train stations. Funicular bases become dispatch hubs.
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:10px;">
+        <div style="border:1px solid rgba(76,201,176,0.3);border-radius:3px;padding:7px 9px;background:rgba(76,201,176,0.03);">
+          <div style="font-family:var(--font-mono);font-size:8px;color:var(--chrome-cyan);margin-bottom:3px;">cargo worker</div>
+          <div style="font-family:var(--font-body);font-size:9px;color:var(--chrome-muted);line-height:1.4;">pharma sorter, post/DHL driver finishing at 04:00 — needs handoff point, not just rest</div>
+        </div>
+        <div style="border:1px solid rgba(201,168,76,0.3);border-radius:3px;padding:7px 9px;background:rgba(201,168,76,0.03);">
+          <div style="font-family:var(--font-mono);font-size:8px;color:var(--chrome-accent);margin-bottom:3px;">healthcare staff</div>
+          <div style="font-family:var(--font-body);font-size:9px;color:var(--chrome-muted);line-height:1.4;">nurse finishing 02:00, stranded 80min from station — needs dispatch, shelter, connectivity</div>
+        </div>
+        <div style="border:1px solid rgba(168,139,235,0.3);border-radius:3px;padding:7px 9px;background:rgba(168,139,235,0.03);">
+          <div style="font-family:var(--font-mono);font-size:8px;color:var(--chrome-purple);margin-bottom:3px;">patient-in-transit</div>
+          <div style="font-family:var(--font-body);font-size:9px;color:var(--chrome-muted);line-height:1.4;">non-urgent transfer, rehab discharge, chronic treatment return — needs Ronald McDonald logic</div>
+        </div>
+      </div>
+
+      <div class="prop-principles" style="margin-bottom:8px;">
+        <div class="prop-principle">
+          <span class="pp-label" style="min-width:52px;">puzzle</span>
+          <span>same prototype collapses or expands per site — Nyon spreads vertically, Rennaz is a lit path</span>
+        </div>
+        <div class="prop-principle">
+          <span class="pp-label" style="min-width:52px;">hospital=hub</span>
+          <span>hospitals become funicular stations — program defined by local gradient + healthcare density</span>
+        </div>
+        <div class="prop-principle">
+          <span class="pp-label" style="min-width:52px;">fractal</span>
+          <span>3 flows (cargo / staff / patient) never mix — same as clean/dirty shafts in a hospital</span>
+        </div>
+        <div class="prop-principle">
+          <span class="pp-label" style="min-width:52px;">MCP model</span>
+          <span>Rhino script reads lat/lon + OSM + healthcare density → generates adaptive prototype per site</span>
+        </div>
+      </div>
+
+      <div style="border-top:1px dashed var(--glass-border);padding-top:7px;font-family:var(--font-mono);font-size:8.5px;color:var(--chrome-muted);line-height:1.7;">
+        <span style="color:var(--chrome-accent);">narrative arc —</span>
+        train pulse · gap appears · shift workers stranded · nurse waits · chain breaks · chamber opens
+      </div>
+    </div>
+  </div>
+
+  <!-- —— BOTTOM STATUS BAR —— -->
+  <div class="bottom-bar">
+    <span>A02: "The Archipelago" — submitted Mar 3 &bull; A03: field visits complete Mar 10 (5 nodes)</span>
+    <span>A04: midterm due March 30, 2026 &bull; 5 nodes · 3 users · hospitals = funicular stations</span>
+    <span>City101 "Still on the Line" &bull; EPFL BA6 &bull; 2026</span>
+  </div>
+
+</div>
+
+<script>
+  // —— CORRIDOR STRIP DATA (49 stations, approximate WCI) ——
+  const stations = [
+    { name: "Geneva", wci: 0.64 },
+    { name: "Lancy-Pont-Rouge", wci: 0.55 },
+    { name: "Lancy-Bachet", wci: 0.50 },
+    { name: "Carouge-Bachet", wci: 0.42 },
+    { name: "Genève-Aéroport", wci: 0.48 },
+    { name: "Meyrin", wci: 0.32 },
+    { name: "Cointrin", wci: 0.28 },
+    { name: "Vernier-Meyrin", wci: 0.25 },
+    { name: "Genthod-Bellevue", wci: 0.20 },
+    { name: "Croisette", wci: 0.18 },
+    { name: "Coppet", wci: 0.22 },
+    { name: "Founex", wci: 0.15 },
+    { name: "Céligny", wci: 0.12 },
+    { name: "Nyon", wci: 0.30 },
+    // GAP 1: Nyon → Gland (19.3km)
+    { name: "Gland", wci: 0.08 },
+    { name: "Rolle", wci: 0.07 },
+    { name: "Allaman", wci: 0.05 },
+    { name: "St-Prex", wci: 0.06 },
+    // GAP 2: Gland → Morges (20km)
+    { name: "Morges", wci: 0.18 },
+    { name: "Tolochenaz", wci: 0.07 },
+    { name: "Saint-Sulpice", wci: 0.09 },
+    { name: "Renens", wci: 0.35 },
+    { name: "Lausanne", wci: 0.58 },
+    { name: "Lausanne-Flon", wci: 0.52 },
+    { name: "Pully", wci: 0.28 },
+    { name: "Puidoux", wci: 0.12 },
+    { name: "Cully", wci: 0.08 },
+    // GAP 3: LAVAUX FRACTURE (17.5km)
+    { name: "Epesses", wci: 0.04 },
+    { name: "Rivaz", wci: 0.03 },
+    { name: "St-Saphorin", wci: 0.0003 },
+    { name: "Vevey", wci: 0.22 },
+    { name: "La Tour-de-Peilz", wci: 0.16 },
+    { name: "Clarens", wci: 0.10 },
+    { name: "Montreux", wci: 0.25 },
+    { name: "Territet", wci: 0.08 },
+    { name: "Veytaux-Chillon", wci: 0.05 },
+    { name: "Villeneuve", wci: 0.12 },
+    { name: "Roche-VD", wci: 0.04 },
+    { name: "Bex", wci: 0.08 },
+    { name: "Aigle", wci: 0.14 },
+    { name: "Yvorne", wci: 0.04 },
+    { name: "Ollon-St-Tryphon", wci: 0.03 },
+    { name: "Monthey", wci: 0.10 },
+    { name: "Collombey", wci: 0.05 },
+    { name: "Muraz", wci: 0.03 },
+    { name: "Illarsaz", wci: 0.02 },
+    { name: "Rennaz", wci: 0.04 },
+    { name: "Noville", wci: 0.02 },
+    { name: "Villeneuve-Fin", wci: 0.08 }
+  ];
+
+  function wciToColor(wci) {
+    const n = Math.min(wci / 0.65, 1);
+    if (n < 0.5) {
+      const r = Math.round(224 + (232 - 224) * (n * 2));
+      const g = Math.round(85 + (168 - 85) * (n * 2));
+      const b = 40;
+      return `rgb(${r},${g},${b})`;
+    } else {
+      const t = (n - 0.5) * 2;
+      const r = Math.round(232 - (232 - 76) * t);
+      const g = Math.round(168 + (175 - 168) * t);
+      const b = Math.round(40 + (80 - 40) * t);
+      return `rgb(${r},${g},${b})`;
+    }
+  }
+
+  function buildCorridorStrip() {
+    const strip = document.getElementById('corridorStrip');
+    stations.forEach((st, i) => {
+      const dot = document.createElement('div');
+      dot.className = 'st-dot';
+      const h = Math.max(8, Math.round(st.wci / 0.65 * 28) + 4);
+      dot.style.height = h + 'px';
+      dot.style.background = wciToColor(st.wci);
+      dot.style.opacity = '0.85';
+      dot.setAttribute('data-name', st.name + ' ' + st.wci.toFixed(3));
+      strip.appendChild(dot);
+    });
+
+    // Gap zones (approximate positions)
+    const wrap = strip.parentElement;
+    const gapContainer = document.getElementById('gapZones');
+    gapContainer.style.position = 'relative';
+
+    const totalWidth = strip.offsetWidth || 340;
+    const dotWidth = totalWidth / 49;
+
+    const gaps = [
+      { start: 13, end: 14, label: 'Nyon→Gland 19.3km' },
+      { start: 17, end: 18, label: 'Gland→Morges 20km' },
+      { start: 26, end: 29, label: 'Lavaux 17.5km' }
+    ];
+
+    gaps.forEach(g => {
+      const zone = document.createElement('div');
+      zone.className = 'gap-zone';
+      const left = g.start * dotWidth;
+      const width = (g.end - g.start + 1) * dotWidth;
+      zone.style.left = left + 'px';
+      zone.style.width = width + 'px';
+      zone.textContent = g.label;
+      gapContainer.appendChild(zone);
+    });
+  }
+
+  // —— PLAY SEQUENCE ——
+  let playing = false;
+  let playTimeout = null;
+
+  function togglePlay() {
+    const btn = document.getElementById('playBtn');
+    if (playing) {
+      playing = false;
+      btn.innerHTML = '&#9654; play sequence';
+      btn.classList.remove('playing');
+      clearTimeout(playTimeout);
+      document.querySelectorAll('.panel').forEach(p => p.classList.remove('highlight'));
+      return;
+    }
+
+    playing = true;
+    btn.innerHTML = '&#9724; stop';
+    btn.classList.add('playing');
+
+    // Reset stats
+    document.querySelectorAll('.stat-cell').forEach(c => c.classList.remove('visible'));
+
+    const screens = ['screen1', 'screen2', 'screen3', 'screen4', 'screen5', 'screen6'];
+    let currentScreen = 0;
+
+    function highlightNext() {
+      if (!playing) return;
+      document.querySelectorAll('.panel').forEach(p => p.classList.remove('highlight'));
+
+      if (currentScreen >= screens.length) {
+        playing = false;
+        const btn = document.getElementById('playBtn');
+        btn.innerHTML = '&#9654; play sequence';
+        btn.classList.remove('playing');
+        return;
+      }
+
+      const panel = document.getElementById(screens[currentScreen]);
+      panel.classList.add('highlight');
+
+      if (currentScreen === 0) {
+        animateStats();
+      }
+
+      currentScreen++;
+      playTimeout = setTimeout(highlightNext, 3500);
+    }
+
+    highlightNext();
+  }
+
+  function animateStats() {
+    const cells = document.querySelectorAll('.stat-cell');
+    cells.forEach((cell, i) => {
+      setTimeout(() => cell.classList.add('visible'), i * 120);
+    });
+  }
+
+  // —— 24H PULSE MINI-CHART ——
+  function drawPulseChart() {
+    const canvas = document.getElementById('zhPulseCanvas');
+    if (!canvas) return;
+    const wrap = canvas.parentElement;
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = wrap.offsetWidth * dpr;
+    canvas.height = wrap.offsetHeight * dpr;
+    canvas.style.width = wrap.offsetWidth + 'px';
+    canvas.style.height = wrap.offsetHeight + 'px';
+    const ctx = canvas.getContext('2d');
+    ctx.scale(dpr, dpr);
+    const W = wrap.offsetWidth;
+    const H = wrap.offsetHeight;
+
+    // Zurich S8 Thalwil — approximate hourly trains/hr over 24h (radial overlap keeps floor high)
+    const zhCurve = [0,0,0,0,0,4,6,8,8,6,6,6,6,6,6,6,6,8,8,6,6,4,2,0];
+    // City101 Morges — approximate hourly trains/hr (linear, drops to zero at night)
+    const c1Curve = [0,0,0,0,0,3,6,11,11,8,8,8,8,8,8,8,8,11,11,8,6,3,1,0];
+
+    const maxVal = 12;
+    const pad = { top: 2, bottom: 10, left: 0, right: 0 };
+    const plotW = W - pad.left - pad.right;
+    const plotH = H - pad.top - pad.bottom;
+
+    function xAt(h) { return pad.left + (h / 23) * plotW; }
+    function yAt(v) { return pad.top + plotH - (v / maxVal) * plotH; }
+
+    // Dead window shading (01:00 – 05:00)
+    ctx.fillStyle = 'rgba(229, 85, 85, 0.08)';
+    ctx.fillRect(xAt(1), pad.top, xAt(5) - xAt(1), plotH);
+
+    // Hour grid lines
+    ctx.strokeStyle = 'rgba(255,255,255,0.04)';
+    ctx.lineWidth = 0.5;
+    for (let h = 0; h <= 23; h += 6) {
+      ctx.beginPath();
+      ctx.moveTo(xAt(h), pad.top);
+      ctx.lineTo(xAt(h), pad.top + plotH);
+      ctx.stroke();
+    }
+
+    // Hour labels
+    ctx.fillStyle = 'rgba(138,136,128,0.5)';
+    ctx.font = '7px "DM Mono", monospace';
+    ctx.textAlign = 'center';
+    [0,6,12,18,23].forEach(h => {
+      ctx.fillText(String(h).padStart(2,'0'), xAt(h), H - 1);
+    });
+
+    // Draw curves
+    function drawCurve(data, color, alpha) {
+      ctx.beginPath();
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 1.5;
+      ctx.globalAlpha = alpha;
+      data.forEach((v, i) => {
+        const x = xAt(i);
+        const y = yAt(v);
+        if (i === 0) ctx.moveTo(x, y);
+        else {
+          // Smooth curve
+          const prevX = xAt(i - 1);
+          const prevY = yAt(data[i - 1]);
+          const cpx = (prevX + x) / 2;
+          ctx.bezierCurveTo(cpx, prevY, cpx, y, x, y);
+        }
+      });
+      ctx.stroke();
+
+      // Fill under curve
+      ctx.lineTo(xAt(23), yAt(0));
+      ctx.lineTo(xAt(0), yAt(0));
+      ctx.closePath();
+      ctx.globalAlpha = alpha * 0.12;
+      ctx.fillStyle = color;
+      ctx.fill();
+      ctx.globalAlpha = 1;
+    }
+
+    drawCurve(c1Curve, '#e05555', 0.7);
+    drawCurve(zhCurve, '#5b9bd5', 0.85);
+  }
+
+  // —— INIT ——
+  window.addEventListener('load', () => {
+    buildCorridorStrip();
+    drawPulseChart();
+
+    // Auto-show stats after load
+    setTimeout(() => {
+      document.querySelectorAll('.stat-cell').forEach((cell, i) => {
+        setTimeout(() => cell.classList.add('visible'), i * 100);
+      });
+    }, 400);
+  });
+
+  window.addEventListener('resize', drawPulseChart);
+</script>
+</body>
+</html>
