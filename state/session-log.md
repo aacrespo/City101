@@ -25,3 +25,21 @@
 - Friday 15:20
 - Friday 15:26
 - Friday 15:28
+- Friday 15:37
+- Friday 15:37
+- Friday 15:38
+- Friday 15:44
+- Friday 15:47
+- Friday 15:50
+- Friday 15:54
+- Friday 15:58
+- Friday 16:01
+- Friday 16:04
+- Friday 16:11
+- Friday 16:22
+- Friday 16:25
+- Friday 16:29
+- Friday 16:32
+- Friday 16:32
+- Friday 16:34
+- Friday 16:35 [break] session saved
