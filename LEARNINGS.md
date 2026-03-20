@@ -148,6 +148,19 @@ The real dead window is **01:00–05:00**, not "all night." Late-night frequenci
 ### Inline GeoJSON for file:// compatibility
 Leaflet maps opened via `file://` can't use `fetch()` for local GeoJSON (CORS). Fix: inline all geodata as JS global variables in a separate `city101_geodata.js` file, loaded via `<script>` tag before the map module. The map module checks for globals first, falls back to `fetch()` for server deployments.
 
+### Lock siting: start from the person, not the geometry
+Discovered during Morges Lock 03 re-siting (2026-03-18). The original approach traced a geometric walking route from EHC Morges to Gare de Morges and optimized lock placement for terrain flatness near the rail. Andrea caught the fundamental flaw: a nurse finishing at 2am is not going to walk 30 minutes alone in the dark to wait at a train station. The lock is **waiting infrastructure** — it must be where the person IS when the gap hits, not at a convenient point on a map line.
+
+**The rule for all 9 nodes:**
+1. Who is this person? (nurse, driver, on-call doctor)
+2. Where are they at 02:00? (hospital ward, warehouse, home)
+3. What transit actually exists during the dead window? (Noctambus? shuttle? nothing?)
+4. Is the assumed journey safe? (30min walk at 2am alone — is that realistic?)
+5. Both endpoints of the connection matter — you can't site a lock by looking at only one end
+6. The 3D model must show both endpoints to tell the story of what's being connected
+
+This connects to Huang's crit feedback: **"Find the one person"** — not abstract flows, but one nurse, one shift, one 2am moment. The siting must follow from that specificity. Applied via `prompts/PROMPT_lock_siting_audit.md` across all 9 nodes.
+
 ## A03/A04 insights
 
 ### The relay-lock prototypology
