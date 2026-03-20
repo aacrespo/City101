@@ -67,3 +67,48 @@ Lock_03::
 - Stair treads individually visible (0.18m run × 0.05m thick)
 - Facade frames create depth in perspective view
 - Model responsive — 138 breps added to ~2,700-object file (now ~2,800 total)
+
+---
+
+## Lock 03: Re-siting Audit (2026-03-18, session 2)
+
+### What we tried
+Planned to re-site Lock 03 along the actual hospital→station walking route, with roads projected onto terrain for visual verification. Wrote analysis scripts, traced the road network through GeoJSON data with real Z values.
+
+### What we found
+
+**1. Avenue de Marcelin is NOT on the walking route.**
+The original plan assumed Av. de Marcelin as the descent from hospital to station. Google Maps shows the actual route goes: Hospital → Av. Muret (south) → west through town center → Rue de la Gare → station. Completely different corridor.
+
+**2. Rail sits on an embankment.**
+Rail tracks are at Z~381-382 on a raised embankment. The town and walking route are 6m BELOW at Z~375-378. Pont de la Gare is a bridge OVER the tracks at Z~386. The current lock at Z=381.5 sits on the embankment — at rail level, not at street/walking level.
+
+**3. The hospital is outside the 3D model.**
+Terrain tile stops at N=1152000 (local Y=500). EHC Morges is at ~N=1152050 (local Y=550) — 50m beyond the northern edge. Only 1 building exists above Y=500. The model cannot tell the story of the hospital-to-station connection.
+
+### The fundamental problem (Andrea's insight)
+
+**The siting approach was wrong.** Tracing a geometric walking route and optimizing for terrain flatness misses the point entirely. The lock is waiting infrastructure for a nurse finishing at 2am:
+
+- A 30-minute walk alone at night is not safe or realistic
+- The nurse is AT THE HOSPITAL when the gap hits — not on the road
+- Is there a shuttle? A night bus? Or nothing?
+- You can't solve a connection problem by only looking at one endpoint
+- Both the hospital AND the station must be in the model to tell the story
+
+This applies to ALL 9 nodes, not just Morges. See `prompts/PROMPT_lock_siting_audit.md` for the full audit prompt.
+
+### Decision: HALT placement, research first
+
+**Do NOT re-site until:**
+1. Actual night transit to/from EHC Morges is researched (MBC network, Noctambus)
+2. The experiential gap is understood (where does the nurse wait? how do they get to the station?)
+3. Terrain tile is extended north to include the hospital
+4. Both endpoints are in the 3D model
+5. The same audit is applied to CHUV (Lock 05) and Rennaz (Lock 07)
+
+### Current state
+- Lock 03 remains at SITE_ORIGIN (-60, 0, 381.5) — LOG 400, 138 objects
+- Position is PROVISIONAL pending re-siting audit
+- Analysis scripts preserved at `output/city101_hub/site_modeling/analyze_walking_route.py`
+- Documented in LEARNINGS.md under "Lock siting: start from the person, not the geometry"
