@@ -494,6 +494,14 @@ def create_facade():
     f = box(-5.1, 34 - 0.1, 14.0, 5.1, 34.3, 14.15)
     objs.append(named(f, "Facade_L3_Emergency_Head"))
 
+    # Base reveal strip (L0, ground level transition)
+    f = box(-10, 0, -0.05, 10, 0.05, 0.15)
+    objs.append(named(f, "Facade_L0_BaseReveal"))
+
+    # Roof canopy drip edge (over L2 canopy south edge)
+    f = box(-10, 16 - 0.1, 14.0 + CANOPY_T, 10, 16, 14.0 + CANOPY_T + 0.05)
+    objs.append(named(f, "Facade_Canopy_DripEdge"))
+
     return objs
 
 
