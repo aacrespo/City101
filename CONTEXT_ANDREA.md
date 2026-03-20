@@ -24,37 +24,33 @@
 
 ## Handoff
 
-**What was done (March 18 — repo restructuring session):**
-- Full repo restructuring: promoted outputs to deliverables/observations, archived superseded files
-- CLAUDE.md refactored to pure routing table
-- Equal team framing across CLAUDE.md, CONTEXT.md, LOCKBOARD.md
-- Andrea/Henna midterm task split documented in LOCKBOARD.md
-- Hooks imported from DIDI_2: time injection, break reminders (90min), PreCompact snapshots
-- New commands: `/save-session`, `/resume-session`, `/unlock`
-- Renamed all " copy" files/folders (source, handoffs, archive)
-- Prefixed prompts by phase: [A02_DONE], [A03_DONE], [A04_ACTIVE], [UTIL]
-- Updated INVENTORY.md (healthcare) and INDEX.md (healthcare research)
-- `state/` directory created for session management
+**What was done (March 19-20 — Rhino multi-instance + agent team session):**
+- Built Rhino router MCP server (1209 lines, 31 tools, TCP transport)
+- Forked rhinomcp C# plugin for configurable ports (`mcpstart 9001`)
+- Discovered Mac limitation: one Rhino process only — router is the path
+- Tested with 7-agent team on Lock 05 CHUV: 709 objects, 4 build rounds
+- Created `workflows/agent-team-modeling.md` from the test results
+- Full session log at `experiments/rhino mcp server/SESSION_LOG.md`
 
 **What's next:**
-1. **LOG 400 modeling upgrades** — training round on existing scripts, test review pipeline
-2. **App architecture session** — prompt ready at `prompts/[A04_ACTIVE]_app_architecture.md`
-3. **Finalize project concept** — so Henna can start on slides
-4. **Merge branch to main** once LOG 400 work is done
+1. **Prototypology at scale** — use agent team workflow for remaining nodes
+2. **PR upstream** — plugin port fix is clean, good candidate for `jingcheng-chen/rhinomcp`
+3. **Henna setup** — documented in `experiments/rhino mcp server/SETUP.md`
+4. **Midterm prep** — modeling + slides (due March 30)
+5. **Merge branch to main** when ready
 
 **Watch out for:**
-- **Restart Claude Code** to activate new hooks (settings.json)
-- App architecture session running in parallel — `output/app_architecture/` is active, don't touch
-- Rhino MCP configured (`.mcp.json`) — restart also activates this
+- `.mcp.json` is back to standard `uvx rhinomcp` (port 1999). To use router: copy `experiments/rhino mcp server/mcp_router.json` to `.mcp.json` and restart Claude Code
+- Modified plugin is installed — `mcpstart` now prompts for port. Just press Enter for default 1999
+- Henna doesn't have the modified plugin yet
 - Ramp grades in existing scripts too steep for SIA 500 (35% and 26.7% vs 6% limit)
-- Wave 3 tooling (skills + review agents) scaffolded but untested
 
 **Key files:**
-- `deliverables/A04/city101_vertical_transport_research_v2.md` — v2 paper (canonical)
-- `handoffs/braindump_2026-03-17_three-things.md` — brain dump (concept, app, modeling)
-- `output/city101_hub/rhino_scripts/` — 3 lock chamber scripts (LOG 200-300)
-- `LOCKBOARD.md` — full task split for midterm
-- `.claude/settings.json` — new hooks (time, breaks, compaction)
+- `experiments/rhino mcp server/` — router, setup docs, session log
+- `workflows/agent-team-modeling.md` — agent team modeling workflow (from 7-agent test)
+- `output/city101_hub/rhino_scripts/lock_05_chuv_gradient_v5_agent_team.py` — CHUV script (709 objects)
+- `~/repos/rhinomcp` — forked plugin (branch `feature/configurable-port`)
+- `LOCKBOARD.md` — task split for midterm
 
 ## Data verification gaps
 - **Night worker counts unsourced** — 4,600 / 1,680 / 1,500 / 400 / 300 / 730 are load-bearing claims with no CSV source. Need: OFS employment data, hospital annual reports, or field visit interviews.
@@ -83,3 +79,4 @@
 | 17-03 | Cairn Code | Strategic session: Huang research (Blue City, generative AI, digital twins). Framing insight — project is a skill environment, not "agentic workflow." No code/data work. |
 | 18-03 | Cairn Code | Brain dump session: captured evolved concept (9 nodes, "holds the gap", anti-urban), app interface vision, modeling status assessment. Updated CONTEXT.md + CONTEXT_ANDREA.md. Wrote systems architect prompt. Committed all pending files. |
 | 18-03 | Cairn Code | Repo restructuring: promoted outputs, archived superseded, renamed copies, prefixed prompts. Hooks (time/breaks/compaction) + new commands (save-session, resume-session, unlock). Task split documented. Equal team framing. 4 commits, 51+ files. |
+| 19-03 | Cairn Code | Rhino multi-instance: built router MCP server (31 tools, TCP), forked rhinomcp plugin for custom ports, discovered Mac single-process limit. Tested 7-agent team on Lock 05 CHUV (709 objects). Created agent-team-modeling workflow. |
