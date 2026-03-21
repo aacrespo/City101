@@ -21,6 +21,7 @@ Dependencies:
 
 import argparse
 import json
+import os
 import re
 import sys
 import time
@@ -37,8 +38,8 @@ except ImportError:
 
 # --- Configuration ---
 
-# Knowledge lives in standalone archibase repo
-KNOWLEDGE_ROOT = Path.home() / "CLAUDE" / "archibase"
+# Knowledge lives in standalone archibase repo — override with ARCHIBASE_PATH env var
+KNOWLEDGE_ROOT = Path(os.environ.get("ARCHIBASE_PATH", Path.home() / "CLAUDE" / "archibase"))
 PROJECT_ROOT = KNOWLEDGE_ROOT if KNOWLEDGE_ROOT.exists() else Path(__file__).resolve().parents[2]
 SOURCE_DIR = PROJECT_ROOT / "source" / "dicobat"
 VECTORDB_DIR = PROJECT_ROOT / "vectordb"

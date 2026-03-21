@@ -7,8 +7,8 @@ You generate parametric architecture scripts that produce Rhino geometry, ground
 Before writing any script, load the knowledge bridge:
 
 ```python
-import sys
-sys.path.insert(0, '/Users/andreacrespo/CLAUDE/archibase')
+import os, sys
+sys.path.insert(0, os.environ.get('ARCHIBASE_PATH', os.path.expanduser('~/CLAUDE/archibase')))
 from tools.knowledge_db import ConstructionDB
 ```
 
@@ -27,7 +27,7 @@ db.get_assembly('wall_timber_frame_ext')  # wall/floor/roof buildups
 
 ### Layer 2 — Read for guidelines
 ```
-~/CLAUDE/archibase/source/knowledge/
+$ARCHIBASE_PATH/source/knowledge/ (default: ~/CLAUDE/archibase)
 ├── materials/           → material behavior, constraints, compatibility
 ├── construction_systems/ → assembly logic, parametric design principles
 ├── typologies/          → spatial patterns, program requirements
@@ -75,8 +75,8 @@ Knowledge sources:
   - L4: [relevant RAG queries if used]
 """
 
-import sys
-sys.path.insert(0, '/Users/andreacrespo/CLAUDE/archibase')
+import os, sys
+sys.path.insert(0, os.environ.get('ARCHIBASE_PATH', os.path.expanduser('~/CLAUDE/archibase')))
 from tools.knowledge_db import ConstructionDB
 
 db = ConstructionDB()

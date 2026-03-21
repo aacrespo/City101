@@ -2,6 +2,9 @@
 Bridge to standalone archibase repo (construction knowledge system).
 Import this instead of directly referencing the external repo.
 
+Set ARCHIBASE_PATH env var to override the default location.
+Default: ~/CLAUDE/archibase
+
 Usage:
     from tools.data.knowledge_bridge import ConstructionDB, KNOWLEDGE_ROOT
 
@@ -12,16 +15,17 @@ Usage:
     guideline = (KNOWLEDGE_ROOT / "source/knowledge/materials/rammed_earth.md").read_text()
 """
 
+import os
 import sys
 from pathlib import Path
 
-# Path to standalone archibase repo
-KNOWLEDGE_ROOT = Path.home() / "CLAUDE" / "archibase"
+# Path to standalone archibase repo — override with ARCHIBASE_PATH env var
+KNOWLEDGE_ROOT = Path(os.environ.get("ARCHIBASE_PATH", Path.home() / "CLAUDE" / "archibase"))
 
 if not KNOWLEDGE_ROOT.exists():
     raise FileNotFoundError(
-        f"Construction knowledge repo not found at {KNOWLEDGE_ROOT}. "
-        "Clone or create it first."
+        f"Archibase not found at {KNOWLEDGE_ROOT}. "
+        "Either copy it there or set ARCHIBASE_PATH to its location."
     )
 
 # Add to Python path for imports

@@ -49,8 +49,8 @@ except ImportError:
 # --- Configuration ---
 
 BASE_URL = "https://www.dicobatonline.fr"
-# Knowledge lives in standalone archibase repo
-KNOWLEDGE_ROOT = Path.home() / "CLAUDE" / "archibase"
+# Knowledge lives in standalone archibase repo — override with ARCHIBASE_PATH env var
+KNOWLEDGE_ROOT = Path(os.environ.get("ARCHIBASE_PATH", Path.home() / "CLAUDE" / "archibase"))
 PROJECT_ROOT = KNOWLEDGE_ROOT if KNOWLEDGE_ROOT.exists() else Path(__file__).resolve().parents[2]
 OUTPUT_DIR = PROJECT_ROOT / "output" / "dicobat"
 SOURCE_DIR = PROJECT_ROOT / "source" / "dicobat"
