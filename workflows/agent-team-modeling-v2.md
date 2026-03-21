@@ -399,6 +399,16 @@ Each agent receives:
 7. **Task assignment**: specific objects to build, with names and coordinates
 8. **Spec update responsibility**: after building, update the shared spec with what you actually built and any decisions that deviated from the original plan
 
+### Mandatory first step: Query the knowledge base
+
+Before modeling ANY element, every agent MUST:
+1. Read `.claude/agents/knowledge/rhino-playbook.md` — modeling rules, assembly approach, review checklist
+2. Read their domain learnings file (`.claude/agents/knowledge/learnings-*.md`) — techniques from previous builds
+3. Query archibase (`tools/data/knowledge_bridge.py`) for the **assembly layers** of every element they will build. Don't guess thicknesses — look them up. A roof is not a surface, it's a stack of layers. A wall is not a box, it's render + structure + finish. Every element has assembly logic.
+4. Write learnings to their domain file AFTER building — techniques, failures, what to do differently.
+
+This is not optional. Agents that skip the knowledge base repeat mistakes that previous agents already solved.
+
 ## Geometry Type Guide
 
 | Element | Geometry method | Why |
@@ -435,3 +445,4 @@ Principles:
 |------|--------|--------|
 | 2026-03-19 | v1 created from Lock 05 CHUV roundtable | 7 agents, 709 objects, 4 rounds |
 | 2026-03-20 | v2: added Phase 5 output strategy | 3 paths (Spec→Code, Bake, .3dm), hybrid recommended |
+| 2026-03-22 | v2.1: mandatory knowledge base query, learnings capture | From cabin v2 build — agents must query archibase before modeling, write learnings after |
