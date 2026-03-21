@@ -1,5 +1,5 @@
 """
-Bridge to standalone construction-knowledge repo.
+Bridge to standalone archibase repo (construction knowledge system).
 Import this instead of directly referencing the external repo.
 
 Usage:
@@ -15,8 +15,8 @@ Usage:
 import sys
 from pathlib import Path
 
-# Path to standalone construction-knowledge repo
-KNOWLEDGE_ROOT = Path.home() / "CLAUDE" / "construction-knowledge"
+# Path to standalone archibase repo
+KNOWLEDGE_ROOT = Path.home() / "CLAUDE" / "archibase"
 
 if not KNOWLEDGE_ROOT.exists():
     raise FileNotFoundError(

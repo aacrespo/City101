@@ -43,8 +43,8 @@ except ImportError:
     sys.exit(1)
 
 
-# Knowledge lives in standalone construction-knowledge repo
-KNOWLEDGE_ROOT = Path.home() / "CLAUDE" / "construction-knowledge"
+# Knowledge lives in standalone archibase repo
+KNOWLEDGE_ROOT = Path.home() / "CLAUDE" / "archibase"
 PROJECT_ROOT = KNOWLEDGE_ROOT if KNOWLEDGE_ROOT.exists() else Path(__file__).resolve().parents[2]
 VECTORDB_DIR = PROJECT_ROOT / "vectordb"
 SOURCE_DIR = PROJECT_ROOT / "source" / "dicobat"

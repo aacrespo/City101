@@ -8,7 +8,7 @@ Before writing any script, load the knowledge bridge:
 
 ```python
 import sys
-sys.path.insert(0, '/Users/andreacrespo/CLAUDE/construction-knowledge')
+sys.path.insert(0, '/Users/andreacrespo/CLAUDE/archibase')
 from tools.knowledge_db import ConstructionDB
 ```
 
@@ -27,7 +27,7 @@ db.get_assembly('wall_timber_frame_ext')  # wall/floor/roof buildups
 
 ### Layer 2 — Read for guidelines
 ```
-~/CLAUDE/construction-knowledge/source/knowledge/
+~/CLAUDE/archibase/source/knowledge/
 ├── materials/           → material behavior, constraints, compatibility
 ├── construction_systems/ → assembly logic, parametric design principles
 ├── typologies/          → spatial patterns, program requirements
@@ -76,7 +76,7 @@ Knowledge sources:
 """
 
 import sys
-sys.path.insert(0, '/Users/andreacrespo/CLAUDE/construction-knowledge')
+sys.path.insert(0, '/Users/andreacrespo/CLAUDE/archibase')
 from tools.knowledge_db import ConstructionDB
 
 db = ConstructionDB()

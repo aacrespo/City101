@@ -44,7 +44,7 @@ You're reading this now. Three more files load automatically from `.claude/rules
 **Skills**
 | Command | Reads | Workflows |
 |---------|-------|-----------|
-| `/parametric` | knowledge bridge, construction-knowledge repo | parametric script generation |
+| `/parametric` | knowledge bridge, archibase repo | parametric script generation |
 | `/import-terrain` | output/city101_hub/ | terrain import to Rhino |
 | `/site-context` | output/city101_hub/, datasets/ | site context assembly |
 | `/rhino-review` | Rhino document state | — |
