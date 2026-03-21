@@ -42,6 +42,13 @@ output/city101_hub/context/*swissbuildings3d.dxf
 *.key
 *.pem
 credentials.json
+.cookies.json
+
+# Dicobat vector database (large, rebuilt from source)
+output/dicobat/vectordb/
+
+# Construction knowledge database (rebuilt from seed data)
+output/knowledge/construction.db
 
 # Terminal saved output (not for git)
 CLAUDE DOWN SAVE/
