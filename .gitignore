@@ -50,5 +50,9 @@ output/dicobat/vectordb/
 # Construction knowledge database (rebuilt from seed data)
 output/knowledge/construction.db
 
+# Obsidian metadata
+.obsidian/
+*.canvas
+
 # Terminal saved output (not for git)
 CLAUDE DOWN SAVE/

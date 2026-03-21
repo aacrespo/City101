@@ -16,6 +16,8 @@ You're reading this now. Three more files load automatically from `.claude/rules
 - `tool-protocol.md` — how to use tools and workflows
 
 ### Layer 2: Role-loaded (on slash command)
+
+**Roles**
 | Command | Reads | Workflows |
 |---------|-------|-----------|
 | `/analyst` | datasets/INVENTORY.md, LEARNINGS.md | data-collection, data-verification |
@@ -23,15 +25,37 @@ You're reading this now. Three more files load automatically from `.claude/rules
 | `/modeler` | 00_Workflow_v04.md (Sec 3.2), design_system/SPEC.md | rhino-modeling |
 | `/visualizer` | design_system/SPEC.md, visualizations/site/ | chart-generation, site-update |
 | `/builder` | design_system/SPEC.md, deliverables/ | site-deploy, narrative-assembly |
+
+**Session**
+| Command | Reads | Workflows |
+|---------|-------|-----------|
 | `/session-start` | CONTEXT.md, CONTEXT_ANDREA.md, CONTEXT_HENNA.md, LOCKBOARD.md | session-management |
 | `/session-end` | CONTEXT.md, CONTEXT_ANDREA.md, CONTEXT_HENNA.md, LOCKBOARD.md | session-management |
 | `/save-session` | state/sessions/, LOCKBOARD.md | — |
 | `/resume-session` | state/sessions/ (latest), git state | — |
-| `/verify-data` | (target file) | data-verification |
-| `/parametric` | knowledge bridge, construction-knowledge repo | parametric script generation |
-| `/brain-dump` | prompt-craft.md (auto-loaded from rules) | — |
-| `/unlock` | (target PDF) | — |
+
+**Teams**
+| Command | Reads | Workflows |
+|---------|-------|-----------|
 | `/team` | all role commands, prompt-craft.md | dynamic team assembly |
+| `/build-with-agent-team` | role commands, design_system/SPEC.md | agent-team-modeling |
+| `/research-with-agent-team` | role commands, observations/ | agent-team-research |
+
+**Skills**
+| Command | Reads | Workflows |
+|---------|-------|-----------|
+| `/parametric` | knowledge bridge, construction-knowledge repo | parametric script generation |
+| `/import-terrain` | output/city101_hub/ | terrain import to Rhino |
+| `/site-context` | output/city101_hub/, datasets/ | site context assembly |
+| `/rhino-review` | Rhino document state | — |
+| `/pdf` | (target file) | PDF export |
+| `/unlock` | (target PDF) | — |
+
+**Utilities**
+| Command | Reads | Workflows |
+|---------|-------|-----------|
+| `/verify-data` | (target file) | data-verification |
+| `/brain-dump` | prompt-craft.md (auto-loaded from rules) | — |
 
 ### Layer 3: Reference (loaded on demand)
 | File | What | Updated |
@@ -59,6 +83,8 @@ city101/
 ├── LEARNINGS.md               ← accumulated pitfalls
 ├── LOCKBOARD.md               ← who's doing what + task split
 ├── 00_Workflow_v04.md         ← scale conventions, Rhino rules
+│
+├── app/                       ← Relay-Lock Configurator (demo + tool layer)
 │
 ├── datasets/                  ← verified production data (INVENTORY.md inside)
 │   ├── corridor_analysis/     ← WCI, break points, journeys, crossref, temporal, GA cost
