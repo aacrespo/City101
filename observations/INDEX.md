@@ -47,6 +47,18 @@ SBB Passagierfrequenz workday/nonworkday ratio classifies stations:
 
 ---
 
+## Research: Healthcare
+
+| File | Description | Status |
+|------|-------------|--------|
+| `research/healthcare/healthcare_chain_research.md` | Full healthcare supply chain mapping across 8 flow categories (medication, food, staff, patients, postal, lab samples, waste, emergency) anchored by HUG and CHUV poles | needs verification |
+| `research/healthcare/RESEARCH_Medical_Supply_Chain_FULL_CORRIDOR.md` | Comprehensive medical supply chain overview — ~46k–48k healthcare workers, ~7,200 frontalier nurses, 6 SMUR bases, 14 ambulance bases across the corridor | needs verification |
+| `research/healthcare/logistics_supply_chains_research.md` | Pharma logistics and wholesale distribution structure (Galexis, Alloga, Galenica) — manufacturer-to-pharmacy supply chain along the corridor | needs verification |
+| `research/healthcare/staff_circulation_patient_flows_research.md` | Hospital workforce scale and patient flows — employment figures for HUG (13k), GHOL Nyon (~1k), Genolier, CHUV with catchment populations | needs verification |
+| `research/healthcare/city101_emergency_services_blood_lab_research.md` | Emergency services (144 dispatch), blood banks, and lab sample transport — cantonal CASU systems at CHUV and HUG, ~63k missions/year in Vaud | needs verification |
+
+---
+
 ## Dead Ends
 - (none documented yet in new repo — check LEARNINGS.md for historical dead ends)
 

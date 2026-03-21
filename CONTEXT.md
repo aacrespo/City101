@@ -1,21 +1,19 @@
 # CONTEXT — City101 Working State
-**Last updated:** 2026-03-10 (Cairn Code — consolidated from all handoffs Feb 17 → Mar 09)
+**Last updated:** 2026-03-18 (Cairn Code — concept update post-crit + v2 paper)
 **Read this first every session.**
 
 ---
 
 ## What is this project?
 
-EPFL BA6 Architecture studio (AR-302k, Studio Huang — "Sentient Cities"). Andrea analyzes the Geneva–Villeneuve corridor (City101) through the lens of "flow of people" — what makes people stop, where infrastructure creates behavior, and whether this 101km strip functions as one continuous city.
-
-Teammate: Henna Rafik (transit ridership, psycho-comfort, thermal flows, gap hours, healthcare sites). She also uses the handoff system.
+EPFL BA6 Architecture studio (AR-302k, Studio Huang — "Sentient Cities"). Andrea Crespo and Henna Rafik analyze the Geneva–Villeneuve corridor (City101) through the lens of "flow of people" — what makes people stop, where infrastructure creates behavior, and whether this 101km strip functions as one continuous city. Claude is the third team member (across multiple accounts).
 
 ## Current phase
 
 - **A01** (data collection): ✅ complete
 - **A02** (data synchronicity): ✅ submitted March 3rd. Crit happened March 2nd.
-- **A03** (field data): ⚠️ due March 10. All 7 sites visited Monday March 10 (ahead of schedule — no eastern trip needed). On-site interviews blocked everywhere (staff referred to central offices). Deliverables partially complete, doc review in progress.
-- **A04** (forms of sentience): assigned March 10, due March 30 (midterm). Rhino MCP prototypology. AI workflow diagram v1 built (6-screen HTML). Starting now.
+- **A03** (field data): ✅ complete. All 7 sites visited March 10. On-site interviews blocked (staff referred to central offices). Deliverables submitted.
+- **A04** (forms of sentience): ⚠️ active — due March 30 (midterm). Rhino MCP prototypology. AI workflow diagram v1 built. **March 16 crit: green light from Huang + assistants. Called it cutting edge, offered to fund Max subscription.** Now in full production toward midterm.
 
 See `briefs/` for full assignment specs and PPTX template.
 
@@ -37,29 +35,47 @@ The linear city doesn't exist. It's an **archipelago** — only 11 of 49 station
 - `deliverables/A02_SPEECH_UNIFIED.md`
 - Karim's diary (`karim_diary_v4.md` — Henna/Cadence, stream-of-consciousness narrative device)
 
-### A03 narrative: The Healthcare Supply Chain
-**"Where does the 24h healthcare supply chain break?"**
+### A04 narrative: The Horizontal Elevator — Infrastructure That Holds the Gap
 
-The hospital doesn't end at its walls. A nurse finishing at 02:00 at CHUV and a pharma sorter finishing at 04:00 in Crissier are part of the same system. Neither can get home. The "horizontal elevator" connects the **invisible shift chain** that keeps the 24h city running.
+**Core thesis**: The vertical elevator is anti-architecture (changes the relationship of proportionality — a small elevator enables radically different usage per floor, beyond what architectural proportions consider realistic). The horizontal elevator is **anti-urban**: it changes hierarchy along the corridor. What "breaks" a vertical elevator is a power outage. What breaks the horizontal elevator is **the gap in the 24hr chain** (01:30–03:30, zero public transport on weekdays).
+
+**The chamber is NOT a backup generator.** A generator restores the same thing. The chamber is the **missing link** — it doesn't restore, it fills. Unlike technology that eliminates gaps or makes things faster/obsolete, **this typology holds the gap**. It designs the experience of waiting. Infrastructure that doesn't want to skip the gap, doesn't want to make it disappear. The equalizer.
+
+**Chamber = waiting infrastructure** that transports/holds people AND expresses the information and coordination between nodes. A threshold space managing transition between two states, using the canal lock's 5-stage sequence (entry, sealing, equalization, level-matching, exit). The dwell time IS the architecture.
 
 **Prototypology: The Relay-Lock**
-- **Relay** (system level): chain of 7 nodes along corridor
+- **Relay** (system level): chain of 9 nodes along corridor (~11km spacing, caravanserai logic)
 - **Lock** (building level): architecture managing threshold between two states
-- **Chamber**: the architectural space where transition happens (01:00–05:00 dead window)
+- **Chamber**: the architectural space where transition happens (01:30–03:30 dead window)
+- **Four circulations**: staff + patient + cargo + home care (AVASAD/IMAD field workers doing 6–10 stops per shift)
 
-### The 7-node healthcare circuit
+**Beyond healthcare**: The typology is "infrastructure for waiting" — applies to ANY community with breaks in the 24hr chain. Healthcare is the proof-of-concept. Other communities: bakeries (early shifts, lab-to-shop transport), any industry with non-standard working hours at the 01:30–03:30 breaking point. The interface/app vision extends the typology to any community, any region, eventually any city with equivalent data.
+
+### The 9-node healthcare circuit (v2, scored)
+
+v2 introduced a quantitative scoring framework: 24 candidate sites evaluated on 5 criteria (night worker count, healthcare chain criticality, modal collapse severity, gap distance, infrastructure readiness). Top 9 scored above 3.0.
 
 | Node | Site | km | Lock type | Chamber program |
 |------|------|----|-----------|-----------------|
-| 1 | **Geneva North Industrial Belt** | 8 | Cargo ↔ City | Logistics interface + worker rest |
-| 2 | **Nyon Hospital + Genolier Hilltop** | 25 | Valley ↔ Hilltop | Vertical connector + staff/patient dual use |
-| 3 | **Morges Hospital Gap** | 48 | Last train ↔ First train | Night shelter + elderly mobility hub |
-| 4 | **Crissier-Bussigny Night Belt** | 58 | Invisible ↔ Visible | Supply chain civic space + worker visibility |
-| 5 | **Lausanne CHUV Perpendicular** | 65 | Uphill ↔ Downhill | Gradient connector + equity corrector |
-| 6 | **Montreux–Glion Altitude Medicine** | 85 | Mountain ↔ Lake | Altitude connector + family/rehab access |
-| 7 | **Rennaz Hospital Island** | 89 | Rail ↔ Off-rail | Rail bridge + emergency access |
+| 1 | **Lancy-Pont-Rouge** | 4 | Border lock | Frontalier equalization + cross-border dispatch |
+| 2 | **Geneva North Industrial Belt** | 8 | Cargo ↔ Visibility | Logistics interface + pharma + airport |
+| 3 | **Nyon + Genolier** | 25 | Altitude lock | Valley–hilltop connector + staff/patient dual use |
+| 4 | **Morges** | 48 | Temporal lock | Dead window shelter (01:07–04:01) + Nine Hours Hotel model |
+| 5 | **Crissier-Bussigny-Ecublens** | 58–62 | Logistics engine | Machine room exposed as civic infrastructure |
+| 6 | **Lausanne CHUV** | 65 | Sky lobby + gradient | Dispatcher + income-transport paradox corrector |
+| 7 | **Vevey** | 80 | Gap relay | Intermediate lock (Panama water-saving basin) |
+| 8 | **Montreux-Glion** | 85 | Altitude lock | Funicular base + family/rehab access |
+| 9 | **Rennaz** | 89 | Bridge lock | Off-rail corrective (2.1km from Villeneuve station) |
 
-**Why 7 (brief says 3–5):** One healthcare circuit, not 7 separate projects. Remove any node and the chain breaks. Three scales: infrastructure (nodes 1, 4), staff access (nodes 2, 3, 5, 7), patient access (nodes 2, 5, 6).
+**Why 9 (brief says 3–5):** One healthcare circuit, not 9 separate projects. Remove any node and the chain breaks. Three permanent geographic voids: Nyon→Gland (19.3km, no-ER zone), Gland→Morges (20km, La Côte blind spot), Lavaux Fracture (17.5km, UNESCO-constrained, permanent TOTAL RUPTURE — explicitly not solved by chambers, routed around).
+
+**Key references**: Koolhaas (anti-architecture, programmatic discontinuity), canal locks (5-stage threshold sequence), caravanserai spacing (~11km for motorized travel), airlock asymmetry (fast in, slow out = dwell time), genkan (GA tap-in as entry marking).
+
+### What's defined vs open (as of March 18)
+
+**Defined**: 9 node locations + scoring framework, lock-sequence logic, four circulation types, healthcare chain failures mapped (emergency, pharmacy, staffing), weekday dead window (01:30–03:30), income-transport paradox at CHUV, frontalier dual inversion, three permanent geographic voids.
+
+**Open**: Exact architectural form of chambers, how nodes coordinate/dispatch, bus bay integration, pharmaceutical micro-dispensing, power source (solar/water/electric/fuel), construction logistics (vents, water, drainage, electricity), cadastre integration for buildable land, is it actual transport or just a place, what are fixed vs flexible variables in the typology.
 
 ## TODOs and session logs
 
@@ -230,46 +246,7 @@ Rail noise day/night, road noise day/night, EV 2035 projections (3 scenarios), h
 
 ## Repo structure
 
-```
-city101/                              (git-tracked, GitHub: aacrespo/City101)
-├── CLAUDE.md                         ← router (auto-loaded)
-├── CONTEXT.md                        ← YOU ARE HERE — living project state
-├── LEARNINGS.md                      ← accumulated pitfalls
-├── LOCKBOARD.md                      ← who's doing what
-├── CITY101_WORKING.qgz               ← QGIS project (60 layers, EPSG:2056)
-├── 00_Workflow_v04.md                ← scale conventions, Rhino rules
-├── briefs/                           ← assignment specs (A01-A04) + PPTX template
-├── datasets/                         ← verified production data (INVENTORY.md inside)
-│   ├── corridor_analysis/
-│   ├── ev_charging/
-│   ├── remote_work/
-│   ├── transit/
-│   ├── stations/
-│   └── zurich_comparison/
-├── source/                           ← FROZEN inputs (classmate data, GeoPackages, animation data)
-│   ├── 00-datasets 2/               ← classmate datasets
-│   ├── animation/                    ← promoted animation pipeline data (v2/v3)
-│   └── ...
-├── deliverables/                     ← submission documents
-│   ├── A02_NARRATIVE_DRAFT.md
-│   ├── A02_SPEECH_UNIFIED.md
-│   └── A03/                          ← field visit materials, JSX artifacts, maps
-├── handoffs/                         ← all session handoffs (Andrea S1-S11, Henna, team)
-├── prompts/                          ← Claude/LLM execution prompts
-├── scripts/                          ← processing scripts
-│   ├── animation/                    ← 12 agent pipeline scripts
-│   └── *.py                          ← ad-hoc processing
-├── visualizations/                   ← all interactive viz
-│   ├── site/                         ← scrollytelling site (index_v2.html)
-│   └── viz_01 through viz_09 + diagrams
-├── observations/                     ← INDEX.md + research/ subfolder
-├── design_system/                    ← SPEC.md — visual identity
-├── tools/                            ← reusable scripts
-├── workflows/                        ← step-by-step SOPs
-├── output/                           ← staging (hospital research, vertical transport)
-├── archive/                          ← historical (system architecture, old outputs, screenshots, QA logs)
-└── .claude/                          ← commands, rules, agents
-```
+See CLAUDE.md for the full repo tree (kept in sync there as the single source of truth).
 
 ## Infrastructure — how we work
 

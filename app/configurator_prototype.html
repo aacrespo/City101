@@ -1,0 +1,1133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Relay-Lock Configurator</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;700&family=Instrument+Serif&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+/* ═══ DESIGN TOKENS ═══ */
+:root {
+  --bg: #0a0a0f;
+  --bg-el: #111118;
+  --bg-card: #16161e;
+  --bg-hover: #1c1c26;
+  --border: #2a2a35;
+  --border-hi: #3a3a48;
+  --text: #e8e6e1;
+  --muted: #8a8880;
+  --dim: #5a5a55;
+  --accent: #c9a84c;
+  --accent-glow: rgba(201,168,76,0.15);
+  --green: #22c55e;
+  --yellow: #f59e0b;
+  --red: #ef4444;
+  --fd: 'Instrument Serif', serif;
+  --fb: 'DM Sans', sans-serif;
+  --fm: 'DM Mono', monospace;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { font-family: var(--fb); background: var(--bg); color: var(--text); line-height: 1.5; -webkit-font-smoothing: antialiased; overflow: hidden; height: 100vh; display: flex; flex-direction: column; }
+
+/* ═══ HEADER ═══ */
+.header {
+  background: rgba(10,10,15,0.95);
+  border-bottom: 1px solid var(--border);
+  padding: 0 1.5rem;
+  display: flex;
+  align-items: center;
+  height: 52px;
+  flex-shrink: 0;
+  z-index: 100;
+  gap: 2rem;
+}
+.brand {
+  font-family: var(--fm);
+  font-size: 0.65rem;
+  color: var(--accent);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.tabs { display: flex; gap: 0; height: 100%; }
+.tab-btn {
+  background: none;
+  border: none;
+  font-family: var(--fm);
+  font-size: 0.7rem;
+  color: var(--muted);
+  padding: 0 1rem;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+  letter-spacing: 0.04em;
+}
+.tab-btn:hover { color: var(--text); }
+.tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+.header-right {
+  margin-left: auto;
+  font-family: var(--fm);
+  font-size: 0.58rem;
+  color: var(--dim);
+}
+
+/* ═══ MAIN LAYOUT ═══ */
+.main { flex: 1; overflow: hidden; position: relative; }
+.tab-panel { display: none; height: 100%; }
+.tab-panel.active { display: flex; flex-direction: column; }
+
+/* ═══ TAB 1: ANALYSIS ═══ */
+.analysis-top { display: flex; flex: 1; min-height: 0; }
+#map { flex: 1; background: var(--bg); z-index: 1; }
+.sidebar {
+  width: 320px;
+  flex-shrink: 0;
+  background: var(--bg-el);
+  border-left: 1px solid var(--border);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Sidebar sections */
+.sb-section { padding: 1rem 1.25rem; border-bottom: 1px solid var(--border); }
+.sb-label { font-family: var(--fm); font-size: 0.58rem; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.75rem; }
+.sb-empty { font-family: var(--fm); font-size: 0.72rem; color: var(--dim); text-align: center; padding: 2rem 0; }
+
+/* Selected node info */
+.node-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem; }
+.node-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.node-name { font-family: var(--fd); font-size: 1.15rem; }
+.node-lock { font-family: var(--fm); font-size: 0.62rem; color: var(--muted); }
+.node-km { font-family: var(--fm); font-size: 0.58rem; color: var(--dim); }
+
+/* Criteria bars */
+.crit-row { margin-bottom: 0.75rem; }
+.crit-top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.2rem; }
+.crit-name { font-family: var(--fm); font-size: 0.65rem; }
+.crit-vals { font-family: var(--fm); font-size: 0.58rem; color: var(--muted); }
+.crit-bar { height: 5px; background: var(--bg); border-radius: 3px; overflow: hidden; }
+.crit-fill { height: 100%; border-radius: 3px; transition: width 0.4s ease; }
+.crit-weight { font-family: var(--fm); font-size: 0.55rem; color: var(--accent); }
+
+/* Composite */
+.composite-box { text-align: center; padding: 1rem 0; }
+.composite-val { font-family: var(--fm); font-size: 2.2rem; font-weight: 500; }
+.composite-max { font-family: var(--fm); font-size: 0.8rem; color: var(--muted); }
+.composite-tier {
+  display: inline-block;
+  font-family: var(--fm);
+  font-size: 0.58rem;
+  padding: 3px 8px;
+  border-radius: 3px;
+  margin-top: 0.5rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.tier-high { background: rgba(34,197,94,0.12); color: var(--green); }
+.tier-med { background: rgba(245,158,11,0.12); color: var(--yellow); }
+.tier-low { background: rgba(239,68,68,0.12); color: var(--red); }
+.tier-none { background: rgba(90,90,85,0.12); color: var(--dim); }
+
+/* Weight sliders */
+.weights-bar {
+  background: var(--bg-el);
+  border-top: 1px solid var(--border);
+  padding: 0.75rem 1.5rem;
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+.weight-group { flex: 1; min-width: 140px; }
+.weight-label { font-family: var(--fm); font-size: 0.58rem; color: var(--muted); display: flex; justify-content: space-between; margin-bottom: 0.2rem; }
+.weight-val { color: var(--accent); }
+input[type=range] {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  outline: none;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--accent);
+  cursor: pointer;
+  border: 2px solid var(--bg);
+}
+input[type=range]::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--accent);
+  cursor: pointer;
+  border: 2px solid var(--bg);
+}
+
+/* Ranked table */
+.rank-bar {
+  background: var(--bg-el);
+  border-top: 1px solid var(--border);
+  flex-shrink: 0;
+  max-height: 200px;
+  overflow-y: auto;
+}
+.rank-table { width: 100%; border-collapse: collapse; }
+.rank-table th {
+  font-family: var(--fm);
+  font-size: 0.55rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  text-align: left;
+  padding: 0.4rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  background: var(--bg-el);
+}
+.rank-table td {
+  font-family: var(--fm);
+  font-size: 0.65rem;
+  padding: 0.4rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+}
+.rank-table tr:hover td { background: var(--bg-hover); }
+.rank-table tr.selected td { background: rgba(201,168,76,0.08); }
+.rank-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; margin-right: 0.4rem; vertical-align: middle; }
+.score-badge { font-weight: 500; }
+.score-green { color: var(--green); }
+.score-yellow { color: var(--yellow); }
+.score-red { color: var(--red); }
+
+/* Go to outputs button */
+.goto-btn {
+  display: block;
+  width: 100%;
+  padding: 0.6rem;
+  background: rgba(201,168,76,0.1);
+  border: 1px solid rgba(201,168,76,0.25);
+  border-radius: 4px;
+  color: var(--accent);
+  font-family: var(--fm);
+  font-size: 0.65rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+  letter-spacing: 0.04em;
+}
+.goto-btn:hover { background: rgba(201,168,76,0.18); }
+
+/* ═══ TAB 2: OUTPUTS ═══ */
+.outputs-panel { display: flex; height: 100%; overflow: hidden; }
+.spec-col { flex: 1; overflow-y: auto; padding: 1.5rem 2rem; }
+.preview-col {
+  width: 420px;
+  flex-shrink: 0;
+  border-left: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+}
+
+.spec-back {
+  font-family: var(--fm);
+  font-size: 0.62rem;
+  color: var(--muted);
+  cursor: pointer;
+  margin-bottom: 1rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+.spec-back:hover { color: var(--accent); }
+
+.spec-hero { margin-bottom: 1.5rem; }
+.spec-hero h2 { font-family: var(--fd); font-size: 1.6rem; font-weight: 400; margin-bottom: 0.25rem; }
+.spec-hero-meta { display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; }
+.lock-badge {
+  font-family: var(--fm);
+  font-size: 0.6rem;
+  padding: 3px 10px;
+  border-radius: 3px;
+  border: 1px solid;
+  letter-spacing: 0.04em;
+}
+.spec-score { font-family: var(--fm); font-size: 0.72rem; }
+
+.spec-block { margin-bottom: 1.5rem; }
+.spec-block-title {
+  font-family: var(--fm);
+  font-size: 0.58rem;
+  color: var(--accent);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid var(--border);
+}
+.spec-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+.spec-item { }
+.spec-item-label { font-family: var(--fm); font-size: 0.55rem; color: var(--dim); text-transform: uppercase; letter-spacing: 0.05em; }
+.spec-item-val { font-family: var(--fm); font-size: 0.72rem; }
+.spec-text { font-family: var(--fb); font-size: 0.82rem; color: var(--muted); line-height: 1.7; }
+.spec-flows { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+.flow-tag {
+  font-family: var(--fm);
+  font-size: 0.55rem;
+  padding: 2px 8px;
+  border-radius: 3px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+}
+
+/* Preview column */
+#siteMap { height: 280px; background: var(--bg); border-bottom: 1px solid var(--border); }
+.rhino-section { flex: 1; overflow-y: auto; padding: 1rem 1.25rem; }
+.rhino-title {
+  font-family: var(--fm);
+  font-size: 0.58rem;
+  color: var(--accent);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+.rhino-code {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 0.75rem;
+  font-family: var(--fm);
+  font-size: 0.6rem;
+  color: var(--muted);
+  line-height: 1.7;
+  overflow-x: auto;
+  white-space: pre;
+  max-height: 320px;
+  overflow-y: auto;
+}
+.rhino-dl {
+  display: block;
+  width: 100%;
+  margin-top: 0.75rem;
+  padding: 0.5rem;
+  background: rgba(201,168,76,0.08);
+  border: 1px solid rgba(201,168,76,0.2);
+  border-radius: 4px;
+  color: var(--accent);
+  font-family: var(--fm);
+  font-size: 0.62rem;
+  cursor: pointer;
+  text-align: center;
+  letter-spacing: 0.04em;
+  transition: background 0.2s;
+}
+.rhino-dl:hover { background: rgba(201,168,76,0.15); }
+
+/* Pushback message (for below-threshold sites) */
+.pushback {
+  background: rgba(239,68,68,0.06);
+  border: 1px solid rgba(239,68,68,0.2);
+  border-radius: 6px;
+  padding: 1.5rem;
+  margin: 1rem 0;
+}
+.pushback h3 { font-family: var(--fm); font-size: 0.75rem; color: var(--red); margin-bottom: 0.5rem; }
+.pushback p { font-family: var(--fm); font-size: 0.68rem; color: var(--muted); line-height: 1.7; }
+
+/* Leaflet overrides */
+.leaflet-container { background: var(--bg) !important; }
+.leaflet-control-zoom a { background: var(--bg-card) !important; color: var(--text) !important; border-color: var(--border) !important; }
+.leaflet-control-attribution { background: rgba(10,10,15,0.8) !important; color: var(--dim) !important; font-size: 9px !important; }
+.leaflet-control-attribution a { color: var(--dim) !important; }
+.leaflet-popup-content-wrapper { background: var(--bg-card); color: var(--text); border-radius: 6px; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
+.leaflet-popup-tip { background: var(--bg-card); }
+.leaflet-popup-content { font-family: var(--fm); font-size: 0.68rem; line-height: 1.6; margin: 10px 14px; }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <span class="brand">Relay-Lock Configurator</span>
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="analysis">Analysis</button>
+    <button class="tab-btn" data-tab="outputs">Outputs</button>
+  </div>
+  <span class="header-right">MIDTERM &bull; Healthcare &bull; 9 Nodes</span>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- TAB 1: ANALYSIS -->
+  <div class="tab-panel active" id="tab-analysis">
+    <div class="analysis-top">
+      <div id="map"></div>
+      <div class="sidebar" id="sidebar">
+        <div class="sb-section" id="node-info">
+          <div class="sb-label">Selected Node</div>
+          <div class="sb-empty" id="empty-msg">Click a node on the map<br>or select from the table below</div>
+          <div id="node-detail" style="display:none;">
+            <div class="node-header">
+              <span class="node-dot" id="nd-dot"></span>
+              <div>
+                <div class="node-name" id="nd-name"></div>
+                <div class="node-lock" id="nd-lock"></div>
+              </div>
+            </div>
+            <div class="node-km" id="nd-km"></div>
+          </div>
+        </div>
+        <div class="sb-section" id="criteria-section" style="display:none;">
+          <div class="sb-label">Scoring Breakdown</div>
+          <div id="criteria-container"></div>
+        </div>
+        <div class="sb-section" id="composite-section" style="display:none;">
+          <div class="composite-box">
+            <div>
+              <span class="composite-val" id="comp-val"></span>
+              <span class="composite-max">/ 5.0</span>
+            </div>
+            <div class="composite-tier" id="comp-tier"></div>
+          </div>
+          <button class="goto-btn" id="goto-outputs" style="margin-top:0.75rem;">View Outputs &rarr;</button>
+        </div>
+      </div>
+    </div>
+    <div class="weights-bar" id="weights-bar">
+      <div class="weight-group">
+        <div class="weight-label"><span>Affected Population</span><span class="weight-val" id="wv-pop">25</span></div>
+        <input type="range" min="0" max="50" value="25" id="ws-pop">
+      </div>
+      <div class="weight-group">
+        <div class="weight-label"><span>Chain Criticality</span><span class="weight-val" id="wv-crit">25</span></div>
+        <input type="range" min="0" max="50" value="25" id="ws-crit">
+      </div>
+      <div class="weight-group">
+        <div class="weight-label"><span>Modal Collapse</span><span class="weight-val" id="wv-modal">20</span></div>
+        <input type="range" min="0" max="50" value="20" id="ws-modal">
+      </div>
+      <div class="weight-group">
+        <div class="weight-label"><span>Gap Distance</span><span class="weight-val" id="wv-gap">15</span></div>
+        <input type="range" min="0" max="50" value="15" id="ws-gap">
+      </div>
+      <div class="weight-group">
+        <div class="weight-label"><span>Infrastructure</span><span class="weight-val" id="wv-infra">15</span></div>
+        <input type="range" min="0" max="50" value="15" id="ws-infra">
+      </div>
+    </div>
+    <div class="rank-bar">
+      <table class="rank-table">
+        <thead>
+          <tr><th>#</th><th>Site</th><th>Score</th><th>Lock Type</th><th>km</th></tr>
+        </thead>
+        <tbody id="rank-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- TAB 2: OUTPUTS -->
+  <div class="tab-panel" id="tab-outputs">
+    <div class="outputs-panel">
+      <div class="spec-col" id="spec-col">
+        <div class="spec-back" id="back-btn">&larr; Back to Analysis</div>
+        <div id="spec-content"></div>
+      </div>
+      <div class="preview-col">
+        <div id="siteMap"></div>
+        <div class="rhino-section">
+          <div class="rhino-title">Rhino Script</div>
+          <pre class="rhino-code" id="rhino-code"></pre>
+          <button class="rhino-dl" id="rhino-dl">Download .py</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════════════════
+
+// All 51 corridor stations [name, lat, lon, tph]
+const STATIONS = [
+  ["Genève-Aéroport",46.2325,6.112,4.5],["Vernier-Blandonnet",46.2219,6.0972,84],
+  ["Genève",46.2102,6.1424,25],["Genève-Sécheron",46.2225,6.1445,8],
+  ["Genthod-Bellevue",46.2567,6.1539,8],["Versoix",46.2797,6.1657,8],
+  ["Coppet",46.3174,6.1878,9.5],["Founex",46.3348,6.1949,3.5],
+  ["Tannay",46.3077,6.1811,8],["Mies",46.2985,6.1676,8],
+  ["Nyon",46.3844,6.236,14.5],["Prangins",46.393,6.2541,5.5],
+  ["Gland",46.42,6.2691,6.5],["Begnins",46.4402,6.2477,8.5],
+  ["Rolle",46.4628,6.3364,4.5],["Perroy",46.4639,6.3529,3],
+  ["Allaman",46.4758,6.3997,6],["Aubonne",46.4938,6.3929,11],
+  ["St-Prex",46.4823,6.4559,4],["Morges",46.5111,6.494,16],
+  ["Lonay-Préverenges",46.5231,6.5195,4],["Denges-Echandens",46.5291,6.5405,2],
+  ["Bussigny",46.5476,6.5518,9],["Renens VD",46.537,6.5789,26.5],
+  ["Prilly-Malley",46.5267,6.6026,9],["Lausanne",46.5168,6.6291,28.5],
+  ["Lausanne-Flon",46.5208,6.6303,4],["La Conversion",46.5131,6.6783,4],
+  ["Bossière",46.5098,6.6993,2],["Grandvaux",46.4969,6.7226,4.5],
+  ["Cully",46.4886,6.7271,9],["Epesses",46.4893,6.7452,3],
+  ["Rivaz",46.4742,6.7846,3.5],["St-Saphorin",46.4727,6.7981,0],
+  ["Vevey",46.463,6.8434,20],["La Tour-de-Peilz",46.4555,6.8595,4],
+  ["Burier",46.4479,6.8771,4],["Clarens",46.4427,6.8958,4],
+  ["Montreux",46.4359,6.9104,16],["Territet",46.4264,6.9227,2],
+  ["Villeneuve VD",46.3984,6.927,8],["Aigle",46.3169,6.9637,16.5],
+  ["Bex",46.2515,7.0007,7.5],["Palézieux",46.5428,6.8379,11.5],
+  ["Puidoux",46.4938,6.7657,6],["Genève-Eaux-Vives",46.2015,6.1665,12.5],
+  ["Genève-Champel",46.1922,6.1535,12.5],["Lancy-Bachet",46.1743,6.1293,12.5],
+  ["Lancy-Pont-Rouge",46.186,6.1249,12]
+];
+
+// 9 Relay-Lock nodes + 3 pushback examples
+const NODES = [
+  {
+    id:1, name:"Lancy-Pont-Rouge", lock:"Border Lock", lockNum:1, km:4,
+    lat:46.186, lon:6.1249, color:"#ff6b6b",
+    lv95:{e:2504161,n:1114970},
+    stA:"Swiss", stB:"Cross-border",
+    prog:"Border gateway + cross-border worker coordination",
+    desc:"Gateway to Geneva. Pre-entry threshold where cross-border healthcare workers (7,200 frontaliers) meet the Swiss rail corridor. The border lock mediates between two regulatory systems — French labor schedules and Swiss hospital shift patterns — during the dead window.",
+    stats:{staff:"~2,000 cross-border",night:"200-350",catchment:"Greater Geneva"},
+    flows:["staff","patient","pharma"],
+    s:{pop:3,crit:4,modal:2,gap:3,infra:4}
+  },
+  {
+    id:2, name:"Geneva North Industrial Belt", lock:"Cargo Lock", lockNum:2, km:8,
+    lat:46.222, lon:6.097, color:"#ffa94d",
+    lv95:{e:2502140,n:1118968},
+    stA:"Cargo", stB:"City",
+    prog:"Logistics interface + worker rest",
+    desc:"ZIMEYSA industrial zone — 380+ hectares, 500+ companies. Where healthcare cargo meets the city. Swiss Post, pharma sorting, medical device manufacturing. Workers invisible despite being the backbone of the supply chain.",
+    stats:{zone_area:"380+ hectares",companies:"500+",description:"ZIMEYSA + RUBIX medical/R&D"},
+    flows:["pharma","food","postal","waste","staff"],
+    s:{pop:4,crit:4,modal:1,gap:2,infra:4}
+  },
+  {
+    id:3, name:"Nyon-Genolier", lock:"Altitude Lock", lockNum:3, km:25,
+    lat:46.384, lon:6.236, color:"#ffd43b",
+    lv95:{e:2512261,n:1137027},
+    stA:"Valley", stB:"Hilltop",
+    prog:"Vertical connector + staff/patient dual use",
+    desc:"GHOL Nyon in the valley (1,000 staff, 103k catchment), Clinique de Genolier on the hilltop (358 staff + 230 doctors). Last NStCM train to Genolier at 21:29 — after that, car-only. Two healthcare worlds separated by 400m of altitude.",
+    stats:{ghol_staff:"~1,000",genolier_staff:"358 + 230 doctors",catchment:"103,000",last_train:"21:29",er_visits:"30,000+/year"},
+    flows:["staff","patient","blood","emergency","pharma"],
+    s:{pop:3,crit:4,modal:3,gap:5,infra:2}
+  },
+  {
+    id:4, name:"Morges", lock:"Temporal Lock", lockNum:4, km:48,
+    lat:46.511, lon:6.494, color:"#69db7c",
+    lv95:{e:2531083,n:1151104},
+    stA:"Last train", stB:"First train",
+    prog:"Night shelter + elderly mobility hub",
+    desc:"EHC Morges — 2,000 staff, 150k catchment. The purest lock concept: the station exists, the hospital exists, but between 00:30 and 05:00 there is no connection. 300–400 night workers face a 4.5-hour void. The temporal lock bridges two moments in time.",
+    stats:{staff:"~2,000",night_workers:"300–400",catchment:"150,000",gap_to_next_er:"23 km (Nyon) / 17 km (CHUV)",taxi_cost:"CHF 55–80"},
+    flows:["staff","patient","pharma","food","emergency"],
+    s:{pop:4,crit:4,modal:4,gap:5,infra:4}
+  },
+  {
+    id:5, name:"Crissier-Bussigny", lock:"Visibility Lock", lockNum:5, km:58,
+    lat:46.548, lon:6.552, color:"#4dabf7",
+    lv95:{e:2535304,n:1155160},
+    stA:"Invisible", stB:"Visible",
+    prog:"Supply chain civic space + worker visibility",
+    desc:"The densest healthcare logistics concentration on the corridor. PLEXUS-Santé (3,500 orders/day), CHUV food production (6,800 meals/day), Galexis pharma (100k packs/day), B. Braun (12M medical devices/year). Thousands of workers, zero civic presence.",
+    stats:{plexus_orders:"3,500/day",chuv_meals:"6,800+/day",galexis_packs:"100,000/day",bbraun_units:"12M/year"},
+    flows:["pharma","food","postal","waste","staff","blood"],
+    s:{pop:5,crit:3,modal:3,gap:3,infra:3}
+  },
+  {
+    id:6, name:"Lausanne CHUV", lock:"Gradient Dispatcher", lockNum:6, km:65,
+    lat:46.517, lon:6.629, color:"#9775fa",
+    lv95:{e:2540941,n:1151737},
+    stA:"Uphill", stB:"Downhill",
+    prog:"Gradient connector + equity corrector",
+    desc:"CHUV — 12,844 staff, 800k referral catchment. Best-connected hospital (M2 metro direct). But Lausanne's extreme topography creates an equity gradient: the M2 runs vertically, but the hospital's supply chain runs horizontally. The gradient dispatcher resolves the perpendicular conflict.",
+    stats:{staff:"12,844",catchment:"800,000 (referral)",transfers:">10,000/year",night_workers:"1,900–2,600",cross_border:"7,200 frontaliers"},
+    flows:["pharma","food","staff","patient","blood","waste","emergency","postal"],
+    s:{pop:5,crit:5,modal:1,gap:3,infra:5}
+  },
+  {
+    id:7, name:"Vevey", lock:"Gap Relay", lockNum:7, km:80,
+    lat:46.463, lon:6.8434, color:"#f06595",
+    lv95:{e:2556578,n:1145759},
+    stA:"West corridor", stB:"East corridor",
+    prog:"Gap bridge + tourism/resort anchor",
+    desc:"Vevey — 20 tph, strong connectivity but positioned at a critical relay point. The 13km gap between Lausanne and Montreux makes Vevey the natural relay for healthcare transfers heading east. Tourism anchor with seasonal worker population adds to night-time demand.",
+    stats:{tph:"20 trains/hr",gap:"13km to Montreux",population:"~20,000",hotels:"35+ (resort corridor)"},
+    flows:["patient","staff","emergency","food"],
+    s:{pop:3,crit:3,modal:2,gap:4,infra:4}
+  },
+  {
+    id:8, name:"Montreux-Glion", lock:"Altitude Lock", lockNum:8, km:85,
+    lat:46.436, lon:6.910, color:"#fcc419",
+    lv95:{e:2561466,n:1142745},
+    stA:"Mountain", stB:"Lake",
+    prog:"Altitude connector + family/rehab access",
+    desc:"Montreux at lake level, Glion rehabilitation clinics at 700m altitude. The MOB and funicular connect two healthcare ecosystems — acute care below, long-term rehabilitation above. Families visiting rehab patients face a vertical journey the corridor doesn't acknowledge.",
+    stats:{altitude_diff:"~700m",laundry:"LBG Chailly-Montreux",lavaux_gap:"20 km, no ambulance base",response_time:"20–25 min"},
+    flows:["patient","staff","food","waste","emergency"],
+    s:{pop:3,crit:4,modal:3,gap:4,infra:3}
+  },
+  {
+    id:9, name:"Rennaz", lock:"Bridge Lock", lockNum:9, km:89,
+    lat:46.398, lon:6.927, color:"#20c997",
+    lv95:{e:2562674,n:1138576},
+    stA:"Rail", stB:"Off-rail",
+    prog:"Rail bridge + emergency access",
+    desc:"HRC Rennaz — 2,500 staff, 180k catchment. 2 km from Villeneuve station. 2.75× slower by public transport than car. A proposed monorail was never built. The newest major hospital on the corridor, yet the most disconnected from rail. The bridge lock spans the last-mile gap.",
+    stats:{staff:"~2,500",catchment:"180,000",distance:"2 km to station",transit_penalty:"2.75× slower than car",phel:"Global dispensing robot"},
+    flows:["patient","staff","pharma","emergency","food","blood"],
+    s:{pop:4,crit:4,modal:3,gap:3,infra:3}
+  },
+  // Pushback examples (below threshold)
+  {
+    id:10, name:"St-Saphorin (Lavaux)", lock:"—", lockNum:0, km:72,
+    lat:46.4727, lon:6.7981, color:"#5a5a55",
+    lv95:{e:2553271,n:1146836},
+    stA:"—",stB:"—",prog:"—",
+    desc:"UNESCO-protected landscape. Permanent rupture. Zero trains, zero workspaces, zero WiFi in radius. The corridor's most extreme void — but architecturally untouchable. Design strategy: acknowledge and organize around, not bridge.",
+    stats:{wci:"0.0003",severity:"TOTAL_RUPTURE",protection:"UNESCO World Heritage"},
+    flows:[],
+    s:{pop:0,crit:0,modal:5,gap:5,infra:0},
+    pushback:"Lavaux is architecturally protected (UNESCO). Nearest viable sites: CHUV (15km west, score 3.9) or Vevey (20km east, score 3.1)."
+  },
+  {
+    id:11, name:"Rolle", lock:"—", lockNum:0, km:38,
+    lat:46.4628, lon:6.3364, color:"#5a5a55",
+    lv95:{e:2519588,n:1145731},
+    stA:"—",stB:"—",prog:"—",
+    desc:"Small town with limited healthcare infrastructure. Low affected population and chain criticality make it unsuitable for a relay-lock chamber. The gap between Nyon and Morges is better served by those two anchor nodes.",
+    stats:{wci:"0.0972",severity:"MINOR",tph:"4.5"},
+    flows:[],
+    s:{pop:1,crit:2,modal:4,gap:4,infra:2},
+    pushback:"Low healthcare criticality. Nearest viable sites: Nyon-Genolier (13km west) or Morges (10km east)."
+  }
+];
+
+// Criteria metadata
+const CRITERIA = [
+  {key:"pop", name:"Affected Population", src:"Community Engine"},
+  {key:"crit", name:"Chain Criticality", src:"Community Engine"},
+  {key:"modal", name:"Modal Collapse", src:"Corridor KB"},
+  {key:"gap", name:"Gap Distance", src:"Corridor KB"},
+  {key:"infra", name:"Infrastructure Readiness", src:"Corridor KB"}
+];
+
+const CRIT_COLORS = {pop:"#ff9f43",crit:"#ff9f43",modal:"#4a9eff",gap:"#4a9eff",infra:"#4a9eff"};
+
+const FLOW_COLORS = {pharma:"#7c4dff",food:"#ff9800",staff:"#29b6f6",patient:"#ef5350",postal:"#ffd54f",blood:"#e91e63",waste:"#78909c",emergency:"#ff1744"};
+
+// ═══════════════════════════════════════════════════════
+// SCORING ENGINE
+// ═══════════════════════════════════════════════════════
+
+function getWeights() {
+  const r = {
+    pop: +document.getElementById('ws-pop').value,
+    crit: +document.getElementById('ws-crit').value,
+    modal: +document.getElementById('ws-modal').value,
+    gap: +document.getElementById('ws-gap').value,
+    infra: +document.getElementById('ws-infra').value
+  };
+  const sum = Object.values(r).reduce((a,b) => a+b, 0) || 1;
+  return Object.fromEntries(Object.entries(r).map(([k,v]) => [k, v/sum]));
+}
+
+function scoreNode(node, weights) {
+  const s = node.s;
+  return s.pop*weights.pop + s.crit*weights.crit + s.modal*weights.modal + s.gap*weights.gap + s.infra*weights.infra;
+}
+
+function getTier(score, isViable) {
+  if (!isViable || score < 2) return {cls:"tier-none", label:"NOT VIABLE"};
+  if (score < 3) return {cls:"tier-low", label:"LOW CONFIDENCE"};
+  if (score >= 3) return {cls:"tier-high", label:"HIGH CONFIDENCE"};
+  return {cls:"tier-med", label:"MEDIUM CONFIDENCE"};
+}
+
+function scoreColor(score) {
+  if (score >= 4) return 'var(--green)';
+  if (score >= 3) return 'var(--yellow)';
+  return 'var(--red)';
+}
+
+function scoreClass(score) {
+  if (score >= 4) return 'score-green';
+  if (score >= 3) return 'score-yellow';
+  return 'score-red';
+}
+
+// ═══════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════
+
+let selectedNode = null;
+let scores = {};
+let map, siteMap;
+let nodeMarkers = {};
+let stationMarkers = [];
+
+// ═══════════════════════════════════════════════════════
+// MAP
+// ═══════════════════════════════════════════════════════
+
+function initMap() {
+  map = L.map('map', {
+    zoomControl: true,
+    attributionControl: true
+  }).setView([46.42, 6.55], 10);
+
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+    attribution: '&copy; OSM &amp; CARTO',
+    maxZoom: 18
+  }).addTo(map);
+
+  // Context stations
+  STATIONS.forEach(([name, lat, lon, tph]) => {
+    const isNode = NODES.some(n => Math.abs(n.lat - lat) < 0.005 && Math.abs(n.lon - lon) < 0.005);
+    if (!isNode) {
+      const m = L.circleMarker([lat, lon], {
+        radius: 3,
+        fillColor: '#3a3a48',
+        color: 'rgba(255,255,255,0.08)',
+        weight: 1,
+        fillOpacity: 0.5
+      }).addTo(map);
+      m.bindTooltip(name, {className:'station-tip',direction:'top',offset:[0,-4]});
+      stationMarkers.push(m);
+    }
+  });
+
+  // Node markers
+  NODES.forEach(n => {
+    const score = scores[n.id] || 0;
+    const r = n.lockNum > 0 ? 9 : 5;
+    const m = L.circleMarker([n.lat, n.lon], {
+      radius: r,
+      fillColor: n.color,
+      color: 'rgba(255,255,255,0.3)',
+      weight: 1.5,
+      fillOpacity: 0.85
+    }).addTo(map);
+
+    m.on('click', () => selectNode(n));
+    m.bindTooltip(`<strong>${n.name}</strong><br>${n.lock}<br>Score: ${score.toFixed(1)}`, {
+      className:'node-tip', direction:'top', offset:[0,-8]
+    });
+    nodeMarkers[n.id] = m;
+  });
+
+  // Fit corridor
+  const bounds = L.latLngBounds(STATIONS.map(s => [s[1], s[2]]));
+  map.fitBounds(bounds.pad(0.05));
+}
+
+function updateMapMarkers() {
+  NODES.forEach(n => {
+    const m = nodeMarkers[n.id];
+    if (!m) return;
+    const score = scores[n.id] || 0;
+    const r = n.lockNum > 0 ? (score >= 3 ? 10 : 7) : 5;
+    m.setRadius(r);
+    m.setStyle({
+      fillColor: n.lockNum > 0 ? n.color : '#5a5a55',
+      fillOpacity: score >= 3 ? 0.85 : 0.4
+    });
+    m.setTooltipContent(`<strong>${n.name}</strong><br>${n.lock}<br>Score: ${score.toFixed(2)}`);
+
+    // Highlight selected
+    if (selectedNode && n.id === selectedNode.id) {
+      m.setStyle({ color: '#c9a84c', weight: 3 });
+      m.setRadius(r + 3);
+    } else {
+      m.setStyle({ color: 'rgba(255,255,255,0.3)', weight: 1.5 });
+    }
+  });
+}
+
+// ═══════════════════════════════════════════════════════
+// SIDEBAR
+// ═══════════════════════════════════════════════════════
+
+function selectNode(node) {
+  selectedNode = node;
+  const score = scores[node.id] || 0;
+
+  document.getElementById('empty-msg').style.display = 'none';
+  document.getElementById('node-detail').style.display = 'block';
+  document.getElementById('criteria-section').style.display = 'block';
+  document.getElementById('composite-section').style.display = 'block';
+
+  document.getElementById('nd-dot').style.background = node.color;
+  document.getElementById('nd-name').textContent = node.name;
+  document.getElementById('nd-lock').textContent = node.lock;
+  document.getElementById('nd-km').textContent = `km ${node.km} · Node ${node.lockNum || '—'}`;
+
+  // Criteria bars
+  const weights = getWeights();
+  const container = document.getElementById('criteria-container');
+  container.innerHTML = '';
+  CRITERIA.forEach(c => {
+    const raw = node.s[c.key];
+    const w = (weights[c.key] * 100).toFixed(0);
+    const div = document.createElement('div');
+    div.className = 'crit-row';
+    div.innerHTML = `
+      <div class="crit-top">
+        <span class="crit-name">${c.name}</span>
+        <span class="crit-vals">${raw}/5 <span class="crit-weight">${w}%</span></span>
+      </div>
+      <div class="crit-bar">
+        <div class="crit-fill" style="width:${raw*20}%;background:${CRIT_COLORS[c.key]};"></div>
+      </div>
+    `;
+    container.appendChild(div);
+  });
+
+  // Composite
+  const tier = getTier(score, node.lockNum > 0);
+  document.getElementById('comp-val').textContent = score.toFixed(2);
+  document.getElementById('comp-val').style.color = scoreColor(score);
+  const tierEl = document.getElementById('comp-tier');
+  tierEl.textContent = tier.label;
+  tierEl.className = 'composite-tier ' + tier.cls;
+
+  updateMapMarkers();
+  updateTable();
+}
+
+// ═══════════════════════════════════════════════════════
+// TABLE
+// ═══════════════════════════════════════════════════════
+
+function updateTable() {
+  const sorted = [...NODES].sort((a,b) => (scores[b.id]||0) - (scores[a.id]||0));
+  const tbody = document.getElementById('rank-body');
+  tbody.innerHTML = '';
+  sorted.forEach((n, i) => {
+    const score = scores[n.id] || 0;
+    const tr = document.createElement('tr');
+    tr.className = selectedNode && n.id === selectedNode.id ? 'selected' : '';
+    tr.innerHTML = `
+      <td>${i+1}</td>
+      <td><span class="rank-dot" style="background:${n.color}"></span>${n.name}</td>
+      <td class="score-badge ${scoreClass(score)}">${score.toFixed(2)}</td>
+      <td style="color:var(--muted)">${n.lock}</td>
+      <td style="color:var(--dim)">${n.km}</td>
+    `;
+    tr.addEventListener('click', () => selectNode(n));
+    tbody.appendChild(tr);
+  });
+}
+
+// ═══════════════════════════════════════════════════════
+// WEIGHTS
+// ═══════════════════════════════════════════════════════
+
+function recompute() {
+  const w = getWeights();
+  // Update labels
+  ['pop','crit','modal','gap','infra'].forEach(k => {
+    document.getElementById('wv-'+k).textContent = (w[k]*100).toFixed(0);
+  });
+  // Recompute scores
+  NODES.forEach(n => { scores[n.id] = scoreNode(n, w); });
+  // Update UI
+  updateTable();
+  updateMapMarkers();
+  if (selectedNode) selectNode(selectedNode);
+}
+
+// ═══════════════════════════════════════════════════════
+// TAB 2: OUTPUTS
+// ═══════════════════════════════════════════════════════
+
+function renderOutputs(node) {
+  const score = scores[node.id] || 0;
+  const tier = getTier(score, node.lockNum > 0);
+  const el = document.getElementById('spec-content');
+
+  if (node.pushback) {
+    el.innerHTML = `
+      <div class="spec-hero">
+        <h2>${node.name}</h2>
+        <div class="spec-hero-meta">
+          <span class="spec-score ${scoreClass(score)}">${score.toFixed(2)} / 5.0</span>
+          <span class="composite-tier ${tier.cls}">${tier.label}</span>
+        </div>
+      </div>
+      <div class="pushback">
+        <h3>Site Not Viable</h3>
+        <p>${node.pushback}</p>
+      </div>
+      <div class="spec-block">
+        <div class="spec-block-title">Context</div>
+        <p class="spec-text">${node.desc}</p>
+      </div>
+    `;
+  } else {
+    // Full spec card
+    const statsHtml = Object.entries(node.stats).map(([k,v]) =>
+      `<div class="spec-item"><div class="spec-item-label">${k.replace(/_/g,' ')}</div><div class="spec-item-val">${v}</div></div>`
+    ).join('');
+
+    const flowsHtml = node.flows.map(f =>
+      `<span class="flow-tag" style="border-color:${FLOW_COLORS[f]||'var(--border)'};color:${FLOW_COLORS[f]||'var(--muted)'}">${f}</span>`
+    ).join('');
+
+    el.innerHTML = `
+      <div class="spec-hero">
+        <h2>${node.name}</h2>
+        <div class="spec-hero-meta">
+          <span class="lock-badge" style="color:${node.color};border-color:${node.color}">${node.lock}</span>
+          <span class="spec-score ${scoreClass(score)}">${score.toFixed(2)} / 5.0</span>
+          <span class="composite-tier ${tier.cls}">${tier.label}</span>
+        </div>
+      </div>
+
+      <div class="spec-block">
+        <div class="spec-block-title">Dead Window</div>
+        <div class="spec-grid">
+          <div class="spec-item"><div class="spec-item-label">Window</div><div class="spec-item-val">01:30 – 03:30</div></div>
+          <div class="spec-item"><div class="spec-item-label">Duration</div><div class="spec-item-val">2 hours</div></div>
+          <div class="spec-item"><div class="spec-item-label">State A</div><div class="spec-item-val">${node.stA}</div></div>
+          <div class="spec-item"><div class="spec-item-label">State B</div><div class="spec-item-val">${node.stB}</div></div>
+        </div>
+      </div>
+
+      <div class="spec-block">
+        <div class="spec-block-title">Key Statistics</div>
+        <div class="spec-grid">${statsHtml}</div>
+      </div>
+
+      <div class="spec-block">
+        <div class="spec-block-title">Chamber Program</div>
+        <p class="spec-text">${node.prog}</p>
+      </div>
+
+      <div class="spec-block">
+        <div class="spec-block-title">Supply Chain Flows</div>
+        <div class="spec-flows">${flowsHtml}</div>
+      </div>
+
+      <div class="spec-block">
+        <div class="spec-block-title">Coordinates</div>
+        <div class="spec-grid">
+          <div class="spec-item"><div class="spec-item-label">WGS84</div><div class="spec-item-val">${node.lat.toFixed(4)}°N, ${node.lon.toFixed(4)}°E</div></div>
+          <div class="spec-item"><div class="spec-item-label">LV95</div><div class="spec-item-val">E ${node.lv95.e.toLocaleString()}, N ${node.lv95.n.toLocaleString()}</div></div>
+          <div class="spec-item"><div class="spec-item-label">Corridor km</div><div class="spec-item-val">${node.km}</div></div>
+          <div class="spec-item"><div class="spec-item-label">Node</div><div class="spec-item-val">#${node.lockNum}</div></div>
+        </div>
+      </div>
+
+      <div class="spec-block">
+        <div class="spec-block-title">Context Notes</div>
+        <p class="spec-text">${node.desc}</p>
+      </div>
+
+      <div class="spec-block">
+        <div class="spec-block-title">Source Attribution</div>
+        <p class="spec-text" style="font-size:0.72rem;">EPFL Corridor Study 2024, Swiss Hospital Association shift data, SBB frequency analysis, Google Places API, OSM Overpass</p>
+      </div>
+    `;
+  }
+
+  // Site preview map
+  if (siteMap) siteMap.remove();
+  siteMap = L.map('siteMap', { zoomControl: false, attributionControl: false }).setView([node.lat, node.lon], 14);
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', { maxZoom: 18 }).addTo(siteMap);
+  L.circleMarker([node.lat, node.lon], {
+    radius: 12,
+    fillColor: node.color,
+    color: '#c9a84c',
+    weight: 2,
+    fillOpacity: 0.8
+  }).addTo(siteMap);
+  // 500m radius circle
+  L.circle([node.lat, node.lon], {
+    radius: 500,
+    color: node.color,
+    fillColor: node.color,
+    fillOpacity: 0.05,
+    weight: 1,
+    dashArray: '4 4'
+  }).addTo(siteMap);
+
+  // Rhino script
+  renderRhinoScript(node);
+}
+
+function renderRhinoScript(node) {
+  const params = getChamberParams(node);
+  const date = new Date().toISOString().split('T')[0];
+  const script = `import rhinoscriptsyntax as rs
+
+# RELAY-LOCK CHAMBER: ${node.name}, Healthcare
+# Generated ${date} from Configurator v1
+# Lock Type: ${node.lock} (Node #${node.lockNum})
+
+# PARAMETERS
+footprint_m2 = ${params.footprint}
+height_m = ${params.height}
+orientation_deg = ${params.orientation}
+material = "${params.material}"
+
+# PROGRAM ZONES
+program = [
+    {"name": "wait_rest", "area_m2": ${Math.round(params.footprint * 0.47)}},
+    {"name": "coordinate", "area_m2": ${Math.round(params.footprint * 0.18)}},
+    {"name": "work_async", "area_m2": ${Math.round(params.footprint * 0.23)}},
+    {"name": "facility", "area_m2": ${Math.round(params.footprint * 0.12)}}
+]
+
+# SITE ANCHOR (LV95)
+origin_east = ${node.lv95.e}
+origin_north = ${node.lv95.n}
+
+# DEAD WINDOW
+dead_window = "01:30-03:30"
+state_a = "${node.stA}"
+state_b = "${node.stB}"
+
+# --- GEOMETRY ---
+def build_chamber():
+    rs.EnableRedraw(False)
+
+    # Base footprint
+    side = footprint_m2 ** 0.5
+    w, d = side * 1.2, side / 1.2
+    origin = (0, 0, 0)
+
+    # Rotate to orientation
+    base = rs.AddRectangle(rs.WorldXYPlane(), w, d)
+    rs.RotateObject(base, origin, orientation_deg)
+
+    # Extrude to height
+    srf = rs.ExtrudeCurveStraight(base, (0,0,0), (0,0,height_m))
+    rs.CapPlanarHoles(srf)
+
+    # Program zone division
+    zones = []
+    x_offset = 0
+    for zone in program:
+        zone_w = (zone["area_m2"] / d)
+        rect = rs.AddRectangle(
+            rs.MovePlane(rs.WorldXYPlane(), (x_offset, 0, 0)),
+            zone_w, d
+        )
+        rs.RotateObject(rect, origin, orientation_deg)
+        zones.append(rect)
+        x_offset += zone_w
+
+    # Layer assignment
+    rs.AddLayer("CHAMBER_${node.name.replace(/[^a-zA-Z]/g,'_').toUpperCase()}")
+    rs.ObjectLayer(srf, "CHAMBER_${node.name.replace(/[^a-zA-Z]/g,'_').toUpperCase()}")
+
+    rs.EnableRedraw(True)
+    return srf
+
+if __name__ == "__main__":
+    build_chamber()
+    print("Chamber built: ${node.name}")`;
+
+  document.getElementById('rhino-code').textContent = script;
+
+  // Download button
+  document.getElementById('rhino-dl').onclick = () => {
+    const blob = new Blob([script], {type: 'text/plain'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `chamber_${node.name.toLowerCase().replace(/[^a-z0-9]/g,'_')}_healthcare.py`;
+    a.click();
+  };
+}
+
+function getChamberParams(node) {
+  const params = {
+    1: {footprint:600, height:5.5, orientation:0, material:"steel_glass_hybrid"},
+    2: {footprint:1200, height:8.0, orientation:90, material:"steel_concrete_industrial"},
+    3: {footprint:500, height:7.0, orientation:270, material:"timber_stone_alpine"},
+    4: {footprint:850, height:6.5, orientation:145, material:"oak_concrete_hybrid"},
+    5: {footprint:1100, height:7.5, orientation:180, material:"glass_steel_civic"},
+    6: {footprint:950, height:9.0, orientation:45, material:"concrete_timber_urban"},
+    7: {footprint:750, height:6.0, orientation:120, material:"timber_concrete_lakeside"},
+    8: {footprint:550, height:7.5, orientation:315, material:"stone_timber_alpine"},
+    9: {footprint:900, height:6.5, orientation:80, material:"steel_concrete_bridge"}
+  };
+  return params[node.lockNum] || {footprint:700, height:6.0, orientation:0, material:"generic"};
+}
+
+// ═══════════════════════════════════════════════════════
+// TABS
+// ═══════════════════════════════════════════════════════
+
+function switchTab(tab) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.toggle('active', p.id === 'tab-'+tab));
+
+  if (tab === 'analysis') {
+    setTimeout(() => map.invalidateSize(), 50);
+  }
+  if (tab === 'outputs' && selectedNode) {
+    renderOutputs(selectedNode);
+    setTimeout(() => { if (siteMap) siteMap.invalidateSize(); }, 100);
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════
+
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+});
+
+document.getElementById('goto-outputs').addEventListener('click', () => switchTab('outputs'));
+document.getElementById('back-btn').addEventListener('click', () => switchTab('analysis'));
+
+['ws-pop','ws-crit','ws-modal','ws-gap','ws-infra'].forEach(id => {
+  document.getElementById(id).addEventListener('input', recompute);
+});
+
+// Initial compute
+recompute();
+initMap();
+updateTable();
+
+// Auto-select Morges (the hero node from the architecture doc)
+const morges = NODES.find(n => n.name === 'Morges');
+if (morges) selectNode(morges);
+
+// Tooltip styles
+const tipStyle = document.createElement('style');
+tipStyle.textContent = `
+.station-tip { background: rgba(22,22,30,0.9) !important; color: #8a8880 !important; border: 1px solid #2a2a35 !important; font-family: 'DM Mono', monospace !important; font-size: 0.6rem !important; padding: 3px 8px !important; border-radius: 3px !important; box-shadow: none !important; }
+.station-tip::before { display: none !important; }
+.node-tip { background: rgba(22,22,30,0.95) !important; color: #e8e6e1 !important; border: 1px solid #3a3a48 !important; font-family: 'DM Mono', monospace !important; font-size: 0.65rem !important; padding: 6px 10px !important; border-radius: 4px !important; box-shadow: 0 2px 10px rgba(0,0,0,0.4) !important; }
+.node-tip::before { display: none !important; }
+.leaflet-tooltip-top:before, .leaflet-tooltip-bottom:before, .leaflet-tooltip-left:before, .leaflet-tooltip-right:before { display: none !important; }
+`;
+document.head.appendChild(tipStyle);
+</script>
+</body>
+</html>

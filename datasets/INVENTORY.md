@@ -70,6 +70,12 @@ All verified production datasets. Updated when data changes.
 |---------|------|------|-------------|
 | Late night v3 | `24h_venues/city101_late_night_venues_v3.csv` | — | 24h and late-closing venues |
 
+## Healthcare ⚠️ UNVERIFIED
+
+| Dataset | File | Rows | Key columns |
+|---------|------|------|-------------|
+| Hospitals corridor | `healthcare/city101_hospitals_corridor_research.csv` | 32 | id, name, city_commune, type, address, lat_wgs84, lon_wgs84, canton, beds, notes, source, in_riegert_data |
+
 ---
 
 ## Not yet integrated (available in `source/00-datasets 2/`)

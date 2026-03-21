@@ -1,0 +1,1252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>City101 Architecture Diagrams — Midterm A04</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-dark: #0a0a0f;
+            --bg-darker: #050507;
+            --gold: #c9a84c;
+            --purple: #4a2c6e;
+            --green: #1a3a2a;
+            --blue-grey: #2a2a3a;
+            --brown: #3a2a1a;
+            --teal: #1a3a3a;
+            --text-light: #e8e6e1;
+            --text-secondary: #8a8880;
+            --text-muted: #6a6860;
+            --border: #3a3a45;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-light);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Navigation Bar */
+        nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--bg-darker);
+            border-bottom: 1px solid var(--border);
+            padding: 0.75rem 2rem;
+            display: flex;
+            gap: 2rem;
+            overflow-x: auto;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+        }
+
+        nav a {
+            color: var(--text-light);
+            text-decoration: none;
+            font-size: 0.95rem;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            border-bottom: 2px solid transparent;
+        }
+
+        nav a:hover {
+            color: var(--gold);
+            border-bottom-color: var(--gold);
+        }
+
+        nav a.active {
+            color: var(--gold);
+            border-bottom-color: var(--gold);
+        }
+
+        /* Section Layout */
+        section {
+            scroll-margin-top: 80px;
+            padding: 4rem 2rem;
+            min-height: 100vh;
+            border-bottom: 1px solid var(--border);
+        }
+
+        section:last-child {
+            border-bottom: none;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            color: var(--gold);
+            margin-bottom: 2rem;
+            letter-spacing: 0.5px;
+        }
+
+        h2 {
+            font-size: 1.3rem;
+            color: var(--text-light);
+            margin: 1.5rem 0 1rem 0;
+        }
+
+        /* Diagram 1: System Architecture */
+        .architecture-flow {
+            display: grid;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .flow-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            align-items: start;
+            margin-bottom: 1rem;
+            position: relative;
+        }
+
+        .module-card {
+            background: var(--bg-darker);
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--gold);
+            padding: 1.5rem;
+            border-radius: 6px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .module-card:hover {
+            border-color: var(--gold);
+            box-shadow: 0 0 20px rgba(201, 168, 76, 0.1);
+        }
+
+        .module-card.ai {
+            border-left-color: var(--purple);
+        }
+
+        .module-card.deterministic {
+            border-left-color: var(--green);
+        }
+
+        .module-card.data {
+            border-left-color: var(--blue-grey);
+        }
+
+        .module-card.interface {
+            border-left-color: var(--brown);
+        }
+
+        .module-title {
+            font-weight: 600;
+            font-size: 1.05rem;
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+        }
+
+        .module-subtitle {
+            font-size: 0.85rem;
+            color: var(--gold);
+            margin-bottom: 1rem;
+        }
+
+        .module-items {
+            list-style: none;
+            font-size: 0.9rem;
+        }
+
+        .module-items li {
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+            padding-left: 1rem;
+            position: relative;
+        }
+
+        .module-items li:before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            color: var(--gold);
+        }
+
+        /* Boundary Line */
+        .boundary-marker {
+            text-align: center;
+            padding: 1.5rem;
+            border-top: 2px dashed var(--gold);
+            border-bottom: 2px dashed var(--gold);
+            margin: 2rem 0;
+            color: var(--gold);
+            font-weight: 600;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
+
+        /* Diagram 2: AI vs Deterministic */
+        .boundary-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .boundary-column {
+            padding: 2rem;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        .boundary-column.ai-zone {
+            background: rgba(74, 44, 110, 0.15);
+            border-color: var(--purple);
+        }
+
+        .boundary-column.handoff-zone {
+            background: rgba(201, 168, 76, 0.1);
+            border-color: var(--gold);
+            border-width: 2px;
+        }
+
+        .boundary-column.deterministic-zone {
+            background: rgba(26, 58, 42, 0.15);
+            border-color: var(--green);
+        }
+
+        .boundary-column h3 {
+            color: var(--gold);
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .boundary-items {
+            list-style: none;
+            font-size: 0.9rem;
+        }
+
+        .boundary-items li {
+            margin-bottom: 1rem;
+            padding: 0.75rem;
+            background: var(--bg-darker);
+            border-left: 3px solid var(--text-secondary);
+            padding-left: 1rem;
+        }
+
+        .boundary-items li strong {
+            color: var(--text-light);
+        }
+
+        .boundary-items li span {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-top: 0.25rem;
+        }
+
+        /* Arrow between zones */
+        .arrow-between {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin: 2rem 0;
+            font-size: 2rem;
+            color: var(--gold);
+        }
+
+        /* Diagram 3: Scoring Funnel */
+        .funnel-container {
+            display: flex;
+            flex-direction: column;
+            gap: 3rem;
+        }
+
+        .funnel-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .funnel-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .funnel-item {
+            background: var(--bg-darker);
+            border: 1px solid var(--border);
+            border-left: 3px solid var(--blue-grey);
+            padding: 1rem;
+            border-radius: 4px;
+            text-align: center;
+            font-size: 0.85rem;
+        }
+
+        .funnel-item strong {
+            display: block;
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+        }
+
+        .funnel-item span {
+            color: var(--text-secondary);
+            display: block;
+            font-size: 0.75rem;
+        }
+
+        /* Criteria bars */
+        .criteria-container {
+            width: 100%;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .criterion {
+            margin-bottom: 1.5rem;
+        }
+
+        .criterion-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .criterion-name {
+            color: var(--text-light);
+            font-weight: 600;
+        }
+
+        .criterion-weight {
+            color: var(--gold);
+            font-weight: 600;
+        }
+
+        .criterion-bar {
+            height: 24px;
+            background: var(--bg-darker);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+
+        .criterion-fill {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 0.5rem;
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .criterion-1 .criterion-fill { background: linear-gradient(90deg, #d97706 0%, #f59e0b 100%); width: 25%; }
+        .criterion-2 .criterion-fill { background: linear-gradient(90deg, #dc2626 0%, #ef4444 100%); width: 25%; }
+        .criterion-3 .criterion-fill { background: linear-gradient(90deg, #2563eb 0%, #3b82f6 100%); width: 20%; }
+        .criterion-4 .criterion-fill { background: linear-gradient(90deg, #0d9488 0%, #14b8a6 100%); width: 15%; }
+        .criterion-5 .criterion-fill { background: linear-gradient(90deg, #059669 0%, #10b981 100%); width: 15%; }
+
+        .funnel-output {
+            background: var(--bg-darker);
+            border: 2px solid var(--gold);
+            padding: 2rem;
+            border-radius: 8px;
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .funnel-output-title {
+            color: var(--gold);
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .funnel-output-items {
+            display: flex;
+            justify-content: space-around;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .output-item {
+            flex: 1;
+            min-width: 120px;
+            padding: 0.75rem;
+            background: var(--blue-grey);
+            border-radius: 4px;
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        /* Diagram 4: Decision Tree */
+        .decision-tree {
+            max-width: 600px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .tree-node {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .decision-box {
+            background: var(--bg-darker);
+            border: 2px solid var(--teal);
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 600;
+            color: var(--text-light);
+            width: 100%;
+            max-width: 300px;
+        }
+
+        .decision-diamond {
+            background: var(--bg-darker);
+            border: 2px solid var(--gold);
+            padding: 1.5rem;
+            width: 250px;
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-size: 0.9rem;
+            color: var(--text-light);
+            font-weight: 600;
+            position: relative;
+            transform: rotate(45deg);
+            border-radius: 0;
+            margin: 1rem auto;
+        }
+
+        .decision-diamond-text {
+            transform: rotate(-45deg);
+            position: absolute;
+        }
+
+        .tree-branches {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .branch-yes, .branch-no {
+            text-align: center;
+        }
+
+        .branch-label {
+            color: var(--gold);
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .lock-badge {
+            background: var(--bg-darker);
+            border: 2px solid var(--text-secondary);
+            padding: 0.75rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-light);
+            display: inline-block;
+        }
+
+        .lock-badge.border { border-color: #c2410c; color: #fed7aa; }
+        .lock-badge.logistics { border-color: #ea580c; color: #fed7aa; }
+        .lock-badge.cargo { border-color: #ea580c; color: #fed7aa; }
+        .lock-badge.gradient { border-color: #7c3aed; color: #e9d5ff; }
+        .lock-badge.altitude { border-color: #7c3aed; color: #e9d5ff; }
+        .lock-badge.bridge { border-color: #0284c7; color: #bae6fd; }
+        .lock-badge.visibility { border-color: var(--text-secondary); color: var(--text-light); }
+        .lock-badge.gap { border-color: #0d9488; color: #ccfbf1; }
+        .lock-badge.temporal { border-color: var(--gold); color: var(--gold); }
+
+        .lock-description {
+            display: block;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-top: 0.25rem;
+        }
+
+        /* Simplified vertical tree */
+        .tree-simple {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .tree-level {
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .tree-level:last-child {
+            border-bottom: none;
+        }
+
+        .tree-level-title {
+            color: var(--gold);
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .tree-options {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .tree-option {
+            flex: 1;
+            min-width: 150px;
+            padding: 1rem;
+            background: var(--bg-darker);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-size: 0.85rem;
+            text-align: center;
+        }
+
+        .tree-option.yes {
+            border-left: 3px solid var(--gold);
+        }
+
+        .tree-option.no {
+            border-left: 3px solid var(--text-secondary);
+        }
+
+        /* Diagram 5: Gantt Timeline */
+        .gantt-container {
+            overflow-x: auto;
+            margin-bottom: 2rem;
+            background: var(--bg-darker);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
+        }
+
+        .gantt-chart {
+            display: grid;
+            grid-template-columns: 150px repeat(12, 1fr);
+            gap: 0;
+            min-width: 1000px;
+        }
+
+        .gantt-header {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            display: contents;
+        }
+
+        .gantt-day {
+            padding: 0.75rem;
+            text-align: center;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .gantt-day.weekend {
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .gantt-day.today {
+            background: rgba(220, 38, 38, 0.15);
+            color: #fca5a5;
+        }
+
+        .gantt-label {
+            padding: 0.75rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text-light);
+            border-right: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+        }
+
+        .gantt-row {
+            display: contents;
+        }
+
+        .gantt-cell {
+            padding: 0.25rem;
+            border-bottom: 1px solid var(--border);
+            background: var(--bg-darker);
+        }
+
+        .gantt-cell.weekend {
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .gantt-bar {
+            height: 32px;
+            border-radius: 4px;
+            margin: 0.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.65rem;
+            font-weight: 600;
+            color: white;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .gantt-bar.prep { background: rgba(59, 130, 246, 0.5); }
+        .gantt-bar.andrea { background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%); }
+        .gantt-bar.henna { background: linear-gradient(135deg, #a855f7 0%, #7c3aed 100%); }
+        .gantt-bar.milestone { background: var(--gold); }
+
+        .gantt-cell.today-marker {
+            border-left: 3px solid #ef4444;
+        }
+
+        /* Milestone legend */
+        .timeline-legend {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+            font-size: 0.85rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .legend-box {
+            width: 20px;
+            height: 20px;
+            border-radius: 3px;
+        }
+
+        /* Footer */
+        footer {
+            padding: 2rem;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            border-top: 1px solid var(--border);
+        }
+
+        /* Print styles */
+        @media print {
+            body { background: white; color: black; }
+            nav { position: static; }
+            section { page-break-inside: avoid; }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 { font-size: 1.8rem; }
+            nav { padding: 0.5rem 1rem; }
+            .boundary-layout { grid-template-columns: 1fr; }
+            .funnel-grid { grid-template-columns: repeat(2, 1fr); }
+            .gantt-chart { grid-template-columns: 120px repeat(6, 1fr); min-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <a href="#system" class="active">System Architecture</a>
+        <a href="#boundary">AI Boundary</a>
+        <a href="#funnel">Scoring Funnel</a>
+        <a href="#tree">Decision Tree</a>
+        <a href="#timeline">Implementation</a>
+    </nav>
+
+    <!-- Section 1: System Architecture -->
+    <section id="system">
+        <h1>System Architecture — 6 Modules</h1>
+
+        <div class="architecture-flow">
+            <!-- Top flow -->
+            <div class="flow-row">
+                <div class="module-card">
+                    <div class="module-title">USER</div>
+                    <div class="module-subtitle">Browser Interface</div>
+                    <ul class="module-items">
+                        <li>Web viewport</li>
+                        <li>Route selection</li>
+                        <li>Dual output views</li>
+                    </ul>
+                </div>
+
+                <div class="module-card data">
+                    <div class="module-title">CORRIDOR KB</div>
+                    <div class="module-subtitle">Static Data Foundation</div>
+                    <ul class="module-items">
+                        <li>49 stations reference</li>
+                        <li>WCI + breakpoints</li>
+                        <li>Temporal frequency</li>
+                        <li>Modal diversity</li>
+                    </ul>
+                </div>
+
+                <div class="module-card ai">
+                    <div class="module-title">COMMUNITY RESEARCH</div>
+                    <div class="module-subtitle">AI Processing — Phase 2</div>
+                    <ul class="module-items">
+                        <li>24h pattern analysis</li>
+                        <li>Break point reasoning</li>
+                        <li>Region validation</li>
+                        <li>Narrative synthesis</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="boundary-marker">
+                ═══════════════════════════════════════════════════════════<br>
+                AI / DETERMINISTIC BOUNDARY<br>
+                ═══════════════════════════════════════════════════════════
+            </div>
+
+            <div class="flow-row">
+                <div class="module-card deterministic">
+                    <div class="module-title">SCORING ENGINE</div>
+                    <div class="module-subtitle">Deterministic Calculation</div>
+                    <ul class="module-items">
+                        <li>5 criteria weighted sum</li>
+                        <li>Quality gates enforced</li>
+                        <li>Score normalization</li>
+                    </ul>
+                </div>
+
+                <div class="module-card deterministic">
+                    <div class="module-title">PROPOSITION GEN</div>
+                    <div class="module-subtitle">Lock Type Assignment</div>
+                    <ul class="module-items">
+                        <li>Priority decision tree</li>
+                        <li>Site classification</li>
+                        <li>Spec template selection</li>
+                    </ul>
+                </div>
+
+                <div class="module-card interface">
+                    <div class="module-title">OUTPUT PIPELINE</div>
+                    <div class="module-subtitle">3 Parallel Renderers</div>
+                    <ul class="module-items">
+                        <li>Spec card generator</li>
+                        <li>Leaflet map updater</li>
+                        <li>Rhino script exporter</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Interface layer -->
+            <div style="margin-top: 2rem;">
+                <div class="module-card interface">
+                    <div class="module-title">INTERFACE LAYER</div>
+                    <div class="module-subtitle">Two-Tab Experience</div>
+                    <ul class="module-items">
+                        <li><strong>Tab 1 — Analysis:</strong> Corridor map with breakpoints, WCI heatmap, modal diversity visual</li>
+                        <li><strong>Tab 2 — Outputs:</strong> Spec cards, 3D preview, Rhino script download, comparison view</li>
+                        <li>Real-time filter + search</li>
+                        <li>Export & sharing controls</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 2: AI vs Deterministic -->
+    <section id="boundary">
+        <h1>AI vs Deterministic Boundary</h1>
+
+        <div class="arrow-between">→ FLOW →</div>
+
+        <div class="boundary-layout">
+            <div class="boundary-column ai-zone">
+                <h3>🧠 AI Zone</h3>
+                <h3 style="font-size: 0.95rem; color: var(--text-secondary); font-weight: 400; margin-top: -1rem;">Input Processing</h3>
+
+                <ul class="boundary-items">
+                    <li>
+                        <strong>Community Chain Research</strong>
+                        <span>Understanding 24hr patterns, worker flows, modal preferences</span>
+                    </li>
+                    <li>
+                        <strong>Breaking Point ID</strong>
+                        <span>Where chains fail, identify criticality, loss of coverage</span>
+                    </li>
+                    <li>
+                        <strong>Region Validation</strong>
+                        <span>Match quality reasoning, contextual fit scoring</span>
+                    </li>
+                    <li>
+                        <strong>Narrative Generation</strong>
+                        <span>Explain propositions, summarize findings</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="boundary-column handoff-zone">
+                <h3>📦 Handoff Model</h3>
+                <h3 style="font-size: 0.95rem; color: var(--text-secondary); font-weight: 400; margin-top: -1rem;">Data Contract</h3>
+
+                <ul class="boundary-items">
+                    <li>
+                        <strong>Worker Counts</strong>
+                        <span>Per site, per modal, per time window</span>
+                    </li>
+                    <li>
+                        <strong>Criticality Scores</strong>
+                        <span>1–5 scale, weighted by equity + coverage</span>
+                    </li>
+                    <li>
+                        <strong>Break Point Locs</strong>
+                        <span>km coordinates, gap size, affected population</span>
+                    </li>
+                    <li>
+                        <strong>Flow Definitions</strong>
+                        <span>Modal mix, frequency, capacity constraints</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="boundary-column deterministic-zone">
+                <h3>⚙️ Deterministic Zone</h3>
+                <h3 style="font-size: 0.95rem; color: var(--text-secondary); font-weight: 400; margin-top: -1rem;">Everything Else</h3>
+
+                <ul class="boundary-items">
+                    <li>
+                        <strong>Scoring</strong>
+                        <span>5 criteria, weighted sum, deterministic</span>
+                    </li>
+                    <li>
+                        <strong>Lock Type Decision</strong>
+                        <span>Priority tree, badge assignment</span>
+                    </li>
+                    <li>
+                        <strong>Weight Adjustment</strong>
+                        <span>Slider controls, instant recalculation</span>
+                    </li>
+                    <li>
+                        <strong>Spec Sheet Gen</strong>
+                        <span>Template + data → filled document</span>
+                    </li>
+                    <li>
+                        <strong>3D Preview</strong>
+                        <span>Parametric geometry, Rhino viewport</span>
+                    </li>
+                    <li>
+                        <strong>Rhino Script</strong>
+                        <span>Template + parameters → code export</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="arrow-between" style="margin-top: 2rem;">↓ DETERMINISTIC OUTPUT ↓</div>
+    </section>
+
+    <!-- Section 3: Scoring Funnel -->
+    <section id="funnel">
+        <h1>The Scoring Funnel</h1>
+        <p style="color: var(--text-secondary); margin-bottom: 2rem;">Many sources → 5 weighted criteria → Single score → Deterministic output</p>
+
+        <div class="funnel-container">
+            <!-- Data sources -->
+            <div class="funnel-section">
+                <h2 style="margin: 0 0 1rem 0; color: var(--text-secondary);">Data Sources (9 inputs)</h2>
+                <div class="funnel-grid">
+                    <div class="funnel-item">
+                        <strong>corridor_segments_WCI</strong>
+                        <span>49×17 matrix</span>
+                    </div>
+                    <div class="funnel-item">
+                        <strong>break_points</strong>
+                        <span>49×25 locations</span>
+                    </div>
+                    <div class="funnel-item">
+                        <strong>temporal_frequency</strong>
+                        <span>49×28 time grid</span>
+                    </div>
+                    <div class="funnel-item">
+                        <strong>modal_diversity</strong>
+                        <span>49×17 modes</span>
+                    </div>
+                    <div class="funnel-item">
+                        <strong>ridership_sbb</strong>
+                        <span>174×13 records</span>
+                    </div>
+                    <div class="funnel-item">
+                        <strong>shared_mobility</strong>
+                        <span>2,062×9 stations</span>
+                    </div>
+                    <div class="funnel-item">
+                        <strong>Google Places API</strong>
+                        <span>+1,200 venues</span>
+                    </div>
+                    <div class="funnel-item">
+                        <strong>transport.opendata.ch</strong>
+                        <span>Frequency data</span>
+                    </div>
+                    <div class="funnel-item">
+                        <strong>AI Chain Analysis</strong>
+                        <span>Narrative scores</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Scoring criteria -->
+            <div class="funnel-section">
+                <h2 style="margin: 0 0 1.5rem 0; color: var(--text-secondary);">5 Weighted Criteria</h2>
+                <div class="criteria-container">
+                    <div class="criterion criterion-1">
+                        <div class="criterion-header">
+                            <span class="criterion-name">① Affected Population</span>
+                            <span class="criterion-weight">25%</span>
+                        </div>
+                        <div class="criterion-bar">
+                            <div class="criterion-fill">25%</div>
+                        </div>
+                    </div>
+
+                    <div class="criterion criterion-2">
+                        <div class="criterion-header">
+                            <span class="criterion-name">② Chain Criticality</span>
+                            <span class="criterion-weight">25%</span>
+                        </div>
+                        <div class="criterion-bar">
+                            <div class="criterion-fill">25%</div>
+                        </div>
+                    </div>
+
+                    <div class="criterion criterion-3">
+                        <div class="criterion-header">
+                            <span class="criterion-name">③ Modal Collapse Severity</span>
+                            <span class="criterion-weight">20%</span>
+                        </div>
+                        <div class="criterion-bar">
+                            <div class="criterion-fill">20%</div>
+                        </div>
+                    </div>
+
+                    <div class="criterion criterion-4">
+                        <div class="criterion-header">
+                            <span class="criterion-name">④ Gap Distance</span>
+                            <span class="criterion-weight">15%</span>
+                        </div>
+                        <div class="criterion-bar">
+                            <div class="criterion-fill">15%</div>
+                        </div>
+                    </div>
+
+                    <div class="criterion criterion-5">
+                        <div class="criterion-header">
+                            <span class="criterion-name">⑤ Infrastructure Readiness</span>
+                            <span class="criterion-weight">15%</span>
+                        </div>
+                        <div class="criterion-bar">
+                            <div class="criterion-fill">15%</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Output -->
+            <div class="funnel-section">
+                <h2 style="margin: 0 0 1rem 0; color: var(--text-secondary);">Deterministic Output</h2>
+                <div class="funnel-output">
+                    <div class="funnel-output-title">Score ≥ 3.0 → Lock Type → Rendered Outputs</div>
+                    <div class="funnel-output-items">
+                        <div class="output-item">Chamber Config</div>
+                        <div class="output-item">Spec Sheet</div>
+                        <div class="output-item">3D Preview</div>
+                        <div class="output-item">Rhino Script</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 4: Decision Tree -->
+    <section id="tree">
+        <h1>Lock Type Assignment — Priority Decision Tree</h1>
+
+        <div class="tree-simple">
+            <!-- Start -->
+            <div class="tree-level">
+                <div class="tree-level-title">START: Qualification Gate</div>
+                <div class="tree-options">
+                    <div class="tree-option" style="flex: 1; border-left: 3px solid var(--teal);">
+                        Score ≥ 3.0 ✓ Proceed to decision tree
+                    </div>
+                </div>
+            </div>
+
+            <!-- Level 1 -->
+            <div class="tree-level">
+                <div class="tree-level-title">Level 1: Crosses national border?</div>
+                <div class="tree-options">
+                    <div class="tree-option yes">
+                        <span class="lock-badge border">🔴 BORDER LOCK</span>
+                        <span class="lock-description">Lancy–Pont-Rouge, km 4</span>
+                    </div>
+                    <div class="tree-option no">
+                        Continue → Level 2
+                    </div>
+                </div>
+            </div>
+
+            <!-- Level 2 -->
+            <div class="tree-level">
+                <div class="tree-level-title">Level 2: Major logistics corridor?</div>
+                <div class="tree-options">
+                    <div class="tree-option yes">
+                        <strong>Adjacent to civic space?</strong>
+                        <div style="margin-top: 0.5rem; font-size: 0.75rem; color: var(--text-secondary);">
+                            YES → <span class="lock-badge logistics">LOGISTICS ENGINE</span><br>
+                            NO → <span class="lock-badge cargo">CARGO LOCK</span>
+                        </div>
+                    </div>
+                    <div class="tree-option no">
+                        Continue → Level 3
+                    </div>
+                </div>
+            </div>
+
+            <!-- Level 3 -->
+            <div class="tree-level">
+                <div class="tree-level-title">Level 3: Significant altitude change?</div>
+                <div class="tree-options">
+                    <div class="tree-option yes">
+                        <strong>Steep grade + equity gap?</strong>
+                        <div style="margin-top: 0.5rem; font-size: 0.75rem; color: var(--text-secondary);">
+                            YES → <span class="lock-badge gradient">GRADIENT DISPATCHER</span><br>
+                            NO → <span class="lock-badge altitude">ALTITUDE LOCK</span>
+                        </div>
+                    </div>
+                    <div class="tree-option no">
+                        Continue → Level 4
+                    </div>
+                </div>
+            </div>
+
+            <!-- Level 4 -->
+            <div class="tree-level">
+                <div class="tree-level-title">Level 4: Hospital off-rail?</div>
+                <div class="tree-options">
+                    <div class="tree-option yes">
+                        <span class="lock-badge bridge">🏥 BRIDGE LOCK</span>
+                    </div>
+                    <div class="tree-option no">
+                        Continue → Level 5
+                    </div>
+                </div>
+            </div>
+
+            <!-- Level 5 -->
+            <div class="tree-level">
+                <div class="tree-level-title">Level 5: Infrastructure invisible?</div>
+                <div class="tree-options">
+                    <div class="tree-option yes">
+                        <span class="lock-badge visibility">👁️ VISIBILITY LOCK</span>
+                    </div>
+                    <div class="tree-option no">
+                        Continue → Level 6
+                    </div>
+                </div>
+            </div>
+
+            <!-- Level 6 -->
+            <div class="tree-level">
+                <div class="tree-level-title">Level 6: Between geographic voids?</div>
+                <div class="tree-options">
+                    <div class="tree-option yes">
+                        <span class="lock-badge gap">🗺️ GAP RELAY</span>
+                    </div>
+                    <div class="tree-option no">
+                        <span class="lock-badge temporal">⏱️ TEMPORAL LOCK</span>
+                        <span class="lock-description">(Default — pure dead-window problem)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 5: Timeline -->
+    <section id="timeline">
+        <h1>Midterm Sprint — March 18 to March 30</h1>
+
+        <div class="gantt-container">
+            <div class="gantt-chart">
+                <!-- Header row -->
+                <div class="gantt-header">
+                    <div class="gantt-label">Task</div>
+                    <div class="gantt-day">M18</div>
+                    <div class="gantt-day">T19</div>
+                    <div class="gantt-day">W20</div>
+                    <div class="gantt-day">T21</div>
+                    <div class="gantt-day">F22</div>
+                    <div class="gantt-day weekend">S23</div>
+                    <div class="gantt-day weekend">S24</div>
+                    <div class="gantt-day">M25</div>
+                    <div class="gantt-day">T26</div>
+                    <div class="gantt-day">W27</div>
+                    <div class="gantt-day">T28</div>
+                    <div class="gantt-day">F29</div>
+                    <div class="gantt-day weekend">S30</div>
+                </div>
+
+                <!-- Andrea's row -->
+                <div class="gantt-row">
+                    <div class="gantt-label">Andrea — App Dev</div>
+                    <div class="gantt-cell today-marker gantt-cell">
+                        <div class="gantt-bar prep">LOCKBOARD</div>
+                    </div>
+                    <div class="gantt-cell"><div class="gantt-bar prep">Prep</div></div>
+                    <div class="gantt-cell"><div class="gantt-bar prep">Prep</div></div>
+                    <div class="gantt-cell"><div class="gantt-bar prep">Prep</div></div>
+                    <div class="gantt-cell"><div class="gantt-bar prep">Prep</div></div>
+                    <div class="gantt-cell weekend"></div>
+                    <div class="gantt-cell weekend"></div>
+                    <div class="gantt-cell"><div class="gantt-bar andrea">Scoring</div></div>
+                    <div class="gantt-cell"><div class="gantt-bar andrea">Map</div></div>
+                    <div class="gantt-cell"><div class="gantt-bar andrea">Spec</div></div>
+                    <div class="gantt-cell"><div class="gantt-bar andrea">Rhino</div></div>
+                    <div class="gantt-cell"><div class="gantt-bar andrea">Integrate</div></div>
+                    <div class="gantt-cell weekend"><div class="gantt-bar milestone">DEMO</div></div>
+                </div>
+
+                <!-- Henna's row -->
+                <div class="gantt-row">
+                    <div class="gantt-label">Henna — 3D + Brand</div>
+                    <div class="gantt-cell"><div class="gantt-bar prep">LOCKBOARD</div></div>
+                    <div class="gantt-cell"><div class="gantt-bar prep">Prep</div></div>
+                    <div class="gantt-cell"><div class="gantt-bar prep">Prep</div></div>
+                    <div class="gantt-cell"><div class="gantt-bar prep">Prep</div></div>
+                    <div class="gantt-cell"><div class="gantt-bar prep">Prep</div></div>
+                    <div class="gantt-cell weekend"></div>
+                    <div class="gantt-cell weekend"><div class="gantt-bar henna">Brand</div></div>
+                    <div class="gantt-cell"><div class="gantt-bar henna">Brand</div></div>
+                    <div class="gantt-cell"><div class="gantt-bar henna">3D Model</div></div>
+                    <div class="gantt-cell"><div class="gantt-bar henna">PPTX</div></div>
+                    <div class="gantt-cell"><div class="gantt-bar henna">Tools</div></div>
+                    <div class="gantt-cell weekend"><div class="gantt-bar milestone">DEMO</div></div>
+                </div>
+
+                <!-- Milestones row -->
+                <div class="gantt-row">
+                    <div class="gantt-label">Milestones</div>
+                    <div class="gantt-cell"></div>
+                    <div class="gantt-cell"></div>
+                    <div class="gantt-cell"></div>
+                    <div class="gantt-cell"></div>
+                    <div class="gantt-cell"><div style="color: var(--gold); text-align: center; font-weight: 600;">Contract</div></div>
+                    <div class="gantt-cell weekend"></div>
+                    <div class="gantt-cell weekend"></div>
+                    <div class="gantt-cell"></div>
+                    <div class="gantt-cell"></div>
+                    <div class="gantt-cell"><div style="color: var(--gold); text-align: center; font-weight: 600;">Test ✓</div></div>
+                    <div class="gantt-cell"></div>
+                    <div class="gantt-cell"><div style="color: var(--gold); text-align: center; font-weight: 600;">Ready</div></div>
+                    <div class="gantt-cell weekend" style="background: rgba(201, 168, 76, 0.2);"><div style="color: var(--gold); text-align: center; font-weight: 600; font-size: 0.8rem;">MIDTERM</div></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="timeline-legend">
+            <div class="legend-item">
+                <div class="legend-box" style="background: rgba(59, 130, 246, 0.5);"></div>
+                <span>Prep Phase</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-box" style="background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);"></div>
+                <span>Andrea Development</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-box" style="background: linear-gradient(135deg, #a855f7 0%, #7c3aed 100%);"></div>
+                <span>Henna Design + 3D</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-box" style="background: var(--gold);"></div>
+                <span>Milestone / Delivery</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-box" style="background: rgba(0, 0, 0, 0.3);"></div>
+                <span>Weekend</span>
+            </div>
+        </div>
+
+        <div style="margin-top: 2rem; padding: 1.5rem; background: var(--bg-darker); border: 1px solid var(--border); border-radius: 6px; border-left: 3px solid var(--gold);">
+            <h3 style="color: var(--gold); margin-bottom: 0.5rem;">Key Dates</h3>
+            <ul style="color: var(--text-secondary); font-size: 0.9rem; list-style: none; padding-left: 0;">
+                <li>📅 <strong>Mar 22 (Fri):</strong> Integration contract signed — final API specs locked</li>
+                <li>✅ <strong>Mar 27 (Wed):</strong> Internal test suite passes — all modules communicating</li>
+                <li>🎯 <strong>Mar 29 (Fri):</strong> Presentation materials ready — full rehearsal</li>
+                <li>🏁 <strong>Mar 30 (Sat):</strong> MIDTERM SUBMISSION — deployment + archive</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>City101 Architecture Diagrams — EPFL BA6 Architecture Studio (AR-302k)</p>
+        <p style="margin-top: 0.5rem; font-size: 0.85rem;">Generated March 18, 2026 | Midterm A04 Sprint</p>
+    </footer>
+
+    <script>
+        // Simple navigation active state
+        document.querySelectorAll('nav a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // Update active nav on scroll
+        window.addEventListener('scroll', () => {
+            let current = '';
+            document.querySelectorAll('section').forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (scrollY >= sectionTop - 200) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            document.querySelectorAll('nav a').forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href').slice(1) === current) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
