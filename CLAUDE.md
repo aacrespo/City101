@@ -28,6 +28,7 @@ You're reading this now. Three more files load automatically from `.claude/rules
 | `/save-session` | state/sessions/, LOCKBOARD.md | — |
 | `/resume-session` | state/sessions/ (latest), git state | — |
 | `/verify-data` | (target file) | data-verification |
+| `/parametric` | knowledge bridge, construction-knowledge repo | parametric script generation |
 | `/brain-dump` | prompt-craft.md (auto-loaded from rules) | — |
 | `/unlock` | (target PDF) | — |
 | `/team` | all role commands, prompt-craft.md | dynamic team assembly |
