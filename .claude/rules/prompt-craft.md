@@ -37,6 +37,18 @@ Applied automatically when running `/brain-dump` and useful across all roles.
 
 **Proactive team assembly:** You do not need to wait for the user to invoke `/team`. When a task naturally splits into 2+ parallel roles, propose assembling a team or just do it. The `/team` command has the full protocol. When generating prompts (via `/brain-dump` or otherwise), embed team assembly instructions directly — don't reference slash commands, write the actual instructions so any session can follow them.
 
+## Prompt file naming (prompts/)
+
+Every prompt file in `prompts/` uses a bracketed prefix showing assignment and status:
+
+```
+[A04_ACTIVE]_topic_descriptor.md   ← current work, not yet executed
+[A04_DONE]_topic_descriptor.md     ← executed and complete
+[UTIL]_topic_descriptor.md         ← not tied to an assignment
+```
+
+**When creating a prompt:** always use this prefix. Update `DONE` when the prompt has been run successfully.
+
 ## Common anti-patterns to avoid
 - Over-aggressive language ("CRITICAL: You MUST") — causes overtriggering. Use calm instructions.
 - Prescriptive step-by-step plans — Claude's reasoning often exceeds what you'd prescribe.
