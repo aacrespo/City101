@@ -12,6 +12,12 @@
       "runtimeExecutable": "python3",
       "runtimeArgs": ["-m", "http.server", "8081", "--directory", "/Users/andreacrespo/CLAUDE/city101/visualizations"],
       "port": 8081
+    },
+    {
+      "name": "presentation",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-m", "http.server", "8082", "--directory", "C:/Users/Henna Rafik/Desktop/Huang - Sentient/Claude Code/City101"],
+      "port": 8082
     }
   ]
 }

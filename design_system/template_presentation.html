@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>City101 — Presentation Template</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #0c0c14;
+    --bg-elevated: #12121c;
+    --surface: rgba(255,255,255,0.04);
+    --gold: #c9a84c;
+    --gold-dim: rgba(201,168,76,0.12);
+    --gold-mid: rgba(201,168,76,0.35);
+    --text: #e8e6e1;
+    --text-muted: #9a9690;
+    --copper: #b87a56;
+    --teal: #5b8fa8;
+    --font-display: 'Instrument Serif', serif;
+    --font-body: 'DM Sans', sans-serif;
+    --font-mono: 'DM Mono', monospace;
+    --radius: 12px;
+    --radius-sm: 6px;
+  }
+
+  html {
+    background: #000;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--bg);
+    color: var(--text);
+    width: 1920px;
+    height: 1080px;
+    overflow: hidden;
+    transform-origin: top left;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ─── Slide Container ─── */
+  .slides-container {
+    width: 1920px;
+    height: 1080px;
+    position: relative;
+  }
+  .slide {
+    position: absolute;
+    inset: 0;
+    display: none;
+    flex-direction: column;
+  }
+  .slide.active { display: flex; }
+
+  /* ─── Datum Line (top bar) ─── */
+  .datum-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 32px;
+    height: 44px;
+    background: var(--bg-elevated);
+    border-bottom: 1px solid var(--gold-dim);
+    flex-shrink: 0;
+    font-family: var(--font-mono);
+    font-size: 12px;
+  }
+  .datum-top .dt-tag { color: var(--gold); opacity: 0.8; letter-spacing: 1.5px; text-transform: uppercase; }
+  .datum-top .dt-title { color: var(--text); position: absolute; left: 50%; transform: translateX(-50%); }
+  .datum-top .dt-meta { color: var(--text-muted); opacity: 0.6; }
+
+  /* ─── Datum Line (bottom bar) ─── */
+  .datum-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 32px;
+    height: 44px;
+    background: var(--bg-elevated);
+    border-top: 1px solid var(--gold-dim);
+    flex-shrink: 0;
+  }
+  .datum-bottom .db-brand {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+  }
+  .datum-bottom .db-brand .b-city {
+    font-family: var(--font-display);
+    font-size: 14px;
+    color: var(--text-muted);
+  }
+  .datum-bottom .db-brand .b-101 {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    color: var(--gold);
+    font-weight: 500;
+  }
+  .datum-bottom .db-center {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-muted);
+    opacity: 0.5;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  .datum-bottom .db-nav {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-muted);
+    opacity: 0.6;
+  }
+  .datum-bottom .db-nav .current { color: var(--text); opacity: 1; }
+
+  /* ─── Slide body area ─── */
+  .slide-body {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* ══════ SLIDE TYPES ══════ */
+
+  /* Title slide */
+  .slide-title .slide-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 64px;
+  }
+  .slide-title .st-logo {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-bottom: 48px;
+  }
+  .slide-title .st-logo .l-city {
+    font-family: var(--font-display);
+    font-size: 80px;
+    color: var(--text);
+    letter-spacing: 8px;
+  }
+  .slide-title .st-logo .l-101 {
+    font-family: var(--font-mono);
+    font-size: 80px;
+    color: var(--gold);
+    font-weight: 500;
+    letter-spacing: 3px;
+  }
+  .slide-title .st-line {
+    width: 320px;
+    height: 2px;
+    background: var(--gold);
+    margin-bottom: 48px;
+    opacity: 0.6;
+  }
+  .slide-title .st-heading {
+    font-family: var(--font-display);
+    font-size: 56px;
+    color: var(--text);
+    line-height: 1.15;
+    margin-bottom: 16px;
+    max-width: 900px;
+  }
+  .slide-title .st-subtitle {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 24px;
+    color: var(--text-muted);
+    max-width: 700px;
+  }
+
+  /* Data slide — full-width visualization */
+  .slide-data .slide-body {
+    display: flex;
+    flex-direction: column;
+    padding: 48px;
+  }
+  .slide-data .sd-heading {
+    font-family: var(--font-display);
+    font-size: 36px;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+  .slide-data .sd-desc {
+    font-size: 16px;
+    color: var(--text-muted);
+    margin-bottom: 32px;
+    max-width: 600px;
+  }
+  .slide-data .sd-viz {
+    flex: 1;
+    background: var(--surface);
+    border: 1px solid var(--gold-dim);
+    border-radius: var(--radius);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-mono);
+    font-size: 14px;
+    color: var(--text-muted);
+  }
+
+  /* Split slide — text left, visual right */
+  .slide-split .slide-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    padding: 64px;
+    align-items: center;
+  }
+  .slide-split .ss-text h2 {
+    font-family: var(--font-display);
+    font-size: 44px;
+    color: var(--text);
+    line-height: 1.15;
+    margin-bottom: 24px;
+  }
+  .slide-split .ss-text p {
+    font-size: 18px;
+    color: var(--text-muted);
+    line-height: 1.7;
+    margin-bottom: 24px;
+  }
+  .slide-split .ss-metric {
+    display: flex;
+    gap: 48px;
+    margin-top: 32px;
+  }
+  .slide-split .ss-metric-item .mi-val {
+    font-family: var(--font-mono);
+    font-size: 40px;
+    font-weight: 500;
+    color: var(--gold);
+    line-height: 1;
+  }
+  .slide-split .ss-metric-item .mi-lbl {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-top: 4px;
+  }
+  .slide-split .ss-visual {
+    height: 100%;
+    background: var(--surface);
+    border: 1px solid var(--gold-dim);
+    border-radius: var(--radius);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-mono);
+    font-size: 14px;
+    color: var(--text-muted);
+  }
+
+  /* Grid slide — 2x2 or 3-column */
+  .slide-grid .slide-body {
+    display: flex;
+    flex-direction: column;
+    padding: 48px;
+  }
+  .slide-grid .sg-heading {
+    font-family: var(--font-display);
+    font-size: 36px;
+    color: var(--text);
+    margin-bottom: 32px;
+  }
+  .slide-grid .sg-grid {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  .slide-grid .sg-grid.two-col {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .slide-grid .sg-cell {
+    background: var(--surface);
+    border: 1px solid var(--gold-dim);
+    border-radius: var(--radius);
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+  }
+  .slide-grid .sg-cell h3 {
+    font-family: var(--font-display);
+    font-size: 24px;
+    color: var(--text);
+    margin-bottom: 12px;
+  }
+  .slide-grid .sg-cell p {
+    font-size: 15px;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+  .slide-grid .sg-cell .cell-value {
+    font-family: var(--font-mono);
+    font-size: 48px;
+    font-weight: 500;
+    color: var(--gold);
+    margin-bottom: 8px;
+  }
+
+  /* Quote slide */
+  .slide-quote .slide-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 96px;
+  }
+  .slide-quote .sq-mark {
+    font-family: var(--font-display);
+    font-size: 120px;
+    color: var(--gold);
+    line-height: 0.5;
+    opacity: 0.3;
+    margin-bottom: 24px;
+  }
+  .slide-quote .sq-text {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 44px;
+    color: var(--text);
+    line-height: 1.35;
+    max-width: 1000px;
+    margin-bottom: 32px;
+  }
+  .slide-quote .sq-attr {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    color: var(--text-muted);
+    letter-spacing: 2px;
+  }
+
+  /* Map slide */
+  .slide-map .slide-body {
+    position: relative;
+    background: linear-gradient(180deg, #0d1926, #1a2332);
+  }
+  .slide-map .sm-overlay {
+    position: absolute;
+    top: 32px;
+    left: 32px;
+    z-index: 2;
+  }
+  .slide-map .sm-overlay h2 {
+    font-family: var(--font-display);
+    font-size: 36px;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+  .slide-map .sm-overlay p {
+    font-size: 15px;
+    color: var(--text-muted);
+    max-width: 400px;
+    line-height: 1.6;
+  }
+  .slide-map .sm-legend {
+    position: absolute;
+    bottom: 32px;
+    left: 32px;
+    background: rgba(12,12,20,0.7);
+    backdrop-filter: blur(16px);
+    border: 1px solid var(--gold-dim);
+    border-radius: var(--radius-sm);
+    padding: 16px 20px;
+    z-index: 2;
+  }
+  .slide-map .sm-legend .leg-title {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 8px;
+    opacity: 0.8;
+  }
+  .slide-map .sm-legend .leg-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+  }
+  .slide-map .sm-legend .leg-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+  .slide-map .sm-map-placeholder {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-mono);
+    font-size: 14px;
+    color: var(--text-muted);
+    opacity: 0.4;
+  }
+
+  /* ─── Slide progress bar ─── */
+  .progress-bar {
+    position: absolute;
+    bottom: 44px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: rgba(255,255,255,0.04);
+    z-index: 10;
+  }
+  .progress-bar .progress-fill {
+    height: 100%;
+    background: var(--gold);
+    transition: width 0.3s ease;
+    opacity: 0.6;
+  }
+
+  /* ─── Keyboard hint ─── */
+  .key-hint {
+    position: fixed;
+    bottom: 16px;
+    right: 16px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-muted);
+    opacity: 0.3;
+    z-index: 100;
+    pointer-events: none;
+  }
+</style>
+</head>
+<body>
+
+<div class="slides-container">
+  <!-- Progress bar -->
+  <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+
+  <!-- ═══ SLIDE 1: Title ═══ -->
+  <div class="slide slide-title active" data-slide="1">
+    <div class="datum-top">
+      <span class="dt-tag">A04 &middot; Forms of Sentience</span>
+      <span class="dt-title"></span>
+      <span class="dt-meta">EPFL &middot; Studio Huang &middot; 2026</span>
+    </div>
+    <div class="slide-body">
+      <div class="st-logo">
+        <span class="l-city">CITY</span><span class="l-101">101</span>
+      </div>
+      <div class="st-line"></div>
+      <h1 class="st-heading">Your Presentation Title</h1>
+      <p class="st-subtitle">A subtitle that provides context</p>
+    </div>
+    <div class="datum-bottom">
+      <div class="db-brand"><span class="b-city">CITY</span><span class="b-101">101</span></div>
+      <span class="db-center">Geneva &ndash; Villeneuve &middot; 101km</span>
+      <span class="db-nav"><span class="current">01</span> / <span id="totalSlides">06</span></span>
+    </div>
+  </div>
+
+  <!-- ═══ SLIDE 2: Split ═══ -->
+  <div class="slide slide-split" data-slide="2">
+    <div class="datum-top">
+      <span class="dt-tag">A04 &middot; Forms of Sentience</span>
+      <span class="dt-title">Section Title</span>
+      <span class="dt-meta">2026-03-19</span>
+    </div>
+    <div class="slide-body">
+      <div class="ss-text">
+        <h2>Heading Text Goes Here</h2>
+        <p>Body text that explains the key insight or finding. Keep paragraphs concise for readability at presentation scale.</p>
+        <div class="ss-metric">
+          <div class="ss-metric-item"><span class="mi-val">49</span><span class="mi-lbl">Stations</span></div>
+          <div class="ss-metric-item"><span class="mi-val">101</span><span class="mi-lbl">Kilometres</span></div>
+        </div>
+      </div>
+      <div class="ss-visual">[Visualization / Image]</div>
+    </div>
+    <div class="datum-bottom">
+      <div class="db-brand"><span class="b-city">CITY</span><span class="b-101">101</span></div>
+      <span class="db-center">Geneva &ndash; Villeneuve &middot; 101km</span>
+      <span class="db-nav"><span class="current">02</span> / <span>06</span></span>
+    </div>
+  </div>
+
+  <!-- ═══ SLIDE 3: Data ═══ -->
+  <div class="slide slide-data" data-slide="3">
+    <div class="datum-top">
+      <span class="dt-tag">A04 &middot; Forms of Sentience</span>
+      <span class="dt-title">Data Visualization</span>
+      <span class="dt-meta">2026-03-19</span>
+    </div>
+    <div class="slide-body">
+      <h2 class="sd-heading">Full-Width Visualization</h2>
+      <p class="sd-desc">Description of what this visualization shows and why it matters.</p>
+      <div class="sd-viz">[Full-width chart, map, or diagram goes here]</div>
+    </div>
+    <div class="datum-bottom">
+      <div class="db-brand"><span class="b-city">CITY</span><span class="b-101">101</span></div>
+      <span class="db-center">Geneva &ndash; Villeneuve &middot; 101km</span>
+      <span class="db-nav"><span class="current">03</span> / <span>06</span></span>
+    </div>
+  </div>
+
+  <!-- ═══ SLIDE 4: Grid ═══ -->
+  <div class="slide slide-grid" data-slide="4">
+    <div class="datum-top">
+      <span class="dt-tag">A04 &middot; Forms of Sentience</span>
+      <span class="dt-title">Key Metrics</span>
+      <span class="dt-meta">2026-03-19</span>
+    </div>
+    <div class="slide-body">
+      <h2 class="sg-heading">Grid Layout</h2>
+      <div class="sg-grid">
+        <div class="sg-cell"><div class="cell-value">42&times;</div><h3>Frequency Variation</h3><p>Between the busiest and quietest stations on the corridor.</p></div>
+        <div class="sg-cell"><div class="cell-value">85%</div><h3>Not Workable</h3><p>Of connections cannot sustain productive work during transit.</p></div>
+        <div class="sg-cell"><div class="cell-value">160k</div><h3>Ghost Citizens</h3><p>Frontaliers who exceed Lausanne&rsquo;s population but vanish in metrics.</p></div>
+      </div>
+    </div>
+    <div class="datum-bottom">
+      <div class="db-brand"><span class="b-city">CITY</span><span class="b-101">101</span></div>
+      <span class="db-center">Geneva &ndash; Villeneuve &middot; 101km</span>
+      <span class="db-nav"><span class="current">04</span> / <span>06</span></span>
+    </div>
+  </div>
+
+  <!-- ═══ SLIDE 5: Quote ═══ -->
+  <div class="slide slide-quote" data-slide="5">
+    <div class="datum-top">
+      <span class="dt-tag">A04 &middot; Forms of Sentience</span>
+      <span class="dt-title"></span>
+      <span class="dt-meta">2026-03-19</span>
+    </div>
+    <div class="slide-body">
+      <div class="sq-mark">&ldquo;</div>
+      <div class="sq-text">Infrastructure does not just move people. It times them.</div>
+      <div class="sq-attr">&mdash; OBSERVATION FROM FIELD RESEARCH</div>
+    </div>
+    <div class="datum-bottom">
+      <div class="db-brand"><span class="b-city">CITY</span><span class="b-101">101</span></div>
+      <span class="db-center">Geneva &ndash; Villeneuve &middot; 101km</span>
+      <span class="db-nav"><span class="current">05</span> / <span>06</span></span>
+    </div>
+  </div>
+
+  <!-- ═══ SLIDE 6: Map ═══ -->
+  <div class="slide slide-map" data-slide="6">
+    <div class="datum-top">
+      <span class="dt-tag">A04 &middot; Forms of Sentience</span>
+      <span class="dt-title">Spatial Analysis</span>
+      <span class="dt-meta">EPSG:2056</span>
+    </div>
+    <div class="slide-body">
+      <div class="sm-map-placeholder">[Map / spatial visualization here]</div>
+      <div class="sm-overlay">
+        <h2>Map Title</h2>
+        <p>Brief description of what the map shows and the key spatial patterns to observe.</p>
+      </div>
+      <div class="sm-legend">
+        <div class="leg-title">Legend</div>
+        <div class="leg-item"><span class="leg-dot" style="background: var(--gold);"></span> IC lines</div>
+        <div class="leg-item"><span class="leg-dot" style="background: var(--copper);"></span> S-Bahn</div>
+        <div class="leg-item"><span class="leg-dot" style="background: var(--teal);"></span> Regional</div>
+      </div>
+    </div>
+    <div class="datum-bottom">
+      <div class="db-brand"><span class="b-city">CITY</span><span class="b-101">101</span></div>
+      <span class="db-center">Geneva &ndash; Villeneuve &middot; 101km</span>
+      <span class="db-nav"><span class="current">06</span> / <span>06</span></span>
+    </div>
+  </div>
+</div>
+
+<div class="key-hint">&larr; &rarr; navigate</div>
+
+<script>
+  // Auto-scale to fit window
+  function scaleBody() {
+    const sx = window.innerWidth / 1920;
+    const sy = window.innerHeight / 1080;
+    const s = Math.min(sx, sy);
+    document.body.style.transform = `scale(${s})`;
+  }
+  scaleBody();
+  window.addEventListener('resize', scaleBody);
+
+  // Slide navigation
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+  let current = 0;
+
+  document.getElementById('totalSlides').textContent = String(total).padStart(2, '0');
+
+  function goTo(index) {
+    if (index < 0 || index >= total) return;
+    slides[current].classList.remove('active');
+    current = index;
+    slides[current].classList.add('active');
+    document.getElementById('progressFill').style.width = `${((current + 1) / total) * 100}%`;
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); goTo(current + 1); }
+    if (e.key === 'ArrowLeft') { e.preventDefault(); goTo(current - 1); }
+    if (e.key === 'Home') goTo(0);
+    if (e.key === 'End') goTo(total - 1);
+  });
+
+  // Click to advance
+  document.addEventListener('click', e => {
+    if (e.clientX > window.innerWidth / 2) goTo(current + 1);
+    else goTo(current - 1);
+  });
+
+  // Init progress
+  document.getElementById('progressFill').style.width = `${(1 / total) * 100}%`;
+</script>
+</body>
+</html>

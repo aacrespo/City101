@@ -1,37 +1,63 @@
-# Design System — City101 "Still on the Line"
+# Design System v2 — City101 "Still on the Line"
 
-**Status**: Current prototypes — not locked. Swap palette when concept lands.
+**Status**: Locked — see `brand_guide.html` for interactive reference.
 
 ---
+
+## Brand Assets
+
+| File | Purpose |
+|------|---------|
+| `brand_guide.html` | Interactive brand guide — colors, type, components, examples |
+| `city101_logo.svg` | Logo/wordmark SVG with dark, light, and monogram variants |
+| `template_presentation.html` | 1920×1080 presentation template with 6 slide types |
+| `template_map_layout.html` | Map header/footer overlay template with print support |
 
 ## Palette
 
 | Role | Hex | Where used |
 |------|-----|------------|
-| Background | `#0a0a0f` | Site, QGIS page bg (rgb 10,10,15), diagrams |
-| Gold accent | `#c9a84c` | Headings, data highlights, train lines on web maps |
+| Background | `#0c0c14` | Site, QGIS page bg, diagrams |
+| Gold accent | `#c9a84c` | Headings, data highlights, train lines, primary brand color |
 | Text primary | `#e8e6e1` | Body text, labels |
-| Text muted | `#8a8880` | Secondary info, captions |
+| Text muted | `#9a9690` | Secondary info, captions (WCAG AA compliant) |
+| Copper | `#b87a56` | Secondary warm accent, S-Bahn lines |
+| Teal | `#5b8fa8` | Cool complement, Lake Léman association |
+| Surface | `rgba(255,255,255,0.04)` | Glass panel backgrounds |
+| Gold border | `rgba(201,168,76,0.12)` | Subtle borders on panels and cards |
 | Data layer | `#ffffff` at varying opacity | Points, trails on dark bg |
-| WCI gradient | red → yellow → green | WCI maps (0 → 0.65+) |
+| WCI gradient | `#c45d4a` → `#c9a84c` → `#5a9e6f` | WCI maps (0 → 0.65+) |
 | Frequency gradient | red → green | Transit maps (0 → 16+ trains/hr) |
+
+### Semantic Colors
+
+| Role | Hex |
+|------|-----|
+| Success | `#5a9e6f` |
+| Warning | `#c9a84c` |
+| Error | `#c45d4a` |
 
 ## Typography
 
-| Role | Font | Fallback |
-|------|------|----------|
-| Display / headings | Instrument Serif | serif |
-| Body | DM Sans | sans-serif |
-| Data / code / mono | DM Mono | monospace |
+| Role | Font | Fallback | Usage |
+|------|------|----------|-------|
+| Display / headings | Instrument Serif | serif | Narrative voice — titles, pull quotes |
+| Body | DM Sans (400/500/700) | sans-serif | Explanatory — body text, labels, UI |
+| Data / code / mono | DM Mono (400/500) | monospace | Measurement — timestamps, coordinates, metrics |
 
 ## CSS Variables
 
 ```css
 :root {
-  --chrome-bg: #0a0a0f;
-  --chrome-text: #e8e6e1;
-  --chrome-accent: #c9a84c;
-  --chrome-muted: #8a8880;
+  --bg: #0c0c14;
+  --bg-elevated: #12121c;
+  --surface: rgba(255,255,255,0.04);
+  --gold: #c9a84c;
+  --gold-dim: rgba(201,168,76,0.12);
+  --text: #e8e6e1;
+  --text-muted: #9a9690;
+  --copper: #b87a56;
+  --teal: #5b8fa8;
   --font-display: 'Instrument Serif', serif;
   --font-body: 'DM Sans', sans-serif;
   --font-mono: 'DM Mono', monospace;
@@ -42,7 +68,7 @@ All UI elements (panels, legends, controls, overlays) reference these variables.
 
 ## QGIS
 
-- Page background: rgb(10, 10, 15)
+- Page background: rgb(12, 12, 20)
 - Labels: DM Sans, white, dark halo
 - Print exports: 300 DPI PDF + 150 DPI PNG
 - Basemap: dark — no standard OSM tiles
@@ -52,8 +78,31 @@ All UI elements (panels, legends, controls, overlays) reference these variables.
 - Basemap tiles: CartoDB Dark Matter
 - Accent color for lines/highlights: #c9a84c
 - Popup styling: dark bg, light text, DM Sans
+- Use `template_map_layout.html` for branded header/footer overlay
 - Use IntersectionObserver for lazy loading
 
-## Architectural Drawings / Print
+## Presentations
 
-TBD — depends on design phase and output format. Will derive from the same palette.
+- Use `template_presentation.html` as starting point
+- 1920×1080 fixed viewport with auto-scale
+- 6 slide types: title, split, data, grid, quote, map
+- Keyboard navigation (arrow keys, space, home/end)
+- Always include datum lines (top/bottom branded bars)
+
+## Key Animations
+
+```css
+/* Breathing pulse — the corridor's rhythm */
+@keyframes breathe {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+/* duration: 4s · easing: ease-in-out · infinite */
+
+/* Fade-up entrance */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+/* duration: 0.6s · stagger: 0.1s per element */
+```
