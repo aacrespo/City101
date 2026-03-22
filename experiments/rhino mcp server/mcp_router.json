@@ -4,7 +4,7 @@
       "command": "uv",
       "args": ["run", "experiments/rhino mcp server/rhino_router_mcp.py"],
       "env": {
-        "RHINO_INSTANCES": "{\"main\": 9002}"
+        "RHINO_INSTANCES": "{\"a\": 9001, \"b\": 9002, \"c\": 9003, \"d\": 9004, \"e\": 9005, \"f\": 9006, \"g\": 9007, \"h\": 9008, \"i\": 9009, \"j\": 9010}"
       }
     }
   }

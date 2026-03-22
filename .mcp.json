@@ -1,11 +1,11 @@
-{
-  "mcpServers": {
-    "rhino": {
-      "command": "uv",
-      "args": ["run", "experiments/rhino mcp server/rhino_router_mcp.py"],
-      "env": {
-        "RHINO_INSTANCES": "{\"main\": 9002}"
+  {
+    "mcpServers": {
+      "rhino_router": {
+        "command": "uv",
+        "args": ["run", "experiments/rhino mcp server/rhino_router_mcp.py"],
+        "env": {
+          "RHINO_INSTANCES": "{\"structure\": 9001, \"envelope\": 9002, \"interior\": 9003}"
+        }
       }
     }
   }
-}
