@@ -73,3 +73,5 @@
 - Sunday 09:23
 - Sunday 09:31
 - Sunday 09:32 [break] playbook v3 (doctrine/law/jurisprudence framework), session saved
+- Sunday 09:33
+- Sunday 09:33 [break] session saved
