@@ -121,7 +121,74 @@ The 100Ã¢â‚¬â€œ500 scale can apply to LOG, LOI, or LOD independently:
 | **400** | Build from this | Verified for fabrication/construction |
 | **500** | Matches reality | As-built, field verified |
 
-### 2.5 Custom Level: LOG 350v (Visual)
+### 2.5 LOG Per-Element Definitions
+
+The generic spectrum above answers "what LOG level am I at?" The table below answers "what does that LOG level mean for THIS element?"
+
+**LOG 200 — Massing**
+
+| Element | What to model | What to skip |
+|---------|--------------|--------------|
+| Wall | Single solid, overall thickness | Layers, finish, openings |
+| Floor / Roof | Single slab, overall thickness | Layers, edge conditions |
+| Opening | Rectangular void, approximate size | Frame, glass, reveals, hardware |
+| Furniture | Bounding box, correct overall dimensions | Form, legs, sub-components |
+| Connection | Not modeled | — |
+| Hardware | Not modeled | — |
+| Stairs | Ramp or single solid volume | Treads, stringers, railing |
+| Chimney | Vertical box | Flashing, fire stops |
+
+**LOG 300 — Defined**
+
+| Element | What to model | What to skip |
+|---------|--------------|--------------|
+| Wall | 2-3 zones: structure, insulation, finish (as separate solids) | Individual sub-layers, membranes |
+| Floor / Roof | Structure zone vs finish zone distinguished | Individual sub-layers |
+| Opening | Correct size + position. Frame as simple rectangular profile. Door/window as flat panel. | Reveal detail, weatherstripping, gaskets |
+| Furniture | Recognizable silhouette: table with top + legs, chair with seat + back, bed with frame + mattress | Joinery, edge profiles, drawer runners |
+| Connection | Elements positioned to meet correctly | Junction geometry (notches, laps) |
+| Hardware | Not modeled | — |
+| Stairs | Stringers + treads as separate objects, correct rise/going | Nosing detail, baluster infill |
+| Chimney | Pipe with correct dimensions | Fire stop collars, flashing |
+
+**LOG 350 — Coordinated / Assembly**
+
+| Element | What to model | What to skip |
+|---------|--------------|--------------|
+| Wall | Individual layers as separate solids (cladding, air gap, wind barrier, studs, OSB, service cavity, finish) | Sub-millimeter details, sealant beads |
+| Floor / Roof | Individual layers (structure, screed, insulation, membrane, finish, ceiling) | Fasteners, adhesive layers |
+| Opening | Frame with reveals, sill projecting, lintel with bearing. Door leaf / window pane as simplified solid. | Gaskets, weatherstripping, hinge mechanism |
+| Furniture | Major sub-components as separate objects: table top + legs + stretchers, drawer fronts, shelf boards, headboard | Edge profiles, finger joints, hardware |
+| Connection | How layers meet at junctions: wall-floor blocking, corner posts, wind barrier returns, transition seals | Individual fasteners, bolt holes |
+| Hardware | Symbolic: handles as simple boxes/cylinders at correct location | Mechanism, screws, springs |
+| Stairs | Treads + stringers + railing with posts. Nosing as edge offset. | Baluster infill pattern, bracket detail |
+| Chimney | Pipe + fire stop collars at each assembly crossing + flashing at roof | Mortar joints in collar, cap detail |
+
+**LOG 400 — Detailed / Fabrication**
+
+| Element | What to model | What to skip |
+|---------|--------------|--------------|
+| Wall | All layers + edge conditions: drip edges, corner returns, membrane overlaps, reveal returns | Screw patterns, adhesive |
+| Floor / Roof | All layers + edge conditions: drainage falls, membrane laps, trim at perimeter | Individual tile/plank joints |
+| Opening | Full frame profile, glazing panes with spacer, sill slope, reveal insulation, weatherstrip groove | Glass unit internal structure |
+| Furniture | Joinery-level: housing joints, tenons, edge profiles, drawer runners, hinge locations | Glue lines, grain direction |
+| Connection | Joints modeled: timber notches, steel brackets, bolt positions, bearing plates | Thread detail, washer geometry |
+| Hardware | Simplified solids at correct locations: hinges, handles, locks, brackets | Internal mechanism |
+| Stairs | Full detail: nosing profile, baluster pattern, newel posts, handrail profile, bracket fixings | Wood grain, finish layers |
+| Chimney | Full assembly: pipe, collars, flashing cricket, cap, fire clearance sleeve | Internal flue lining |
+
+**Adjacency Consistency Rule**
+
+Elements visible together in a section or view should be within ONE LOG step of each other. A LOG 350 wall meeting LOG 100 furniture creates a visual lie — the wall layers have nowhere to terminate convincingly. Minimum: elements in direct contact should be at compatible LOGs.
+
+| If structure is at... | Furniture must be at least... | Why |
+|----------------------|------------------------------|-----|
+| LOG 200 | LOG 100-200 | Massing study — boxes are fine |
+| LOG 300 | LOG 200-300 | Defined — recognizable forms needed |
+| LOG 350 | LOG 300 | Assembly — sub-components visible |
+| LOG 400 | LOG 350 | Detail — joinery should match |
+
+### 2.6 Custom Level: LOG 350v (Visual)
 
 **LOG 350v** = Presentation-optimized geometry
 
