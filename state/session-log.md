@@ -358,3 +358,7 @@
 - Sunday 18:33
 - Sunday 18:34
 - Sunday 18:35 [break] session saved — YouTube embedding pipeline built, 11/32 videos done, pausing for ChromaDB migration
+- Sunday 18:36
+- Sunday 18:37
+- Sunday 18:42
+- Sunday 18:38 [end] knowledge extraction + Gemini integration complete, ChromaDB→Qdrant migration next
