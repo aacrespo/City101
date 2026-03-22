@@ -47,3 +47,31 @@ The observation-then-propose cycle caught issues no single agent would find in i
 - Structure agent found bearing length concerns (resolved by measurement)
 - Walls agent self-corrected during build but missed Course 16 void
 Volume verification scripts are essential — visual/bbox inspection is not sufficient for hollow geometry.
+
+---
+
+## 2026-03-22: Cabin v3 — Stone masonry openings (GF)
+
+### 12. Stone lintels vs timber lintels: material choice matters for vernacular
+For Swiss Alpine vernacular with molasse stone walls, stone lintels are more authentic than timber. Timber lintels (glulam) were used in cabin v2 (rammed earth) because earth walls need gentler materials. Stone masonry can take stone lintels — the compressive strength of molasse (20-60 MPa) is more than sufficient for 90-100cm spans at residential scale. Reserve timber lintels for rammed earth or very wide spans.
+
+### 13. Frame positioning within deep stone reveals
+With 36cm stone walls, the window/door frame position within the reveal is an architectural decision. Setting frames 4cm from the exterior face creates a deep interior reveal (useful as shelf/display in vernacular buildings) and keeps the glass closer to the weather plane. The 36cm reveal depth is a feature of stone construction — it provides thermal buffer and visual character.
+
+### 14. Threshold vs sill naming and layer placement
+The door threshold and window sills serve the same weather-shedding function but at different heights. Both go on the Sills layer (not a separate Threshold layer) because they're the same building element type — a horizontal stone piece protecting the opening base. The threshold sits at z=0 (ground level), window sills at z=75-80 (opening bottom). Both project 2cm beyond the exterior wall face.
+
+### 15. Reveal soffit geometry overlaps with lintel z-range
+The reveal soffit (lime render on lintel underside) sits at z=200-202, which overlaps vertically with the lintel at z=200-220. This is correct — the soffit render is applied to the BOTTOM face of the lintel, so it occupies the same z-start. The 2cm render is thin enough to not cause visual issues, but at higher LOD this interface needs careful detailing (the render is applied TO the stone, not floating below it).
+
+### 16. Two completely different opening systems: stone vs timber frame
+Stone openings (GF) and timber frame openings (UF) are architecturally different systems:
+- **Stone**: monolithic lintel (stone/timber), deep 36cm reveals finished with lime render, stone sills with drip projection. The stone mass IS the thermal envelope.
+- **Timber frame**: doubled header beams in stud zone, mineral wool reveal insulation around the full opening perimeter, window frame must connect to OSB vapour barrier. The insulated assembly IS the envelope — every layer must be completed at the penetration.
+Don't copy techniques between systems. Stone reveals get lime render; timber reveals get insulation.
+
+### 17. Reading timber agent coordination data from Rhino objects
+When the timber agent has already built the frame walls with split layers (left/mid/right segments), the gap between segments reveals the window void positions. Object naming conventions (e.g., `East_gypsum_left`, `East_gypsum_mid1`) encode the split pattern. The bounding boxes of these segments define the void extents precisely — no separate coordination message needed if you can read the geometry.
+
+### 18. Window frame position in timber wall assembly
+The frame sits at the wind barrier inner face (the boundary between insulated stud zone and the ventilated rainscreen). This puts the glass close to the weather plane while keeping the frame within the structural zone. The reveal insulation then fills the gap between the frame and the interior layers (OSB, service cavity, gypsum), completing the thermal envelope at the penetration.

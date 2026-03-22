@@ -35,3 +35,37 @@ When a lintel occupies a z-range (e.g., z=240-260), the render and plaster above
 
 ### 10. Improvement rounds have diminishing returns
 Round 1: critical structural fix (courses). Round 2: geometry fix (gables). Round 3: assembly completion (DPC, gable finishes, lintel collision). Round 4: no functional issues found. The pattern is clear — functional issues concentrate in early rounds. By Round 3-4, proposals shift to cosmetic, which is the signal to stop.
+
+---
+
+## Cabin v3 — Stone + Timber (2026-03-22)
+
+### 11. Search by material metadata, not object name
+Roof assembly objects were all unnamed, so searching for "blocking" or "vapour" by name returned zero hits — a false negative. Querying `rs.GetUserText(obj, "material")` found all 24 inter-rafter blocking objects (`mineral_wool_blocking`) and the PE membrane vapour barrier. Always search by material metadata as a fallback when names are absent.
+
+### 12. Rafter z-bottom below wall plate is normal for eave overhang
+Half-span rafters with overhang will have their lowest z well below the wall plate top. In this build: wall plate top z=567.5, rafter bottom z=511.5 — a 56cm drop from the 60cm overhang at ~38 degrees. This is geometrically correct (eave tail). Don't flag it as a misalignment.
+
+### 13. Object count inflation from assembly modeling
+Cabin v3 spec said 664 objects; actual count was 721 (+57). This happens when builders model more assembly layers than initially estimated (e.g., 68 fire stops vs expected ~20, extra reveal insulation objects). Not a problem — it means assemblies are more detailed than planned, not that orphans exist. Cross-check by layer, not just total.
+
+### 14. Unnamed objects are a minor but persistent issue
+31 roof structure objects (all rafters + ridge beam) and 62 roof assembly objects had no `rs.ObjectName`. Material metadata was present on all, so functional review was unaffected. But naming helps debugging and spec sheets. Flag as MINOR, not blocking.
+
+### 15. Viewport captures at 800x600 routinely exceed token limits
+All four viewport captures (Front, Right, Top, Perspective) exceeded the inline token limit and had to be saved to disk then read as images. This is consistent with learning #5 from v2. For future reviews: either reduce resolution (400x300) or plan to read from disk. The disk-read approach works reliably.
+
+### 16. Account for every object in the delta
+When re-reviewing after an improvement round, compute the exact object delta and trace every new object to a specific improvement task. In this build: 721 -> 850 (+129). Delta was fully accounted for across stairs (+35), rim boards (+2), floor opening framing (+4), fascia/soffit (+8), north window components (+18), and stone course splits (+18), plus floor layer adjustments. If the delta doesn't add up, there are orphans or unintended additions.
+
+### 17. Improvement rounds can exceed initial build in object count growth
+The improvement round added +129 objects (18% growth) from just 5 tasks. The biggest contributor was the staircase (+35 objects for treads, stringers, handrails, posts) and the north window requiring stone course splits (+18 objects). Plan for this — improvement rounds are not small.
+
+### 18. Stair compliance checks are straightforward with named objects
+When treads are named sequentially (Stair_Tread_01 through Stair_Tread_17), compliance verification is trivial: sort by z, compute rise between consecutive treads, measure going from bbox y-span, compute Blondel. The Timber agent's naming convention made this a 30-second check instead of a manual investigation.
+
+### 19. Envelope breach at floor openings requires 3-element fix
+When a floor opening (stair, service void) interrupts the floor assembly, the thermal envelope breaks at the opening edge. The fix requires three elements: (1) OSB closure panel sealing the floor cavity, (2) mineral wool blocking in exposed joist cavities, (3) vapour barrier bridge connecting the wall vapour layer to the closure panel. All three must be present — missing any one leaves a break in the envelope line. Search broadly by x-range when locating these elements, as the mineral wool and vapour bridge may extend further inward than the closure panel.
+
+### 20. Widen x-range when searching for envelope elements at interfaces
+Initial search for envelope fix objects at x=33-42 missed the mineral wool blocking (x=20.8-34.8) and vapour barrier bridge (x=30.2-37.0). These elements extend inward to fill joist cavities, not just the wall face. For interface searches, use a generous x-range (e.g., x=20-45 instead of x=33-42) to catch all related elements.

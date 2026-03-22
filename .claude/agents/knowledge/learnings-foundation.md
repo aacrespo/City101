@@ -23,3 +23,13 @@ Techniques discovered while modeling. Updated by agents after each build round.
 7. **Apron material should be gravel, not concrete.** The spec calls for gravel drainage apron (material=gravel_drainage). The previous learning incorrectly notes concrete C25/30. Gravel allows water to drain away rather than pooling against the plinth.
 
 8. **Foundation publishes coordination geometry for downstream agents.** After building, immediately send to team lead: plinth top z, finish floor z, outer/inner perimeters, door gap coordinates, foundation strip extents. Other agents (walls, openings, roof) depend on these numbers to align their work. Publishing early unblocks parallel work.
+
+## 2026-03-22 — Structure Agent (cabin-v3 stone masonry build)
+
+9. **No stone wall assembly in archibase — construct your own.** The `ConstructionDB.get_assembly('stone_wall')` returns None. Use `stone_masonry.md` knowledge file to derive layers: 2cm lime render (exterior) + 36cm molasse sandstone (structural) + 2cm lime plaster (interior) = 40cm total, matching SIA 266 minimum for single-leaf load-bearing.
+
+10. **Corner overlap convention matters for coursed walls.** When building 4 walls as boxes, the South and North walls should run full building length (x=0 to 800), while West and East walls fill between the inner faces (y=36 to y=564). This prevents double-thickness stone at corners and gives a clean overlap pattern. The same convention applies to render/plaster layers.
+
+11. **Align openings to course boundaries.** Rather than placing openings at exact spec dimensions (door z=0-210, windows z=90-210), round to the nearest course boundary (20cm increments). Door: z=0-200, windows: z=80-200. This is how real coursed masonry works — you don't cut stones mid-course. The Openings agent adds lintels at the top of the void.
+
+12. **Wall plate (sabliere) section: 15x10cm oak, centered on structural stone.** The plate sits at z=260 (top of 13 courses x 20cm), centered on the 36cm stone with 10.5cm offset from exterior face. South/North plates run full x-length; West/East fit between them. This gives the timber frame agent a level bearing surface at z=260-270.

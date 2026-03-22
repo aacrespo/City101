@@ -146,11 +146,31 @@ Focused checks between agents sharing a boundary:
 - Structure ↔ Ground: footings under every column?
 - Circulation ↔ Shell: railings clear of walls? ramp openings framed?
 
-### Gate 3 — Full model review (lead)
-- Viewport capture from 4 cardinals + aerial
-- Object count per layer
+### Gate 3 — Full model review (reviewer agent or lead)
+
+Two review modes. Both mandatory. Neither alone is sufficient.
+
+**Mode A — Constraint Check:**
+- Section test: place clipping plane, read section bottom-to-top. Every layer present with credible thickness?
+- Thermal envelope trace: continuous insulation/mass line from foundation → walls → roof. Any gap = FAIL
+- Interface alignment: do z-heights match across agents? Do wall tops meet floor bearings? Do openings match wall voids?
+- Object count per layer — track across rounds
+- Z-heights match spec datums
+- All objects have material metadata
+- Every dimension traces to archibase or a stated design decision
+- DPC/capillary breaks present at every material transition
 - Void/core zones clear
-- Visual coherence check
+
+**Mode B — Visual Coherence:**
+- Viewport captures from 4 cardinals + aerial
+- Does it LOOK like the intended building type? (e.g., Swiss Alpine vernacular, not a generic box)
+- Proportions: do heights, widths, and overhangs feel right for the construction type?
+- Roof: does it read as protective (appropriate overhang), correct pitch, not stubby?
+- Openings: placed with intention, not floating arbitrarily?
+- Overall silhouette: ridge orientation, gable closure, no awkward geometry sticking out?
+- Compare against a mental reference of the building type — not just against a constraint table
+
+Constraint checks catch dimensional errors. Visual coherence catches design errors that pass all constraints but still look wrong. Both are needed.
 
 ## Phase 4: Free Improvement (optional, parallel)
 
@@ -446,3 +466,4 @@ Principles:
 | 2026-03-19 | v1 created from Lock 05 CHUV roundtable | 7 agents, 709 objects, 4 rounds |
 | 2026-03-20 | v2: added Phase 5 output strategy | 3 paths (Spec→Code, Bake, .3dm), hybrid recommended |
 | 2026-03-22 | v2.1: mandatory knowledge base query, learnings capture | From cabin v2 build — agents must query archibase before modeling, write learnings after |
+| 2026-03-22 | v2.2: Gate 3 dual-mode review (constraint + visual coherence) | From cabin v2 feedback — reviewer must check both dimensional constraints AND visual/proportional coherence against building type reference |

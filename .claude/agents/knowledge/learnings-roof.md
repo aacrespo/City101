@@ -60,3 +60,19 @@ In cabin v2, gable render and plaster were added as rectangular prisms (full bbo
 
 ### 12. Observation mode is valuable for cross-agent review
 Staying alive after task completion to review the full model caught the courses 07-14 issue (appeared as partial fragments in bounding box data but were actually full rings with voids — volume analysis proved correctness). Also identified gable zero-thickness and missing gable render/plaster. Reviewing other agents' work through bounding box analysis is an effective quality gate even without visual inspection.
+
+---
+
+## Build 3 — Cabin v3 Roof (2026-03-22)
+
+### 13. Full assembly stack requires layered z-offset tracking
+When modeling the complete roof assembly (tiles → battens → counter-battens → sarking → rafters → insulation → vapour barrier → gypsum), track cumulative z-offsets from the rafter top (going up for above-rafter layers) and rafter bottom (going down for below-rafter layers). Each layer's ridge-z and eave-z must be independently computed from the slope. The vertical offset approach works for all layers at 35 degrees.
+
+### 14. Inter-rafter blocking is essential for thermal envelope
+The gap between rafters at the wall plate line is a major cold bridge if left open. Model solid blocking (mineral wool or timber) between every rafter pair at the wall plate zone (y=3..37 south, y=563..597 north). The blocking follows the slope — compute z at each y-edge from the slope rate. This seals the roof-wall junction.
+
+### 15. Gable infill as triangular prism via extrusion
+For mixed construction (stone ground floor + timber upper), gable infill should match the timber frame system. Use rs.AddPolyline for the triangle profile, rs.AddPlanarSrf, then rs.ExtrudeSurface with cap=True. This produces a clean triangular prism. The triangle vertices are: (plate_center_S, plate_top_z), (plate_center_N, plate_top_z), (ridge_y, rafter_bottom_at_ridge).
+
+### 16. Assembly layer panels as continuous sloped boxes
+Each assembly layer (sarking, counter-battens, tiles, vapour barrier, gypsum) is modeled as a continuous sloped box spanning the full roof extent (gable to gable, eave to eave). The 8-corner box approach works: 4 corners at eave z, 4 at ridge z, with thickness applied as vertical offset. Two boxes per layer (south slope + north slope).
