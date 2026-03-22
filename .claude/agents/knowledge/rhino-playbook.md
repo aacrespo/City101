@@ -59,7 +59,24 @@ Build in this order. Structure publishes its geometry (column positions, slab ed
 
 Name every object (`Element_Level_Location_SubElement`). Tag every object with material metadata. Use distinct layer colors for section legibility. An unnamed, untagged object is invisible to review and useless for downstream work.
 
-### 10. Discover while building
+### 10. No overlaps — ever
+
+Two solids cannot occupy the same physical space. This is non-negotiable. In real construction:
+- **Stacking**: layers sit ON TOP of each other (tiles, roof layers, floor layers). No interpenetration.
+- **Joinery**: one piece fits INTO another through a cut void (mortise-tenon, dado, notch). The void must be boolean-cut from the receiving piece BEFORE the inserted piece is placed.
+- **Butting**: pieces meet face-to-face with a gap (mortar joints, expansion gaps). Never overlapping.
+
+If you boolean-intersect any two objects in the model and get a non-zero volume, you have an overlap. Fix it by cutting the receiving piece or adjusting positions. This applies everywhere: wall corners, frame-in-wall, tread-on-stringer, shelf-in-panel.
+
+**Duplicates count as overlaps.** Two identical objects at the same position are the worst kind of overlap — 100% interpenetration. After every boolean operation, verify you haven't left the original behind. Check: same bounding box + same layer = duplicate. Delete the pre-cut original, keep the modified version. Run a duplicate scan before declaring any model clean.
+
+### 11. Nothing floats
+
+Every object must bear on, attach to, or be fastened to something else. Gravity exists. A shelf must rest in its dado or on a cleat. A rafter must sit on a wall plate. A tread must rest in a stringer notch. A leg must touch the floor or touch a rail that touches something that touches the floor. If an object has air below it and no visible connection holding it up, it's wrong.
+
+Verify: for every object, ask "what is holding this up?" If the answer is "nothing," fix it — either move it into contact or model the connection.
+
+### 12. Discover while building
 
 Query the law (archibase) for assemblies and material properties. Read the jurisprudence (learnings) for techniques from past builds. But when you encounter a problem that has no precedent — like a new material transition or an unusual connection — design the solution. Document what you discover in your learnings file so it becomes jurisprudence for the next build.
 
@@ -93,6 +110,21 @@ def box(x, y, z, L, W, H):
 
 Neither mode alone is sufficient.
 
+### Review hygiene
+
+- **Clipping planes**: DELETE all clipping planes after section tests. They clip the perspective viewport and block visual review. Never leave them behind.
+- **Wireframe for joints**: Use wireframe or high-contrast layer colors when reviewing connections (mortise-tenon, corner joints). Shaded perspective makes adjacent same-color objects indistinguishable.
+- **Orthographic for patterns**: Front/right orthographic views are far more informative than perspective for reviewing wall bond patterns, coursing, and layer stacks.
+- **Volume-based clearance analysis**: Compare tenon volume vs mortise pocket volume to verify fit without needing boolean intersection tests.
+- **Blondel rule: going, not tread depth**: The Blondel formula (2R+G = 60-65cm) uses the going (distance between riser faces), NOT the tread depth. Nosing overhang is excluded. A 27cm going with 4cm nosing = 31cm tread, but G=27 for Blondel.
+- **Corner layers need corner pieces**: Each wall layer's corner requires an explicit corner piece (square infill) where two arms meet. Arm lengths must be adjusted to avoid overlap.
+- **Sill replaces bottom reveal**: In window assemblies, the stone sill serves as the bottom reveal — don't model both.
+- **Top/plan views for envelope checks**: Plan section views are essential for verifying continuous insulation wrapping at corners.
+- **Boolean voids vs solid objects**: Weatherstrip grooves, mortise pockets, and other voids are modeled as boolean cuts, not separate solids. An empty layer for a void element is correct — the void lives in the parent object's geometry.
+- **Counter-batten = ventilation gap**: The counter-batten height IS the ventilation gap dimension. No separate "air gap" object needed.
+- **Tile arrays dominate object count**: A 50cm roof strip generates 33 tiles. Plan for this when estimating object counts for full buildings.
+- **Chair back legs as structure**: Back legs extending above seat height to form backrest supports is the canonical joinery pattern for simple timber chairs.
+
 ---
 
-*Doctrine distilled from cabin v1 (rammed earth, 76 objects), v2 (rammed earth, 87 objects), and v3 (stone + timber frame, 933 objects). Jurisprudence lives in the learnings files. Law lives in archibase.*
+*Doctrine distilled from cabin v1–v3 and full training session (10 exercises, 6 furniture scripts, 418 objects across 4 phases). Jurisprudence lives in the learnings files. Law lives in archibase.*
