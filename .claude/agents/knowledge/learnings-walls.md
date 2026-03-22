@@ -56,3 +56,22 @@ If the volume matches the solid ring formula, the void is missing. Faster and mo
 
 ## 16. Point-in-brep test (rs.IsPointInSurface) is definitive for void verification
 Place a test point at the center of where the void should be. If `rs.IsPointInSurface(brep, point)` returns True, the void is missing. Returns False means the void exists. Use this as the final check after any course rebuild. Test both a point that should be void (returns False) AND a point that should be solid (returns True) to catch degenerate geometry.
+
+## Training Session 2 — 2026-03-22 (Deplazes book exercises)
+
+### Wall-floor junction slab positioning
+**Issue:** Slab body extended into structural wall zone, causing 26,000 cm³ overlap in Ex11.
+**Fix:** Slab must bear ON the inner structural leaf, not extend through it. Start slab X-position at inner face of loadbearing wall.
+**Source:** Deplazes p.421, double-leaf masonry wall-floor detail.
+
+### Double-leaf masonry at floor junctions
+**Issue:** All 6 wall layers need both upper AND lower sections at floor junctions — the floor interrupts the wall, so each layer must be modeled above and below.
+**Source:** Deplazes p.421.
+
+### ETICS ultra-thin render layers
+**Discovery:** Render finish coat (2mm) and bonding render with glass mat (4mm) are modelable and essential for the section test. Don't skip thin layers just because they're small.
+**Source:** Deplazes p.424, external insulation rendered.
+
+### ETICS insulation continuity
+**Rule:** Insulation must be continuous past the floor zone to prevent thermal bridging. The insulation board passes in front of the floor slab edge — it does NOT stop at the slab.
+**Source:** Deplazes p.424.

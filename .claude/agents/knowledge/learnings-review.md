@@ -87,3 +87,14 @@ When a chimney penetrates a multi-layer assembly (floor or roof), each layer nee
 
 ### 26. Lead flashing must extend beyond the outermost fire stop
 The chimney's lead flashing apron should cover from mid-assembly to above the outermost assembly layer (counter-battens/tiles), extending 20cm+ beyond the pipe on all sides. In cabin v3: flashing z=624.5-666.6 covered the sarking and counter-batten zones. This ensures water sheds around the penetration before reaching any fire stop joint.
+
+## Training Session 2 — 2026-03-22 (Deplazes book exercises)
+
+### BB overlap audit invalid for sloped geometry
+**Issue:** Bounding-box intersection audit produces massive false positives for any tilted/rotated geometry. Pitched roofs at 30° showed 45+ phantom overlaps.
+**Rule:** When exercises contain sloped elements, use volume verification (compare modeled volume to calculated expected volume) instead of BB intersection. Add slope detection to audit scripts.
+**Source:** Ex13, Ex17.
+
+### Re-audit after fixes
+**Rule:** After fixing overlaps, always re-run the FULL audit to confirm no new overlaps were introduced by the fix. Repositioning one element can create a new collision with an adjacent one.
+**Source:** Ex11 (wall-floor junction fix cycle), Ex16 (foundation fix cycle).

@@ -76,3 +76,22 @@ For mixed construction (stone ground floor + timber upper), gable infill should 
 
 ### 16. Assembly layer panels as continuous sloped boxes
 Each assembly layer (sarking, counter-battens, tiles, vapour barrier, gypsum) is modeled as a continuous sloped box spanning the full roof extent (gable to gable, eave to eave). The 8-corner box approach works: 4 corners at eave z, 4 at ridge z, with thickness applied as vertical offset. Two boxes per layer (south slope + north slope).
+
+## Training Session 2 — 2026-03-22 (Deplazes book exercises)
+
+### Bounding-box audit invalid for sloped geometry
+**Issue:** BB overlap audit reported 45+ phantom overlaps on Ex13/Ex17 pitched roofs. These are false positives — axis-aligned bounding boxes always overlap for tilted objects.
+**Fix:** For sloped elements, use volume verification (expected vs actual) instead of BB intersection audit. Log warning when slope is detected.
+**Source:** Ex13 (cold deck pitched roof, 30°), Ex17 (solid timber panel pitched roof).
+
+### Cumulative normal offset for sloped layers
+**Rule:** When stacking roof layers on a slope, each layer's position = previous layer top + offset along the roof normal vector, NOT along Z axis. Use trigonometry: Z_offset = thickness / cos(pitch_angle).
+**Source:** Ex13, Ex17.
+
+### Cold deck vs warm deck
+**Key difference:** In a warm deck, insulation sits ABOVE the structural deck (warm side). In a cold deck, insulation sits BELOW or between rafters, with a ventilated cavity above. The position relative to the ventilated cavity is the diagnostic.
+**Source:** Deplazes p.468 (cold deck), p.470 (warm deck).
+
+### Flat roof parapet WP upstand
+**Rule:** Waterproofing upstand must be placed on the ROOM SIDE of the inner structural leaf, not in the cavity zone. It turns up the inner face of the parapet wall.
+**Source:** Deplazes p.470, flat roof warm deck with parapet.
