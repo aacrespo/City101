@@ -69,3 +69,21 @@ When a floor opening (stair, service void) interrupts the floor assembly, the th
 
 ### 20. Widen x-range when searching for envelope elements at interfaces
 Initial search for envelope fix objects at x=33-42 missed the mineral wool blocking (x=20.8-34.8) and vapour barrier bridge (x=30.2-37.0). These elements extend inward to fill joist cavities, not just the wall face. For interface searches, use a generous x-range (e.g., x=20-45 instead of x=33-42) to catch all related elements.
+
+### 21. Corner posts and wind returns are critical for timber frame integrity
+Timber frame walls need explicit corner posts (e.g., 16x16cm spruce) at all four building corners, plus wind barrier returns wrapping around the corners. These are easily missed in early builds because the main wall panels terminate at corners. The reviewer should verify: 4 corner posts, 4 wind returns, proper z-range matching the timber wall height.
+
+### 22. Transition corner patches seal the most vulnerable envelope points
+The stone-timber transition at building corners is the most exposed point of the thermal envelope — two different construction systems meeting at a geometric corner. Each corner needs both a capillary break (bitumen) and a thermal seal (compriband). Verify 8 total patches: 4 capillary + 4 thermal, one of each per corner.
+
+### 23. Chimney penetration must be checked through ALL assemblies
+A stove chimney must penetrate every horizontal assembly from ground floor to roof ridge. In cabin v3, the chimney pipe stopped at z=700 but the roof ridge was at ~788 — meaning no roof penetration was modeled. Always trace the chimney from stove top to above roof line, checking penetration through floor assembly and roof assembly, with appropriate fire clearances at each.
+
+### 24. Interior furnishing validates spatial design
+Adding furniture (beds, tables, shelving, stove) at LOG 350 tests whether the building's interior dimensions actually work. A building that passes all constraint checks can still fail as habitable space if circulation is blocked or rooms are impractical. The furnished interior is the final test of the design.
+
+### 25. Chimney penetration requires layer-by-layer fire stops
+When a chimney penetrates a multi-layer assembly (floor or roof), each layer needs its own calcium silicate collar — not a single sleeve. In cabin v3, the roof agent modeled 5 separate collar sets (gypsum, vapour barrier, rafter zone, sarking, counter-battens) with 4 pieces each forming a rectangle around the pipe. This ensures fire rating at every combustible layer crossing. The vapour barrier collar is especially important: PE membrane cannot touch a hot flue, so the calcium silicate board substitutes as the air seal at that level.
+
+### 26. Lead flashing must extend beyond the outermost fire stop
+The chimney's lead flashing apron should cover from mid-assembly to above the outermost assembly layer (counter-battens/tiles), extending 20cm+ beyond the pipe on all sides. In cabin v3: flashing z=624.5-666.6 covered the sarking and counter-batten zones. This ensures water sheds around the penetration before reaching any fire stop joint.
