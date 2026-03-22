@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 120" width="480" height="120">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif&amp;family=DM+Mono:wght@400;500&amp;display=swap');
+    </style>
+
+    <!-- Primary: light on dark -->
+    <symbol id="logo-dark" viewBox="0 0 480 120">
+      <!-- STILL — narrative voice -->
+      <text x="0" y="48" font-family="'Instrument Serif', serif" font-size="54" font-weight="400" letter-spacing="8" fill="#e8e6e1">STILL</text>
+      <!-- ON THE LINE — measured voice, sitting on the line -->
+      <text x="0" y="88" font-family="'DM Mono', monospace" font-size="26" font-weight="500" letter-spacing="4" fill="#c9a84c">ON THE LINE</text>
+      <!-- The line itself — the corridor -->
+      <line x1="0" y1="98" x2="460" y2="98" stroke="#c9a84c" stroke-width="1.5" stroke-linecap="round"/>
+      <!-- Station dots along the corridor -->
+      <circle cx="0" cy="98" r="2.5" fill="#c9a84c" opacity="0.7"/>
+      <circle cx="66" cy="98" r="2" fill="#c9a84c" opacity="0.4"/>
+      <circle cx="132" cy="98" r="2" fill="#c9a84c" opacity="0.4"/>
+      <circle cx="198" cy="98" r="2.5" fill="#c9a84c" opacity="0.6"/>
+      <circle cx="264" cy="98" r="2" fill="#c9a84c" opacity="0.4"/>
+      <circle cx="330" cy="98" r="2" fill="#c9a84c" opacity="0.4"/>
+      <circle cx="396" cy="98" r="2.5" fill="#c9a84c" opacity="0.6"/>
+      <circle cx="460" cy="98" r="2.5" fill="#c9a84c" opacity="0.7"/>
+    </symbol>
+
+    <!-- Inverted: dark on light -->
+    <symbol id="logo-light" viewBox="0 0 480 120">
+      <text x="0" y="48" font-family="'Instrument Serif', serif" font-size="54" font-weight="400" letter-spacing="8" fill="#0c0c14">STILL</text>
+      <text x="0" y="88" font-family="'DM Mono', monospace" font-size="26" font-weight="500" letter-spacing="4" fill="#8a6f2e">ON THE LINE</text>
+      <line x1="0" y1="98" x2="460" y2="98" stroke="#8a6f2e" stroke-width="1.5" stroke-linecap="round"/>
+      <circle cx="0" cy="98" r="2.5" fill="#8a6f2e" opacity="0.7"/>
+      <circle cx="66" cy="98" r="2" fill="#8a6f2e" opacity="0.4"/>
+      <circle cx="132" cy="98" r="2" fill="#8a6f2e" opacity="0.4"/>
+      <circle cx="198" cy="98" r="2.5" fill="#8a6f2e" opacity="0.6"/>
+      <circle cx="264" cy="98" r="2" fill="#8a6f2e" opacity="0.4"/>
+      <circle cx="330" cy="98" r="2" fill="#8a6f2e" opacity="0.4"/>
+      <circle cx="396" cy="98" r="2.5" fill="#8a6f2e" opacity="0.6"/>
+      <circle cx="460" cy="98" r="2.5" fill="#8a6f2e" opacity="0.7"/>
+    </symbol>
+
+    <!-- Monogram: S|L compact -->
+    <symbol id="logo-monogram" viewBox="0 0 48 48">
+      <text x="2" y="22" font-family="'Instrument Serif', serif" font-size="20" font-weight="400" fill="#e8e6e1">S</text>
+      <line x1="16" y1="6" x2="16" y2="42" stroke="#c9a84c" stroke-width="1.5" stroke-linecap="round"/>
+      <text x="22" y="22" font-family="'DM Mono', monospace" font-size="20" font-weight="500" fill="#c9a84c">L</text>
+      <line x1="2" y1="44" x2="46" y2="44" stroke="#c9a84c" stroke-width="1" stroke-linecap="round"/>
+      <circle cx="2" cy="44" r="1.5" fill="#c9a84c" opacity="0.6"/>
+      <circle cx="24" cy="44" r="1.5" fill="#c9a84c" opacity="0.6"/>
+      <circle cx="46" cy="44" r="1.5" fill="#c9a84c" opacity="0.6"/>
+    </symbol>
+
+    <!-- Single-line compact variant -->
+    <symbol id="logo-compact" viewBox="0 0 400 40">
+      <text x="0" y="24" font-family="'Instrument Serif', serif" font-size="22" font-weight="400" letter-spacing="3" fill="#e8e6e1">STILL</text>
+      <text x="96" y="24" font-family="'DM Mono', monospace" font-size="18" font-weight="500" letter-spacing="2" fill="#c9a84c">ON THE LINE</text>
+      <line x1="0" y1="32" x2="340" y2="32" stroke="#c9a84c" stroke-width="1" stroke-linecap="round"/>
+      <circle cx="0" cy="32" r="1.5" fill="#c9a84c" opacity="0.6"/>
+      <circle cx="85" cy="32" r="1.5" fill="#c9a84c" opacity="0.4"/>
+      <circle cx="170" cy="32" r="1.5" fill="#c9a84c" opacity="0.6"/>
+      <circle cx="255" cy="32" r="1.5" fill="#c9a84c" opacity="0.4"/>
+      <circle cx="340" cy="32" r="1.5" fill="#c9a84c" opacity="0.6"/>
+    </symbol>
+  </defs>
+
+  <!-- Default render: dark variant -->
+  <use href="#logo-dark" width="480" height="120"/>
+</svg>

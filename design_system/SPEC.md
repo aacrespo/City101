@@ -1,6 +1,6 @@
-# Design System v2 — City101 "Still on the Line"
+# Design System v3 — "Still On The Line"
 
-**Status**: Locked — see `brand_guide.html` for interactive reference.
+**Status**: Active — see `brand_guide.html` for interactive reference.
 
 ---
 
@@ -9,9 +9,37 @@
 | File | Purpose |
 |------|---------|
 | `brand_guide.html` | Interactive brand guide — colors, type, components, examples |
-| `city101_logo.svg` | Logo/wordmark SVG with dark, light, and monogram variants |
+| `still_on_the_line_logo.svg` | Logo/wordmark SVG with dark, light, compact, and monogram variants |
 | `template_presentation.html` | 1920×1080 presentation template with 6 slide types |
 | `template_map_layout.html` | Map header/footer overlay template with print support |
+
+## Brand Name
+
+**Still On The Line** — the project title. Three meanings:
+1. **Still on the train line** — the 101 km Geneva–Villeneuve rail corridor
+2. **Still connected** — the question of whether these places remain linked
+3. **Still (motionless)** — the paradox of stopping within a transit corridor
+
+**City101** is the studio theme, not our project name. Use "Still On The Line" in all deliverables.
+
+## Logo
+
+The wordmark stacks two voices:
+- **STILL** in Instrument Serif — the narrative pause
+- **ON THE LINE** in DM Mono — the measured infrastructure
+
+The gold line with station dots runs beneath — the corridor itself, always present.
+
+### Variants
+| Variant | Use case |
+|---------|----------|
+| Dark (on `#0c0c14`) | Default — presentations, site, diagrams |
+| Light (on `#f5f3ee`) | Print, light backgrounds |
+| Compact (single-line) | Navigation bars, headers, small spaces |
+| Monogram **S\|L** | Favicons, badges, map markers (min 24×24px) |
+
+### Clear space
+Minimum clear space = height of "S" on all sides.
 
 ## Palette
 
@@ -41,9 +69,9 @@
 
 | Role | Font | Fallback | Usage |
 |------|------|----------|-------|
-| Display / headings | Instrument Serif | serif | Narrative voice — titles, pull quotes |
+| Display / headings | Instrument Serif | serif | Narrative voice — titles, pull quotes, "STILL" |
 | Body | DM Sans (400/500/700) | sans-serif | Explanatory — body text, labels, UI |
-| Data / code / mono | DM Mono (400/500) | monospace | Measurement — timestamps, coordinates, metrics |
+| Data / code / mono | DM Mono (400/500) | monospace | Measurement — timestamps, coordinates, metrics, "ON THE LINE" |
 
 ## CSS Variables
 
@@ -88,6 +116,7 @@ All UI elements (panels, legends, controls, overlays) reference these variables.
 - 6 slide types: title, split, data, grid, quote, map
 - Keyboard navigation (arrow keys, space, home/end)
 - Always include datum lines (top/bottom branded bars)
+- Footer brand: "STILL" + "ON THE LINE" (not City101)
 
 ## Key Animations
 

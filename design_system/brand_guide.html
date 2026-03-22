@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>City101 — Brand Identity</title>
+<title>Still On The Line — Brand Identity</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,400;0,500;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
@@ -82,17 +82,24 @@
     gap: var(--space-lg);
   }
   nav .nav-brand {
-    font-family: var(--font-display);
-    font-size: 18px;
-    color: var(--gold);
     white-space: nowrap;
-    letter-spacing: 1px;
     flex-shrink: 0;
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
   }
-  nav .nav-brand span {
-    font-family: var(--font-mono);
+  nav .nav-brand .nb-still {
+    font-family: var(--font-display);
     font-size: 16px;
+    color: var(--text);
+    letter-spacing: 2px;
+  }
+  nav .nav-brand .nb-otl {
+    font-family: var(--font-mono);
+    font-size: 13px;
     font-weight: 500;
+    color: var(--gold);
+    letter-spacing: 1px;
   }
   nav .nav-links {
     display: flex;
@@ -169,31 +176,33 @@
     pointer-events: none;
   }
   .hero-logo {
-    margin-bottom: var(--space-2xl);
+    margin-bottom: var(--space-lg);
     position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
-  .hero-logo .logo-city {
+  .hero-logo .logo-still {
     font-family: var(--font-display);
     font-size: clamp(64px, 10vw, 120px);
     color: var(--text);
     letter-spacing: 12px;
-    display: inline;
     line-height: 1;
+    margin-bottom: 4px;
   }
-  .hero-logo .logo-101 {
+  .hero-logo .logo-otl {
     font-family: var(--font-mono);
-    font-size: clamp(64px, 10vw, 120px);
+    font-size: clamp(24px, 4vw, 42px);
     color: var(--gold);
     font-weight: 500;
-    letter-spacing: 4px;
-    display: inline;
+    letter-spacing: 6px;
     line-height: 1;
   }
   .hero-line-container {
-    width: min(480px, 80vw);
+    width: min(560px, 85vw);
     height: 24px;
     position: relative;
-    margin: var(--space-lg) auto var(--space-2xl);
+    margin: var(--space-md) auto var(--space-2xl);
   }
   .hero-line {
     position: absolute;
@@ -230,9 +239,11 @@
   .hero-subtitle {
     font-family: var(--font-display);
     font-style: italic;
-    font-size: clamp(20px, 3vw, 28px);
+    font-size: clamp(16px, 2.5vw, 22px);
     color: var(--text-muted);
     margin-bottom: var(--space-md);
+    max-width: 500px;
+    line-height: 1.5;
   }
   .hero-meta {
     font-family: var(--font-mono);
@@ -289,7 +300,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: 180px;
+    min-height: 200px;
     position: relative;
     overflow: hidden;
   }
@@ -326,36 +337,50 @@
   }
   .logo-showcase.on-light .showcase-label { color: #666; }
 
-  .logo-inline {
+  /* Logo lockup */
+  .logo-lockup {
     display: flex;
-    align-items: baseline;
-    gap: 6px;
+    flex-direction: column;
+    gap: 2px;
   }
-  .logo-inline .l-city {
+  .logo-lockup .ll-still {
     font-family: var(--font-display);
-    font-size: 42px;
+    font-size: 36px;
     letter-spacing: 5px;
+    line-height: 1;
   }
-  .logo-inline .l-101 {
+  .logo-lockup .ll-otl {
     font-family: var(--font-mono);
-    font-size: 42px;
+    font-size: 18px;
     font-weight: 500;
-    letter-spacing: 2px;
+    letter-spacing: 3px;
+    line-height: 1.2;
   }
-  .logo-inline.dark .l-city { color: var(--text); }
-  .logo-inline.dark .l-101 { color: var(--gold); }
-  .logo-inline.light .l-city { color: #0c0c14; }
-  .logo-inline.light .l-101 { color: var(--gold-dark); }
+  .logo-lockup.dark .ll-still { color: var(--text); }
+  .logo-lockup.dark .ll-otl { color: var(--gold); }
+  .logo-lockup.light .ll-still { color: #0c0c14; }
+  .logo-lockup.light .ll-otl { color: var(--gold-dark); }
 
   .logo-line-under {
     width: 100%;
     height: 2px;
-    margin-top: 10px;
+    margin-top: 8px;
     border-radius: 1px;
+    position: relative;
   }
   .logo-line-under.gold { background: var(--gold); }
   .logo-line-under.dark-gold { background: var(--gold-dark); }
+  .logo-line-under .line-dot {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    top: -1px;
+  }
+  .logo-line-under.gold .line-dot { background: var(--gold); }
+  .logo-line-under.dark-gold .line-dot { background: var(--gold-dark); }
 
+  /* Monogram */
   .monogram-showcase {
     display: flex;
     align-items: center;
@@ -370,29 +395,38 @@
     width: 64px;
     height: 64px;
     display: flex;
-    flex-direction: column;
+    align-items: center;
     justify-content: center;
+    gap: 2px;
     flex-shrink: 0;
+    position: relative;
   }
-  .monogram .m-c {
+  .monogram .m-s {
     font-family: var(--font-display);
-    font-size: 22px;
+    font-size: 28px;
     color: var(--text);
     line-height: 1;
   }
-  .monogram .m-101 {
+  .monogram .m-divider {
+    width: 1.5px;
+    height: 32px;
+    background: var(--gold);
+    opacity: 0.6;
+  }
+  .monogram .m-l {
     font-family: var(--font-mono);
-    font-size: 18px;
+    font-size: 24px;
     font-weight: 500;
     color: var(--gold);
     line-height: 1;
-    margin-top: 2px;
   }
   .monogram-line {
     width: 48px;
     height: 1.5px;
     background: var(--gold);
-    margin-top: 4px;
+    position: absolute;
+    bottom: 4px;
+    left: 8px;
     border-radius: 1px;
   }
   .monogram-desc {
@@ -459,7 +493,7 @@
     border: 1px solid var(--gold-dim);
   }
   .do-dont-card .card-preview {
-    height: 120px;
+    height: 140px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -491,21 +525,24 @@
 
   .do-dont-card .mini-logo {
     display: flex;
-    align-items: baseline;
-    gap: 3px;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
   }
-  .do-dont-card .mini-logo .ml-city {
+  .do-dont-card .mini-logo .ml-still {
     font-family: var(--font-display);
-    font-size: 24px;
+    font-size: 22px;
     color: var(--text);
     letter-spacing: 3px;
+    line-height: 1;
   }
-  .do-dont-card .mini-logo .ml-101 {
+  .do-dont-card .mini-logo .ml-otl {
     font-family: var(--font-mono);
-    font-size: 24px;
+    font-size: 12px;
     font-weight: 500;
     color: var(--gold);
-    letter-spacing: 1px;
+    letter-spacing: 2px;
+    line-height: 1.3;
   }
 
   /* ─── Color Palette ─── */
@@ -1376,18 +1413,19 @@
   .mock-slide .ms-bottom .msb-brand {
     display: flex;
     align-items: baseline;
-    gap: 3px;
+    gap: 4px;
   }
-  .mock-slide .ms-bottom .msb-brand .b-city {
+  .mock-slide .ms-bottom .msb-brand .b-still {
     font-family: var(--font-display);
     font-size: 11px;
     color: var(--text-muted);
   }
-  .mock-slide .ms-bottom .msb-brand .b-101 {
+  .mock-slide .ms-bottom .msb-brand .b-otl {
     font-family: var(--font-mono);
-    font-size: 11px;
+    font-size: 9px;
     color: var(--gold);
     font-weight: 500;
+    letter-spacing: 1px;
   }
   .mock-slide .ms-bottom .msb-meta {
     font-family: var(--font-mono);
@@ -1427,18 +1465,19 @@
   .mock-map .mm-header .mh-brand {
     display: flex;
     align-items: baseline;
-    gap: 3px;
+    gap: 4px;
   }
-  .mock-map .mm-header .mh-brand .b-city {
+  .mock-map .mm-header .mh-brand .b-still {
     font-family: var(--font-display);
     font-size: 13px;
     color: var(--text);
   }
-  .mock-map .mm-header .mh-brand .b-101 {
+  .mock-map .mm-header .mh-brand .b-otl {
     font-family: var(--font-mono);
-    font-size: 13px;
+    font-size: 10px;
     color: var(--gold);
     font-weight: 500;
+    letter-spacing: 1px;
   }
   .mock-map .mm-header .mh-title {
     font-family: var(--font-display);
@@ -1562,6 +1601,38 @@
     margin-top: 4px;
   }
 
+  /* ─── Concept Section ─── */
+  .concept-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--space-lg);
+    margin-bottom: var(--space-2xl);
+  }
+  .concept-card {
+    background: var(--surface);
+    border: 1px solid var(--gold-dim);
+    border-radius: var(--radius);
+    padding: var(--space-lg);
+  }
+  .concept-card .cc-number {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--gold);
+    opacity: 0.6;
+    margin-bottom: var(--space-sm);
+  }
+  .concept-card .cc-title {
+    font-family: var(--font-display);
+    font-size: 20px;
+    color: var(--text);
+    margin-bottom: var(--space-sm);
+  }
+  .concept-card .cc-body {
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+
   /* ─── Footer ─── */
   .page-footer {
     max-width: var(--content-full);
@@ -1574,19 +1645,21 @@
   }
   .page-footer .footer-brand {
     display: flex;
-    align-items: baseline;
-    gap: 4px;
+    flex-direction: column;
+    gap: 2px;
   }
-  .page-footer .footer-brand .fb-city {
+  .page-footer .footer-brand .fb-still {
     font-family: var(--font-display);
     font-size: 18px;
     color: var(--text);
+    letter-spacing: 2px;
   }
-  .page-footer .footer-brand .fb-101 {
+  .page-footer .footer-brand .fb-otl {
     font-family: var(--font-mono);
-    font-size: 18px;
+    font-size: 12px;
     color: var(--gold);
     font-weight: 500;
+    letter-spacing: 1px;
   }
   .page-footer .footer-meta {
     font-family: var(--font-mono);
@@ -1607,18 +1680,20 @@
     .dos-donts { grid-template-columns: 1fr 1fr; }
     .mock-slide .ms-body { flex-direction: column; padding: var(--space-md); }
     .mock-narrative .mn-metric-row { flex-direction: column; gap: var(--space-md); }
+    .concept-grid { grid-template-columns: 1fr; }
     nav .nav-brand { display: none; }
   }
 </style>
 </head>
 <body>
 
-<!-- ═══════════════ NAVIGATION ═══════════════ -->
+<!-- Navigation -->
 <nav>
   <div class="nav-inner">
-    <div class="nav-brand">CITY <span>101</span></div>
+    <div class="nav-brand"><span class="nb-still">STILL</span> <span class="nb-otl">ON THE LINE</span></div>
     <div class="nav-links">
       <a href="#hero" class="active">Identity</a>
+      <a href="#concept">Concept</a>
       <a href="#logo">Logo</a>
       <a href="#color">Color</a>
       <a href="#type">Typography</a>
@@ -1630,61 +1705,111 @@
   </div>
 </nav>
 
-<!-- ═══════════════ HERO ═══════════════ -->
+<!-- Hero -->
 <section class="hero" id="hero">
   <div class="hero-logo">
-    <span class="logo-city">CITY</span><span class="logo-101">101</span>
+    <span class="logo-still">STILL</span>
+    <span class="logo-otl">ON THE LINE</span>
   </div>
   <div class="hero-line-container">
     <div class="hero-line"></div>
     <span class="hero-station" style="left: 0%"></span>
-    <span class="hero-station" style="left: 18%"></span>
-    <span class="hero-station" style="left: 35%"></span>
-    <span class="hero-station" style="left: 52%"></span>
-    <span class="hero-station" style="left: 70%"></span>
+    <span class="hero-station" style="left: 14%"></span>
+    <span class="hero-station" style="left: 28%"></span>
+    <span class="hero-station" style="left: 42%"></span>
+    <span class="hero-station" style="left: 56%"></span>
+    <span class="hero-station" style="left: 72%"></span>
     <span class="hero-station" style="left: 88%"></span>
     <span class="hero-station" style="left: 100%"></span>
   </div>
-  <div class="hero-subtitle">Still on the Line</div>
+  <div class="hero-subtitle">Geneva &ndash; Villeneuve &middot; 101 km &middot; 49 stations</div>
   <div class="hero-meta">Visual Identity &mdash; EPFL Studio Huang 2026</div>
   <div class="hero-scroll-hint">
     <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
   </div>
 </section>
 
-<!-- ═══════════════ LOGO ═══════════════ -->
+<!-- Concept -->
+<section id="concept">
+  <div class="fade-up">
+    <div class="section-label">00 &mdash; Concept</div>
+    <h2 class="section-title">The Name</h2>
+    <p class="section-desc">&ldquo;Still On The Line&rdquo; carries three meanings at once &mdash; each one a lens on the corridor.</p>
+  </div>
+
+  <div class="concept-grid fade-up">
+    <div class="concept-card">
+      <div class="cc-number">01</div>
+      <div class="cc-title">Still on the train line</div>
+      <div class="cc-body">The literal: 101 km of rail from Geneva to Villeneuve. 49 stations. One continuous thread of infrastructure that stitches the territory together.</div>
+    </div>
+    <div class="concept-card">
+      <div class="cc-number">02</div>
+      <div class="cc-title">Still connected</div>
+      <div class="cc-body">The question: are we still on the line? Are these places still connected, still reachable, still part of the same urban fabric &mdash; or has the thread already broken?</div>
+    </div>
+    <div class="concept-card">
+      <div class="cc-number">03</div>
+      <div class="cc-title">Still &mdash; motionless</div>
+      <div class="cc-body">The paradox: a transit corridor where people stop. Where infrastructure designed for movement creates stillness &mdash; waiting, pausing, staying put.</div>
+    </div>
+  </div>
+</section>
+
+<!-- Logo -->
 <section id="logo">
   <div class="fade-up">
     <div class="section-label">01 &mdash; Identity</div>
     <h2 class="section-title">Logo</h2>
-    <p class="section-desc">The wordmark pairs Instrument Serif with DM Mono &mdash; narrative voice and measured precision. The gold line beneath is the corridor itself: 101 kilometres, always present.</p>
+    <p class="section-desc">The wordmark stacks two voices: Instrument Serif for &ldquo;STILL&rdquo; (the narrative) and DM Mono for &ldquo;ON THE LINE&rdquo; (the measurement). The gold line beneath is the corridor itself &mdash; always present, always connecting.</p>
   </div>
 
   <div class="logo-grid fade-up">
     <div class="logo-showcase on-dark">
       <div>
-        <div class="logo-inline dark">
-          <span class="l-city">CITY</span><span class="l-101">101</span>
+        <div class="logo-lockup dark">
+          <span class="ll-still">STILL</span>
+          <span class="ll-otl">ON THE LINE</span>
         </div>
-        <div class="logo-line-under gold"></div>
+        <div class="logo-line-under gold">
+          <span class="line-dot" style="left: 0;"></span>
+          <span class="line-dot" style="left: 25%;"></span>
+          <span class="line-dot" style="left: 50%;"></span>
+          <span class="line-dot" style="left: 75%;"></span>
+          <span class="line-dot" style="right: 0;"></span>
+        </div>
       </div>
       <span class="showcase-label">On dark</span>
     </div>
     <div class="logo-showcase on-light">
       <div>
-        <div class="logo-inline light">
-          <span class="l-city">CITY</span><span class="l-101">101</span>
+        <div class="logo-lockup light">
+          <span class="ll-still">STILL</span>
+          <span class="ll-otl">ON THE LINE</span>
         </div>
-        <div class="logo-line-under dark-gold"></div>
+        <div class="logo-line-under dark-gold">
+          <span class="line-dot" style="left: 0;"></span>
+          <span class="line-dot" style="left: 25%;"></span>
+          <span class="line-dot" style="left: 50%;"></span>
+          <span class="line-dot" style="left: 75%;"></span>
+          <span class="line-dot" style="right: 0;"></span>
+        </div>
       </div>
       <span class="showcase-label">On light</span>
     </div>
     <div class="logo-showcase on-map">
       <div style="position:relative; z-index:1; background: rgba(12,12,20,0.6); backdrop-filter: blur(16px); padding: 20px 28px; border-radius: 8px; border: 1px solid rgba(201,168,76,0.12);">
-        <div class="logo-inline dark">
-          <span class="l-city">CITY</span><span class="l-101">101</span>
+        <div class="logo-lockup dark">
+          <span class="ll-still">STILL</span>
+          <span class="ll-otl">ON THE LINE</span>
         </div>
-        <div class="logo-line-under gold"></div>
+        <div class="logo-line-under gold">
+          <span class="line-dot" style="left: 0;"></span>
+          <span class="line-dot" style="left: 25%;"></span>
+          <span class="line-dot" style="left: 50%;"></span>
+          <span class="line-dot" style="left: 75%;"></span>
+          <span class="line-dot" style="right: 0;"></span>
+        </div>
       </div>
       <span class="showcase-label">On map (glass backing)</span>
     </div>
@@ -1692,22 +1817,24 @@
 
   <div class="monogram-showcase fade-up">
     <div class="monogram">
-      <span class="m-c">C</span>
-      <span class="m-101">101</span>
+      <span class="m-s">S</span>
+      <div class="m-divider"></div>
+      <span class="m-l">L</span>
       <div class="monogram-line"></div>
     </div>
     <div class="monogram-desc">
-      The <strong>C101</strong> monogram is used where the full wordmark won&rsquo;t fit: favicons, small badges, map markers, and compact UI elements. Minimum size: 24&times;24px.
+      The <strong>S|L</strong> monogram is used where the full wordmark won&rsquo;t fit: favicons, small badges, map markers, and compact UI elements. The vertical bar represents the line &mdash; connecting S(till) to (on the) L(ine). Minimum size: 24&times;24px.
     </div>
   </div>
 
   <div class="clearspace-demo fade-up">
     <div class="clearspace-box">
-      <div class="logo-inline dark" style="font-size: 28px;">
-        <span class="l-city" style="font-size: 28px;">CITY</span><span class="l-101" style="font-size: 28px;">101</span>
+      <div class="logo-lockup dark" style="font-size: 28px;">
+        <span class="ll-still" style="font-size: 24px;">STILL</span>
+        <span class="ll-otl" style="font-size: 13px;">ON THE LINE</span>
       </div>
     </div>
-    <div class="clearspace-note">Minimum clear space = height of &ldquo;1&rdquo; on all sides</div>
+    <div class="clearspace-note">Minimum clear space = height of &ldquo;S&rdquo; on all sides</div>
   </div>
 
   <div class="fade-up">
@@ -1715,37 +1842,37 @@
     <div class="dos-donts">
       <div class="do-dont-card do">
         <div class="card-preview">
-          <div class="mini-logo"><span class="ml-city">CITY</span><span class="ml-101">101</span></div>
+          <div class="mini-logo"><span class="ml-still">STILL</span><br><span class="ml-otl">ON THE LINE</span></div>
         </div>
-        <div class="card-label"><span class="icon">&#10003;</span> Use correct proportions</div>
+        <div class="card-label"><span class="icon">&#10003;</span> Use correct stacked layout</div>
       </div>
       <div class="do-dont-card do">
         <div class="card-preview" style="background: var(--bg);">
-          <div class="mini-logo"><span class="ml-city">CITY</span><span class="ml-101">101</span></div>
+          <div class="mini-logo"><span class="ml-still">STILL</span><br><span class="ml-otl">ON THE LINE</span></div>
         </div>
         <div class="card-label"><span class="icon">&#10003;</span> Use on solid dark background</div>
       </div>
       <div class="do-dont-card dont">
         <div class="card-preview">
-          <div class="mini-logo" style="transform: scaleX(1.5);"><span class="ml-city">CITY</span><span class="ml-101">101</span></div>
+          <div class="mini-logo" style="transform: scaleX(1.5);"><span class="ml-still">STILL</span><br><span class="ml-otl">ON THE LINE</span></div>
         </div>
         <div class="card-label"><span class="icon">&#10005;</span> Don&rsquo;t stretch or distort</div>
       </div>
       <div class="do-dont-card dont">
         <div class="card-preview">
-          <div class="mini-logo"><span class="ml-city" style="color: #ff6b6b;">CITY</span><span class="ml-101" style="color: #4ecdc4;">101</span></div>
+          <div class="mini-logo"><span class="ml-still" style="color: #ff6b6b;">STILL</span><br><span class="ml-otl" style="color: #4ecdc4;">ON THE LINE</span></div>
         </div>
         <div class="card-label"><span class="icon">&#10005;</span> Don&rsquo;t use off-brand colors</div>
       </div>
       <div class="do-dont-card dont">
         <div class="card-preview">
-          <div class="mini-logo" style="text-shadow: 0 4px 12px rgba(201,168,76,0.5);"><span class="ml-city">CITY</span><span class="ml-101">101</span></div>
+          <div class="mini-logo" style="text-shadow: 0 4px 12px rgba(201,168,76,0.5);"><span class="ml-still">STILL</span><br><span class="ml-otl">ON THE LINE</span></div>
         </div>
         <div class="card-label"><span class="icon">&#10005;</span> Don&rsquo;t add glows or shadows</div>
       </div>
       <div class="do-dont-card dont">
         <div class="card-preview" style="background: repeating-conic-gradient(#1a1a2e 0% 25%, #16213e 0% 50%) 0 0 / 20px 20px;">
-          <div class="mini-logo"><span class="ml-city">CITY</span><span class="ml-101">101</span></div>
+          <div class="mini-logo"><span class="ml-still">STILL</span><br><span class="ml-otl">ON THE LINE</span></div>
         </div>
         <div class="card-label"><span class="icon">&#10005;</span> Don&rsquo;t place on busy patterns</div>
       </div>
@@ -1753,7 +1880,7 @@
   </div>
 </section>
 
-<!-- ═══════════════ COLOR PALETTE ═══════════════ -->
+<!-- Color Palette -->
 <section id="color">
   <div class="fade-up">
     <div class="section-label">02 &mdash; Palette</div>
@@ -1763,9 +1890,7 @@
 
   <div class="fade-up">
     <h3 class="palette-group-title">Primary</h3>
-    <div class="palette-grid" id="primary-palette">
-      <!-- Populated by JS -->
-    </div>
+    <div class="palette-grid" id="primary-palette"></div>
   </div>
 
   <div class="gradient-bar fade-up"></div>
@@ -1781,7 +1906,7 @@
   </div>
 </section>
 
-<!-- ═══════════════ TYPOGRAPHY ═══════════════ -->
+<!-- Typography -->
 <section id="type">
   <div class="fade-up">
     <div class="section-label">03 &mdash; Typography</div>
@@ -1791,7 +1916,7 @@
 
   <div class="type-showcase fade-up">
     <div class="type-label">Display &mdash; Instrument Serif</div>
-    <div class="type-sample-display">The corridor breathes</div>
+    <div class="type-sample-display">Still on the line</div>
     <div class="type-meta">Instrument Serif &middot; Regular &middot; Headings, titles, pull quotes</div>
   </div>
 
@@ -1808,7 +1933,7 @@
   </div>
 
   <div class="type-roles fade-up">
-    Instrument Serif carries the narrative voice. DM Sans explains. DM Mono measures.
+    Instrument Serif carries the narrative voice &mdash; the &ldquo;still&rdquo; that pauses. DM Sans explains &mdash; the connective tissue. DM Mono measures &mdash; the line itself, precise and constant.
   </div>
 
   <div class="fade-up">
@@ -1827,7 +1952,7 @@
   </div>
 </section>
 
-<!-- ═══════════════ COMPONENTS ═══════════════ -->
+<!-- Components -->
 <section id="components">
   <div class="fade-up">
     <div class="section-label">04 &mdash; Components</div>
@@ -1925,7 +2050,7 @@
     <div class="datum-line">
       <span class="dl-tag">A04 &middot; SENTIENCE</span>
       <span class="dl-title">Healthcare Supply Chain</span>
-      <span class="dl-time">2026-03-19 &middot; 14:30</span>
+      <span class="dl-time">2026-03-22 &middot; 14:30</span>
     </div>
   </div>
 
@@ -1942,7 +2067,7 @@
   </div>
 </section>
 
-<!-- ═══════════════ LAYOUT & SPACING ═══════════════ -->
+<!-- Layout & Spacing -->
 <section id="layout">
   <div class="fade-up">
     <div class="section-label">05 &mdash; Layout</div>
@@ -1987,7 +2112,7 @@
   </div>
 </section>
 
-<!-- ═══════════════ ANIMATION ═══════════════ -->
+<!-- Animation -->
 <section id="motion">
   <div class="fade-up">
     <div class="section-label">06 &mdash; Motion</div>
@@ -2029,7 +2154,7 @@
   </div>
 </section>
 
-<!-- ═══════════════ APPLICATION EXAMPLES ═══════════════ -->
+<!-- Application Examples -->
 <section id="examples">
   <div class="fade-up">
     <div class="section-label">07 &mdash; Application</div>
@@ -2062,7 +2187,7 @@
         </div>
       </div>
       <div class="ms-bottom">
-        <div class="msb-brand"><span class="b-city">CITY</span><span class="b-101">101</span></div>
+        <div class="msb-brand"><span class="b-still">STILL</span> <span class="b-otl">ON THE LINE</span></div>
         <span class="msb-meta">EPFL &middot; Studio Huang &middot; 2026</span>
       </div>
     </div>
@@ -2073,7 +2198,7 @@
     <div class="app-example-label">Map Layout</div>
     <div class="mock-map">
       <div class="mm-header">
-        <div class="mh-brand"><span class="b-city">CITY</span><span class="b-101">101</span></div>
+        <div class="mh-brand"><span class="b-still">Still</span> <span class="b-otl">ON THE LINE</span></div>
         <div class="mh-title">Transit Frequency</div>
         <div class="mh-meta">EPSG:2056</div>
       </div>
@@ -2116,10 +2241,11 @@
   </div>
 </section>
 
-<!-- ═══════════════ FOOTER ═══════════════ -->
+<!-- Footer -->
 <footer class="page-footer">
   <div class="footer-brand">
-    <span class="fb-city">CITY</span><span class="fb-101">101</span>
+    <span class="fb-still">STILL</span>
+    <span class="fb-otl">ON THE LINE</span>
   </div>
   <div class="footer-meta">
     EPFL &middot; Studio Huang &middot; Sentient Cities<br>
@@ -2128,10 +2254,10 @@
 </footer>
 
 <script>
-// ─── Color palette data ───
+// Color palette data
 const palettes = {
   primary: [
-    { name: 'Background', hex: '#0c0c14', sample: 'Aa', sampleColor: '#e8e6e1', ratio: '—' },
+    { name: 'Background', hex: '#0c0c14', sample: 'Aa', sampleColor: '#e8e6e1', ratio: '\u2014' },
     { name: 'Gold Accent', hex: '#c9a84c', sample: 'Aa', sampleColor: '#0c0c14', ratio: '7.2:1' },
     { name: 'Text Primary', hex: '#e8e6e1', sample: 'Aa', sampleColor: '#0c0c14', ratio: '14.1:1' },
     { name: 'Text Muted', hex: '#9a9690', sample: 'Aa', sampleColor: '#0c0c14', ratio: '6.8:1' },
@@ -2139,8 +2265,8 @@ const palettes = {
   extended: [
     { name: 'Copper', hex: '#b87a56', sample: 'Aa', sampleColor: '#0c0c14', ratio: '5.1:1' },
     { name: 'Teal', hex: '#5b8fa8', sample: 'Aa', sampleColor: '#0c0c14', ratio: '5.4:1' },
-    { name: 'Surface', hex: 'rgba(255,255,255,0.04)', sample: '', sampleColor: '', ratio: '—', display: '#15151f' },
-    { name: 'Gold Border', hex: 'rgba(201,168,76,0.12)', sample: '', sampleColor: '', ratio: '—', display: '#1e1c17' },
+    { name: 'Surface', hex: 'rgba(255,255,255,0.04)', sample: '', sampleColor: '', ratio: '\u2014', display: '#15151f' },
+    { name: 'Gold Border', hex: 'rgba(201,168,76,0.12)', sample: '', sampleColor: '', ratio: '\u2014', display: '#1e1c17' },
   ],
   semantic: [
     { name: 'Success', hex: '#5a9e6f', sample: 'Aa', sampleColor: '#0c0c14', ratio: '5.5:1' },
@@ -2162,7 +2288,7 @@ function renderPalette(containerId, colors) {
       <div class="swatch-info">
         <div class="swatch-name">${c.name}</div>
         <div class="swatch-hex">${c.hex}</div>
-        ${c.ratio !== '—' ? `<div class="swatch-ratio">Contrast: ${c.ratio}</div>` : ''}
+        ${c.ratio !== '\u2014' ? `<div class="swatch-ratio">Contrast: ${c.ratio}</div>` : ''}
       </div>
       <div class="copied-toast">Copied!</div>
     `;
@@ -2181,7 +2307,7 @@ renderPalette('primary-palette', palettes.primary);
 renderPalette('extended-palette', palettes.extended);
 renderPalette('semantic-palette', palettes.semantic);
 
-// ─── Scroll-based nav highlighting ───
+// Scroll-based nav highlighting
 const sections = document.querySelectorAll('section[id]');
 const navLinks = document.querySelectorAll('nav .nav-links a');
 
@@ -2198,7 +2324,7 @@ const observer = new IntersectionObserver(entries => {
 
 sections.forEach(s => observer.observe(s));
 
-// ─── Fade-up on scroll ───
+// Fade-up on scroll
 const fadeEls = document.querySelectorAll('.fade-up');
 const fadeObserver = new IntersectionObserver(entries => {
   entries.forEach(entry => {
@@ -2211,16 +2337,15 @@ const fadeObserver = new IntersectionObserver(entries => {
 
 fadeEls.forEach(el => fadeObserver.observe(el));
 
-// ─── Replay fade animation ───
+// Replay fade animation
 function replayFade() {
   const boxes = document.querySelectorAll('#fadeDemo .anim-fade-box');
   boxes.forEach(box => {
     box.classList.remove('animate');
-    void box.offsetWidth; // force reflow
+    void box.offsetWidth;
     box.classList.add('animate');
   });
 }
-// Auto-trigger once visible
 const fadeDemoObs = new IntersectionObserver(entries => {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
