@@ -73,6 +73,19 @@ You're reading this now. Three more files load automatically from `.claude/rules
 ### Layer 4: Execution (tools + workflows)
 Before any repeatable operation: check `workflows/` then `tools/`. See `.claude/rules/tool-protocol.md`.
 
+## Archibase — Construction Knowledge System
+
+Standalone repo. Location set by `ARCHIBASE_PATH` env var (default: `~/CLAUDE/archibase`). Contains construction knowledge for prototypology agents — **all Claudes should know about this**.
+
+| Layer | What | How to access |
+|-------|------|---------------|
+| **L1 — SQLite** | Materials, KBOB (375 Swiss LCA), steel profiles, fire codes, SIA loads, room dimensions, spans, assemblies | `from tools.data.knowledge_bridge import ConstructionDB` |
+| **L2 — Markdown** | 33 curated guides: materials, construction systems, typologies, norms, parametric design | Read `$ARCHIBASE_PATH/source/knowledge/` — start with directory READMEs |
+| **L3 — Scripts** | Parametric enforcement in code | Lives here in city101 (prototypology scripts) |
+| **L4 — RAG** | 35K+ chunks: Dicobat, 21 SIA norms, Designing Buildings Wiki, Alexander patterns, Bloomsbury | `from tools.data.knowledge_bridge import DicobatRAG` |
+
+Use `/parametric` to generate knowledge-grounded Rhino scripts. See `README.md` and `KNOWLEDGE_SYSTEM_DIAGRAM.md` inside the archibase repo for full documentation, source citations, and architecture diagrams.
+
 ## Repo structure
 ```
 city101/

@@ -11,23 +11,9 @@ This is the demo moment: "every dimension has a source, every constraint is enfo
 
 ## Before you start
 
-### 1. Switch MCP config to router
+### 1. Check MCP config
 
-Edit `.mcp.json` in the city101 repo root:
-
-```json
-{
-  "mcpServers": {
-    "rhino_router": {
-      "command": "uv",
-      "args": ["run", "experiments/rhino mcp server/rhino_router_mcp.py"],
-      "env": {
-        "RHINO_INSTANCES": "{\"main\": 9002}"
-      }
-    }
-  }
-}
-```
+`.mcp.json` should already be set to router mode (pointing to `tools/rhino/rhino_router_mcp.py`). If not, see `.claude/rules/rhino-mcp.md` for the config.
 
 ### 2. Start Rhino with custom port
 
@@ -35,7 +21,7 @@ In Rhino, run command: `mcpstart`
 When prompted for port: type `9002` and press Enter.
 
 > If Rhino says "unknown command mcpstart": the forked plugin isn't installed.
-> Check `experiments/rhino mcp server/SETUP.md` for installation steps.
+> Check `tools/rhino/SETUP.md` for installation steps.
 > The fork is at `aacrespo/rhinomcp`, branch `feature/configurable-port`.
 
 ### 3. Restart Claude Code

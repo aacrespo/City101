@@ -33,3 +33,18 @@ Techniques discovered while modeling. Updated by agents after each build round.
 11. **Align openings to course boundaries.** Rather than placing openings at exact spec dimensions (door z=0-210, windows z=90-210), round to the nearest course boundary (20cm increments). Door: z=0-200, windows: z=80-200. This is how real coursed masonry works — you don't cut stones mid-course. The Openings agent adds lintels at the top of the void.
 
 12. **Wall plate (sabliere) section: 15x10cm oak, centered on structural stone.** The plate sits at z=260 (top of 13 courses x 20cm), centered on the 36cm stone with 10.5cm offset from exterior face. South/North plates run full x-length; West/East fit between them. This gives the timber frame agent a level bearing surface at z=260-270.
+
+## Training Session 2 — 2026-03-22 (Deplazes book exercises)
+
+### DPC at sole plate
+**Rule:** Damp-proof course at the timber-to-concrete transition is a separate object — 3mm bitumen felt strip. It sits between the timber sole plate and the concrete plinth/stem wall. Model it explicitly.
+**Source:** Deplazes p.417, timber platform frame plinth.
+
+### Basement floor positioning
+**Issue:** Basement floor slab extended under the concrete wall, causing 48,000 cm³ overlap.
+**Fix:** Floor slab must start at the INNER face of the concrete basement wall, not extend underneath it. The wall sits on the foundation, the floor sits next to it.
+**Source:** Deplazes p.417.
+
+### Drainage pipe in gravel bed
+**Note:** Drainage pipe embedded in coarse gravel is an intentional overlap (gravel wraps around the pipe). Don't flag this as an error in overlap audits. Mark as "intentional_overlap" in metadata.
+**Source:** Deplazes p.417-418.
