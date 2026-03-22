@@ -1,8 +1,8 @@
 {
   "mcpServers": {
-    "rhino": {
+    "rhino_router": {
       "command": "uv",
-      "args": ["run", "tools/rhino/rhino_router_mcp.py"],
+      "args": ["run", "experiments/rhino mcp server/rhino_router_mcp.py"],
       "env": {
         "RHINO_INSTANCES": "{\"main\": 9002}"
       }
