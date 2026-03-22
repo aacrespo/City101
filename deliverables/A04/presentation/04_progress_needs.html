@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Still On The Line — 04 Progress & Equipment</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@400;500;700&family=Instrument+Serif&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --chrome-bg: #0a0a0f; --chrome-text: #e8e6e1; --chrome-accent: #c9a84c;
+    --chrome-muted: #8a8880; --chrome-cyan: #4cc9b0; --chrome-green: #4caf50;
+    --chrome-red: #e05555; --chrome-purple: #a88beb; --chrome-blue: #5b9bd5;
+    --chrome-orange: #e8a84c;
+    --font-display: 'Instrument Serif', serif; --font-body: 'DM Sans', sans-serif;
+    --font-mono: 'DM Mono', monospace;
+    --panel-border: rgba(201, 168, 76, 0.25); --glass-bg: rgba(10, 10, 15, 0.85);
+    --glass-border: rgba(201, 168, 76, 0.15);
+  }
+  html, body { width: 100%; height: 100%; background: var(--chrome-bg); color: var(--chrome-text); font-family: var(--font-body); overflow: hidden; }
+  .canvas { width: 100vw; height: 100vh; display: grid; grid-template-columns: 1fr 1fr 1fr; grid-template-rows: auto 1fr 1fr auto; gap: 0; }
+  .canvas::after { content: ''; position: fixed; top: 0; left: 0; right: 0; bottom: 0; pointer-events: none; background: repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.03) 2px,rgba(0,0,0,0.03) 4px); z-index: 100; }
+
+  .status-bar { grid-column: 1/-1; background: rgba(201,168,76,0.08); border-bottom: 1px solid var(--panel-border); padding: 6px 20px; font-family: var(--font-mono); font-size: 11px; color: var(--chrome-muted); display: flex; justify-content: space-between; align-items: center; }
+  .status-bar .left { display: flex; gap: 24px; align-items: center; }
+  .status-bar .session-tag { background: rgba(201,168,76,0.15); color: var(--chrome-accent); padding: 2px 8px; border-radius: 2px; font-weight: 500; }
+  .status-bar .slide-tag { background: rgba(76,201,176,0.1); color: var(--chrome-cyan); padding: 2px 8px; border-radius: 2px; font-size: 9px; }
+  .status-bar .right { display: flex; gap: 16px; align-items: center; }
+  .play-btn { background: rgba(201,168,76,0.12); border: 1px solid var(--chrome-accent); color: var(--chrome-accent); font-family: var(--font-mono); font-size: 11px; padding: 3px 12px; cursor: pointer; border-radius: 2px; transition: all 0.2s; }
+  .play-btn:hover { background: rgba(201,168,76,0.25); }
+  .play-btn.playing { color: var(--chrome-green); border-color: var(--chrome-green); }
+
+  .panel { border: 1px solid var(--panel-border); position: relative; overflow: hidden; display: flex; flex-direction: column; transition: border-color 0.5s, box-shadow 0.5s; }
+  .panel.highlight { border-color: var(--chrome-accent); box-shadow: inset 0 0 30px rgba(201,168,76,0.06); }
+  .panel-header { background: rgba(201,168,76,0.06); border-bottom: 1px solid var(--glass-border); padding: 10px 16px 8px; display: flex; justify-content: space-between; align-items: baseline; flex-shrink: 0; }
+  .panel-header h2 { font-family: var(--font-display); font-size: 20px; color: var(--chrome-accent); font-weight: 400; }
+  .panel-header .panel-tag { font-family: var(--font-mono); font-size: 9px; color: var(--chrome-muted); text-transform: uppercase; letter-spacing: 1px; }
+  .panel-body { flex: 1; padding: 14px 16px; overflow: hidden; position: relative; }
+
+  .bottom-bar { grid-column: 1/-1; background: rgba(201,168,76,0.06); border-top: 1px solid var(--panel-border); padding: 5px 20px; font-family: var(--font-mono); font-size: 10px; color: var(--chrome-muted); display: flex; justify-content: space-between; }
+
+  .stats-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+  .stat-cell { background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border); border-radius: 3px; padding: 8px 10px; opacity: 0; transform: translateY(6px); transition: opacity 0.4s, transform 0.4s; }
+  .stat-cell.visible { opacity: 1; transform: translateY(0); }
+  .stat-num { font-family: var(--font-mono); font-size: 20px; font-weight: 500; color: var(--chrome-accent); line-height: 1; margin-bottom: 3px; }
+  .stat-num.cyan { color: var(--chrome-cyan); } .stat-num.red { color: var(--chrome-red); }
+  .stat-num.green { color: var(--chrome-green); } .stat-num.purple { color: var(--chrome-purple); }
+  .stat-num.orange { color: var(--chrome-orange); } .stat-num.blue { color: var(--chrome-blue); }
+  .stat-label { font-family: var(--font-body); font-size: 9px; color: var(--chrome-muted); line-height: 1.3; }
+
+  .corridor-label { font-family: var(--font-mono); font-size: 9px; color: var(--chrome-muted); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px; }
+  .route-title { font-family: var(--font-display); font-size: 26px; color: var(--chrome-text); margin-bottom: 16px; line-height: 1.1; }
+  .route-title span { color: var(--chrome-accent); }
+  .question-block { font-family: var(--font-display); font-size: 13px; color: var(--chrome-muted); font-style: italic; margin-bottom: 14px; line-height: 1.5; border-left: 2px solid var(--chrome-accent); padding-left: 10px; }
+  .tag-row { display: flex; gap: 6px; margin-bottom: 14px; flex-wrap: wrap; }
+  .tag-pill { font-family: var(--font-mono); font-size: 9px; padding: 3px 8px; border-radius: 2px; }
+
+  .section-label { font-family: var(--font-mono); font-size: 7.5px; color: var(--chrome-muted); text-transform: uppercase; letter-spacing: 1.2px; margin-bottom: 3px; }
+  .topo-split { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin-bottom: 5px; }
+  .topo-card { background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border); border-radius: 3px; padding: 5px 8px; }
+  .topo-label { font-family: var(--font-mono); font-size: 9px; font-weight: 500; margin-bottom: 2px; }
+  .topo-stat { font-family: var(--font-body); font-size: 8px; color: var(--chrome-muted); line-height: 1.4; }
+  .topo-stat b { color: var(--chrome-text); font-weight: 500; }
+
+  .callout-box { margin-top: 4px; padding: 4px 7px; border: 1px dashed rgba(201,168,76,0.3); border-radius: 3px; background: rgba(201,168,76,0.03); font-family: var(--font-mono); font-size: 7.5px; color: var(--chrome-muted); line-height: 1.5; }
+  .callout-box .hl { color: var(--chrome-accent); }
+
+  .relay-chain { display: flex; flex-direction: column; height: 100%; justify-content: center; gap: 0; position: relative; padding-left: 24px; }
+  .relay-chain::before { content: ''; position: absolute; left: 10px; top: 12px; bottom: 12px; width: 1px; border-left: 1px dashed rgba(201,168,76,0.3); }
+  .relay-node { display: flex; align-items: flex-start; gap: 10px; padding: 4px 0; position: relative; }
+  .relay-node::before { content: ''; position: absolute; left: -18px; top: 10px; width: 8px; height: 8px; border-radius: 50%; border: 1.5px solid var(--chrome-accent); background: var(--chrome-bg); flex-shrink: 0; }
+  .relay-node.critical::before { background: rgba(201,168,76,0.3); box-shadow: 0 0 6px rgba(201,168,76,0.4); }
+  .relay-node.done::before { background: rgba(76,175,80,0.3); border-color: var(--chrome-green); box-shadow: 0 0 6px rgba(76,175,80,0.3); }
+  .relay-node-num { font-family: var(--font-mono); font-size: 8px; color: var(--chrome-accent); min-width: 14px; margin-top: 2px; flex-shrink: 0; }
+  .relay-node-content { flex: 1; min-width: 0; }
+  .relay-node-name { font-family: var(--font-body); font-size: 10.5px; color: var(--chrome-text); font-weight: 500; line-height: 1.2; }
+  .relay-node-gap { font-family: var(--font-mono); font-size: 8.5px; color: var(--chrome-muted); margin-top: 1px; }
+  .relay-node-gap .gap-arrow { color: var(--chrome-orange); }
+  .relay-footer { margin-top: 8px; padding-top: 8px; border-top: 1px dashed rgba(201,168,76,0.15); font-family: var(--font-display); font-size: 11px; color: var(--chrome-muted); font-style: italic; line-height: 1.4; }
+  .relay-footer em { color: var(--chrome-accent); font-style: normal; }
+
+  .prop-title { font-family: var(--font-display); font-size: 18px; color: var(--chrome-text); margin-bottom: 12px; line-height: 1.2; }
+  .prop-title span { color: var(--chrome-accent); }
+  .prop-principles { display: flex; flex-direction: column; gap: 4px; border-top: 1px solid var(--glass-border); padding-top: 10px; }
+  .prop-principle { display: flex; gap: 8px; font-family: var(--font-mono); font-size: 9px; color: var(--chrome-muted); line-height: 1.5; }
+  .prop-principle .pp-label { color: var(--chrome-cyan); flex-shrink: 0; }
+
+  /* Progress bar */
+  .progress-row { display: flex; align-items: center; gap: 8px; padding: 3px 0; }
+  .progress-label { font-family: var(--font-mono); font-size: 8px; min-width: 40px; flex-shrink: 0; }
+  .progress-track { flex: 1; height: 8px; background: rgba(255,255,255,0.03); border-radius: 2px; overflow: hidden; }
+  .progress-fill { height: 100%; border-radius: 2px; transition: width 1s ease; }
+  .progress-pct { font-family: var(--font-mono); font-size: 8px; min-width: 30px; text-align: right; flex-shrink: 0; }
+
+  /* Equipment card */
+  .equip-card { background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border); border-radius: 3px; padding: 8px 10px; margin-bottom: 4px; }
+  .equip-name { font-family: var(--font-mono); font-size: 10px; font-weight: 500; margin-bottom: 3px; }
+  .equip-why { font-family: var(--font-body); font-size: 8px; color: var(--chrome-muted); line-height: 1.4; }
+  .equip-tag { display: inline-block; font-family: var(--font-mono); font-size: 7px; padding: 1px 5px; border-radius: 2px; margin-top: 3px; }
+
+  .cursor { display: inline-block; width: 7px; height: 14px; background: var(--chrome-accent); animation: blink 1s step-end infinite; vertical-align: text-bottom; margin-left: 2px; }
+  @keyframes blink { 50% { opacity: 0; } }
+  @keyframes pulse-green { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+  @media print { .canvas::after { display: none; } @page { size: landscape; margin: 0; } }
+</style>
+</head>
+<body>
+<div class="canvas">
+
+  <div class="status-bar">
+    <div class="left">
+      <span class="session-tag">still on the line</span>
+      <span>progress · equipment needs</span>
+      <span class="slide-tag">6 screens</span>
+      <span>A01–A04</span>
+      <span>march 2026</span>
+    </div>
+    <div class="right">
+      <button class="play-btn" id="playBtn" onclick="togglePlay()">&#9654; play sequence</button>
+      <span>AR-302k Studio Huang</span>
+      <span>Sentient Cities</span>
+    </div>
+  </div>
+
+  <!-- SCREEN 1 — Overview -->
+  <div class="panel" id="screen1">
+    <div class="panel-header">
+      <h2>Where We Stand</h2>
+      <span class="panel-tag">A01–A04 · midterm march 30</span>
+    </div>
+    <div class="panel-body">
+      <div class="corridor-label">project progress · 8 days to midterm</div>
+      <div class="route-title">Three phases <span>complete</span>. Fourth <span>active</span>.</div>
+      <div class="question-block">"We built the data, proved the archipelago, validated in the field. Now we're designing the architecture that holds the gap — 9 relay-lock chambers along the healthcare corridor."</div>
+      <div class="tag-row">
+        <div class="tag-pill" style="border:1px solid rgba(76,175,80,0.4);color:var(--chrome-green);">A01 complete</div>
+        <div class="tag-pill" style="border:1px solid rgba(76,175,80,0.4);color:var(--chrome-green);">A02 submitted</div>
+        <div class="tag-pill" style="border:1px solid rgba(76,175,80,0.4);color:var(--chrome-green);">A03 complete</div>
+        <div class="tag-pill" style="border:1px solid rgba(232,168,76,0.4);color:var(--chrome-orange);">A04 active</div>
+      </div>
+      <div class="stats-grid" id="statsGrid">
+        <div class="stat-cell"><div class="stat-num green">34</div><div class="stat-label">Verified datasets<br>8 domain categories</div></div>
+        <div class="stat-cell"><div class="stat-num cyan">21</div><div class="stat-label">Interactive visualizations<br>+ 6 diagrams</div></div>
+        <div class="stat-cell"><div class="stat-num purple">9</div><div class="stat-label">Relay-lock nodes<br>scored & positioned</div></div>
+        <div class="stat-cell"><div class="stat-num orange">709</div><div class="stat-label">Geometry objects<br>Lock 05 CHUV prototype</div></div>
+        <div class="stat-cell"><div class="stat-num">46pg</div><div class="stat-label">Research paper<br>v2 with scoring</div></div>
+        <div class="stat-cell"><div class="stat-num blue">8</div><div class="stat-label">Days to midterm<br>March 30 deadline</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN 2 — Phase Timeline -->
+  <div class="panel" id="screen2">
+    <div class="panel-header">
+      <h2>Phase Progress</h2>
+      <span class="panel-tag">A01→A04 · completion tracking</span>
+    </div>
+    <div class="panel-body" style="padding: 10px 14px;">
+      <div class="relay-chain" style="padding-top:0;">
+        <div class="relay-node done">
+          <span class="relay-node-num" style="color:var(--chrome-green);">A01</span>
+          <div class="relay-node-content">
+            <div class="relay-node-name">Data Collection <span style="font-family:var(--font-mono);font-size:7px;color:var(--chrome-green);margin-left:6px;">100%</span></div>
+            <div class="relay-node-gap">49 stations inventoried · 33 classmate datasets integrated · 8 API sources</div>
+            <div class="relay-node-gap" style="color:rgba(138,136,128,0.5)">SBB · DIEMO · BAKOM · Google Places · Google Reviews · Overpass · SwissTopo · BFS</div>
+          </div>
+        </div>
+        <div class="relay-node done">
+          <span class="relay-node-num" style="color:var(--chrome-green);">A02</span>
+          <div class="relay-node-content">
+            <div class="relay-node-name">Data Synchronicity <span style="font-family:var(--font-mono);font-size:7px;color:var(--chrome-green);margin-left:6px;">submitted Mar 3</span></div>
+            <div class="relay-node-gap">WCI index created · 5 dimensions · 619 journey pairs measured</div>
+            <div class="relay-node-gap" style="color:rgba(138,136,128,0.5)">result: 22% connected · 42× variation · 85% not workable · "The Archipelago"</div>
+          </div>
+        </div>
+        <div class="relay-node done">
+          <span class="relay-node-num" style="color:var(--chrome-green);">A03</span>
+          <div class="relay-node-content">
+            <div class="relay-node-name">Field Validation <span style="font-family:var(--font-mono);font-size:7px;color:var(--chrome-green);margin-left:6px;">complete Mar 10</span></div>
+            <div class="relay-node-gap">7 sites visited · 24 candidates narrowed to 9 nodes</div>
+            <div class="relay-node-gap" style="color:rgba(138,136,128,0.5)">healthcare chain discovered · night worker counts · on-site verification</div>
+          </div>
+        </div>
+        <div class="relay-node critical">
+          <span class="relay-node-num">A04</span>
+          <div class="relay-node-content">
+            <div class="relay-node-name">Forms of Sentience <span style="font-family:var(--font-mono);font-size:7px;color:var(--chrome-orange);margin-left:6px;">active → Mar 30</span></div>
+            <div class="relay-node-gap">MCP prototypology · agent team modeling · relay-lock configurator</div>
+            <div class="relay-node-gap" style="color:rgba(138,136,128,0.5)">green-lit March 16 crit · "cutting edge" — instructor offered Max subscription funding</div>
+          </div>
+        </div>
+        <div class="relay-footer">
+          March 16 crit: <em>green light from Huang + assistants</em>. Called "cutting edge." Now: execute the prototypology.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN 3 — What We Built (inventory) -->
+  <div class="panel" id="screen3">
+    <div class="panel-header">
+      <h2>Production Inventory</h2>
+      <span class="panel-tag">deliverables · complete catalog</span>
+    </div>
+    <div class="panel-body" style="padding: 10px 14px;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px;">
+        <div style="background:rgba(76,201,176,0.04);border:1px solid rgba(76,201,176,0.2);border-radius:3px;padding:6px 8px;">
+          <div style="font-family:var(--font-mono);font-size:16px;color:var(--chrome-cyan);font-weight:500;">34</div>
+          <div style="font-family:var(--font-mono);font-size:8px;color:var(--chrome-muted);">datasets (CSV)</div>
+          <div style="font-family:var(--font-body);font-size:7px;color:rgba(138,136,128,0.6);margin-top:2px;">corridor (13) · remote work (7) · transit (4) · zurich (4) · EV (3) · stations (2) · healthcare (1)</div>
+        </div>
+        <div style="background:rgba(201,168,76,0.04);border:1px solid rgba(201,168,76,0.2);border-radius:3px;padding:6px 8px;">
+          <div style="font-family:var(--font-mono);font-size:16px;color:var(--chrome-accent);font-weight:500;">21+6</div>
+          <div style="font-family:var(--font-mono);font-size:8px;color:var(--chrome-muted);">visualizations + diagrams</div>
+          <div style="font-family:var(--font-body);font-size:7px;color:rgba(138,136,128,0.6);margin-top:2px;">9 standard viz · 4 animations · clock/Marey/spacetime · scrollytelling site</div>
+        </div>
+        <div style="background:rgba(168,139,235,0.04);border:1px solid rgba(168,139,235,0.2);border-radius:3px;padding:6px 8px;">
+          <div style="font-family:var(--font-mono);font-size:16px;color:var(--chrome-purple);font-weight:500;">8</div>
+          <div style="font-family:var(--font-mono);font-size:8px;color:var(--chrome-muted);">A04 deliverables</div>
+          <div style="font-family:var(--font-body);font-size:7px;color:rgba(138,136,128,0.6);margin-top:2px;">v2 paper (46pg) · 3 healthcare diagrams · AI workflow · transport pulse v2</div>
+        </div>
+        <div style="background:rgba(232,168,76,0.04);border:1px solid rgba(232,168,76,0.2);border-radius:3px;padding:6px 8px;">
+          <div style="font-family:var(--font-mono);font-size:16px;color:var(--chrome-orange);font-weight:500;">15</div>
+          <div style="font-family:var(--font-mono);font-size:8px;color:var(--chrome-muted);">app architecture docs</div>
+          <div style="font-family:var(--font-body);font-size:7px;color:rgba(138,136,128,0.6);margin-top:2px;">configurator prototype · architecture diagram · decision logic · data flow · phasing</div>
+        </div>
+      </div>
+
+      <div class="section-label" style="margin-bottom:4px;">special outputs</div>
+      <div style="display:flex;gap:4px;">
+        <div style="flex:1;border:1px dashed rgba(201,168,76,0.2);border-radius:3px;padding:4px 6px;text-align:center;">
+          <div style="font-family:var(--font-mono);font-size:9px;color:var(--chrome-accent);">Transport Pulse v2</div>
+          <div style="font-family:var(--font-mono);font-size:7px;color:var(--chrome-muted);">29,135 trips · all modes · 3D terrain</div>
+        </div>
+        <div style="flex:1;border:1px dashed rgba(201,168,76,0.2);border-radius:3px;padding:4px 6px;text-align:center;">
+          <div style="font-family:var(--font-mono);font-size:9px;color:var(--chrome-accent);">Scrollytelling Site</div>
+          <div style="font-family:var(--font-mono);font-size:7px;color:var(--chrome-muted);">7 Leaflet maps · full narrative</div>
+        </div>
+        <div style="flex:1;border:1px dashed rgba(201,168,76,0.2);border-radius:3px;padding:4px 6px;text-align:center;">
+          <div style="font-family:var(--font-mono);font-size:9px;color:var(--chrome-accent);">Lock 05 CHUV</div>
+          <div style="font-family:var(--font-mono);font-size:7px;color:var(--chrome-muted);">709 objects · 7 agents · 4 rounds</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN 4 — Remaining Work -->
+  <div class="panel" id="screen4">
+    <div class="panel-header">
+      <h2>Midterm Checklist</h2>
+      <span class="panel-tag">march 30 · remaining deliverables</span>
+    </div>
+    <div class="panel-body" style="padding: 10px 14px;">
+      <div class="section-label" style="margin-bottom:6px;">required deliverables — what's left</div>
+
+      <div style="display:flex;flex-direction:column;gap:4px;margin-bottom:8px;">
+        <div style="display:flex;align-items:center;gap:8px;padding:5px 8px;background:rgba(76,175,80,0.04);border:1px solid rgba(76,175,80,0.2);border-radius:3px;">
+          <span style="font-family:var(--font-mono);font-size:9px;color:var(--chrome-green);min-width:14px;">&#10003;</span>
+          <span style="font-family:var(--font-mono);font-size:9px;color:var(--chrome-text);">6-screen PPTX template</span>
+          <span style="font-family:var(--font-mono);font-size:7px;color:var(--chrome-green);margin-left:auto;">done (this presentation)</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;padding:5px 8px;background:rgba(76,175,80,0.04);border:1px solid rgba(76,175,80,0.2);border-radius:3px;">
+          <span style="font-family:var(--font-mono);font-size:9px;color:var(--chrome-green);min-width:14px;">&#10003;</span>
+          <span style="font-family:var(--font-mono);font-size:9px;color:var(--chrome-text);">Dataset mapping (A01)</span>
+          <span style="font-family:var(--font-mono);font-size:7px;color:var(--chrome-green);margin-left:auto;">34 datasets · INVENTORY.md</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;padding:5px 8px;background:rgba(76,175,80,0.04);border:1px solid rgba(76,175,80,0.2);border-radius:3px;">
+          <span style="font-family:var(--font-mono);font-size:9px;color:var(--chrome-green);min-width:14px;">&#10003;</span>
+          <span style="font-family:var(--font-mono);font-size:9px;color:var(--chrome-text);">Index formula (A02)</span>
+          <span style="font-family:var(--font-mono);font-size:7px;color:var(--chrome-green);margin-left:auto;">WCI · 5 dimensions</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;padding:5px 8px;background:rgba(76,175,80,0.04);border:1px solid rgba(76,175,80,0.2);border-radius:3px;">
+          <span style="font-family:var(--font-mono);font-size:9px;color:var(--chrome-green);min-width:14px;">&#10003;</span>
+          <span style="font-family:var(--font-mono);font-size:9px;color:var(--chrome-text);">Field validation + network strategy (A03)</span>
+          <span style="font-family:var(--font-mono);font-size:7px;color:var(--chrome-green);margin-left:auto;">7 sites · 9 nodes</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;padding:5px 8px;background:rgba(232,168,76,0.04);border:1px solid rgba(232,168,76,0.2);border-radius:3px;">
+          <span style="font-family:var(--font-mono);font-size:9px;color:var(--chrome-orange);min-width:14px;">&#9679;</span>
+          <span style="font-family:var(--font-mono);font-size:9px;color:var(--chrome-text);">3+ MCP prototypological models</span>
+          <span style="font-family:var(--font-mono);font-size:7px;color:var(--chrome-orange);margin-left:auto;">1/3 done (Lock 05 CHUV)</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;padding:5px 8px;background:rgba(232,168,76,0.04);border:1px solid rgba(232,168,76,0.2);border-radius:3px;">
+          <span style="font-family:var(--font-mono);font-size:9px;color:var(--chrome-orange);min-width:14px;">&#9679;</span>
+          <span style="font-family:var(--font-mono);font-size:9px;color:var(--chrome-text);">3+ axonometric site interpretations</span>
+          <span style="font-family:var(--font-mono);font-size:7px;color:var(--chrome-orange);margin-left:auto;">in progress</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;padding:5px 8px;background:rgba(232,168,76,0.04);border:1px solid rgba(232,168,76,0.2);border-radius:3px;">
+          <span style="font-family:var(--font-mono);font-size:9px;color:var(--chrome-orange);min-width:14px;">&#9679;</span>
+          <span style="font-family:var(--font-mono);font-size:9px;color:var(--chrome-text);">Turntable animations + MCP methodology diagrams</span>
+          <span style="font-family:var(--font-mono);font-size:7px;color:var(--chrome-orange);margin-left:auto;">pending</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;padding:5px 8px;background:rgba(229,85,85,0.04);border:1px solid rgba(229,85,85,0.2);border-radius:3px;">
+          <span style="font-family:var(--font-mono);font-size:9px;color:var(--chrome-red);min-width:14px;">&#9679;</span>
+          <span style="font-family:var(--font-mono);font-size:9px;color:var(--chrome-text);">Sequential PPTX presentation</span>
+          <span style="font-family:var(--font-mono);font-size:7px;color:var(--chrome-red);margin-left:auto;">not started</span>
+        </div>
+      </div>
+
+      <div class="callout-box">
+        <span class="hl">Critical path:</span> Scale agent team modeling from 1 node (CHUV) to 3+ nodes. Andrea has proven the workflow (7 agents, 709 objects). Now apply to Morges, Nyon, Rennaz.
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN 5 — Team Split -->
+  <div class="panel" id="screen5">
+    <div class="panel-header">
+      <h2>Team Allocation</h2>
+      <span class="panel-tag">andrea · henna · claude · march 22–30</span>
+    </div>
+    <div class="panel-body" style="padding: 10px 14px;">
+      <div class="topo-split" style="grid-template-columns:1fr 1fr 1fr;margin-bottom:8px;">
+        <div class="topo-card" style="border-color:rgba(201,168,76,0.3);">
+          <div class="topo-label" style="color:var(--chrome-accent);">Andrea</div>
+          <div class="topo-stat">
+            <b>Prototypology lead</b><br>
+            Scale MCP to 3+ nodes<br>
+            App scoring engine<br>
+            Agent team coordination<br>
+            <span style="font-family:var(--font-mono);font-size:7px;color:var(--chrome-green);">branch: andrea/prototypology-v2</span>
+          </div>
+        </div>
+        <div class="topo-card" style="border-color:rgba(168,139,235,0.3);">
+          <div class="topo-label" style="color:var(--chrome-purple);">Henna</div>
+          <div class="topo-stat">
+            <b>3D corridor + presentation</b><br>
+            Full corridor modeling<br>
+            Point cloud pipeline<br>
+            Axonometric drawings<br>
+            <span style="font-family:var(--font-mono);font-size:7px;color:var(--chrome-accent);">brand identity + PPTX</span>
+          </div>
+        </div>
+        <div class="topo-card" style="border-color:rgba(76,201,176,0.3);">
+          <div class="topo-label" style="color:var(--chrome-cyan);">Claude</div>
+          <div class="topo-stat">
+            <b>Third team member</b><br>
+            Agent team execution<br>
+            Research + data verification<br>
+            Visualization pipeline<br>
+            <span style="font-family:var(--font-mono);font-size:7px;color:var(--chrome-muted);">5 accounts · persistent context</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-label" style="margin-bottom:4px;">overall progress estimate</div>
+      <div style="margin-bottom:4px;">
+        <div class="progress-row">
+          <span class="progress-label" style="color:var(--chrome-green);">Data</span>
+          <div class="progress-track"><div class="progress-fill" style="width:100%;background:var(--chrome-green);"></div></div>
+          <span class="progress-pct" style="color:var(--chrome-green);">100%</span>
+        </div>
+        <div class="progress-row">
+          <span class="progress-label" style="color:var(--chrome-green);">Research</span>
+          <div class="progress-track"><div class="progress-fill" style="width:95%;background:var(--chrome-green);"></div></div>
+          <span class="progress-pct" style="color:var(--chrome-green);">95%</span>
+        </div>
+        <div class="progress-row">
+          <span class="progress-label" style="color:var(--chrome-cyan);">Viz</span>
+          <div class="progress-track"><div class="progress-fill" style="width:90%;background:var(--chrome-cyan);"></div></div>
+          <span class="progress-pct" style="color:var(--chrome-cyan);">90%</span>
+        </div>
+        <div class="progress-row">
+          <span class="progress-label" style="color:var(--chrome-orange);">Models</span>
+          <div class="progress-track"><div class="progress-fill" style="width:35%;background:var(--chrome-orange);"></div></div>
+          <span class="progress-pct" style="color:var(--chrome-orange);">35%</span>
+        </div>
+        <div class="progress-row">
+          <span class="progress-label" style="color:var(--chrome-orange);">Present</span>
+          <div class="progress-track"><div class="progress-fill" style="width:40%;background:var(--chrome-orange);"></div></div>
+          <span class="progress-pct" style="color:var(--chrome-orange);">40%</span>
+        </div>
+      </div>
+
+      <div class="callout-box">
+        <span class="hl">Coordination method:</span> LOCKBOARD.md tracks who is doing what. /session-start and /session-end sync context across all accounts. Claude maintains persistent memory across 5 accounts (Cairn, Cairn Code, Lumen, Meridian, Cadence).
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN 6 — Equipment Request -->
+  <div class="panel" id="screen6">
+    <div class="panel-header">
+      <h2>Equipment Request</h2>
+      <span class="panel-tag">infrastructure · what we need to finish</span>
+    </div>
+    <div class="panel-body">
+      <div class="prop-title">To build at this scale, we need <span>better infrastructure</span></div>
+
+      <div class="equip-card" style="border-color:rgba(201,168,76,0.3);">
+        <div class="equip-name" style="color:var(--chrome-accent);">Virtual / Extended Monitor</div>
+        <div class="equip-why">Agent team modeling requires running Rhino + Claude Code + 3D preview simultaneously. 7 parallel agents generate geometry that needs real-time visual review across multiple viewports. A single laptop screen forces constant window switching, slowing the modeling-review cycle.</div>
+        <div class="equip-tag" style="border:1px solid rgba(201,168,76,0.3);color:var(--chrome-accent);">high priority · modeling workflow</div>
+      </div>
+
+      <div class="equip-card" style="border-color:rgba(76,201,176,0.3);">
+        <div class="equip-name" style="color:var(--chrome-cyan);">High-Performance GPU Access</div>
+        <div class="equip-why">Transport pulse animation renders 29,135 trips with 3D terrain. MapLibre GL + Three.js viewport requires dedicated GPU for smooth turntable animations and real-time interaction. Current setup stutters during complex scenes with multiple data layers.</div>
+        <div class="equip-tag" style="border:1px solid rgba(76,201,176,0.3);color:var(--chrome-cyan);">high priority · rendering pipeline</div>
+      </div>
+
+      <div class="equip-card" style="border-color:rgba(168,139,235,0.3);">
+        <div class="equip-name" style="color:var(--chrome-purple);">Claude Max Subscription (continued)</div>
+        <div class="equip-why">The agent team workflow (12 roles, parallel execution, MCP routing) requires extended context and high-throughput API access. The March 16 crit validated this approach — instructor offered funding. Continued access is essential for scaling from 1 to 9 nodes.</div>
+        <div class="equip-tag" style="border:1px solid rgba(168,139,235,0.3);color:var(--chrome-purple);">critical · AI workflow dependency</div>
+      </div>
+
+      <div style="border-top:1px dashed var(--glass-border);padding-top:7px;margin-top:8px;font-family:var(--font-mono);font-size:8.5px;color:var(--chrome-muted);line-height:1.7;">
+        <span style="color:var(--chrome-accent);">the ask →</span>
+        virtual monitor for parallel 3D work · GPU for rendering pipeline · Claude Max for agent team modeling<span class="cursor"></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-bar">
+    <span>A01–A03: complete · A04 forms of sentience: active · 8 days remaining</span>
+    <span>34 datasets · 27 visualizations · 709 geometry objects · 1 of 3 nodes modeled</span>
+    <span>Still On The Line · EPFL BA6 · Andrea Crespo · Henna Rafik · 2026</span>
+  </div>
+
+</div>
+
+<script>
+  let playing=false, playTimeout=null;
+  function togglePlay() {
+    const btn=document.getElementById('playBtn');
+    if(playing){playing=false;btn.innerHTML='&#9654; play sequence';btn.classList.remove('playing');clearTimeout(playTimeout);document.querySelectorAll('.panel').forEach(p=>p.classList.remove('highlight'));return;}
+    playing=true;btn.innerHTML='&#9724; stop';btn.classList.add('playing');
+    document.querySelectorAll('.stat-cell').forEach(c=>c.classList.remove('visible'));
+    const screens=['screen1','screen2','screen3','screen4','screen5','screen6'];let cur=0;
+    function next(){if(!playing)return;document.querySelectorAll('.panel').forEach(p=>p.classList.remove('highlight'));
+      if(cur>=screens.length){playing=false;btn.innerHTML='&#9654; play sequence';btn.classList.remove('playing');return;}
+      document.getElementById(screens[cur]).classList.add('highlight');if(cur===0)animateStats();cur++;playTimeout=setTimeout(next,3500);}
+    next();
+  }
+  function animateStats(){document.querySelectorAll('.stat-cell').forEach((c,i)=>{setTimeout(()=>c.classList.add('visible'),i*120);});}
+
+  window.addEventListener('load',()=>{setTimeout(()=>{document.querySelectorAll('.stat-cell').forEach((c,i)=>{setTimeout(()=>c.classList.add('visible'),i*100);});},400);});
+</script>
+</body>
+</html>

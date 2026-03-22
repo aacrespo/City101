@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Still On The Line — 02 Healthcare Corridor</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@400;500;700&family=Instrument+Serif&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --chrome-bg: #0a0a0f; --chrome-text: #e8e6e1; --chrome-accent: #c9a84c;
+    --chrome-muted: #8a8880; --chrome-cyan: #4cc9b0; --chrome-green: #4caf50;
+    --chrome-red: #e05555; --chrome-purple: #a88beb; --chrome-blue: #5b9bd5;
+    --chrome-orange: #e8a84c;
+    --font-display: 'Instrument Serif', serif; --font-body: 'DM Sans', sans-serif;
+    --font-mono: 'DM Mono', monospace;
+    --panel-border: rgba(201, 168, 76, 0.25); --glass-bg: rgba(10, 10, 15, 0.85);
+    --glass-border: rgba(201, 168, 76, 0.15);
+  }
+  html, body { width: 100%; height: 100%; background: var(--chrome-bg); color: var(--chrome-text); font-family: var(--font-body); overflow: hidden; }
+  .canvas { width: 100vw; height: 100vh; display: grid; grid-template-columns: 1fr 1fr 1fr; grid-template-rows: auto 1fr 1fr auto; gap: 0; }
+  .canvas::after { content: ''; position: fixed; top: 0; left: 0; right: 0; bottom: 0; pointer-events: none; background: repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.03) 2px,rgba(0,0,0,0.03) 4px); z-index: 100; }
+
+  .status-bar { grid-column: 1/-1; background: rgba(201,168,76,0.08); border-bottom: 1px solid var(--panel-border); padding: 6px 20px; font-family: var(--font-mono); font-size: 11px; color: var(--chrome-muted); display: flex; justify-content: space-between; align-items: center; }
+  .status-bar .left { display: flex; gap: 24px; align-items: center; }
+  .status-bar .session-tag { background: rgba(201,168,76,0.15); color: var(--chrome-accent); padding: 2px 8px; border-radius: 2px; font-weight: 500; }
+  .status-bar .slide-tag { background: rgba(76,201,176,0.1); color: var(--chrome-cyan); padding: 2px 8px; border-radius: 2px; font-size: 9px; }
+  .status-bar .right { display: flex; gap: 16px; align-items: center; }
+  .play-btn { background: rgba(201,168,76,0.12); border: 1px solid var(--chrome-accent); color: var(--chrome-accent); font-family: var(--font-mono); font-size: 11px; padding: 3px 12px; cursor: pointer; border-radius: 2px; transition: all 0.2s; }
+  .play-btn:hover { background: rgba(201,168,76,0.25); }
+  .play-btn.playing { color: var(--chrome-green); border-color: var(--chrome-green); }
+
+  .panel { border: 1px solid var(--panel-border); position: relative; overflow: hidden; display: flex; flex-direction: column; transition: border-color 0.5s, box-shadow 0.5s; }
+  .panel.highlight { border-color: var(--chrome-accent); box-shadow: inset 0 0 30px rgba(201,168,76,0.06); }
+  .panel-header { background: rgba(201,168,76,0.06); border-bottom: 1px solid var(--glass-border); padding: 10px 16px 8px; display: flex; justify-content: space-between; align-items: baseline; flex-shrink: 0; }
+  .panel-header h2 { font-family: var(--font-display); font-size: 20px; color: var(--chrome-accent); font-weight: 400; }
+  .panel-header .panel-tag { font-family: var(--font-mono); font-size: 9px; color: var(--chrome-muted); text-transform: uppercase; letter-spacing: 1px; }
+  .panel-body { flex: 1; padding: 14px 16px; overflow: hidden; position: relative; }
+
+  .bottom-bar { grid-column: 1/-1; background: rgba(201,168,76,0.06); border-top: 1px solid var(--panel-border); padding: 5px 20px; font-family: var(--font-mono); font-size: 10px; color: var(--chrome-muted); display: flex; justify-content: space-between; }
+
+  /* Reusable components */
+  .stats-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+  .stat-cell { background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border); border-radius: 3px; padding: 8px 10px; opacity: 0; transform: translateY(6px); transition: opacity 0.4s, transform 0.4s; }
+  .stat-cell.visible { opacity: 1; transform: translateY(0); }
+  .stat-num { font-family: var(--font-mono); font-size: 20px; font-weight: 500; color: var(--chrome-accent); line-height: 1; margin-bottom: 3px; }
+  .stat-num.cyan { color: var(--chrome-cyan); } .stat-num.red { color: var(--chrome-red); }
+  .stat-num.green { color: var(--chrome-green); } .stat-num.purple { color: var(--chrome-purple); }
+  .stat-num.orange { color: var(--chrome-orange); } .stat-num.blue { color: var(--chrome-blue); }
+  .stat-label { font-family: var(--font-body); font-size: 9px; color: var(--chrome-muted); line-height: 1.3; }
+
+  .corridor-label { font-family: var(--font-mono); font-size: 9px; color: var(--chrome-muted); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px; }
+  .route-title { font-family: var(--font-display); font-size: 26px; color: var(--chrome-text); margin-bottom: 16px; line-height: 1.1; }
+  .route-title span { color: var(--chrome-accent); }
+  .question-block { font-family: var(--font-display); font-size: 13px; color: var(--chrome-muted); font-style: italic; margin-bottom: 14px; line-height: 1.5; border-left: 2px solid var(--chrome-accent); padding-left: 10px; }
+  .tag-row { display: flex; gap: 6px; margin-bottom: 14px; flex-wrap: wrap; }
+  .tag-pill { font-family: var(--font-mono); font-size: 9px; padding: 3px 8px; border-radius: 2px; }
+
+  .findings-list { display: flex; flex-direction: column; gap: 5px; }
+  .finding-row { display: flex; align-items: baseline; gap: 8px; padding: 5px 8px; border-left: 2px solid transparent; transition: border-color 0.2s, background 0.2s; border-radius: 0 2px 2px 0; }
+  .finding-row:hover { border-left-color: var(--chrome-accent); background: rgba(201,168,76,0.04); }
+  .finding-n { font-family: var(--font-mono); font-size: 9px; color: var(--chrome-accent); flex-shrink: 0; min-width: 18px; }
+  .finding-title { font-family: var(--font-body); font-size: 11px; color: var(--chrome-text); font-weight: 500; flex-shrink: 0; }
+  .finding-data { font-family: var(--font-mono); font-size: 9px; color: var(--chrome-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+  .topo-split { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin-bottom: 5px; }
+  .topo-card { background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border); border-radius: 3px; padding: 5px 8px; }
+  .topo-label { font-family: var(--font-mono); font-size: 9px; font-weight: 500; margin-bottom: 2px; }
+  .topo-stat { font-family: var(--font-body); font-size: 8px; color: var(--chrome-muted); line-height: 1.4; }
+  .topo-stat b { color: var(--chrome-text); font-weight: 500; }
+
+  .section-label { font-family: var(--font-mono); font-size: 7.5px; color: var(--chrome-muted); text-transform: uppercase; letter-spacing: 1.2px; margin-bottom: 3px; }
+  .callout-box { margin-top: 4px; padding: 4px 7px; border: 1px dashed rgba(229,85,85,0.3); border-radius: 3px; background: rgba(229,85,85,0.03); font-family: var(--font-mono); font-size: 7.5px; color: var(--chrome-muted); line-height: 1.5; }
+  .callout-box .hl { color: var(--chrome-accent); }
+
+  .relay-chain { display: flex; flex-direction: column; height: 100%; justify-content: center; gap: 0; position: relative; padding-left: 24px; }
+  .relay-chain::before { content: ''; position: absolute; left: 10px; top: 12px; bottom: 12px; width: 1px; border-left: 1px dashed rgba(201,168,76,0.3); }
+  .relay-node { display: flex; align-items: flex-start; gap: 10px; padding: 4px 0; position: relative; }
+  .relay-node::before { content: ''; position: absolute; left: -18px; top: 10px; width: 8px; height: 8px; border-radius: 50%; border: 1.5px solid var(--chrome-accent); background: var(--chrome-bg); flex-shrink: 0; }
+  .relay-node.critical::before { background: rgba(201,168,76,0.3); box-shadow: 0 0 6px rgba(201,168,76,0.4); }
+  .relay-node-num { font-family: var(--font-mono); font-size: 8px; color: var(--chrome-accent); min-width: 14px; margin-top: 2px; flex-shrink: 0; }
+  .relay-node-content { flex: 1; min-width: 0; }
+  .relay-node-name { font-family: var(--font-body); font-size: 10.5px; color: var(--chrome-text); font-weight: 500; line-height: 1.2; }
+  .relay-node-gap { font-family: var(--font-mono); font-size: 8.5px; color: var(--chrome-muted); margin-top: 1px; }
+  .relay-node-gap .gap-arrow { color: var(--chrome-orange); }
+  .relay-footer { margin-top: 8px; padding-top: 8px; border-top: 1px dashed rgba(201,168,76,0.15); font-family: var(--font-display); font-size: 11px; color: var(--chrome-muted); font-style: italic; line-height: 1.4; }
+  .relay-footer em { color: var(--chrome-accent); font-style: normal; }
+
+  .prop-title { font-family: var(--font-display); font-size: 18px; color: var(--chrome-text); margin-bottom: 12px; line-height: 1.2; }
+  .prop-title span { color: var(--chrome-accent); }
+  .persona-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin-bottom: 10px; }
+  .persona-card { border-radius: 3px; padding: 7px 9px; }
+  .persona-card .persona-name { font-family: var(--font-mono); font-size: 8px; margin-bottom: 3px; }
+  .persona-card .persona-desc { font-family: var(--font-body); font-size: 9px; color: var(--chrome-muted); line-height: 1.4; }
+  .prop-principles { display: flex; flex-direction: column; gap: 4px; border-top: 1px solid var(--glass-border); padding-top: 10px; }
+  .prop-principle { display: flex; gap: 8px; font-family: var(--font-mono); font-size: 9px; color: var(--chrome-muted); line-height: 1.5; }
+  .prop-principle .pp-label { color: var(--chrome-cyan); flex-shrink: 0; }
+
+  .dead-pulse { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--chrome-red); animation: pulse-red 2s ease-in-out infinite; margin-right: 4px; vertical-align: middle; }
+  @keyframes pulse-red { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.3; transform: scale(0.7); } }
+  .cursor { display: inline-block; width: 7px; height: 14px; background: var(--chrome-accent); animation: blink 1s step-end infinite; vertical-align: text-bottom; margin-left: 2px; }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  /* Node map */
+  .node-map { position: relative; height: 48px; margin: 8px 0; background: rgba(255,255,255,0.01); border: 1px solid var(--glass-border); border-radius: 3px; overflow: hidden; }
+  .node-map .track { position: absolute; top: 50%; left: 20px; right: 20px; height: 1px; background: rgba(201,168,76,0.2); }
+  .node-map .node { position: absolute; top: 50%; transform: translate(-50%, -50%); width: 10px; height: 10px; border-radius: 50%; border: 1.5px solid var(--chrome-accent); background: var(--chrome-bg); cursor: default; z-index: 2; }
+  .node-map .node.major { width: 12px; height: 12px; background: rgba(201,168,76,0.3); box-shadow: 0 0 8px rgba(201,168,76,0.3); }
+  .node-map .node::after { content: attr(data-name); position: absolute; top: -16px; left: 50%; transform: translateX(-50%); font-family: var(--font-mono); font-size: 6px; color: var(--chrome-muted); white-space: nowrap; }
+  .node-map .km-label { position: absolute; bottom: 2px; font-family: var(--font-mono); font-size: 6px; color: rgba(138,136,128,0.5); transform: translateX(-50%); }
+
+  /* Supply flow */
+  .flow-row { display: flex; align-items: center; gap: 6px; padding: 3px 0; border-bottom: 1px solid rgba(255,255,255,0.02); }
+  .flow-icon { font-size: 10px; flex-shrink: 0; width: 16px; text-align: center; }
+  .flow-name { font-family: var(--font-mono); font-size: 8px; color: var(--chrome-text); min-width: 60px; flex-shrink: 0; }
+  .flow-detail { font-family: var(--font-mono); font-size: 7.5px; color: var(--chrome-muted); flex: 1; }
+  .flow-tag { font-family: var(--font-mono); font-size: 7px; padding: 1px 5px; border-radius: 2px; flex-shrink: 0; }
+
+  @media print { .canvas::after { display: none; } @page { size: landscape; margin: 0; } }
+</style>
+</head>
+<body>
+<div class="canvas">
+
+  <div class="status-bar">
+    <div class="left">
+      <span class="session-tag">still on the line</span>
+      <span>healthcare · the circuit</span>
+      <span class="slide-tag">6 screens</span>
+      <span>A03–A04</span>
+      <span>march 2026</span>
+    </div>
+    <div class="right">
+      <button class="play-btn" id="playBtn" onclick="togglePlay()">&#9654; play sequence</button>
+      <span>AR-302k Studio Huang</span>
+      <span>Sentient Cities</span>
+    </div>
+  </div>
+
+  <!-- SCREEN 1 — Title / Overview -->
+  <div class="panel" id="screen1">
+    <div class="panel-header">
+      <h2>Healthcare Corridor</h2>
+      <span class="panel-tag">supply chain · 32,000 workers · 101km</span>
+    </div>
+    <div class="panel-body">
+      <div class="corridor-label">Geneva → Villeneuve · healthcare as infrastructure</div>
+      <div class="route-title">One hospital system, <span>zero night transport</span></div>
+      <div class="question-block">"32,000 hospital workers operate a single 101km healthcare chain. At 01:30 every night, the corridor flatlines — and 4,600 of them are still on shift."</div>
+      <div class="tag-row">
+        <div class="tag-pill" style="border:1px solid rgba(229,85,85,0.4);color:var(--chrome-red);"><span class="dead-pulse"></span>dead window 01:00–05:00</div>
+        <div class="tag-pill" style="border:1px solid rgba(76,201,176,0.4);color:var(--chrome-cyan);">7 anchor hospitals</div>
+        <div class="tag-pill" style="border:1px solid rgba(168,139,235,0.4);color:var(--chrome-purple);">7,200 frontalier nurses</div>
+        <div class="tag-pill" style="border:1px solid rgba(201,168,76,0.4);color:var(--chrome-accent);">9 relay-lock nodes</div>
+      </div>
+      <div class="stats-grid" id="statsGrid">
+        <div class="stat-cell"><div class="stat-num red">4.5h</div><div class="stat-label">Dead window<br>zero public transport</div></div>
+        <div class="stat-cell"><div class="stat-num cyan">32k</div><div class="stat-label">Hospital workers<br>6 major institutions</div></div>
+        <div class="stat-cell"><div class="stat-num orange">4,600</div><div class="stat-label">Night shift workers<br>stranded nightly</div></div>
+        <div class="stat-cell"><div class="stat-num purple">7,200</div><div class="stat-label">Frontalier nurses<br>cross-border healthcare</div></div>
+        <div class="stat-cell"><div class="stat-num">100k</div><div class="stat-label">Packs/day Galexis<br>pharma supply hub</div></div>
+        <div class="stat-cell"><div class="stat-num green">17.2%</div><div class="stat-label">Canton Vaud jobs<br>largest employment sector</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN 2 — The 9-Node Network -->
+  <div class="panel" id="screen2">
+    <div class="panel-header">
+      <h2>The 9-Node Network</h2>
+      <span class="panel-tag">relay-lock · ~11km spacing · healthcare circuit</span>
+    </div>
+    <div class="panel-body">
+      <div class="node-map" id="nodeMap">
+        <div class="track"></div>
+      </div>
+      <div class="relay-chain" style="padding-top:0;">
+        <div class="relay-node critical">
+          <span class="relay-node-num">01</span>
+          <div class="relay-node-content">
+            <div class="relay-node-name">Lancy-Pont-Rouge <span style="font-family:var(--font-mono);font-size:7px;color:var(--chrome-red);margin-left:4px;">km 4</span></div>
+            <div class="relay-node-gap">Border lock <span class="gap-arrow">→</span> HUG 13,086 staff · 2,100 beds</div>
+          </div>
+        </div>
+        <div class="relay-node">
+          <span class="relay-node-num">02</span>
+          <div class="relay-node-content">
+            <div class="relay-node-name">GE North Industrial <span style="font-family:var(--font-mono);font-size:7px;color:var(--chrome-muted);margin-left:4px;">km 8</span></div>
+            <div class="relay-node-gap">Cargo/visibility <span class="gap-arrow">→</span> logistics + night worker hub</div>
+          </div>
+        </div>
+        <div class="relay-node">
+          <span class="relay-node-num">03</span>
+          <div class="relay-node-content">
+            <div class="relay-node-name">Nyon + Genolier <span style="font-family:var(--font-mono);font-size:7px;color:var(--chrome-orange);margin-left:4px;">km 25</span></div>
+            <div class="relay-node-gap">Altitude lock <span class="gap-arrow">→</span> GHOL 1,000 staff · Genolier 340 staff · 23km gap</div>
+          </div>
+        </div>
+        <div class="relay-node critical">
+          <span class="relay-node-num">04</span>
+          <div class="relay-node-content">
+            <div class="relay-node-name">Morges <span style="font-family:var(--font-mono);font-size:7px;color:var(--chrome-red);margin-left:4px;">km 48</span></div>
+            <div class="relay-node-gap">Temporal lock <span class="gap-arrow">→</span> EHC 2,000 staff · 220 beds · 150k catchment</div>
+          </div>
+        </div>
+        <div class="relay-node">
+          <span class="relay-node-num">05</span>
+          <div class="relay-node-content">
+            <div class="relay-node-name">Crissier-Ecublens <span style="font-family:var(--font-mono);font-size:7px;color:var(--chrome-cyan);margin-left:4px;">km 58–62</span></div>
+            <div class="relay-node-gap">Logistics engine <span class="gap-arrow">→</span> Galexis 100k packs/day · CHUV kitchen 6,800 meals</div>
+          </div>
+        </div>
+        <div class="relay-node critical">
+          <span class="relay-node-num">06</span>
+          <div class="relay-node-content">
+            <div class="relay-node-name">Lausanne CHUV <span style="font-family:var(--font-mono);font-size:7px;color:var(--chrome-red);margin-left:4px;">km 65</span></div>
+            <div class="relay-node-gap">Sky lobby <span class="gap-arrow">→</span> 12,844 staff · 1,500 beds · 800k catchment</div>
+          </div>
+        </div>
+        <div class="relay-node">
+          <span class="relay-node-num">07</span>
+          <div class="relay-node-content">
+            <div class="relay-node-name">Vevey <span style="font-family:var(--font-mono);font-size:7px;color:var(--chrome-muted);margin-left:4px;">km 80</span></div>
+            <div class="relay-node-gap">Gap relay <span class="gap-arrow">→</span> Lavaux fracture bridge · night transfer point</div>
+          </div>
+        </div>
+        <div class="relay-node">
+          <span class="relay-node-num">08</span>
+          <div class="relay-node-content">
+            <div class="relay-node-name">Montreux-Glion <span style="font-family:var(--font-mono);font-size:7px;color:var(--chrome-muted);margin-left:4px;">km 85</span></div>
+            <div class="relay-node-gap">Altitude lock <span class="gap-arrow">→</span> vertical connection · funicular/rack</div>
+          </div>
+        </div>
+        <div class="relay-node critical">
+          <span class="relay-node-num">09</span>
+          <div class="relay-node-content">
+            <div class="relay-node-name">Rennaz <span style="font-family:var(--font-mono);font-size:7px;color:var(--chrome-orange);margin-left:4px;">km 89</span></div>
+            <div class="relay-node-gap">Bridge lock <span class="gap-arrow">→</span> HRC 2,500 staff · 300 beds · 2km from rail</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN 3 — The Dead Window -->
+  <div class="panel" id="screen3">
+    <div class="panel-header">
+      <h2>The Dead Window</h2>
+      <span class="panel-tag">01:00–05:00 · corridor flatline</span>
+    </div>
+    <div class="panel-body" style="padding: 12px 16px;">
+      <div style="text-align:center;margin-bottom:8px;">
+        <span class="dead-pulse" style="width:10px;height:10px;"></span>
+        <span style="font-family:var(--font-display);font-size:28px;color:var(--chrome-red);letter-spacing:2px;">01:00 — 05:00</span>
+      </div>
+      <div style="font-family:var(--font-mono);font-size:8px;color:var(--chrome-muted);text-align:center;margin-bottom:12px;text-transform:uppercase;letter-spacing:1.5px;">
+        zero weekday night public transport · entire corridor
+      </div>
+
+      <div class="topo-split" style="grid-template-columns:1fr 1fr 1fr;margin-bottom:8px;">
+        <div class="topo-card" style="border-color:rgba(229,85,85,0.25);">
+          <div class="topo-label" style="color:var(--chrome-red);">CHUV shift</div>
+          <div class="topo-stat"><b>22:45–07:15</b><br>2,500 staff on CHUV hillside<br>M2 metro stopped</div>
+        </div>
+        <div class="topo-card" style="border-color:rgba(229,85,85,0.25);">
+          <div class="topo-label" style="color:var(--chrome-red);">HUG shift</div>
+          <div class="topo-stat"><b>21:15–07:15</b><br>60% nurses from France<br>Léman Express stopped</div>
+        </div>
+        <div class="topo-card" style="border-color:rgba(201,168,76,0.25);">
+          <div class="topo-label" style="color:var(--chrome-accent);">Pharmacy</div>
+          <div class="topo-stat"><b>1 for 55km</b><br>Pharma24 HUG only<br>next: Lausanne (closes 00h)</div>
+        </div>
+      </div>
+
+      <div class="section-label">night cost per worker</div>
+      <div style="display:flex;gap:4px;margin-bottom:8px;">
+        <div style="flex:1;background:rgba(229,85,85,0.05);border:1px solid rgba(229,85,85,0.2);border-radius:3px;padding:4px 6px;text-align:center;">
+          <div style="font-family:var(--font-mono);font-size:14px;color:var(--chrome-red);font-weight:500;">CHF 55</div>
+          <div style="font-family:var(--font-mono);font-size:7px;color:var(--chrome-muted);">Morges→Nyon taxi</div>
+        </div>
+        <div style="flex:1;background:rgba(229,85,85,0.05);border:1px solid rgba(229,85,85,0.2);border-radius:3px;padding:4px 6px;text-align:center;">
+          <div style="font-family:var(--font-mono);font-size:14px;color:var(--chrome-red);font-weight:500;">CHF 80</div>
+          <div style="font-family:var(--font-mono);font-size:7px;color:var(--chrome-muted);">Lausanne→Vevey taxi</div>
+        </div>
+        <div style="flex:1;background:rgba(229,85,85,0.05);border:1px solid rgba(229,85,85,0.2);border-radius:3px;padding:4px 6px;text-align:center;">
+          <div style="font-family:var(--font-mono);font-size:14px;color:var(--chrome-red);font-weight:500;">CHF 110</div>
+          <div style="font-family:var(--font-mono);font-size:7px;color:var(--chrome-muted);">round-trip commute/night</div>
+        </div>
+      </div>
+
+      <div class="callout-box" style="border-color:rgba(229,85,85,0.4);">
+        <span class="hl">Ambulance reduction:</span> Riviera 4→2 crews · SIS Geneva 3→1 casernes after 21:00<br>
+        <span class="hl">Coverage gap:</span> Nyon–Morges 23km — no emergency department · 150k population
+      </div>
+
+      <div style="margin-top:6px;padding-top:6px;border-top:1px solid var(--glass-border);">
+        <div class="section-label">24h service timeline</div>
+        <div style="position:relative;height:24px;margin-top:4px;" id="timelineBar"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN 4 — Supply Chain -->
+  <div class="panel" id="screen4">
+    <div class="panel-header">
+      <h2>Four Circulations</h2>
+      <span class="panel-tag">supply chain · staff · patient · cargo · home care</span>
+    </div>
+    <div class="panel-body" style="padding: 10px 14px;">
+      <div class="section-label" style="margin-bottom:6px;">the four flows that never stop</div>
+
+      <div class="flow-row">
+        <div class="flow-icon" style="color:var(--chrome-cyan);">&#9673;</div>
+        <div class="flow-name" style="color:var(--chrome-cyan);">Staff</div>
+        <div class="flow-detail">32,000 workers · 6 night shifts/month · 60% HUG nurses from France</div>
+        <div class="flow-tag" style="border:1px solid rgba(76,201,176,0.3);color:var(--chrome-cyan);">shift change</div>
+      </div>
+      <div class="flow-row">
+        <div class="flow-icon" style="color:var(--chrome-accent);">&#9673;</div>
+        <div class="flow-name" style="color:var(--chrome-accent);">Patient</div>
+        <div class="flow-detail">800k CHUV catchment · Hôtel des Patients 108 rooms · blood 24h delivery</div>
+        <div class="flow-tag" style="border:1px solid rgba(201,168,76,0.3);color:var(--chrome-accent);">transfer</div>
+      </div>
+      <div class="flow-row">
+        <div class="flow-icon" style="color:var(--chrome-orange);">&#9673;</div>
+        <div class="flow-name" style="color:var(--chrome-orange);">Cargo</div>
+        <div class="flow-detail">100k packs/day Galexis · Swiss Post Innight 220+ theaters by 06:00 · cold chain -80°C</div>
+        <div class="flow-tag" style="border:1px solid rgba(232,168,76,0.3);color:var(--chrome-orange);">logistics</div>
+      </div>
+      <div class="flow-row">
+        <div class="flow-icon" style="color:var(--chrome-purple);">&#9673;</div>
+        <div class="flow-name" style="color:var(--chrome-purple);">Home care</div>
+        <div class="flow-detail">AVASAD 5,000 staff · IMAD 2,300 staff · night insulin/wound visits</div>
+        <div class="flow-tag" style="border:1px solid rgba(168,139,235,0.3);color:var(--chrome-purple);">field</div>
+      </div>
+
+      <div style="height:8px;"></div>
+      <div class="section-label">key supply chain nodes</div>
+      <div class="topo-split" style="grid-template-columns:1fr 1fr 1fr;">
+        <div class="topo-card">
+          <div class="topo-label" style="color:var(--chrome-orange);">Galexis Ecublens</div>
+          <div class="topo-stat"><b>km 60</b><br>100k packs/day<br>150k order lines<br>all Romandie supply</div>
+        </div>
+        <div class="topo-card">
+          <div class="topo-label" style="color:var(--chrome-accent);">CHUV Kitchen</div>
+          <div class="topo-stat"><b>Bussigny km 58</b><br>6,800 meals/day<br>4,800m² facility<br>28 cold storage rooms</div>
+        </div>
+        <div class="topo-card">
+          <div class="topo-label" style="color:var(--chrome-cyan);">Blood CRS</div>
+          <div class="topo-stat"><b>Épalinges</b><br>350 employees<br>24h blood delivery<br>M2 terminus access</div>
+        </div>
+      </div>
+
+      <div class="callout-box" style="margin-top:6px;border-color:rgba(201,168,76,0.3);">
+        <span class="hl">The corridor functions as one hospital.</span> Galexis supplies all pharmacies. CHUV kitchen feeds Bussigny to Vevey. Blood products travel nightly. Remove one node and the chain breaks.
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN 5 — Frontalier Trap -->
+  <div class="panel" id="screen5">
+    <div class="panel-header">
+      <h2>The Frontalier Trap</h2>
+      <span class="panel-tag">cross-border · 7,200 healthcare workers</span>
+    </div>
+    <div class="panel-body">
+      <div class="topo-split" style="margin-bottom:8px;">
+        <div class="topo-card" style="border-color:rgba(168,139,235,0.3);">
+          <div class="topo-label" style="color:var(--chrome-purple);">Franco-Valdo-Genevois</div>
+          <div class="topo-stat"><b>7,200</b> healthcare frontaliers<br><b>17.6%</b> of all nursing staff<br><b>+175%</b> growth in Vaud (10yr)</div>
+        </div>
+        <div class="topo-card" style="border-color:rgba(229,85,85,0.3);">
+          <div class="topo-label" style="color:var(--chrome-red);">Salary trap</div>
+          <div class="topo-stat"><b>2.5×</b> salary differential<br>FR: €1,650/mo net<br>CH: CHF 7,926/mo gross</div>
+        </div>
+      </div>
+
+      <div class="section-label">the transport trap</div>
+      <div style="display:flex;flex-direction:column;gap:4px;margin-bottom:8px;">
+        <div style="display:flex;align-items:center;gap:8px;padding:4px 8px;background:rgba(255,255,255,0.02);border:1px solid var(--glass-border);border-radius:3px;">
+          <span style="font-family:var(--font-mono);font-size:8px;color:var(--chrome-accent);min-width:80px;">Léman Express</span>
+          <span style="font-family:var(--font-mono);font-size:8px;color:var(--chrome-muted);">last ~00:30 · first ~05:00 · perfectly misses night shift change</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;padding:4px 8px;background:rgba(255,255,255,0.02);border:1px solid var(--glass-border);border-radius:3px;">
+          <span style="font-family:var(--font-mono);font-size:8px;color:var(--chrome-accent);min-width:80px;">Noctambus</span>
+          <span style="font-family:var(--font-mono);font-size:8px;color:var(--chrome-muted);">Fri–Sat only · not Mon–Thu when shifts run</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;padding:4px 8px;background:rgba(255,255,255,0.02);border:1px solid var(--glass-border);border-radius:3px;">
+          <span style="font-family:var(--font-mono);font-size:8px;color:var(--chrome-accent);min-width:80px;">CarPostal Night</span>
+          <span style="font-family:var(--font-mono);font-size:8px;color:var(--chrome-muted);">weekend only · Nyon–Morges corridor dark Mon–Fri</span>
+        </div>
+      </div>
+
+      <div class="section-label">patient accommodation gaps</div>
+      <div class="topo-split" style="grid-template-columns:1fr 1fr 1fr;">
+        <div class="topo-card" style="border-color:rgba(76,201,176,0.3);">
+          <div class="topo-label" style="color:var(--chrome-green);">CHUV</div>
+          <div class="topo-stat">Hôtel des Patients<br><b>108 rooms</b><br>first in Switzerland</div>
+        </div>
+        <div class="topo-card" style="border-color:rgba(76,201,176,0.3);">
+          <div class="topo-label" style="color:var(--chrome-green);">HUG</div>
+          <div class="topo-stat">Ronald McDonald<br><b>10 rooms</b><br>3,500+ families since '94</div>
+        </div>
+        <div class="topo-card" style="border-color:rgba(229,85,85,0.3);">
+          <div class="topo-label" style="color:var(--chrome-red);">Gap</div>
+          <div class="topo-stat">Nyon · Morges · Rennaz<br><b>0 rooms</b><br>no patient accommodation</div>
+        </div>
+      </div>
+
+      <div class="callout-box" style="margin-top:6px;">
+        <span class="hl">60% of HUG nurses</span> live in Haute-Savoie. They earn 2.5× their French salary but have <span class="hl">zero reliable night transport</span> back across the border. The salary attracts them; the infrastructure abandons them.
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN 6 — Proposition -->
+  <div class="panel" id="screen6">
+    <div class="panel-header">
+      <h2>The Lock Proposition</h2>
+      <span class="panel-tag">architecture · relay-lock · chamber</span>
+    </div>
+    <div class="panel-body">
+      <div class="prop-title">The corridor is a <span>single hospital</span>. The lock holds the <span>dead window</span>.</div>
+      <div style="font-family:var(--font-mono);font-size:9px;color:var(--chrome-muted);margin-bottom:10px;border-left:2px solid var(--chrome-red);padding-left:8px;line-height:1.6;">
+        Healthcare never stops. Transport does. The lock is the architecture<br>
+        of that contradiction — a chamber where people survive modal collapse.
+      </div>
+
+      <div class="persona-grid">
+        <div class="persona-card" style="border:1px solid rgba(76,201,176,0.3);background:rgba(76,201,176,0.03);">
+          <div class="persona-name" style="color:var(--chrome-cyan);">night shift nurse</div>
+          <div class="persona-desc">CHUV 22:45 shift end. M2 stopped. 2,500 stranded on hillside. Lock = safe transition space.</div>
+        </div>
+        <div class="persona-card" style="border:1px solid rgba(201,168,76,0.3);background:rgba(201,168,76,0.03);">
+          <div class="persona-name" style="color:var(--chrome-accent);">home care worker</div>
+          <div class="persona-desc">AVASAD: 6–10 stops per shift. 01:30–03:30 dead. Lock = relay point with rest + recharge.</div>
+        </div>
+        <div class="persona-card" style="border:1px solid rgba(168,139,235,0.3);background:rgba(168,139,235,0.03);">
+          <div class="persona-name" style="color:var(--chrome-purple);">frontalier nurse</div>
+          <div class="persona-desc">HUG 60% from France. Léman Express stopped. Lock = overnight chamber + morning relay.</div>
+        </div>
+      </div>
+
+      <div class="prop-principles" style="margin-bottom:8px;">
+        <div class="prop-principle"><span class="pp-label" style="min-width:64px;">relay</span><span>9 nodes ~11km apart — caravanserai logic for the healthcare chain</span></div>
+        <div class="prop-principle"><span class="pp-label" style="min-width:64px;">lock</span><span>Chamber equalizes modes — holds people through the dead window</span></div>
+        <div class="prop-principle"><span class="pp-label" style="min-width:64px;">four flows</span><span>Staff · patient · cargo · home care — all must survive the gap</span></div>
+      </div>
+
+      <div style="border-top:1px dashed var(--glass-border);padding-top:7px;font-family:var(--font-mono);font-size:8.5px;color:var(--chrome-muted);line-height:1.7;">
+        <span style="color:var(--chrome-accent);">lock types →</span>
+        border lock · altitude lock · temporal lock · logistics engine · sky lobby · gap relay · bridge lock
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-bar">
+    <span>32,000 hospital workers · 4.5h dead window · 7,200 frontalier nurses</span>
+    <span>9 relay-lock nodes · 4 circulations · 7 lock types</span>
+    <span>Still On The Line · EPFL BA6 · Andrea Crespo · Henna Rafik · 2026</span>
+  </div>
+
+</div>
+
+<script>
+  // Node map with 9 nodes positioned by km
+  function buildNodeMap() {
+    const map = document.getElementById('nodeMap');
+    if (!map) return;
+    const nodes = [
+      {name:'Lancy',km:4,major:true},{name:'GE North',km:8,major:false},
+      {name:'Nyon',km:25,major:false},{name:'Morges',km:48,major:true},
+      {name:'Ecublens',km:60,major:false},{name:'CHUV',km:65,major:true},
+      {name:'Vevey',km:80,major:false},{name:'Montreux',km:85,major:false},
+      {name:'Rennaz',km:89,major:true}
+    ];
+    const pad = 30;
+    const w = map.offsetWidth || 400;
+    nodes.forEach(n => {
+      const pct = ((n.km / 101) * (w - 2*pad) + pad) / w * 100;
+      const dot = document.createElement('div');
+      dot.className = 'node' + (n.major ? ' major' : '');
+      dot.style.left = pct + '%';
+      dot.setAttribute('data-name', n.name);
+      map.appendChild(dot);
+      const km = document.createElement('div');
+      km.className = 'km-label';
+      km.style.left = pct + '%';
+      km.textContent = n.km + 'km';
+      map.appendChild(km);
+    });
+  }
+
+  // 24h timeline bar
+  function buildTimeline() {
+    const bar = document.getElementById('timelineBar');
+    if (!bar) return;
+    bar.style.background = 'rgba(255,255,255,0.02)';
+    bar.style.borderRadius = '3px';
+    bar.style.border = '1px solid rgba(255,255,255,0.05)';
+    bar.style.position = 'relative';
+    bar.style.overflow = 'hidden';
+    // Active service (05:00-01:00)
+    const active = document.createElement('div');
+    active.style.cssText = 'position:absolute;left:'+(5/24*100)+'%;right:'+(23/24*100-100/24*100)+'%;top:0;bottom:0;background:rgba(76,201,176,0.12);border-left:1px solid rgba(76,201,176,0.4);border-right:1px solid rgba(76,201,176,0.4);';
+    bar.appendChild(active);
+    // Dead window (01:00-05:00)
+    const dead = document.createElement('div');
+    dead.style.cssText = 'position:absolute;left:'+(1/24*100)+'%;width:'+(4/24*100)+'%;top:0;bottom:0;background:rgba(229,85,85,0.15);border-left:1px solid rgba(229,85,85,0.5);border-right:1px solid rgba(229,85,85,0.5);';
+    bar.appendChild(dead);
+    const deadLabel = document.createElement('div');
+    deadLabel.style.cssText = 'position:absolute;left:'+(2.5/24*100)+'%;top:50%;transform:translate(-50%,-50%);font-family:var(--font-mono);font-size:7px;color:rgba(229,85,85,0.8);';
+    deadLabel.textContent = 'DEAD';
+    bar.appendChild(deadLabel);
+    // Hour markers
+    [0,6,12,18,23].forEach(h => {
+      const m = document.createElement('div');
+      m.style.cssText = 'position:absolute;left:'+(h/24*100)+'%;bottom:-10px;transform:translateX(-50%);font-family:var(--font-mono);font-size:6px;color:rgba(138,136,128,0.5);';
+      m.textContent = String(h).padStart(2,'0');
+      bar.appendChild(m);
+    });
+  }
+
+  // Play sequence
+  let playing=false, playTimeout=null;
+  function togglePlay() {
+    const btn=document.getElementById('playBtn');
+    if(playing){playing=false;btn.innerHTML='&#9654; play sequence';btn.classList.remove('playing');clearTimeout(playTimeout);document.querySelectorAll('.panel').forEach(p=>p.classList.remove('highlight'));return;}
+    playing=true;btn.innerHTML='&#9724; stop';btn.classList.add('playing');
+    document.querySelectorAll('.stat-cell').forEach(c=>c.classList.remove('visible'));
+    const screens=['screen1','screen2','screen3','screen4','screen5','screen6'];let cur=0;
+    function next(){if(!playing)return;document.querySelectorAll('.panel').forEach(p=>p.classList.remove('highlight'));
+      if(cur>=screens.length){playing=false;btn.innerHTML='&#9654; play sequence';btn.classList.remove('playing');return;}
+      document.getElementById(screens[cur]).classList.add('highlight');if(cur===0)animateStats();cur++;playTimeout=setTimeout(next,3500);}
+    next();
+  }
+  function animateStats(){document.querySelectorAll('.stat-cell').forEach((c,i)=>{setTimeout(()=>c.classList.add('visible'),i*120);});}
+
+  window.addEventListener('load',()=>{buildNodeMap();buildTimeline();setTimeout(()=>{document.querySelectorAll('.stat-cell').forEach((c,i)=>{setTimeout(()=>c.classList.add('visible'),i*100);});},400);});
+</script>
+</body>
+</html>

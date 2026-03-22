@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Still On The Line — 01 The Archipelago</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@400;500;700&family=Instrument+Serif&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --chrome-bg: #0a0a0f; --chrome-text: #e8e6e1; --chrome-accent: #c9a84c;
+    --chrome-muted: #8a8880; --chrome-cyan: #4cc9b0; --chrome-green: #4caf50;
+    --chrome-red: #e05555; --chrome-purple: #a88beb; --chrome-blue: #5b9bd5;
+    --chrome-orange: #e8a84c;
+    --font-display: 'Instrument Serif', serif; --font-body: 'DM Sans', sans-serif;
+    --font-mono: 'DM Mono', monospace;
+    --panel-border: rgba(201, 168, 76, 0.25); --glass-bg: rgba(10, 10, 15, 0.85);
+    --glass-border: rgba(201, 168, 76, 0.15);
+  }
+  html, body { width: 100%; height: 100%; background: var(--chrome-bg); color: var(--chrome-text); font-family: var(--font-body); overflow: hidden; }
+  .canvas { width: 100vw; height: 100vh; display: grid; grid-template-columns: 1fr 1fr 1fr; grid-template-rows: auto 1fr 1fr auto; gap: 0; }
+  .canvas::after { content: ''; position: fixed; top: 0; left: 0; right: 0; bottom: 0; pointer-events: none; background: repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.03) 2px,rgba(0,0,0,0.03) 4px); z-index: 100; }
+
+  .status-bar { grid-column: 1/-1; background: rgba(201,168,76,0.08); border-bottom: 1px solid var(--panel-border); padding: 6px 20px; font-family: var(--font-mono); font-size: 11px; color: var(--chrome-muted); display: flex; justify-content: space-between; align-items: center; }
+  .status-bar .left { display: flex; gap: 24px; align-items: center; }
+  .status-bar .session-tag { background: rgba(201,168,76,0.15); color: var(--chrome-accent); padding: 2px 8px; border-radius: 2px; font-weight: 500; }
+  .status-bar .slide-tag { background: rgba(76,201,176,0.1); color: var(--chrome-cyan); padding: 2px 8px; border-radius: 2px; font-size: 9px; }
+  .status-bar .right { display: flex; gap: 16px; align-items: center; }
+  .play-btn { background: rgba(201,168,76,0.12); border: 1px solid var(--chrome-accent); color: var(--chrome-accent); font-family: var(--font-mono); font-size: 11px; padding: 3px 12px; cursor: pointer; border-radius: 2px; transition: all 0.2s; }
+  .play-btn:hover { background: rgba(201,168,76,0.25); }
+  .play-btn.playing { color: var(--chrome-green); border-color: var(--chrome-green); }
+
+  .panel { border: 1px solid var(--panel-border); position: relative; overflow: hidden; display: flex; flex-direction: column; transition: border-color 0.5s, box-shadow 0.5s; }
+  .panel.highlight { border-color: var(--chrome-accent); box-shadow: inset 0 0 30px rgba(201,168,76,0.06); }
+  .panel-header { background: rgba(201,168,76,0.06); border-bottom: 1px solid var(--glass-border); padding: 10px 16px 8px; display: flex; justify-content: space-between; align-items: baseline; flex-shrink: 0; }
+  .panel-header h2 { font-family: var(--font-display); font-size: 20px; color: var(--chrome-accent); font-weight: 400; }
+  .panel-header .panel-tag { font-family: var(--font-mono); font-size: 9px; color: var(--chrome-muted); text-transform: uppercase; letter-spacing: 1px; }
+  .panel-body { flex: 1; padding: 14px 16px; overflow: hidden; position: relative; }
+
+  .bottom-bar { grid-column: 1/-1; background: rgba(201,168,76,0.06); border-top: 1px solid var(--panel-border); padding: 5px 20px; font-family: var(--font-mono); font-size: 10px; color: var(--chrome-muted); display: flex; justify-content: space-between; }
+
+  /* Reusable components */
+  .stats-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+  .stat-cell { background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border); border-radius: 3px; padding: 8px 10px; opacity: 0; transform: translateY(6px); transition: opacity 0.4s, transform 0.4s; }
+  .stat-cell.visible { opacity: 1; transform: translateY(0); }
+  .stat-num { font-family: var(--font-mono); font-size: 20px; font-weight: 500; color: var(--chrome-accent); line-height: 1; margin-bottom: 3px; }
+  .stat-num.cyan { color: var(--chrome-cyan); } .stat-num.red { color: var(--chrome-red); }
+  .stat-num.green { color: var(--chrome-green); } .stat-num.purple { color: var(--chrome-purple); }
+  .stat-num.orange { color: var(--chrome-orange); } .stat-num.blue { color: var(--chrome-blue); }
+  .stat-label { font-family: var(--font-body); font-size: 9px; color: var(--chrome-muted); line-height: 1.3; }
+
+  .corridor-label { font-family: var(--font-mono); font-size: 9px; color: var(--chrome-muted); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px; }
+  .route-title { font-family: var(--font-display); font-size: 26px; color: var(--chrome-text); margin-bottom: 16px; line-height: 1.1; }
+  .route-title span { color: var(--chrome-accent); }
+  .question-block { font-family: var(--font-display); font-size: 13px; color: var(--chrome-muted); font-style: italic; margin-bottom: 14px; line-height: 1.5; border-left: 2px solid var(--chrome-accent); padding-left: 10px; }
+  .tag-row { display: flex; gap: 6px; margin-bottom: 14px; flex-wrap: wrap; }
+  .tag-pill { font-family: var(--font-mono); font-size: 9px; padding: 3px 8px; border-radius: 2px; }
+
+  .corridor-strip-wrap { position: relative; margin-bottom: 12px; }
+  .corridor-strip-label { font-family: var(--font-mono); font-size: 9px; color: var(--chrome-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; display: flex; justify-content: space-between; }
+  .corridor-strip { display: flex; gap: 2px; align-items: flex-end; height: 32px; position: relative; }
+  .st-dot { flex: 1; border-radius: 1px; position: relative; transition: opacity 0.3s; cursor: default; }
+  .st-dot:hover::after { content: attr(data-name); position: absolute; bottom: 38px; left: 50%; transform: translateX(-50%); background: rgba(10,10,15,0.95); border: 1px solid var(--panel-border); color: var(--chrome-text); font-family: var(--font-mono); font-size: 8px; padding: 2px 5px; border-radius: 2px; white-space: nowrap; z-index: 50; pointer-events: none; }
+  .gap-zone { position: absolute; bottom: -18px; height: 14px; border-left: 1px dashed rgba(229,85,85,0.5); border-right: 1px dashed rgba(229,85,85,0.5); border-bottom: 1px dashed rgba(229,85,85,0.5); font-family: var(--font-mono); font-size: 7px; color: var(--chrome-red); display: flex; align-items: flex-end; justify-content: center; padding-bottom: 1px; }
+
+  .findings-list { display: flex; flex-direction: column; gap: 5px; }
+  .finding-row { display: flex; align-items: baseline; gap: 8px; padding: 5px 8px; border-left: 2px solid transparent; transition: border-color 0.2s, background 0.2s; border-radius: 0 2px 2px 0; }
+  .finding-row:hover { border-left-color: var(--chrome-accent); background: rgba(201,168,76,0.04); }
+  .finding-n { font-family: var(--font-mono); font-size: 9px; color: var(--chrome-accent); flex-shrink: 0; min-width: 18px; }
+  .finding-title { font-family: var(--font-body); font-size: 11px; color: var(--chrome-text); font-weight: 500; flex-shrink: 0; }
+  .finding-data { font-family: var(--font-mono); font-size: 9px; color: var(--chrome-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+  .topo-split { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin-bottom: 5px; }
+  .topo-card { background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border); border-radius: 3px; padding: 5px 8px; }
+  .topo-label { font-family: var(--font-mono); font-size: 9px; font-weight: 500; margin-bottom: 2px; }
+  .topo-stat { font-family: var(--font-body); font-size: 8px; color: var(--chrome-muted); line-height: 1.4; }
+  .topo-stat b { color: var(--chrome-text); font-weight: 500; }
+
+  .section-label { font-family: var(--font-mono); font-size: 7.5px; color: var(--chrome-muted); text-transform: uppercase; letter-spacing: 1.2px; margin-bottom: 3px; }
+  .pair-row { display: flex; align-items: center; gap: 3px; margin-bottom: 2px; }
+  .pair-name { font-family: var(--font-mono); font-size: 7px; min-width: 54px; flex-shrink: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .pair-bars { flex: 1; display: flex; flex-direction: column; gap: 1px; }
+  .bar-track { height: 4px; background: rgba(255,255,255,0.03); border-radius: 1px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 1px; transition: width 1s ease; }
+  .pair-freq { font-family: var(--font-mono); font-size: 7px; min-width: 28px; text-align: right; flex-shrink: 0; }
+  .callout-box { margin-top: 4px; padding: 4px 7px; border: 1px dashed rgba(229,85,85,0.3); border-radius: 3px; background: rgba(229,85,85,0.03); font-family: var(--font-mono); font-size: 7.5px; color: var(--chrome-muted); line-height: 1.5; }
+  .callout-box .hl { color: var(--chrome-accent); }
+
+  .pulse-wrap { margin-top: 4px; border-top: 1px solid var(--glass-border); padding-top: 4px; }
+  .pulse-canvas-wrap { position: relative; height: 30px; margin-top: 2px; }
+  .pulse-canvas-wrap canvas { width: 100%; height: 100%; }
+  .pulse-legend { display: flex; gap: 10px; font-family: var(--font-mono); font-size: 6.5px; color: var(--chrome-muted); margin-top: 1px; }
+  .pulse-legend .dot { display: inline-block; width: 5px; height: 5px; border-radius: 50%; margin-right: 2px; vertical-align: middle; }
+
+  .relay-chain { display: flex; flex-direction: column; height: 100%; justify-content: center; gap: 0; position: relative; padding-left: 24px; }
+  .relay-chain::before { content: ''; position: absolute; left: 10px; top: 12px; bottom: 12px; width: 1px; border-left: 1px dashed rgba(201,168,76,0.3); }
+  .relay-node { display: flex; align-items: flex-start; gap: 10px; padding: 4px 0; position: relative; }
+  .relay-node::before { content: ''; position: absolute; left: -18px; top: 10px; width: 8px; height: 8px; border-radius: 50%; border: 1.5px solid var(--chrome-accent); background: var(--chrome-bg); flex-shrink: 0; }
+  .relay-node.critical::before { background: rgba(201,168,76,0.3); box-shadow: 0 0 6px rgba(201,168,76,0.4); }
+  .relay-node-num { font-family: var(--font-mono); font-size: 8px; color: var(--chrome-accent); min-width: 14px; margin-top: 2px; flex-shrink: 0; }
+  .relay-node-content { flex: 1; min-width: 0; }
+  .relay-node-name { font-family: var(--font-body); font-size: 10.5px; color: var(--chrome-text); font-weight: 500; line-height: 1.2; }
+  .relay-node-gap { font-family: var(--font-mono); font-size: 8.5px; color: var(--chrome-muted); margin-top: 1px; }
+  .relay-node-gap .gap-arrow { color: var(--chrome-orange); }
+  .relay-footer { margin-top: 8px; padding-top: 8px; border-top: 1px dashed rgba(201,168,76,0.15); font-family: var(--font-display); font-size: 11px; color: var(--chrome-muted); font-style: italic; line-height: 1.4; }
+  .relay-footer em { color: var(--chrome-accent); font-style: normal; }
+
+  .prop-title { font-family: var(--font-display); font-size: 18px; color: var(--chrome-text); margin-bottom: 12px; line-height: 1.2; }
+  .prop-title span { color: var(--chrome-accent); }
+  .persona-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin-bottom: 10px; }
+  .persona-card { border-radius: 3px; padding: 7px 9px; }
+  .persona-card .persona-name { font-family: var(--font-mono); font-size: 8px; margin-bottom: 3px; }
+  .persona-card .persona-desc { font-family: var(--font-body); font-size: 9px; color: var(--chrome-muted); line-height: 1.4; }
+  .prop-principles { display: flex; flex-direction: column; gap: 4px; border-top: 1px solid var(--glass-border); padding-top: 10px; }
+  .prop-principle { display: flex; gap: 8px; font-family: var(--font-mono); font-size: 9px; color: var(--chrome-muted); line-height: 1.5; }
+  .prop-principle .pp-label { color: var(--chrome-cyan); flex-shrink: 0; }
+
+  .dead-pulse { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--chrome-red); animation: pulse-red 2s ease-in-out infinite; margin-right: 4px; vertical-align: middle; }
+  @keyframes pulse-red { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.3; transform: scale(0.7); } }
+  .cursor { display: inline-block; width: 7px; height: 14px; background: var(--chrome-accent); animation: blink 1s step-end infinite; vertical-align: text-bottom; margin-left: 2px; }
+  @keyframes blink { 50% { opacity: 0; } }
+  @media print { .canvas::after { display: none; } @page { size: landscape; margin: 0; } }
+</style>
+</head>
+<body>
+<div class="canvas">
+
+  <div class="status-bar">
+    <div class="left">
+      <span class="session-tag">still on the line</span>
+      <span>narrative · the archipelago</span>
+      <span class="slide-tag">6 screens</span>
+      <span>A01–A02</span>
+      <span>march 2026</span>
+    </div>
+    <div class="right">
+      <button class="play-btn" id="playBtn" onclick="togglePlay()">&#9654; play sequence</button>
+      <span>AR-302k Studio Huang</span>
+      <span>Sentient Cities</span>
+    </div>
+  </div>
+
+  <!-- SCREEN 1 — Title / Overview -->
+  <div class="panel" id="screen1">
+    <div class="panel-header">
+      <h2>The Archipelago</h2>
+      <span class="panel-tag">narrative · 49 stations · 41 datasets</span>
+    </div>
+    <div class="panel-body">
+      <div class="corridor-label">Geneva → Villeneuve · 101km corridor</div>
+      <div class="route-title">The <span>linear city</span> does not exist</div>
+      <div class="question-block">"We measured every station, every connection, every hour. The corridor is not a line — it is an archipelago of islands separated by permanent gaps that no timetable can close."</div>
+      <div class="tag-row">
+        <div class="tag-pill" style="border:1px solid rgba(76,201,176,0.4);color:var(--chrome-cyan);">working continuity index</div>
+        <div class="tag-pill" style="border:1px solid rgba(201,168,76,0.4);color:var(--chrome-accent);">5 dimensions</div>
+        <div class="tag-pill" style="border:1px solid rgba(168,139,235,0.4);color:var(--chrome-purple);">33 classmate datasets</div>
+        <div class="tag-pill" style="border:1px solid rgba(229,85,85,0.3);color:var(--chrome-red);">3 structural gaps</div>
+      </div>
+      <div class="stats-grid" id="statsGrid">
+        <div class="stat-cell"><div class="stat-num">49</div><div class="stat-label">Stations analyzed<br>Geneva → Villeneuve</div></div>
+        <div class="stat-cell"><div class="stat-num cyan">41</div><div class="stat-label">Verified datasets<br>8 domains collected</div></div>
+        <div class="stat-cell"><div class="stat-num red">11/49</div><div class="stat-label">Working continuity<br>only 22% connected</div></div>
+        <div class="stat-cell"><div class="stat-num orange">42×</div><div class="stat-label">Frequency variation<br>Lausanne vs St-Saphorin</div></div>
+        <div class="stat-cell"><div class="stat-num purple">160k</div><div class="stat-label">Ghost citizens<br>frontaliers invisible</div></div>
+        <div class="stat-cell"><div class="stat-num green">r=0.67</div><div class="stat-label">Diversity correlation<br>quadruple-validated</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN 2 — Data / Index -->
+  <div class="panel" id="screen2">
+    <div class="panel-header">
+      <h2>Working Continuity Index</h2>
+      <span class="panel-tag">WCI · 5 dimensions · 49 stations</span>
+    </div>
+    <div class="panel-body">
+      <div class="corridor-strip-wrap">
+        <div class="corridor-strip-label"><span>Geneva</span><span>WCI — 49 stations west → east</span><span>Villeneuve</span></div>
+        <div class="corridor-strip" id="corridorStrip"></div>
+        <div id="gapZones" style="position:relative; height:22px;"></div>
+      </div>
+      <div class="findings-list" style="margin-top: 24px;">
+        <div class="finding-row"><span class="finding-n">01</span><span class="finding-title">Three permanent gaps</span><span class="finding-data">Nyon→Gland 19.3km · Gland→Morges 20km · Lavaux 17.5km</span></div>
+        <div class="finding-row"><span class="finding-n">02</span><span class="finding-title">Two corridors, same tracks</span><span class="finding-data">IC = workable office · S-Bahn = doors every 90s, no WiFi</span></div>
+        <div class="finding-row"><span class="finding-n">03</span><span class="finding-title">85% not workable</span><span class="finding-data">618 connections measured · 15% prime · 12% workable · 39% marginal</span></div>
+        <div class="finding-row"><span class="finding-n">04</span><span class="finding-title">Diversity threshold</span><span class="finding-data">Shannon ≈ 1.0 → 8× richness jump · below: 8.8 avg · above: 70.5</span></div>
+        <div class="finding-row"><span class="finding-n">05</span><span class="finding-title">Ghost citizens</span><span class="finding-data">160k frontaliers exceed Lausanne pop · invisible · vanish 18:00</span></div>
+        <div class="finding-row"><span class="finding-n">06</span><span class="finding-title">Structural, not temporal</span><span class="finding-data">14 workable at peak · 13 at 23:00 · archipelago barely pulses</span></div>
+        <div class="finding-row"><span class="finding-n">07</span><span class="finding-title">Pricing inequality</span><span class="finding-data">GA CHF 10.50/day vs full CHF 26 · 6× short-hop penalty</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN 3 — Visual / Comic -->
+  <div class="panel" id="screen3">
+    <div class="panel-header">
+      <h2>Evidence Layers</h2>
+      <span class="panel-tag">visualizations · 9 interactive HTML</span>
+    </div>
+    <div class="panel-body" style="padding: 12px;">
+      <div style="height:100%;display:flex;flex-direction:column;gap:8px;">
+        <div style="font-family:var(--font-mono);font-size:9px;color:var(--chrome-muted);text-transform:uppercase;letter-spacing:1.5px;display:flex;justify-content:space-between;flex-shrink:0;">
+          <span>interactive data visualizations</span>
+          <span style="background:rgba(76,201,176,0.1);border:1px solid rgba(76,201,176,0.3);color:var(--chrome-cyan);padding:1px 6px;border-radius:10px;font-size:8px;">9 live</span>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:4px;flex:1;min-height:0;">
+          <div style="border:2px solid rgba(201,168,76,0.35);position:relative;overflow:hidden;background:repeating-linear-gradient(45deg,transparent,transparent 6px,rgba(201,168,76,0.025) 6px,rgba(201,168,76,0.025) 7px);">
+            <div style="position:absolute;inset:5px;border:1px dashed rgba(201,168,76,0.2);display:flex;flex-direction:column;justify-content:space-between;padding:6px;">
+              <div style="font-family:var(--font-mono);font-size:10px;font-weight:500;color:rgba(201,168,76,0.5);">viz_01</div>
+              <div style="font-family:var(--font-mono);font-size:8px;color:rgba(201,168,76,0.25);text-align:center;">GA cost corridor</div>
+              <div style="font-family:var(--font-mono);font-size:7px;color:rgba(201,168,76,0.3);text-align:right;">CHF 10.50 → CHF 26</div>
+            </div>
+          </div>
+          <div style="border:2px solid rgba(201,168,76,0.35);position:relative;overflow:hidden;background:repeating-linear-gradient(45deg,transparent,transparent 6px,rgba(201,168,76,0.025) 6px,rgba(201,168,76,0.025) 7px);">
+            <div style="position:absolute;inset:5px;border:1px dashed rgba(201,168,76,0.2);display:flex;flex-direction:column;justify-content:space-between;padding:6px;">
+              <div style="font-family:var(--font-mono);font-size:10px;font-weight:500;color:rgba(201,168,76,0.5);">viz_02</div>
+              <div style="font-family:var(--font-mono);font-size:8px;color:rgba(201,168,76,0.25);text-align:center;">temporal pulse 24h</div>
+              <div style="font-family:var(--font-mono);font-size:7px;color:rgba(201,168,76,0.3);text-align:right;">7 time slots</div>
+            </div>
+          </div>
+          <div style="border:2px solid rgba(201,168,76,0.35);position:relative;overflow:hidden;background:repeating-linear-gradient(45deg,transparent,transparent 6px,rgba(201,168,76,0.025) 6px,rgba(201,168,76,0.025) 7px);">
+            <div style="position:absolute;inset:5px;border:1px dashed rgba(201,168,76,0.2);display:flex;flex-direction:column;justify-content:space-between;padding:6px;">
+              <div style="font-family:var(--font-mono);font-size:10px;font-weight:500;color:rgba(201,168,76,0.5);">viz_03</div>
+              <div style="font-family:var(--font-mono);font-size:8px;color:rgba(201,168,76,0.25);text-align:center;">diversity indices</div>
+              <div style="font-family:var(--font-mono);font-size:7px;color:rgba(201,168,76,0.3);text-align:right;">Shannon r=0.63–0.71</div>
+            </div>
+          </div>
+          <div style="border:2px solid rgba(201,168,76,0.35);position:relative;overflow:hidden;background:repeating-linear-gradient(45deg,transparent,transparent 6px,rgba(201,168,76,0.025) 6px,rgba(201,168,76,0.025) 7px);">
+            <div style="position:absolute;inset:5px;border:1px dashed rgba(201,168,76,0.2);display:flex;flex-direction:column;justify-content:space-between;padding:6px;">
+              <div style="font-family:var(--font-mono);font-size:10px;font-weight:500;color:rgba(201,168,76,0.5);">viz_07</div>
+              <div style="font-family:var(--font-mono);font-size:8px;color:rgba(201,168,76,0.25);text-align:center;">scrollytelling site</div>
+              <div style="font-family:var(--font-mono);font-size:7px;color:rgba(201,168,76,0.3);text-align:right;">7 Leaflet maps</div>
+            </div>
+          </div>
+        </div>
+        <div style="flex-shrink:0;background:rgba(201,168,76,0.05);border:1px solid var(--glass-border);border-radius:2px;padding:5px 10px;font-family:var(--font-mono);font-size:9px;color:var(--chrome-muted);display:flex;gap:12px;">
+          <span style="color:var(--chrome-accent);">also</span> viz_04 zurich · viz_05 station explorer · viz_06 journeys · viz_08 presentation · viz_09 demographics
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN 4 — Zurich Comparison -->
+  <div class="panel" id="screen4">
+    <div class="panel-header">
+      <h2>Zurich S8 Benchmark</h2>
+      <span class="panel-tag">City101 vs S8 · 12 analog stations</span>
+    </div>
+    <div class="panel-body">
+      <div class="topo-split">
+        <div class="topo-card" style="border-color: rgba(229,85,85,0.25);">
+          <div class="topo-label" style="color: var(--chrome-red);">City101 · Geneva–Villeneuve</div>
+          <div class="topo-stat"><b>101km</b> · 49 stations · <b style="color:var(--chrome-red)">42×</b> freq variation<br>service <b>0h–21.3h</b> · workable <b style="color:var(--chrome-red)">22%</b></div>
+        </div>
+        <div class="topo-card" style="border-color: rgba(91,155,213,0.35);">
+          <div class="topo-label" style="color: var(--chrome-blue);">Zurich S8 · Lakeside</div>
+          <div class="topo-stat"><b>~50km</b> · 12 stations · <b style="color:var(--chrome-blue)">12×</b> freq variation<br>service <b>18h–21h</b> · workable <b style="color:var(--chrome-green)">~60%</b></div>
+        </div>
+      </div>
+
+      <div class="section-label">frequency variation — <span style="color:var(--chrome-red)">city101</span> vs <span style="color:var(--chrome-blue)">zurich</span></div>
+      <div class="pair-row"><span class="pair-name" style="color:var(--chrome-text)">Max station</span><div class="pair-bars"><div class="bar-track"><div class="bar-fill" style="width:100%;background:var(--chrome-red);opacity:0.7;"></div></div><div class="bar-track"><div class="bar-fill" style="width:50%;background:var(--chrome-blue);opacity:0.7;"></div></div></div><span class="pair-freq"><span style="color:var(--chrome-red)">28.5</span>/<span style="color:var(--chrome-blue)">14</span></span></div>
+      <div class="pair-row"><span class="pair-name" style="color:var(--chrome-muted)">Median</span><div class="pair-bars"><div class="bar-track"><div class="bar-fill" style="width:21%;background:var(--chrome-red);opacity:0.7;"></div></div><div class="bar-track"><div class="bar-fill" style="width:28%;background:var(--chrome-blue);opacity:0.7;"></div></div></div><span class="pair-freq"><span style="color:var(--chrome-red)">6</span>/<span style="color:var(--chrome-blue)">8</span></span></div>
+      <div class="pair-row"><span class="pair-name" style="color:var(--chrome-text);font-weight:500;">Minimum</span><div class="pair-bars"><div class="bar-track"><div class="bar-fill" style="width:0%;background:var(--chrome-red);opacity:0.9;"></div></div><div class="bar-track"><div class="bar-fill" style="width:7%;background:var(--chrome-blue);opacity:0.9;"></div></div></div><span class="pair-freq"><span style="color:var(--chrome-red)">0.0</span>/<span style="color:var(--chrome-blue)">2</span></span></div>
+      <div class="pair-row"><span class="pair-name" style="color:var(--chrome-muted)">Gaps >15km</span><div class="pair-bars"><div class="bar-track"><div class="bar-fill" style="width:100%;background:var(--chrome-red);opacity:0.7;"></div></div><div class="bar-track"><div class="bar-fill" style="width:0%;background:var(--chrome-blue);opacity:0.7;"></div></div></div><span class="pair-freq"><span style="color:var(--chrome-red)">3</span>/<span style="color:var(--chrome-blue)">0</span></span></div>
+
+      <div class="callout-box">
+        <span class="hl">3.5× wider variation:</span> City101 frequency gap is structurally worse than Zurich.<br>
+        Same country, same operator — <span class="hl">the problem is specific to this corridor</span>.
+      </div>
+
+      <div class="pulse-wrap">
+        <div class="section-label">24h service level — <span style="color:var(--chrome-red)">city101 avg</span> vs <span style="color:var(--chrome-blue)">zurich s8</span></div>
+        <div class="pulse-canvas-wrap"><canvas id="pulseCanvas"></canvas></div>
+        <div class="pulse-legend">
+          <span><span class="dot" style="background:var(--chrome-blue);"></span>Zurich S8</span>
+          <span><span class="dot" style="background:var(--chrome-red);"></span>City101</span>
+          <span><span class="dot" style="background:rgba(229,85,85,0.3);"></span>dead window</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN 5 — Relay Chain (key findings sequence) -->
+  <div class="panel" id="screen5">
+    <div class="panel-header">
+      <h2>The Argument Chain</h2>
+      <span class="panel-tag">logic · A01→A02 → proposition</span>
+    </div>
+    <div class="panel-body">
+      <div class="relay-chain">
+        <div class="relay-node critical">
+          <span class="relay-node-num">A01</span>
+          <div class="relay-node-content">
+            <div class="relay-node-name">Data Collection <span style="font-family:var(--font-mono);font-size:7px;color:var(--chrome-green);margin-left:6px;">complete</span></div>
+            <div class="relay-node-gap">49 stations <span class="gap-arrow">→</span> 41 verified datasets</div>
+            <div class="relay-node-gap" style="color:rgba(138,136,128,0.6)">33 classmate datasets · SBB + DIEMO + BAKOM + Google APIs</div>
+          </div>
+        </div>
+        <div class="relay-node critical">
+          <span class="relay-node-num">A02</span>
+          <div class="relay-node-content">
+            <div class="relay-node-name">The Archipelago <span style="font-family:var(--font-mono);font-size:7px;color:var(--chrome-green);margin-left:6px;">submitted</span></div>
+            <div class="relay-node-gap">WCI index <span class="gap-arrow">→</span> only 22% connected</div>
+            <div class="relay-node-gap" style="color:rgba(138,136,128,0.6)">42× frequency · 85% not workable · 160k invisible · r=0.67 diversity</div>
+          </div>
+        </div>
+        <div class="relay-node">
+          <span class="relay-node-num">A03</span>
+          <div class="relay-node-content">
+            <div class="relay-node-name">Field Validation <span style="font-family:var(--font-mono);font-size:7px;color:var(--chrome-green);margin-left:6px;">complete</span></div>
+            <div class="relay-node-gap">7 sites visited <span class="gap-arrow">→</span> 24 sites narrowed to 9</div>
+            <div class="relay-node-gap" style="color:rgba(138,136,128,0.6)">healthcare supply chain · night worker counts · on-site verification</div>
+          </div>
+        </div>
+        <div class="relay-node">
+          <span class="relay-node-num">A04</span>
+          <div class="relay-node-content">
+            <div class="relay-node-name">The Horizontal Elevator <span style="font-family:var(--font-mono);font-size:7px;color:var(--chrome-orange);margin-left:6px;">active</span></div>
+            <div class="relay-node-gap">9 relay-lock nodes <span class="gap-arrow">→</span> prototypology</div>
+            <div class="relay-node-gap" style="color:rgba(138,136,128,0.6)">agent team modeling · 709 objects · Rhino MCP router</div>
+          </div>
+        </div>
+        <div class="relay-footer">
+          Each phase builds on the last. Data proved the gap. Field confirmed the person. Now we <em>design the chamber that holds the gap</em>.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN 6 — Proposition -->
+  <div class="panel" id="screen6">
+    <div class="panel-header">
+      <h2>Core Thesis</h2>
+      <span class="panel-tag">proposition · 3 user types · principle</span>
+    </div>
+    <div class="panel-body">
+      <div class="prop-title">The corridor is an <span>archipelago</span>. The architecture is the <span>lock</span>.</div>
+      <div style="font-family:var(--font-mono);font-size:9px;color:var(--chrome-muted);margin-bottom:10px;border-left:2px solid var(--chrome-accent);padding-left:8px;line-height:1.6;">
+        The vertical elevator is anti-architecture. The horizontal elevator is anti-urban.<br>
+        It changes hierarchy along the corridor. The dwell time IS the architecture.
+      </div>
+
+      <div class="persona-grid">
+        <div class="persona-card" style="border:1px solid rgba(76,201,176,0.3);background:rgba(76,201,176,0.03);">
+          <div class="persona-name" style="color:var(--chrome-cyan);">night shift nurse</div>
+          <div class="persona-desc">2am, M2 stopped, 2,500 stranded on CHUV hillside. Needs safe waiting + transition.</div>
+        </div>
+        <div class="persona-card" style="border:1px solid rgba(201,168,76,0.3);background:rgba(201,168,76,0.03);">
+          <div class="persona-name" style="color:var(--chrome-accent);">home care worker</div>
+          <div class="persona-desc">AVASAD/IMAD: 6–10 stops per shift, 01:30–03:30 corridor dead. Needs relay points.</div>
+        </div>
+        <div class="persona-card" style="border:1px solid rgba(168,139,235,0.3);background:rgba(168,139,235,0.03);">
+          <div class="persona-name" style="color:var(--chrome-purple);">frontalier</div>
+          <div class="persona-desc">160k from France. Can't buy GA. Invisible in metrics. Needs access equity.</div>
+        </div>
+      </div>
+
+      <div class="prop-principles" style="margin-bottom:8px;">
+        <div class="prop-principle"><span class="pp-label" style="min-width:52px;">lock</span><span>Chamber equalizes mobility levels — holds the gap, doesn't eliminate it</span></div>
+        <div class="prop-principle"><span class="pp-label" style="min-width:52px;">relay</span><span>9 nodes spaced ~11km — remove any one and the healthcare chain breaks</span></div>
+        <div class="prop-principle"><span class="pp-label" style="min-width:52px;">person</span><span>Start from who is stranded at 2am, not where the terrain is convenient</span></div>
+      </div>
+
+      <div style="border-top:1px dashed var(--glass-border);padding-top:7px;font-family:var(--font-mono);font-size:8.5px;color:var(--chrome-muted);line-height:1.7;">
+        <span style="color:var(--chrome-accent);">narrative arc →</span>
+        data collection · archipelago proof · field validation · healthcare circuit · relay-lock prototypology · architecture of waiting
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-bar">
+    <span>A01–A03: complete · A04 forms of sentience: active</span>
+    <span>midterm due march 30 · 9 relay-lock nodes · 46-page research paper</span>
+    <span>Still On The Line · EPFL BA6 · Andrea Crespo · Henna Rafik · 2026</span>
+  </div>
+
+</div>
+
+<script>
+  // Corridor strip with real WCI data sorted west→east
+  const stations = [
+    {n:"GE-Aéroport",v:0.1297},{n:"Vernier-Bl.",v:0.4647},{n:"Lancy-PR",v:0.1085},{n:"Lancy-B.",v:0.07},
+    {n:"Genève",v:0.6431},{n:"GE-Sécheron",v:0.3838},{n:"GE-Champel",v:0.2814},{n:"GE-Eaux-V.",v:0.2664},
+    {n:"Genthod",v:0.0578},{n:"Versoix",v:0.171},{n:"Mies",v:0.0296},{n:"Tannay",v:0.1496},
+    {n:"Coppet",v:0.0656},{n:"Founex",v:0.0135},{n:"Nyon",v:0.28},{n:"Begnins",v:0.033},
+    {n:"Prangins",v:0.0213},{n:"Gland",v:0.1241},{n:"Rolle",v:0.0972},{n:"Perroy",v:0.0107},
+    {n:"Aubonne",v:0.0436},{n:"Allaman",v:0.0844},{n:"St-Prex",v:0.0163},{n:"Morges",v:0.2901},
+    {n:"Lonay",v:0.2385},{n:"Denges",v:0.0155},{n:"Bussigny",v:0.0425},{n:"Renens",v:0.2653},
+    {n:"Prilly",v:0.2101},{n:"Lausanne",v:0.5536},{n:"LS-Flon",v:0.3951},{n:"La Conv.",v:0.0875},
+    {n:"Bossière",v:0.0977},{n:"Grandvaux",v:0.0164},{n:"Cully",v:0.0625},{n:"Epesses",v:0.0407},
+    {n:"Puidoux",v:0.0231},{n:"Rivaz",v:0.0128},{n:"St-Saphorin",v:0.0003},{n:"Vevey",v:0.4011},
+    {n:"La Tour",v:0.3905},{n:"Burier",v:0.016},{n:"Clarens",v:0.0173},{n:"Montreux",v:0.339},
+    {n:"Territet",v:0.0081},{n:"Villeneuve",v:0.2238},{n:"Aigle",v:0.0666},{n:"Bex",v:0.0331},
+    {n:"Palézieux",v:0.0464}
+  ];
+
+  function valueToColor(v) {
+    const n = Math.min(v / 0.65, 1);
+    if (n < 0.5) { const t = n*2; return `rgb(${Math.round(224+(232-224)*t)},${Math.round(85+(168-85)*t)},40)`; }
+    const t = (n-0.5)*2; return `rgb(${Math.round(232-(232-76)*t)},${Math.round(168+(175-168)*t)},${Math.round(40+(80-40)*t)})`;
+  }
+
+  function buildCorridorStrip() {
+    const strip = document.getElementById('corridorStrip');
+    if (!strip) return;
+    stations.forEach(st => {
+      const dot = document.createElement('div');
+      dot.className = 'st-dot';
+      dot.style.height = Math.max(8, Math.round(st.v/0.65*28)+4)+'px';
+      dot.style.background = valueToColor(st.v);
+      dot.style.opacity = '0.85';
+      dot.setAttribute('data-name', st.n+' '+st.v.toFixed(3));
+      strip.appendChild(dot);
+    });
+    const gc = document.getElementById('gapZones');
+    if (!gc) return;
+    const tw = strip.offsetWidth || 340, dw = tw/stations.length;
+    [{s:14,e:17,l:'Nyon→Gland'},{s:17,e:23,l:'Gland→Morges'},{s:33,e:39,l:'Lavaux Fracture'}].forEach(g => {
+      const z = document.createElement('div'); z.className='gap-zone';
+      z.style.left=(g.s*dw)+'px'; z.style.width=((g.e-g.s+1)*dw)+'px';
+      z.textContent=g.l; gc.appendChild(z);
+    });
+  }
+
+  // Play sequence
+  let playing=false, playTimeout=null;
+  function togglePlay() {
+    const btn=document.getElementById('playBtn');
+    if(playing){playing=false;btn.innerHTML='&#9654; play sequence';btn.classList.remove('playing');clearTimeout(playTimeout);document.querySelectorAll('.panel').forEach(p=>p.classList.remove('highlight'));return;}
+    playing=true;btn.innerHTML='&#9724; stop';btn.classList.add('playing');
+    document.querySelectorAll('.stat-cell').forEach(c=>c.classList.remove('visible'));
+    const screens=['screen1','screen2','screen3','screen4','screen5','screen6'];let cur=0;
+    function next(){if(!playing)return;document.querySelectorAll('.panel').forEach(p=>p.classList.remove('highlight'));
+      if(cur>=screens.length){playing=false;btn.innerHTML='&#9654; play sequence';btn.classList.remove('playing');return;}
+      document.getElementById(screens[cur]).classList.add('highlight');if(cur===0)animateStats();cur++;playTimeout=setTimeout(next,3500);}
+    next();
+  }
+  function animateStats(){document.querySelectorAll('.stat-cell').forEach((c,i)=>{setTimeout(()=>c.classList.add('visible'),i*120);});}
+
+  // 24h pulse chart
+  function drawPulseChart() {
+    const canvas=document.getElementById('pulseCanvas');if(!canvas)return;
+    const wrap=canvas.parentElement,dpr=window.devicePixelRatio||1;
+    canvas.width=wrap.offsetWidth*dpr;canvas.height=wrap.offsetHeight*dpr;
+    canvas.style.width=wrap.offsetWidth+'px';canvas.style.height=wrap.offsetHeight+'px';
+    const ctx=canvas.getContext('2d');ctx.scale(dpr,dpr);
+    const W=wrap.offsetWidth,H=wrap.offsetHeight;
+    const c101=[2,1,0,0,0,4,7,10,10,8,7,7,7,7,7,8,9,10,10,8,6,4,3,2];
+    const zuri=[2,1,0,0,1,5,8,11,11,9,8,8,8,8,8,9,10,11,11,9,7,5,3,2];
+    const maxV=12;const pad={top:2,bottom:10,left:0,right:0};
+    const pW=W-pad.left-pad.right,pH=H-pad.top-pad.bottom;
+    function xAt(h){return pad.left+(h/23)*pW;}function yAt(v){return pad.top+pH-(v/maxV)*pH;}
+    ctx.fillStyle='rgba(229,85,85,0.08)';ctx.fillRect(xAt(1.5),pad.top,xAt(3.5)-xAt(1.5),pH);
+    ctx.strokeStyle='rgba(255,255,255,0.04)';ctx.lineWidth=0.5;
+    for(let h=0;h<=23;h+=6){ctx.beginPath();ctx.moveTo(xAt(h),pad.top);ctx.lineTo(xAt(h),pad.top+pH);ctx.stroke();}
+    ctx.fillStyle='rgba(138,136,128,0.5)';ctx.font='7px "DM Mono",monospace';ctx.textAlign='center';
+    [0,6,12,18,23].forEach(h=>{ctx.fillText(String(h).padStart(2,'0'),xAt(h),H-1);});
+    function draw(data,color,alpha){ctx.beginPath();ctx.strokeStyle=color;ctx.lineWidth=1.5;ctx.globalAlpha=alpha;
+      data.forEach((v,i)=>{const x=xAt(i),y=yAt(v);if(i===0)ctx.moveTo(x,y);else{const px=xAt(i-1),py=yAt(data[i-1]),cp=(px+x)/2;ctx.bezierCurveTo(cp,py,cp,y,x,y);}});
+      ctx.stroke();ctx.lineTo(xAt(23),yAt(0));ctx.lineTo(xAt(0),yAt(0));ctx.closePath();ctx.globalAlpha=alpha*0.12;ctx.fillStyle=color;ctx.fill();ctx.globalAlpha=1;}
+    draw(c101,'#e05555',0.7);draw(zuri,'#5b9bd5',0.85);
+  }
+
+  window.addEventListener('load',()=>{buildCorridorStrip();drawPulseChart();setTimeout(()=>{document.querySelectorAll('.stat-cell').forEach((c,i)=>{setTimeout(()=>c.classList.add('visible'),i*100);});},400);});
+  window.addEventListener('resize',drawPulseChart);
+</script>
+</body>
+</html>

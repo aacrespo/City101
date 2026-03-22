@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Still On The Line — 03 AI Methodology</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@400;500;700&family=Instrument+Serif&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --chrome-bg: #0a0a0f; --chrome-text: #e8e6e1; --chrome-accent: #c9a84c;
+    --chrome-muted: #8a8880; --chrome-cyan: #4cc9b0; --chrome-green: #4caf50;
+    --chrome-red: #e05555; --chrome-purple: #a88beb; --chrome-blue: #5b9bd5;
+    --chrome-orange: #e8a84c;
+    --font-display: 'Instrument Serif', serif; --font-body: 'DM Sans', sans-serif;
+    --font-mono: 'DM Mono', monospace;
+    --panel-border: rgba(201, 168, 76, 0.25); --glass-bg: rgba(10, 10, 15, 0.85);
+    --glass-border: rgba(201, 168, 76, 0.15);
+  }
+  html, body { width: 100%; height: 100%; background: var(--chrome-bg); color: var(--chrome-text); font-family: var(--font-body); overflow: hidden; }
+  .canvas { width: 100vw; height: 100vh; display: grid; grid-template-columns: 1fr 1fr 1fr; grid-template-rows: auto 1fr 1fr auto; gap: 0; }
+  .canvas::after { content: ''; position: fixed; top: 0; left: 0; right: 0; bottom: 0; pointer-events: none; background: repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.03) 2px,rgba(0,0,0,0.03) 4px); z-index: 100; }
+
+  .status-bar { grid-column: 1/-1; background: rgba(201,168,76,0.08); border-bottom: 1px solid var(--panel-border); padding: 6px 20px; font-family: var(--font-mono); font-size: 11px; color: var(--chrome-muted); display: flex; justify-content: space-between; align-items: center; }
+  .status-bar .left { display: flex; gap: 24px; align-items: center; }
+  .status-bar .session-tag { background: rgba(201,168,76,0.15); color: var(--chrome-accent); padding: 2px 8px; border-radius: 2px; font-weight: 500; }
+  .status-bar .slide-tag { background: rgba(76,201,176,0.1); color: var(--chrome-cyan); padding: 2px 8px; border-radius: 2px; font-size: 9px; }
+  .status-bar .right { display: flex; gap: 16px; align-items: center; }
+  .play-btn { background: rgba(201,168,76,0.12); border: 1px solid var(--chrome-accent); color: var(--chrome-accent); font-family: var(--font-mono); font-size: 11px; padding: 3px 12px; cursor: pointer; border-radius: 2px; transition: all 0.2s; }
+  .play-btn:hover { background: rgba(201,168,76,0.25); }
+  .play-btn.playing { color: var(--chrome-green); border-color: var(--chrome-green); }
+
+  .panel { border: 1px solid var(--panel-border); position: relative; overflow: hidden; display: flex; flex-direction: column; transition: border-color 0.5s, box-shadow 0.5s; }
+  .panel.highlight { border-color: var(--chrome-accent); box-shadow: inset 0 0 30px rgba(201,168,76,0.06); }
+  .panel-header { background: rgba(201,168,76,0.06); border-bottom: 1px solid var(--glass-border); padding: 10px 16px 8px; display: flex; justify-content: space-between; align-items: baseline; flex-shrink: 0; }
+  .panel-header h2 { font-family: var(--font-display); font-size: 20px; color: var(--chrome-accent); font-weight: 400; }
+  .panel-header .panel-tag { font-family: var(--font-mono); font-size: 9px; color: var(--chrome-muted); text-transform: uppercase; letter-spacing: 1px; }
+  .panel-body { flex: 1; padding: 14px 16px; overflow: hidden; position: relative; }
+
+  .bottom-bar { grid-column: 1/-1; background: rgba(201,168,76,0.06); border-top: 1px solid var(--panel-border); padding: 5px 20px; font-family: var(--font-mono); font-size: 10px; color: var(--chrome-muted); display: flex; justify-content: space-between; }
+
+  .stats-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+  .stat-cell { background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border); border-radius: 3px; padding: 8px 10px; opacity: 0; transform: translateY(6px); transition: opacity 0.4s, transform 0.4s; }
+  .stat-cell.visible { opacity: 1; transform: translateY(0); }
+  .stat-num { font-family: var(--font-mono); font-size: 20px; font-weight: 500; color: var(--chrome-accent); line-height: 1; margin-bottom: 3px; }
+  .stat-num.cyan { color: var(--chrome-cyan); } .stat-num.red { color: var(--chrome-red); }
+  .stat-num.green { color: var(--chrome-green); } .stat-num.purple { color: var(--chrome-purple); }
+  .stat-num.orange { color: var(--chrome-orange); } .stat-num.blue { color: var(--chrome-blue); }
+  .stat-label { font-family: var(--font-body); font-size: 9px; color: var(--chrome-muted); line-height: 1.3; }
+
+  .corridor-label { font-family: var(--font-mono); font-size: 9px; color: var(--chrome-muted); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px; }
+  .route-title { font-family: var(--font-display); font-size: 26px; color: var(--chrome-text); margin-bottom: 16px; line-height: 1.1; }
+  .route-title span { color: var(--chrome-accent); }
+  .question-block { font-family: var(--font-display); font-size: 13px; color: var(--chrome-muted); font-style: italic; margin-bottom: 14px; line-height: 1.5; border-left: 2px solid var(--chrome-accent); padding-left: 10px; }
+  .tag-row { display: flex; gap: 6px; margin-bottom: 14px; flex-wrap: wrap; }
+  .tag-pill { font-family: var(--font-mono); font-size: 9px; padding: 3px 8px; border-radius: 2px; }
+
+  .section-label { font-family: var(--font-mono); font-size: 7.5px; color: var(--chrome-muted); text-transform: uppercase; letter-spacing: 1.2px; margin-bottom: 3px; }
+  .topo-split { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin-bottom: 5px; }
+  .topo-card { background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border); border-radius: 3px; padding: 5px 8px; }
+  .topo-label { font-family: var(--font-mono); font-size: 9px; font-weight: 500; margin-bottom: 2px; }
+  .topo-stat { font-family: var(--font-body); font-size: 8px; color: var(--chrome-muted); line-height: 1.4; }
+  .topo-stat b { color: var(--chrome-text); font-weight: 500; }
+
+  .callout-box { margin-top: 4px; padding: 4px 7px; border: 1px dashed rgba(201,168,76,0.3); border-radius: 3px; background: rgba(201,168,76,0.03); font-family: var(--font-mono); font-size: 7.5px; color: var(--chrome-muted); line-height: 1.5; }
+  .callout-box .hl { color: var(--chrome-accent); }
+
+  .relay-chain { display: flex; flex-direction: column; height: 100%; justify-content: center; gap: 0; position: relative; padding-left: 24px; }
+  .relay-chain::before { content: ''; position: absolute; left: 10px; top: 12px; bottom: 12px; width: 1px; border-left: 1px dashed rgba(201,168,76,0.3); }
+  .relay-node { display: flex; align-items: flex-start; gap: 10px; padding: 4px 0; position: relative; }
+  .relay-node::before { content: ''; position: absolute; left: -18px; top: 10px; width: 8px; height: 8px; border-radius: 50%; border: 1.5px solid var(--chrome-accent); background: var(--chrome-bg); flex-shrink: 0; }
+  .relay-node.critical::before { background: rgba(201,168,76,0.3); box-shadow: 0 0 6px rgba(201,168,76,0.4); }
+  .relay-node-num { font-family: var(--font-mono); font-size: 8px; color: var(--chrome-accent); min-width: 14px; margin-top: 2px; flex-shrink: 0; }
+  .relay-node-content { flex: 1; min-width: 0; }
+  .relay-node-name { font-family: var(--font-body); font-size: 10.5px; color: var(--chrome-text); font-weight: 500; line-height: 1.2; }
+  .relay-node-gap { font-family: var(--font-mono); font-size: 8.5px; color: var(--chrome-muted); margin-top: 1px; }
+  .relay-node-gap .gap-arrow { color: var(--chrome-orange); }
+  .relay-footer { margin-top: 8px; padding-top: 8px; border-top: 1px dashed rgba(201,168,76,0.15); font-family: var(--font-display); font-size: 11px; color: var(--chrome-muted); font-style: italic; line-height: 1.4; }
+  .relay-footer em { color: var(--chrome-accent); font-style: normal; }
+
+  .prop-title { font-family: var(--font-display); font-size: 18px; color: var(--chrome-text); margin-bottom: 12px; line-height: 1.2; }
+  .prop-title span { color: var(--chrome-accent); }
+  .prop-principles { display: flex; flex-direction: column; gap: 4px; border-top: 1px solid var(--glass-border); padding-top: 10px; }
+  .prop-principle { display: flex; gap: 8px; font-family: var(--font-mono); font-size: 9px; color: var(--chrome-muted); line-height: 1.5; }
+  .prop-principle .pp-label { color: var(--chrome-cyan); flex-shrink: 0; }
+
+  /* Agent cards */
+  .agent-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
+  .agent-card { background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border); border-radius: 3px; padding: 5px 8px; transition: border-color 0.2s; }
+  .agent-card:hover { border-color: var(--chrome-accent); }
+  .agent-name { font-family: var(--font-mono); font-size: 8px; font-weight: 500; margin-bottom: 2px; }
+  .agent-desc { font-family: var(--font-body); font-size: 7.5px; color: var(--chrome-muted); line-height: 1.3; }
+
+  /* Flow diagram */
+  .flow-step { display: flex; align-items: center; gap: 6px; padding: 4px 0; }
+  .flow-box { background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border); border-radius: 3px; padding: 4px 8px; font-family: var(--font-mono); font-size: 8px; }
+  .flow-arrow { color: var(--chrome-accent); font-family: var(--font-mono); font-size: 10px; }
+
+  .cursor { display: inline-block; width: 7px; height: 14px; background: var(--chrome-accent); animation: blink 1s step-end infinite; vertical-align: text-bottom; margin-left: 2px; }
+  @keyframes blink { 50% { opacity: 0; } }
+  @media print { .canvas::after { display: none; } @page { size: landscape; margin: 0; } }
+</style>
+</head>
+<body>
+<div class="canvas">
+
+  <div class="status-bar">
+    <div class="left">
+      <span class="session-tag">still on the line</span>
+      <span>methodology · ai workflow</span>
+      <span class="slide-tag">6 screens</span>
+      <span>A04</span>
+      <span>march 2026</span>
+    </div>
+    <div class="right">
+      <button class="play-btn" id="playBtn" onclick="togglePlay()">&#9654; play sequence</button>
+      <span>AR-302k Studio Huang</span>
+      <span>Sentient Cities</span>
+    </div>
+  </div>
+
+  <!-- SCREEN 1 — Title / Overview -->
+  <div class="panel" id="screen1">
+    <div class="panel-header">
+      <h2>AI-Augmented Architecture</h2>
+      <span class="panel-tag">methodology · agent system · MCP</span>
+    </div>
+    <div class="panel-body">
+      <div class="corridor-label">claude as third team member</div>
+      <div class="route-title">Designing with <span>agent teams</span></div>
+      <div class="question-block">"Claude is not a tool we use — it is the third member of our team. It has roles, responsibilities, and a persistent memory of our project. We coordinate through a shared lockboard."</div>
+      <div class="tag-row">
+        <div class="tag-pill" style="border:1px solid rgba(76,201,176,0.4);color:var(--chrome-cyan);">12 agent roles</div>
+        <div class="tag-pill" style="border:1px solid rgba(201,168,76,0.4);color:var(--chrome-accent);">31 MCP tools</div>
+        <div class="tag-pill" style="border:1px solid rgba(168,139,235,0.4);color:var(--chrome-purple);">20 slash commands</div>
+        <div class="tag-pill" style="border:1px solid rgba(91,155,213,0.4);color:var(--chrome-blue);">15 workflows</div>
+      </div>
+      <div class="stats-grid" id="statsGrid">
+        <div class="stat-cell"><div class="stat-num">12</div><div class="stat-label">Agent roles<br>5 primary + 7 specialist</div></div>
+        <div class="stat-cell"><div class="stat-num cyan">31</div><div class="stat-label">MCP routing tools<br>Rhino operations</div></div>
+        <div class="stat-cell"><div class="stat-num green">709</div><div class="stat-label">Geometry objects<br>Lock 05 CHUV (7 agents)</div></div>
+        <div class="stat-cell"><div class="stat-num orange">14</div><div class="stat-label">Python tools<br>data · maps · rhino</div></div>
+        <div class="stat-cell"><div class="stat-num purple">15</div><div class="stat-label">Workflow SOPs<br>repeatable operations</div></div>
+        <div class="stat-cell"><div class="stat-num blue">20</div><div class="stat-label">Slash commands<br>role + session + skill</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN 2 — Agent Roles -->
+  <div class="panel" id="screen2">
+    <div class="panel-header">
+      <h2>The Agent Team</h2>
+      <span class="panel-tag">roles · 5 primary · 7 specialist</span>
+    </div>
+    <div class="panel-body" style="padding: 10px 14px;">
+      <div class="section-label" style="margin-bottom:6px;">primary roles — data to form</div>
+      <div class="agent-grid" style="grid-template-columns:1fr 1fr 1fr;margin-bottom:8px;">
+        <div class="agent-card" style="border-color:rgba(76,201,176,0.3);">
+          <div class="agent-name" style="color:var(--chrome-cyan);">/analyst</div>
+          <div class="agent-desc">Data collection, API queries, dataset verification, quality gates</div>
+        </div>
+        <div class="agent-card" style="border-color:rgba(201,168,76,0.3);">
+          <div class="agent-name" style="color:var(--chrome-accent);">/cartographer</div>
+          <div class="agent-desc">Maps, spatial analysis, GeoJSON, QGIS, Leaflet</div>
+        </div>
+        <div class="agent-card" style="border-color:rgba(168,139,235,0.3);">
+          <div class="agent-name" style="color:var(--chrome-purple);">/visualizer</div>
+          <div class="agent-desc">Charts, diagrams, scrollytelling, interactive viz</div>
+        </div>
+        <div class="agent-card" style="border-color:rgba(91,155,213,0.3);">
+          <div class="agent-name" style="color:var(--chrome-blue);">/builder</div>
+          <div class="agent-desc">Deployment, site assembly, packaging, narrative</div>
+        </div>
+        <div class="agent-card" style="border-color:rgba(232,168,76,0.3);">
+          <div class="agent-name" style="color:var(--chrome-orange);">/modeler</div>
+          <div class="agent-desc">3D geometry, Rhino/Grasshopper, physical form, LOD</div>
+        </div>
+      </div>
+
+      <div class="section-label" style="margin-bottom:6px;">specialist review agents</div>
+      <div class="agent-grid" style="grid-template-columns:1fr 1fr 1fr 1fr;margin-bottom:8px;">
+        <div class="agent-card"><div class="agent-name" style="color:var(--chrome-muted);">concept-critic</div><div class="agent-desc">Design review</div></div>
+        <div class="agent-card"><div class="agent-name" style="color:var(--chrome-muted);">structural</div><div class="agent-desc">Building code</div></div>
+        <div class="agent-card"><div class="agent-name" style="color:var(--chrome-muted);">accessibility</div><div class="agent-desc">SIA 500</div></div>
+        <div class="agent-card"><div class="agent-name" style="color:var(--chrome-muted);">envelope</div><div class="agent-desc">Thermal/weather</div></div>
+      </div>
+
+      <div class="section-label" style="margin-bottom:6px;">team assembly — parallel execution</div>
+      <div style="display:flex;gap:4px;align-items:center;flex-wrap:wrap;">
+        <div class="flow-box" style="color:var(--chrome-cyan);">/team</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-box">analyst</div>
+        <div class="flow-box">cartographer</div>
+        <div class="flow-box">visualizer</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-box" style="color:var(--chrome-accent);">output/</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-box" style="color:var(--chrome-green);">review</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-box" style="color:var(--chrome-green);">promote</div>
+      </div>
+
+      <div class="callout-box" style="margin-top:8px;">
+        <span class="hl">Lock 05 CHUV roundtable:</span> 7 agents worked in parallel — modeler, concept critic, structural reviewer, accessibility, envelope, log compliance, site context. <span class="hl">709 geometry objects</span> across 4 modeling rounds.
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN 3 — MCP / Rhino Router -->
+  <div class="panel" id="screen3">
+    <div class="panel-header">
+      <h2>MCP Router</h2>
+      <span class="panel-tag">rhino · multi-instance · TCP proxy</span>
+    </div>
+    <div class="panel-body" style="padding: 12px 16px;">
+      <div style="font-family:var(--font-mono);font-size:8px;color:var(--chrome-muted);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:6px;">
+        model context protocol — rhino integration
+      </div>
+
+      <!-- Architecture diagram -->
+      <div style="background:rgba(255,255,255,0.02);border:1px solid var(--glass-border);border-radius:3px;padding:10px;margin-bottom:8px;">
+        <div style="display:flex;align-items:center;gap:8px;justify-content:center;flex-wrap:wrap;">
+          <div style="border:1.5px solid var(--chrome-accent);border-radius:4px;padding:6px 12px;text-align:center;">
+            <div style="font-family:var(--font-mono);font-size:9px;color:var(--chrome-accent);font-weight:500;">Claude Code</div>
+            <div style="font-family:var(--font-mono);font-size:7px;color:var(--chrome-muted);">agent team</div>
+          </div>
+          <div style="font-family:var(--font-mono);font-size:10px;color:var(--chrome-accent);">──[stdio]──▶</div>
+          <div style="border:1.5px solid var(--chrome-cyan);border-radius:4px;padding:6px 12px;text-align:center;">
+            <div style="font-family:var(--font-mono);font-size:9px;color:var(--chrome-cyan);font-weight:500;">Router</div>
+            <div style="font-family:var(--font-mono);font-size:7px;color:var(--chrome-muted);">1,209 lines · thread-safe</div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:2px;">
+            <div style="font-family:var(--font-mono);font-size:7px;color:var(--chrome-orange);">──[TCP:9001]──▶ <span style="color:var(--chrome-text);">Rhino 1</span></div>
+            <div style="font-family:var(--font-mono);font-size:7px;color:var(--chrome-orange);">──[TCP:9002]──▶ <span style="color:var(--chrome-text);">Rhino 2</span></div>
+            <div style="font-family:var(--font-mono);font-size:7px;color:var(--chrome-orange);">──[TCP:9003]──▶ <span style="color:var(--chrome-text);">Rhino 3</span></div>
+            <div style="font-family:var(--font-mono);font-size:7px;color:var(--chrome-muted);">...up to 10</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="topo-split" style="grid-template-columns:1fr 1fr 1fr;margin-bottom:6px;">
+        <div class="topo-card">
+          <div class="topo-label" style="color:var(--chrome-cyan);">31 Tools</div>
+          <div class="topo-stat">create · modify · boolean<br>loft · sweep · extrude<br>layers · viewport · code</div>
+        </div>
+        <div class="topo-card">
+          <div class="topo-label" style="color:var(--chrome-orange);">Thread-safe</div>
+          <div class="topo-stat">per-instance locks<br>agents model in parallel<br>no blocking between files</div>
+        </div>
+        <div class="topo-card">
+          <div class="topo-label" style="color:var(--chrome-green);">Two modes</div>
+          <div class="topo-stat"><b>Router:</b> multi-agent<br><b>Standard:</b> solo scripts<br>switch via .mcp.json</div>
+        </div>
+      </div>
+
+      <div class="callout-box">
+        <span class="hl">Key insight:</span> The router lets multiple agents build in the same Rhino session simultaneously. One agent models the shell while another handles MEP — <span class="hl">each on a separate layer, through the same TCP proxy</span>.
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN 4 — Command Ecosystem -->
+  <div class="panel" id="screen4">
+    <div class="panel-header">
+      <h2>Command Ecosystem</h2>
+      <span class="panel-tag">20 commands · 4 layers · context management</span>
+    </div>
+    <div class="panel-body" style="padding: 10px 14px;">
+      <div class="section-label" style="margin-bottom:6px;">four-layer architecture</div>
+
+      <div style="display:flex;flex-direction:column;gap:4px;margin-bottom:8px;">
+        <div style="display:flex;align-items:center;gap:6px;padding:5px 8px;background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.2);border-radius:3px;">
+          <span style="font-family:var(--font-mono);font-size:9px;color:var(--chrome-accent);font-weight:500;min-width:60px;">L1 auto</span>
+          <span style="font-family:var(--font-mono);font-size:8px;color:var(--chrome-text);">CLAUDE.md + conventions + data-protocol + tool-protocol</span>
+          <span style="font-family:var(--font-mono);font-size:7px;color:var(--chrome-muted);margin-left:auto;">every session</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;padding:5px 8px;background:rgba(76,201,176,0.04);border:1px solid rgba(76,201,176,0.2);border-radius:3px;">
+          <span style="font-family:var(--font-mono);font-size:9px;color:var(--chrome-cyan);font-weight:500;min-width:60px;">L2 role</span>
+          <span style="font-family:var(--font-mono);font-size:8px;color:var(--chrome-text);">/analyst /cartographer /modeler /visualizer /builder</span>
+          <span style="font-family:var(--font-mono);font-size:7px;color:var(--chrome-muted);margin-left:auto;">on demand</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;padding:5px 8px;background:rgba(168,139,235,0.04);border:1px solid rgba(168,139,235,0.2);border-radius:3px;">
+          <span style="font-family:var(--font-mono);font-size:9px;color:var(--chrome-purple);font-weight:500;min-width:60px;">L3 ref</span>
+          <span style="font-family:var(--font-mono);font-size:8px;color:var(--chrome-text);">CONTEXT.md · LOCKBOARD.md · LEARNINGS.md · INVENTORY.md</span>
+          <span style="font-family:var(--font-mono);font-size:7px;color:var(--chrome-muted);margin-left:auto;">when needed</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;padding:5px 8px;background:rgba(232,168,76,0.04);border:1px solid rgba(232,168,76,0.2);border-radius:3px;">
+          <span style="font-family:var(--font-mono);font-size:9px;color:var(--chrome-orange);font-weight:500;min-width:60px;">L4 exec</span>
+          <span style="font-family:var(--font-mono);font-size:8px;color:var(--chrome-text);">tools/ + workflows/ → check before building anything</span>
+          <span style="font-family:var(--font-mono);font-size:7px;color:var(--chrome-muted);margin-left:auto;">action time</span>
+        </div>
+      </div>
+
+      <div class="section-label" style="margin-bottom:4px;">session management</div>
+      <div style="display:flex;gap:4px;margin-bottom:8px;">
+        <div style="flex:1;background:rgba(255,255,255,0.02);border:1px solid var(--glass-border);border-radius:3px;padding:4px 6px;">
+          <div style="font-family:var(--font-mono);font-size:8px;color:var(--chrome-green);margin-bottom:2px;">/session-start</div>
+          <div style="font-family:var(--font-body);font-size:7px;color:var(--chrome-muted);">Load context + lockboard. Know what happened.</div>
+        </div>
+        <div style="flex:1;background:rgba(255,255,255,0.02);border:1px solid var(--glass-border);border-radius:3px;padding:4px 6px;">
+          <div style="font-family:var(--font-mono);font-size:8px;color:var(--chrome-green);margin-bottom:2px;">/session-end</div>
+          <div style="font-family:var(--font-body);font-size:7px;color:var(--chrome-muted);">Update context + lockboard. Pass the baton.</div>
+        </div>
+        <div style="flex:1;background:rgba(255,255,255,0.02);border:1px solid var(--glass-border);border-radius:3px;padding:4px 6px;">
+          <div style="font-family:var(--font-mono);font-size:8px;color:var(--chrome-accent);margin-bottom:2px;">/save-session</div>
+          <div style="font-family:var(--font-body);font-size:7px;color:var(--chrome-muted);">Snapshot current state for resume.</div>
+        </div>
+      </div>
+
+      <div class="section-label" style="margin-bottom:4px;">knowledge infrastructure</div>
+      <div class="topo-split" style="grid-template-columns:1fr 1fr;">
+        <div class="topo-card">
+          <div class="topo-label" style="color:var(--chrome-accent);">Archibase</div>
+          <div class="topo-stat"><b>SQLite:</b> 375 KBOB materials, SIA loads<br><b>Guides:</b> 33 markdown typologies<br><b>RAG:</b> 35K+ chunks (Dicobat, SIA norms)</div>
+        </div>
+        <div class="topo-card">
+          <div class="topo-label" style="color:var(--chrome-cyan);">Coordination</div>
+          <div class="topo-stat"><b>LOCKBOARD.md:</b> who does what<br><b>CONTEXT.md:</b> shared project state<br><b>LEARNINGS.md:</b> accumulated pitfalls</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN 5 — Relay-Lock Configurator -->
+  <div class="panel" id="screen5">
+    <div class="panel-header">
+      <h2>Relay-Lock Configurator</h2>
+      <span class="panel-tag">app · 6 modules · AI + deterministic</span>
+    </div>
+    <div class="panel-body" style="padding: 10px 14px;">
+      <div class="section-label" style="margin-bottom:6px;">application architecture — 6 modules</div>
+
+      <div class="relay-chain" style="padding-top:0;height:auto;">
+        <div class="relay-node critical">
+          <span class="relay-node-num">01</span>
+          <div class="relay-node-content">
+            <div class="relay-node-name">Corridor Knowledge Base</div>
+            <div class="relay-node-gap">49 stations · ~3,200 records <span class="gap-arrow">→</span> static JSON</div>
+          </div>
+        </div>
+        <div class="relay-node">
+          <span class="relay-node-num">02</span>
+          <div class="relay-node-content">
+            <div class="relay-node-name">Community Research Engine</div>
+            <div class="relay-node-gap">Claude API (Phase 2) <span class="gap-arrow">→</span> population + criticality scalars</div>
+          </div>
+        </div>
+        <div class="relay-node critical">
+          <span class="relay-node-num">03</span>
+          <div class="relay-node-content">
+            <div class="relay-node-name">Scoring Engine</div>
+            <div class="relay-node-gap">5 weighted criteria <span class="gap-arrow">→</span> 0–5 composite score</div>
+          </div>
+        </div>
+        <div class="relay-node">
+          <span class="relay-node-num">04</span>
+          <div class="relay-node-content">
+            <div class="relay-node-name">Lock Type Assignment</div>
+            <div class="relay-node-gap">decision tree <span class="gap-arrow">→</span> 9 lock types (border · altitude · temporal...)</div>
+          </div>
+        </div>
+        <div class="relay-node">
+          <span class="relay-node-num">05</span>
+          <div class="relay-node-content">
+            <div class="relay-node-name">Output Pipeline</div>
+            <div class="relay-node-gap">map + spec cards + 3D preview <span class="gap-arrow">→</span> Rhino script export</div>
+          </div>
+        </div>
+        <div class="relay-node">
+          <span class="relay-node-num">06</span>
+          <div class="relay-node-content">
+            <div class="relay-node-name">Interface</div>
+            <div class="relay-node-gap">Tab 1: Analysis (weights, scores, map) · Tab 2: Outputs (spec, preview, code)</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout-box" style="margin-top:4px;">
+        <span class="hl">AI/Deterministic boundary:</span> Community research outputs 2 scalars (population, criticality). Everything downstream is <span class="hl">pure deterministic JS</span> — scoring, type assignment, parameter generation, rendering. The AI finds who is stranded; the algorithm decides where to build.
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN 6 — Data Pipeline -->
+  <div class="panel" id="screen6">
+    <div class="panel-header">
+      <h2>Data to Form</h2>
+      <span class="panel-tag">pipeline · 34 datasets · 21 visualizations · 3D</span>
+    </div>
+    <div class="panel-body">
+      <div class="prop-title">From <span>49 stations</span> to <span>9 buildings</span></div>
+
+      <div style="display:flex;gap:3px;margin-bottom:10px;align-items:stretch;">
+        <div style="flex:1;background:rgba(76,201,176,0.04);border:1px solid rgba(76,201,176,0.2);border-radius:3px;padding:5px 7px;text-align:center;">
+          <div style="font-family:var(--font-mono);font-size:14px;color:var(--chrome-cyan);font-weight:500;">34</div>
+          <div style="font-family:var(--font-mono);font-size:7px;color:var(--chrome-muted);">datasets CSV</div>
+        </div>
+        <div style="display:flex;align-items:center;font-family:var(--font-mono);font-size:10px;color:var(--chrome-accent);">→</div>
+        <div style="flex:1;background:rgba(201,168,76,0.04);border:1px solid rgba(201,168,76,0.2);border-radius:3px;padding:5px 7px;text-align:center;">
+          <div style="font-family:var(--font-mono);font-size:14px;color:var(--chrome-accent);font-weight:500;">21</div>
+          <div style="font-family:var(--font-mono);font-size:7px;color:var(--chrome-muted);">visualizations</div>
+        </div>
+        <div style="display:flex;align-items:center;font-family:var(--font-mono);font-size:10px;color:var(--chrome-accent);">→</div>
+        <div style="flex:1;background:rgba(168,139,235,0.04);border:1px solid rgba(168,139,235,0.2);border-radius:3px;padding:5px 7px;text-align:center;">
+          <div style="font-family:var(--font-mono);font-size:14px;color:var(--chrome-purple);font-weight:500;">9</div>
+          <div style="font-family:var(--font-mono);font-size:7px;color:var(--chrome-muted);">relay-lock nodes</div>
+        </div>
+        <div style="display:flex;align-items:center;font-family:var(--font-mono);font-size:10px;color:var(--chrome-accent);">→</div>
+        <div style="flex:1;background:rgba(232,168,76,0.04);border:1px solid rgba(232,168,76,0.2);border-radius:3px;padding:5px 7px;text-align:center;">
+          <div style="font-family:var(--font-mono);font-size:14px;color:var(--chrome-orange);font-weight:500;">3D</div>
+          <div style="font-family:var(--font-mono);font-size:7px;color:var(--chrome-muted);">Rhino models</div>
+        </div>
+      </div>
+
+      <div class="section-label" style="margin-bottom:4px;">data domains (8 categories)</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:3px;margin-bottom:8px;">
+        <div style="background:rgba(255,255,255,0.02);border:1px solid var(--glass-border);border-radius:2px;padding:3px 6px;font-family:var(--font-mono);font-size:7px;color:var(--chrome-muted);text-align:center;">transit<br><span style="color:var(--chrome-cyan);">4 files</span></div>
+        <div style="background:rgba(255,255,255,0.02);border:1px solid var(--glass-border);border-radius:2px;padding:3px 6px;font-family:var(--font-mono);font-size:7px;color:var(--chrome-muted);text-align:center;">corridor<br><span style="color:var(--chrome-accent);">13 files</span></div>
+        <div style="background:rgba(255,255,255,0.02);border:1px solid var(--glass-border);border-radius:2px;padding:3px 6px;font-family:var(--font-mono);font-size:7px;color:var(--chrome-muted);text-align:center;">remote work<br><span style="color:var(--chrome-purple);">7 files</span></div>
+        <div style="background:rgba(255,255,255,0.02);border:1px solid var(--glass-border);border-radius:2px;padding:3px 6px;font-family:var(--font-mono);font-size:7px;color:var(--chrome-muted);text-align:center;">EV charging<br><span style="color:var(--chrome-green);">3 files</span></div>
+        <div style="background:rgba(255,255,255,0.02);border:1px solid var(--glass-border);border-radius:2px;padding:3px 6px;font-family:var(--font-mono);font-size:7px;color:var(--chrome-muted);text-align:center;">stations<br><span style="color:var(--chrome-blue);">2 files</span></div>
+        <div style="background:rgba(255,255,255,0.02);border:1px solid var(--glass-border);border-radius:2px;padding:3px 6px;font-family:var(--font-mono);font-size:7px;color:var(--chrome-muted);text-align:center;">zurich<br><span style="color:var(--chrome-blue);">4 files</span></div>
+        <div style="background:rgba(255,255,255,0.02);border:1px solid var(--glass-border);border-radius:2px;padding:3px 6px;font-family:var(--font-mono);font-size:7px;color:var(--chrome-muted);text-align:center;">healthcare<br><span style="color:var(--chrome-red);">1 file</span></div>
+        <div style="background:rgba(255,255,255,0.02);border:1px solid var(--glass-border);border-radius:2px;padding:3px 6px;font-family:var(--font-mono);font-size:7px;color:var(--chrome-muted);text-align:center;">late-night<br><span style="color:var(--chrome-orange);">1 file</span></div>
+      </div>
+
+      <div class="prop-principles" style="padding-top:6px;margin-bottom:0;">
+        <div class="prop-principle"><span class="pp-label" style="min-width:64px;">verify</span><span>Nothing reaches datasets/ unverified — agent output → output/ → quality gates → promote</span></div>
+        <div class="prop-principle"><span class="pp-label" style="min-width:64px;">trace</span><span>Every dataset has source, fetch date, coordinates, unique ID — filter later, not during collection</span></div>
+        <div class="prop-principle"><span class="pp-label" style="min-width:64px;">form</span><span>Data → index → field → prototypology — each phase narrows: 49 → 24 → 9 → architecture</span></div>
+      </div>
+
+      <div style="border-top:1px dashed var(--glass-border);padding-top:7px;margin-top:8px;font-family:var(--font-mono);font-size:8.5px;color:var(--chrome-muted);line-height:1.7;">
+        <span style="color:var(--chrome-accent);">stack →</span>
+        Claude Code CLI · MCP · Rhino 8 · Leaflet · MapLibre GL · Three.js · Python · archibase SQLite
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-bar">
+    <span>12 agent roles · 31 MCP tools · 15 workflows · 20 commands</span>
+    <span>34 datasets · 21 visualizations · relay-lock configurator</span>
+    <span>Still On The Line · EPFL BA6 · Andrea Crespo · Henna Rafik · 2026</span>
+  </div>
+
+</div>
+
+<script>
+  let playing=false, playTimeout=null;
+  function togglePlay() {
+    const btn=document.getElementById('playBtn');
+    if(playing){playing=false;btn.innerHTML='&#9654; play sequence';btn.classList.remove('playing');clearTimeout(playTimeout);document.querySelectorAll('.panel').forEach(p=>p.classList.remove('highlight'));return;}
+    playing=true;btn.innerHTML='&#9724; stop';btn.classList.add('playing');
+    document.querySelectorAll('.stat-cell').forEach(c=>c.classList.remove('visible'));
+    const screens=['screen1','screen2','screen3','screen4','screen5','screen6'];let cur=0;
+    function next(){if(!playing)return;document.querySelectorAll('.panel').forEach(p=>p.classList.remove('highlight'));
+      if(cur>=screens.length){playing=false;btn.innerHTML='&#9654; play sequence';btn.classList.remove('playing');return;}
+      document.getElementById(screens[cur]).classList.add('highlight');if(cur===0)animateStats();cur++;playTimeout=setTimeout(next,3500);}
+    next();
+  }
+  function animateStats(){document.querySelectorAll('.stat-cell').forEach((c,i)=>{setTimeout(()=>c.classList.add('visible'),i*120);});}
+
+  window.addEventListener('load',()=>{setTimeout(()=>{document.querySelectorAll('.stat-cell').forEach((c,i)=>{setTimeout(()=>c.classList.add('visible'),i*100);});},400);});
+</script>
+</body>
+</html>

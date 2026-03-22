@@ -2,634 +2,1326 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Still On The Line — Presentation Template</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Still On The Line — Sixscreen Presentation Template</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@400;500;700&family=Instrument+Serif&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
   :root {
-    --bg: #0c0c14;
-    --bg-elevated: #12121c;
-    --surface: rgba(255,255,255,0.04);
-    --gold: #c9a84c;
-    --gold-dim: rgba(201,168,76,0.12);
-    --gold-mid: rgba(201,168,76,0.35);
-    --text: #e8e6e1;
-    --text-muted: #9a9690;
-    --copper: #b87a56;
-    --teal: #5b8fa8;
+    --chrome-bg: #0a0a0f;
+    --chrome-text: #e8e6e1;
+    --chrome-accent: #c9a84c;
+    --chrome-muted: #8a8880;
+    --chrome-cyan: #4cc9b0;
+    --chrome-green: #4caf50;
+    --chrome-red: #e05555;
+    --chrome-purple: #a88beb;
+    --chrome-blue: #5b9bd5;
+    --chrome-orange: #e8a84c;
     --font-display: 'Instrument Serif', serif;
     --font-body: 'DM Sans', sans-serif;
     --font-mono: 'DM Mono', monospace;
-    --radius: 12px;
-    --radius-sm: 6px;
+    --panel-border: rgba(201, 168, 76, 0.25);
+    --glass-bg: rgba(10, 10, 15, 0.85);
+    --glass-border: rgba(201, 168, 76, 0.15);
   }
 
-  html {
-    background: #000;
+  html, body {
+    width: 100%; height: 100%;
+    background: var(--chrome-bg);
+    color: var(--chrome-text);
+    font-family: var(--font-body);
+    overflow: hidden;
+  }
+
+  /* ── MAIN LAYOUT: 3×2 grid ── */
+  .canvas {
     width: 100vw;
     height: 100vh;
-    overflow: hidden;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: auto 1fr 1fr auto;
+    gap: 0;
   }
 
-  body {
-    font-family: var(--font-body);
-    background: var(--bg);
-    color: var(--text);
-    width: 1920px;
-    height: 1080px;
-    overflow: hidden;
-    transform-origin: top left;
-    -webkit-font-smoothing: antialiased;
-  }
-
-  /* ─── Slide Container ─── */
-  .slides-container {
-    width: 1920px;
-    height: 1080px;
-    position: relative;
-  }
-  .slide {
-    position: absolute;
-    inset: 0;
-    display: none;
-    flex-direction: column;
-  }
-  .slide.active { display: flex; }
-
-  /* ─── Datum Line (top bar) ─── */
-  .datum-top {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 32px;
-    height: 44px;
-    background: var(--bg-elevated);
-    border-bottom: 1px solid var(--gold-dim);
-    flex-shrink: 0;
-    font-family: var(--font-mono);
-    font-size: 12px;
-  }
-  .datum-top .dt-tag { color: var(--gold); opacity: 0.8; letter-spacing: 1.5px; text-transform: uppercase; }
-  .datum-top .dt-title { color: var(--text); position: absolute; left: 50%; transform: translateX(-50%); }
-  .datum-top .dt-meta { color: var(--text-muted); opacity: 0.6; }
-
-  /* ─── Datum Line (bottom bar) ─── */
-  .datum-bottom {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 32px;
-    height: 44px;
-    background: var(--bg-elevated);
-    border-top: 1px solid var(--gold-dim);
-    flex-shrink: 0;
-  }
-  .datum-bottom .db-brand {
-    display: flex;
-    align-items: baseline;
-    gap: 4px;
-  }
-  .datum-bottom .db-brand .b-still {
-    font-family: var(--font-display);
-    font-size: 14px;
-    color: var(--text-muted);
-  }
-  .datum-bottom .db-brand .b-otl {
+  /* ── TOP STATUS BAR ── */
+  .status-bar {
+    grid-column: 1 / -1;
+    background: rgba(201, 168, 76, 0.08);
+    border-bottom: 1px solid var(--panel-border);
+    padding: 6px 20px;
     font-family: var(--font-mono);
     font-size: 11px;
-    color: var(--gold);
+    color: var(--chrome-muted);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .status-bar .left { display: flex; gap: 24px; align-items: center; }
+  .status-bar .session-tag {
+    background: rgba(201, 168, 76, 0.15);
+    color: var(--chrome-accent);
+    padding: 2px 8px;
+    border-radius: 2px;
     font-weight: 500;
+  }
+  .status-bar .slide-tag {
+    background: rgba(76, 201, 176, 0.1);
+    color: var(--chrome-cyan);
+    padding: 2px 8px;
+    border-radius: 2px;
+    font-size: 9px;
+  }
+  .status-bar .right { display: flex; gap: 16px; align-items: center; }
+
+  /* ── PLAY BUTTON ── */
+  .play-btn {
+    background: rgba(201, 168, 76, 0.12);
+    border: 1px solid var(--chrome-accent);
+    color: var(--chrome-accent);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    padding: 3px 12px;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: all 0.2s;
+  }
+  .play-btn:hover { background: rgba(201, 168, 76, 0.25); }
+  .play-btn.playing { color: var(--chrome-green); border-color: var(--chrome-green); }
+
+  /* ── PANELS ── */
+  .panel {
+    border: 1px solid var(--panel-border);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: border-color 0.5s, box-shadow 0.5s;
+  }
+  .panel.highlight {
+    border-color: var(--chrome-accent);
+    box-shadow: inset 0 0 30px rgba(201, 168, 76, 0.06);
+  }
+  .panel-header {
+    background: rgba(201, 168, 76, 0.06);
+    border-bottom: 1px solid var(--glass-border);
+    padding: 10px 16px 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-shrink: 0;
+  }
+  .panel-header h2 {
+    font-family: var(--font-display);
+    font-size: 20px;
+    color: var(--chrome-accent);
+    font-weight: 400;
+  }
+  .panel-header .panel-tag {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: var(--chrome-muted);
+    text-transform: uppercase;
     letter-spacing: 1px;
   }
-  .datum-bottom .db-center {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    color: var(--text-muted);
-    opacity: 0.5;
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-  }
-  .datum-bottom .db-nav {
-    font-family: var(--font-mono);
-    font-size: 12px;
-    color: var(--text-muted);
-    opacity: 0.6;
-  }
-  .datum-bottom .db-nav .current { color: var(--text); opacity: 1; }
-
-  /* ─── Slide body area ─── */
-  .slide-body {
+  .panel-body {
     flex: 1;
-    position: relative;
+    padding: 14px 16px;
     overflow: hidden;
-  }
-
-  /* ══════ SLIDE TYPES ══════ */
-
-  /* Title slide */
-  .slide-title .slide-body {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 64px;
-  }
-  .slide-title .st-logo {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-    margin-bottom: 48px;
-  }
-  .slide-title .st-logo .l-still {
-    font-family: var(--font-display);
-    font-size: 80px;
-    color: var(--text);
-    letter-spacing: 8px;
-    line-height: 1;
-  }
-  .slide-title .st-logo .l-otl {
-    font-family: var(--font-mono);
-    font-size: 32px;
-    color: var(--gold);
-    font-weight: 500;
-    letter-spacing: 5px;
-    line-height: 1;
-  }
-  .slide-title .st-line {
-    width: 320px;
-    height: 2px;
-    background: var(--gold);
-    margin-bottom: 48px;
-    opacity: 0.6;
-  }
-  .slide-title .st-heading {
-    font-family: var(--font-display);
-    font-size: 56px;
-    color: var(--text);
-    line-height: 1.15;
-    margin-bottom: 16px;
-    max-width: 900px;
-  }
-  .slide-title .st-subtitle {
-    font-family: var(--font-display);
-    font-style: italic;
-    font-size: 24px;
-    color: var(--text-muted);
-    max-width: 700px;
-  }
-
-  /* Data slide — full-width visualization */
-  .slide-data .slide-body {
-    display: flex;
-    flex-direction: column;
-    padding: 48px;
-  }
-  .slide-data .sd-heading {
-    font-family: var(--font-display);
-    font-size: 36px;
-    color: var(--text);
-    margin-bottom: 8px;
-  }
-  .slide-data .sd-desc {
-    font-size: 16px;
-    color: var(--text-muted);
-    margin-bottom: 32px;
-    max-width: 600px;
-  }
-  .slide-data .sd-viz {
-    flex: 1;
-    background: var(--surface);
-    border: 1px solid var(--gold-dim);
-    border-radius: var(--radius);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: var(--font-mono);
-    font-size: 14px;
-    color: var(--text-muted);
-  }
-
-  /* Split slide — text left, visual right */
-  .slide-split .slide-body {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 48px;
-    padding: 64px;
-    align-items: center;
-  }
-  .slide-split .ss-text h2 {
-    font-family: var(--font-display);
-    font-size: 44px;
-    color: var(--text);
-    line-height: 1.15;
-    margin-bottom: 24px;
-  }
-  .slide-split .ss-text p {
-    font-size: 18px;
-    color: var(--text-muted);
-    line-height: 1.7;
-    margin-bottom: 24px;
-  }
-  .slide-split .ss-metric {
-    display: flex;
-    gap: 48px;
-    margin-top: 32px;
-  }
-  .slide-split .ss-metric-item .mi-val {
-    font-family: var(--font-mono);
-    font-size: 40px;
-    font-weight: 500;
-    color: var(--gold);
-    line-height: 1;
-  }
-  .slide-split .ss-metric-item .mi-lbl {
-    font-size: 13px;
-    color: var(--text-muted);
-    margin-top: 4px;
-  }
-  .slide-split .ss-visual {
-    height: 100%;
-    background: var(--surface);
-    border: 1px solid var(--gold-dim);
-    border-radius: var(--radius);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: var(--font-mono);
-    font-size: 14px;
-    color: var(--text-muted);
-  }
-
-  /* Grid slide — 2x2 or 3-column */
-  .slide-grid .slide-body {
-    display: flex;
-    flex-direction: column;
-    padding: 48px;
-  }
-  .slide-grid .sg-heading {
-    font-family: var(--font-display);
-    font-size: 36px;
-    color: var(--text);
-    margin-bottom: 32px;
-  }
-  .slide-grid .sg-grid {
-    flex: 1;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 24px;
-  }
-  .slide-grid .sg-grid.two-col {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  .slide-grid .sg-cell {
-    background: var(--surface);
-    border: 1px solid var(--gold-dim);
-    border-radius: var(--radius);
-    padding: 32px;
-    display: flex;
-    flex-direction: column;
-  }
-  .slide-grid .sg-cell h3 {
-    font-family: var(--font-display);
-    font-size: 24px;
-    color: var(--text);
-    margin-bottom: 12px;
-  }
-  .slide-grid .sg-cell p {
-    font-size: 15px;
-    color: var(--text-muted);
-    line-height: 1.6;
-  }
-  .slide-grid .sg-cell .cell-value {
-    font-family: var(--font-mono);
-    font-size: 48px;
-    font-weight: 500;
-    color: var(--gold);
-    margin-bottom: 8px;
-  }
-
-  /* Quote slide */
-  .slide-quote .slide-body {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 96px;
-  }
-  .slide-quote .sq-mark {
-    font-family: var(--font-display);
-    font-size: 120px;
-    color: var(--gold);
-    line-height: 0.5;
-    opacity: 0.3;
-    margin-bottom: 24px;
-  }
-  .slide-quote .sq-text {
-    font-family: var(--font-display);
-    font-style: italic;
-    font-size: 44px;
-    color: var(--text);
-    line-height: 1.35;
-    max-width: 1000px;
-    margin-bottom: 32px;
-  }
-  .slide-quote .sq-attr {
-    font-family: var(--font-mono);
-    font-size: 14px;
-    color: var(--text-muted);
-    letter-spacing: 2px;
-  }
-
-  /* Map slide */
-  .slide-map .slide-body {
     position: relative;
-    background: linear-gradient(180deg, #0d1926, #1a2332);
   }
-  .slide-map .sm-overlay {
-    position: absolute;
-    top: 32px;
-    left: 32px;
-    z-index: 2;
-  }
-  .slide-map .sm-overlay h2 {
-    font-family: var(--font-display);
-    font-size: 36px;
-    color: var(--text);
-    margin-bottom: 8px;
-  }
-  .slide-map .sm-overlay p {
-    font-size: 15px;
-    color: var(--text-muted);
-    max-width: 400px;
-    line-height: 1.6;
-  }
-  .slide-map .sm-legend {
-    position: absolute;
-    bottom: 32px;
-    left: 32px;
-    background: rgba(12,12,20,0.7);
-    backdrop-filter: blur(16px);
-    border: 1px solid var(--gold-dim);
-    border-radius: var(--radius-sm);
-    padding: 16px 20px;
-    z-index: 2;
-  }
-  .slide-map .sm-legend .leg-title {
+
+  /* ── BOTTOM STATUS BAR ── */
+  .bottom-bar {
+    grid-column: 1 / -1;
+    background: rgba(201, 168, 76, 0.06);
+    border-top: 1px solid var(--panel-border);
+    padding: 5px 20px;
     font-family: var(--font-mono);
     font-size: 10px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin-bottom: 8px;
-    opacity: 0.8;
-  }
-  .slide-map .sm-legend .leg-item {
+    color: var(--chrome-muted);
     display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 12px;
-    color: var(--text-muted);
-    margin-bottom: 4px;
+    justify-content: space-between;
   }
-  .slide-map .sm-legend .leg-dot {
+
+  /* ── SCAN LINE OVERLAY ── */
+  .canvas::after {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.03) 2px,
+      rgba(0,0,0,0.03) 4px
+    );
+    z-index: 100;
+  }
+
+  /* ── CURSOR BLINK ── */
+  .cursor {
+    display: inline-block;
+    width: 7px; height: 14px;
+    background: var(--chrome-accent);
+    animation: blink 1s step-end infinite;
+    vertical-align: text-bottom;
+    margin-left: 2px;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  /* ── REUSABLE: Stats grid ── */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+  }
+  .stat-cell {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid var(--glass-border);
+    border-radius: 3px;
+    padding: 8px 10px;
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity 0.4s, transform 0.4s;
+  }
+  .stat-cell.visible { opacity: 1; transform: translateY(0); }
+  .stat-num {
+    font-family: var(--font-mono);
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--chrome-accent);
+    line-height: 1;
+    margin-bottom: 3px;
+  }
+  .stat-num.cyan { color: var(--chrome-cyan); }
+  .stat-num.red { color: var(--chrome-red); }
+  .stat-num.green { color: var(--chrome-green); }
+  .stat-num.purple { color: var(--chrome-purple); }
+  .stat-num.orange { color: var(--chrome-orange); }
+  .stat-num.blue { color: var(--chrome-blue); }
+  .stat-label {
+    font-family: var(--font-body);
+    font-size: 9px;
+    color: var(--chrome-muted);
+    line-height: 1.3;
+  }
+
+  /* ── REUSABLE: Finding rows ── */
+  .findings-list {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  .finding-row {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    padding: 5px 8px;
+    border-left: 2px solid transparent;
+    transition: border-color 0.2s, background 0.2s;
+    border-radius: 0 2px 2px 0;
+  }
+  .finding-row:hover {
+    border-left-color: var(--chrome-accent);
+    background: rgba(201, 168, 76, 0.04);
+  }
+  .finding-n {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: var(--chrome-accent);
+    flex-shrink: 0;
+    min-width: 18px;
+  }
+  .finding-title {
+    font-family: var(--font-body);
+    font-size: 11px;
+    color: var(--chrome-text);
+    font-weight: 500;
+    flex-shrink: 0;
+  }
+  .finding-data {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: var(--chrome-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* ── REUSABLE: Corridor strip ── */
+  .corridor-strip-wrap {
+    position: relative;
+    margin-bottom: 12px;
+  }
+  .corridor-strip-label {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: var(--chrome-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+    display: flex;
+    justify-content: space-between;
+  }
+  .corridor-strip {
+    display: flex;
+    gap: 2px;
+    align-items: flex-end;
+    height: 32px;
+    position: relative;
+  }
+  .st-dot {
+    flex: 1;
+    border-radius: 1px;
+    position: relative;
+    transition: opacity 0.3s;
+    cursor: default;
+  }
+  .st-dot:hover::after {
+    content: attr(data-name);
+    position: absolute;
+    bottom: 38px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(10,10,15,0.95);
+    border: 1px solid var(--panel-border);
+    color: var(--chrome-text);
+    font-family: var(--font-mono);
+    font-size: 8px;
+    padding: 2px 5px;
+    border-radius: 2px;
+    white-space: nowrap;
+    z-index: 50;
+    pointer-events: none;
+  }
+  .gap-zone {
+    position: absolute;
+    bottom: -18px;
+    height: 14px;
+    border-left: 1px dashed rgba(229, 85, 85, 0.5);
+    border-right: 1px dashed rgba(229, 85, 85, 0.5);
+    border-bottom: 1px dashed rgba(229, 85, 85, 0.5);
+    font-family: var(--font-mono);
+    font-size: 7px;
+    color: var(--chrome-red);
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding-bottom: 1px;
+  }
+
+  /* ── REUSABLE: Relay chain ── */
+  .relay-chain {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    justify-content: center;
+    gap: 0;
+    position: relative;
+    padding-left: 24px;
+  }
+  .relay-chain::before {
+    content: '';
+    position: absolute;
+    left: 10px;
+    top: 12px;
+    bottom: 12px;
+    width: 1px;
+    border-left: 1px dashed rgba(201, 168, 76, 0.3);
+  }
+  .relay-node {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 4px 0;
+    position: relative;
+  }
+  .relay-node::before {
+    content: '';
+    position: absolute;
+    left: -18px;
+    top: 10px;
     width: 8px;
     height: 8px;
     border-radius: 50%;
+    border: 1.5px solid var(--chrome-accent);
+    background: var(--chrome-bg);
+    flex-shrink: 0;
   }
-  .slide-map .sm-map-placeholder {
-    position: absolute;
-    inset: 0;
+  .relay-node.critical::before {
+    background: rgba(201, 168, 76, 0.3);
+    box-shadow: 0 0 6px rgba(201, 168, 76, 0.4);
+  }
+  .relay-node-num {
+    font-family: var(--font-mono);
+    font-size: 8px;
+    color: var(--chrome-accent);
+    min-width: 14px;
+    margin-top: 2px;
+    flex-shrink: 0;
+  }
+  .relay-node-content { flex: 1; min-width: 0; }
+  .relay-node-name {
+    font-family: var(--font-body);
+    font-size: 10.5px;
+    color: var(--chrome-text);
+    font-weight: 500;
+    line-height: 1.2;
+  }
+  .relay-node-gap {
+    font-family: var(--font-mono);
+    font-size: 8.5px;
+    color: var(--chrome-muted);
+    margin-top: 1px;
+  }
+  .relay-node-gap .gap-arrow { color: var(--chrome-orange); }
+
+  /* ── REUSABLE: Comparison split cards ── */
+  .topo-split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5px;
+    margin-bottom: 5px;
+  }
+  .topo-card {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid var(--glass-border);
+    border-radius: 3px;
+    padding: 5px 8px;
+    position: relative;
+    overflow: hidden;
+  }
+  .topo-label {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    font-weight: 500;
+    margin-bottom: 2px;
+  }
+  .topo-stat {
+    font-family: var(--font-body);
+    font-size: 8px;
+    color: var(--chrome-muted);
+    line-height: 1.4;
+  }
+  .topo-stat b { color: var(--chrome-text); font-weight: 500; }
+
+  /* ── REUSABLE: Bar comparisons ── */
+  .pair-row {
     display: flex;
     align-items: center;
-    justify-content: center;
+    gap: 3px;
+    margin-bottom: 2px;
+  }
+  .pair-name {
     font-family: var(--font-mono);
-    font-size: 14px;
-    color: var(--text-muted);
-    opacity: 0.4;
+    font-size: 7px;
+    min-width: 54px;
+    flex-shrink: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
-
-  /* ─── Slide progress bar ─── */
-  .progress-bar {
-    position: absolute;
-    bottom: 44px;
-    left: 0;
-    right: 0;
-    height: 2px;
-    background: rgba(255,255,255,0.04);
-    z-index: 10;
+  .pair-bars {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
   }
-  .progress-bar .progress-fill {
+  .bar-track {
+    height: 4px;
+    background: rgba(255,255,255,0.03);
+    border-radius: 1px;
+    overflow: hidden;
+  }
+  .bar-fill {
     height: 100%;
-    background: var(--gold);
-    transition: width 0.3s ease;
-    opacity: 0.6;
+    border-radius: 1px;
+    transition: width 1s ease;
+  }
+  .pair-freq {
+    font-family: var(--font-mono);
+    font-size: 7px;
+    min-width: 28px;
+    text-align: right;
+    flex-shrink: 0;
   }
 
-  /* ─── Keyboard hint ─── */
-  .key-hint {
-    position: fixed;
-    bottom: 16px;
-    right: 16px;
+  /* ── REUSABLE: Callout box ── */
+  .callout-box {
+    margin-top: 4px;
+    padding: 4px 7px;
+    border: 1px dashed rgba(229, 85, 85, 0.3);
+    border-radius: 3px;
+    background: rgba(229, 85, 85, 0.03);
+    font-family: var(--font-mono);
+    font-size: 7.5px;
+    color: var(--chrome-muted);
+    line-height: 1.5;
+  }
+  .callout-box .hl { color: var(--chrome-accent); }
+
+  /* ── REUSABLE: Mini-chart wrapper ── */
+  .pulse-wrap {
+    margin-top: 4px;
+    border-top: 1px solid var(--glass-border);
+    padding-top: 4px;
+  }
+  .pulse-canvas-wrap {
+    position: relative;
+    height: 30px;
+    margin-top: 2px;
+  }
+  .pulse-canvas-wrap canvas {
+    width: 100%;
+    height: 100%;
+  }
+  .pulse-legend {
+    display: flex;
+    gap: 10px;
+    font-family: var(--font-mono);
+    font-size: 6.5px;
+    color: var(--chrome-muted);
+    margin-top: 1px;
+  }
+  .pulse-legend .dot {
+    display: inline-block;
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    margin-right: 2px;
+    vertical-align: middle;
+  }
+
+  /* ── REUSABLE: Comic book grid ── */
+  .comic-outer {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .comic-label {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: var(--chrome-muted);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0;
+  }
+  .comic-label .status-pill {
+    background: rgba(229, 85, 85, 0.1);
+    border: 1px solid rgba(229, 85, 85, 0.3);
+    color: var(--chrome-red);
+    padding: 1px 6px;
+    border-radius: 10px;
+    font-size: 8px;
+  }
+  .comic-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 4px;
+    flex: 1;
+    min-height: 0;
+  }
+  .comic-panel {
+    border: 2px solid rgba(201, 168, 76, 0.35);
+    position: relative;
+    overflow: hidden;
+    background: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 6px,
+      rgba(201, 168, 76, 0.025) 6px,
+      rgba(201, 168, 76, 0.025) 7px
+    );
+    transition: border-color 0.3s;
+    cursor: pointer;
+  }
+  .comic-panel:hover {
+    border-color: rgba(201, 168, 76, 0.7);
+    background: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 6px,
+      rgba(201, 168, 76, 0.05) 6px,
+      rgba(201, 168, 76, 0.05) 7px
+    );
+  }
+  .comic-panel-inner {
+    position: absolute;
+    inset: 5px;
+    border: 1px dashed rgba(201, 168, 76, 0.2);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 6px;
+  }
+  .comic-panel-num {
     font-family: var(--font-mono);
     font-size: 10px;
-    color: var(--text-muted);
-    opacity: 0.3;
-    z-index: 100;
-    pointer-events: none;
+    font-weight: 500;
+    color: rgba(201, 168, 76, 0.5);
+    line-height: 1;
+  }
+  .comic-panel-placeholder {
+    font-family: var(--font-mono);
+    font-size: 8px;
+    color: rgba(201, 168, 76, 0.25);
+    text-align: center;
+    align-self: center;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .comic-caption-bar {
+    flex-shrink: 0;
+    background: rgba(201, 168, 76, 0.05);
+    border: 1px solid var(--glass-border);
+    border-radius: 2px;
+    padding: 5px 10px;
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: var(--chrome-muted);
+    display: flex;
+    gap: 12px;
+  }
+  .comic-caption-bar span { color: var(--chrome-accent); }
+
+  /* ── REUSABLE: Proposition elements ── */
+  .prop-title {
+    font-family: var(--font-display);
+    font-size: 18px;
+    color: var(--chrome-text);
+    margin-bottom: 12px;
+    line-height: 1.2;
+  }
+  .prop-title span { color: var(--chrome-accent); }
+  .prop-principles {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    border-top: 1px solid var(--glass-border);
+    padding-top: 10px;
+  }
+  .prop-principle {
+    display: flex;
+    gap: 8px;
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: var(--chrome-muted);
+    line-height: 1.5;
+  }
+  .prop-principle .pp-label { color: var(--chrome-cyan); flex-shrink: 0; }
+
+  /* ── REUSABLE: User persona cards ── */
+  .persona-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 6px;
+    margin-bottom: 10px;
+  }
+  .persona-card {
+    border-radius: 3px;
+    padding: 7px 9px;
+  }
+  .persona-card .persona-name {
+    font-family: var(--font-mono);
+    font-size: 8px;
+    margin-bottom: 3px;
+  }
+  .persona-card .persona-desc {
+    font-family: var(--font-body);
+    font-size: 9px;
+    color: var(--chrome-muted);
+    line-height: 1.4;
+  }
+
+  /* ── REUSABLE: Question block ── */
+  .question-block {
+    font-family: var(--font-display);
+    font-size: 13px;
+    color: var(--chrome-muted);
+    font-style: italic;
+    margin-bottom: 14px;
+    line-height: 1.5;
+    border-left: 2px solid var(--chrome-accent);
+    padding-left: 10px;
+  }
+
+  /* ── REUSABLE: Tag row ── */
+  .tag-row {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+  }
+  .tag-pill {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    padding: 3px 8px;
+    border-radius: 2px;
+  }
+
+  /* ── REUSABLE: Section label ── */
+  .section-label {
+    font-family: var(--font-mono);
+    font-size: 7.5px;
+    color: var(--chrome-muted);
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    margin-bottom: 3px;
+  }
+
+  /* ── REUSABLE: Corridor label ── */
+  .corridor-label {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: var(--chrome-muted);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 8px;
+  }
+
+  /* ── REUSABLE: Route title ── */
+  .route-title {
+    font-family: var(--font-display);
+    font-size: 26px;
+    color: var(--chrome-text);
+    margin-bottom: 16px;
+    line-height: 1.1;
+  }
+  .route-title span { color: var(--chrome-accent); }
+
+  /* ── REUSABLE: Relay footer ── */
+  .relay-footer {
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px dashed rgba(201, 168, 76, 0.15);
+    font-family: var(--font-display);
+    font-size: 11px;
+    color: var(--chrome-muted);
+    font-style: italic;
+    line-height: 1.4;
+  }
+  .relay-footer em { color: var(--chrome-accent); font-style: normal; }
+
+  /* ── Animated pulse dot ── */
+  .dead-pulse {
+    display: inline-block;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--chrome-red);
+    animation: pulse-red 2s ease-in-out infinite;
+    margin-right: 4px;
+    vertical-align: middle;
+  }
+  @keyframes pulse-red {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.3; transform: scale(0.7); }
+  }
+
+  /* ── Print styles ── */
+  @media print {
+    .canvas::after { display: none; }
+    .status-bar, .bottom-bar {
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    @page {
+      size: landscape;
+      margin: 0;
+    }
   }
 </style>
 </head>
 <body>
+<div class="canvas">
 
-<div class="slides-container">
-  <!-- Progress bar -->
-  <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
-
-  <!-- ═══ SLIDE 1: Title ═══ -->
-  <div class="slide slide-title active" data-slide="1">
-    <div class="datum-top">
-      <span class="dt-tag">A04 &middot; Forms of Sentience</span>
-      <span class="dt-title"></span>
-      <span class="dt-meta">EPFL &middot; Studio Huang &middot; 2026</span>
+  <!-- ── TOP STATUS BAR ── -->
+  <div class="status-bar">
+    <div class="left">
+      <span class="session-tag">still on the line</span>
+      <span>narrative · presentation title here</span>
+      <span class="slide-tag">6 screens</span>
+      <span>assignment code</span>
+      <span>month year</span>
     </div>
-    <div class="slide-body">
-      <div class="st-logo">
-        <span class="l-still">STILL</span><span class="l-otl">ON THE LINE</span>
-      </div>
-      <div class="st-line"></div>
-      <h1 class="st-heading">Your Presentation Title</h1>
-      <p class="st-subtitle">A subtitle that provides context</p>
-    </div>
-    <div class="datum-bottom">
-      <div class="db-brand"><span class="b-still">STILL</span> <span class="b-otl">ON THE LINE</span></div>
-      <span class="db-center">Geneva &ndash; Villeneuve &middot; 101km</span>
-      <span class="db-nav"><span class="current">01</span> / <span id="totalSlides">06</span></span>
+    <div class="right">
+      <button class="play-btn" id="playBtn" onclick="togglePlay()">&#9654; play sequence</button>
+      <span>AR-302k Studio Huang</span>
+      <span>Sentient Cities</span>
     </div>
   </div>
 
-  <!-- ═══ SLIDE 2: Split ═══ -->
-  <div class="slide slide-split" data-slide="2">
-    <div class="datum-top">
-      <span class="dt-tag">A04 &middot; Forms of Sentience</span>
-      <span class="dt-title">Section Title</span>
-      <span class="dt-meta">2026-03-19</span>
+  <!-- ══════════════════════════════════════════════
+       SCREEN 1 — Title / Overview
+       Replace content below with your opening screen
+  ══════════════════════════════════════════════ -->
+  <div class="panel" id="screen1">
+    <div class="panel-header">
+      <h2>Screen Title</h2>
+      <span class="panel-tag">subtitle · key numbers · context</span>
     </div>
-    <div class="slide-body">
-      <div class="ss-text">
-        <h2>Heading Text Goes Here</h2>
-        <p>Body text that explains the key insight or finding. Keep paragraphs concise for readability at presentation scale.</p>
-        <div class="ss-metric">
-          <div class="ss-metric-item"><span class="mi-val">49</span><span class="mi-lbl">Stations</span></div>
-          <div class="ss-metric-item"><span class="mi-val">101</span><span class="mi-lbl">Kilometres</span></div>
+    <div class="panel-body">
+      <div class="corridor-label">Geneva → Villeneuve · topic label</div>
+      <div class="route-title"><span>Key</span> question or title</div>
+      <div class="question-block">"Pull quote or guiding question for this section of the narrative. Use the italic display voice for emphasis."</div>
+
+      <div class="tag-row">
+        <div class="tag-pill" style="border:1px solid rgba(76,201,176,0.4);color:var(--chrome-cyan);">tag one</div>
+        <div class="tag-pill" style="border:1px solid rgba(201,168,76,0.4);color:var(--chrome-accent);">tag two</div>
+        <div class="tag-pill" style="border:1px solid rgba(168,139,235,0.4);color:var(--chrome-purple);">tag three</div>
+        <div class="tag-pill" style="border:1px solid rgba(229,85,85,0.3);color:var(--chrome-muted);">condition</div>
+      </div>
+
+      <div class="stats-grid" id="statsGrid">
+        <div class="stat-cell">
+          <div class="stat-num">000</div>
+          <div class="stat-label">metric label<br>description line</div>
+        </div>
+        <div class="stat-cell">
+          <div class="stat-num cyan">000</div>
+          <div class="stat-label">metric label<br>description line</div>
+        </div>
+        <div class="stat-cell">
+          <div class="stat-num red">000</div>
+          <div class="stat-label">metric label<br>description line</div>
+        </div>
+        <div class="stat-cell">
+          <div class="stat-num orange">000</div>
+          <div class="stat-label">metric label<br>description line</div>
+        </div>
+        <div class="stat-cell">
+          <div class="stat-num purple">000</div>
+          <div class="stat-label">metric label<br>description line</div>
+        </div>
+        <div class="stat-cell">
+          <div class="stat-num green">000</div>
+          <div class="stat-label">metric label<br>description line</div>
         </div>
       </div>
-      <div class="ss-visual">[Visualization / Image]</div>
-    </div>
-    <div class="datum-bottom">
-      <div class="db-brand"><span class="b-still">STILL</span> <span class="b-otl">ON THE LINE</span></div>
-      <span class="db-center">Geneva &ndash; Villeneuve &middot; 101km</span>
-      <span class="db-nav"><span class="current">02</span> / <span>06</span></span>
     </div>
   </div>
 
-  <!-- ═══ SLIDE 3: Data ═══ -->
-  <div class="slide slide-data" data-slide="3">
-    <div class="datum-top">
-      <span class="dt-tag">A04 &middot; Forms of Sentience</span>
-      <span class="dt-title">Data Visualization</span>
-      <span class="dt-meta">2026-03-19</span>
+  <!-- ══════════════════════════════════════════════
+       SCREEN 2 — Data / Index
+       Corridor strip + findings list
+  ══════════════════════════════════════════════ -->
+  <div class="panel" id="screen2">
+    <div class="panel-header">
+      <h2>Data Screen</h2>
+      <span class="panel-tag">index · metric · N findings</span>
     </div>
-    <div class="slide-body">
-      <h2 class="sd-heading">Full-Width Visualization</h2>
-      <p class="sd-desc">Description of what this visualization shows and why it matters.</p>
-      <div class="sd-viz">[Full-width chart, map, or diagram goes here]</div>
-    </div>
-    <div class="datum-bottom">
-      <div class="db-brand"><span class="b-still">STILL</span> <span class="b-otl">ON THE LINE</span></div>
-      <span class="db-center">Geneva &ndash; Villeneuve &middot; 101km</span>
-      <span class="db-nav"><span class="current">03</span> / <span>06</span></span>
-    </div>
-  </div>
-
-  <!-- ═══ SLIDE 4: Grid ═══ -->
-  <div class="slide slide-grid" data-slide="4">
-    <div class="datum-top">
-      <span class="dt-tag">A04 &middot; Forms of Sentience</span>
-      <span class="dt-title">Key Metrics</span>
-      <span class="dt-meta">2026-03-19</span>
-    </div>
-    <div class="slide-body">
-      <h2 class="sg-heading">Grid Layout</h2>
-      <div class="sg-grid">
-        <div class="sg-cell"><div class="cell-value">42&times;</div><h3>Frequency Variation</h3><p>Between the busiest and quietest stations on the corridor.</p></div>
-        <div class="sg-cell"><div class="cell-value">85%</div><h3>Not Workable</h3><p>Of connections cannot sustain productive work during transit.</p></div>
-        <div class="sg-cell"><div class="cell-value">160k</div><h3>Ghost Citizens</h3><p>Frontaliers who exceed Lausanne&rsquo;s population but vanish in metrics.</p></div>
+    <div class="panel-body">
+      <div class="corridor-strip-wrap">
+        <div class="corridor-strip-label">
+          <span>Start</span>
+          <span>Index Name — N stations</span>
+          <span>End</span>
+        </div>
+        <div class="corridor-strip" id="corridorStrip">
+          <!-- JS populates bar chart -->
+        </div>
+        <div id="gapZones" style="position:relative; height:22px;"></div>
+      </div>
+      <div class="findings-list">
+        <div class="finding-row">
+          <span class="finding-n">01</span>
+          <span class="finding-title">Finding title</span>
+          <span class="finding-data">supporting data · numbers · ranges</span>
+        </div>
+        <div class="finding-row">
+          <span class="finding-n">02</span>
+          <span class="finding-title">Finding title</span>
+          <span class="finding-data">supporting data · numbers · ranges</span>
+        </div>
+        <div class="finding-row">
+          <span class="finding-n">03</span>
+          <span class="finding-title">Finding title</span>
+          <span class="finding-data">supporting data · numbers · ranges</span>
+        </div>
+        <div class="finding-row">
+          <span class="finding-n">04</span>
+          <span class="finding-title">Finding title</span>
+          <span class="finding-data">supporting data · numbers · ranges</span>
+        </div>
+        <div class="finding-row">
+          <span class="finding-n">05</span>
+          <span class="finding-title">Finding title</span>
+          <span class="finding-data">supporting data · numbers · ranges</span>
+        </div>
       </div>
     </div>
-    <div class="datum-bottom">
-      <div class="db-brand"><span class="b-still">STILL</span> <span class="b-otl">ON THE LINE</span></div>
-      <span class="db-center">Geneva &ndash; Villeneuve &middot; 101km</span>
-      <span class="db-nav"><span class="current">04</span> / <span>06</span></span>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       SCREEN 3 — Visual / Comic Panel
+       2×2 image grid with caption bar
+  ══════════════════════════════════════════════ -->
+  <div class="panel" id="screen3">
+    <div class="panel-header">
+      <h2>Visual Screen</h2>
+      <span class="panel-tag">artwork · images · panel sequence</span>
+    </div>
+    <div class="panel-body" style="padding: 12px;">
+      <div class="comic-outer">
+        <div class="comic-label">
+          <span>visual narrative — sequential panels</span>
+          <span class="status-pill">status label</span>
+        </div>
+        <div class="comic-grid">
+          <div class="comic-panel">
+            <div class="comic-panel-inner">
+              <div class="comic-panel-num">01</div>
+              <div class="comic-panel-placeholder">panel artwork</div>
+              <div style="font-family:var(--font-mono);font-size:7px;color:rgba(201,168,76,0.3);text-align:right;">caption →</div>
+            </div>
+          </div>
+          <div class="comic-panel">
+            <div class="comic-panel-inner">
+              <div class="comic-panel-num">02</div>
+              <div class="comic-panel-placeholder">panel artwork</div>
+              <div style="font-family:var(--font-mono);font-size:7px;color:rgba(201,168,76,0.3);text-align:right;">caption →</div>
+            </div>
+          </div>
+          <div class="comic-panel">
+            <div class="comic-panel-inner">
+              <div class="comic-panel-num">03</div>
+              <div class="comic-panel-placeholder">panel artwork</div>
+              <div style="font-family:var(--font-mono);font-size:7px;color:rgba(201,168,76,0.3);text-align:right;">caption →</div>
+            </div>
+          </div>
+          <div class="comic-panel">
+            <div class="comic-panel-inner">
+              <div class="comic-panel-num">04</div>
+              <div class="comic-panel-placeholder">panel artwork</div>
+              <div style="font-family:var(--font-mono);font-size:7px;color:rgba(201,168,76,0.3);text-align:right;">caption →</div>
+            </div>
+          </div>
+        </div>
+        <div class="comic-caption-bar">
+          <span>seq</span> 01–04 &nbsp;·&nbsp;
+          <span>format</span> 2×2 grid &nbsp;·&nbsp;
+          <span>theme</span> your theme description here
+        </div>
+      </div>
     </div>
   </div>
 
-  <!-- ═══ SLIDE 5: Quote ═══ -->
-  <div class="slide slide-quote" data-slide="5">
-    <div class="datum-top">
-      <span class="dt-tag">A04 &middot; Forms of Sentience</span>
-      <span class="dt-title"></span>
-      <span class="dt-meta">2026-03-19</span>
+  <!-- ══════════════════════════════════════════════
+       SCREEN 4 — Comparison / Mirror
+       Split cards + bar chart + callout + mini-chart
+  ══════════════════════════════════════════════ -->
+  <div class="panel" id="screen4">
+    <div class="panel-header">
+      <h2>Comparison Screen</h2>
+      <span class="panel-tag">A vs B · metric · N data points</span>
     </div>
-    <div class="slide-body">
-      <div class="sq-mark">&ldquo;</div>
-      <div class="sq-text">Infrastructure does not just move people. It times them.</div>
-      <div class="sq-attr">&mdash; OBSERVATION FROM FIELD RESEARCH</div>
-    </div>
-    <div class="datum-bottom">
-      <div class="db-brand"><span class="b-still">STILL</span> <span class="b-otl">ON THE LINE</span></div>
-      <span class="db-center">Geneva &ndash; Villeneuve &middot; 101km</span>
-      <span class="db-nav"><span class="current">05</span> / <span>06</span></span>
+    <div class="panel-body">
+      <!-- Topology comparison cards -->
+      <div class="topo-split">
+        <div class="topo-card" style="border-color: rgba(91, 155, 213, 0.35);">
+          <div class="topo-label" style="color: var(--chrome-blue);">System A</div>
+          <div class="topo-stat"><b>type</b> · distance · N stations<br>floor <b style="color:var(--chrome-blue)">value</b> · range <b>value</b></div>
+        </div>
+        <div class="topo-card" style="border-color: rgba(229, 85, 85, 0.25);">
+          <div class="topo-label" style="color: var(--chrome-red);">System B</div>
+          <div class="topo-stat"><b>type</b> · distance · N stations<br>floor <b style="color:var(--chrome-red)">value</b> · range <b style="color:var(--chrome-red)">value</b></div>
+        </div>
+      </div>
+
+      <!-- Bar comparison -->
+      <div class="section-label">metric comparison — <span style="color:var(--chrome-blue)">A</span> vs <span style="color:var(--chrome-red)">B</span></div>
+      <div class="pair-row">
+        <span class="pair-name" style="color:var(--chrome-text)">Category</span>
+        <div class="pair-bars">
+          <div class="bar-track"><div class="bar-fill" style="width:70%;background:var(--chrome-blue);opacity:0.7;"></div></div>
+          <div class="bar-track"><div class="bar-fill" style="width:85%;background:var(--chrome-red);opacity:0.5;"></div></div>
+        </div>
+        <span class="pair-freq"><span style="color:var(--chrome-blue)">70</span>/<span style="color:var(--chrome-red)">85</span></span>
+      </div>
+      <div class="pair-row">
+        <span class="pair-name" style="color:var(--chrome-muted)">Category</span>
+        <div class="pair-bars">
+          <div class="bar-track"><div class="bar-fill" style="width:40%;background:var(--chrome-blue);opacity:0.7;"></div></div>
+          <div class="bar-track"><div class="bar-fill" style="width:55%;background:var(--chrome-red);opacity:0.5;"></div></div>
+        </div>
+        <span class="pair-freq"><span style="color:var(--chrome-blue)">40</span>/<span style="color:var(--chrome-red)">55</span></span>
+      </div>
+      <div class="pair-row">
+        <span class="pair-name" style="color:var(--chrome-text);font-weight:500;">Minimum</span>
+        <div class="pair-bars">
+          <div class="bar-track"><div class="bar-fill" style="width:10%;background:var(--chrome-blue);opacity:0.9;"></div></div>
+          <div class="bar-track"><div class="bar-fill" style="width:0%;background:var(--chrome-red);opacity:0.9;"></div></div>
+        </div>
+        <span class="pair-freq"><span style="color:var(--chrome-blue)">10</span>/<span style="color:var(--chrome-red)">0</span></span>
+      </div>
+
+      <!-- Callout -->
+      <div class="callout-box">
+        <span class="hl">Key insight:</span> summary of the comparison result<br>
+        Additional detail — <span class="hl">highlighted conclusion</span>
+      </div>
+
+      <!-- Mini-chart -->
+      <div class="pulse-wrap">
+        <div class="section-label">24h temporal chart</div>
+        <div class="pulse-canvas-wrap">
+          <canvas id="pulseCanvas"></canvas>
+        </div>
+        <div class="pulse-legend">
+          <span><span class="dot" style="background:var(--chrome-blue);"></span>System A</span>
+          <span><span class="dot" style="background:var(--chrome-red);"></span>System B</span>
+          <span><span class="dot" style="background:rgba(229,85,85,0.3);"></span>gap window</span>
+        </div>
+      </div>
     </div>
   </div>
 
-  <!-- ═══ SLIDE 6: Map ═══ -->
-  <div class="slide slide-map" data-slide="6">
-    <div class="datum-top">
-      <span class="dt-tag">A04 &middot; Forms of Sentience</span>
-      <span class="dt-title">Spatial Analysis</span>
-      <span class="dt-meta">EPSG:2056</span>
+  <!-- ══════════════════════════════════════════════
+       SCREEN 5 — Sequence / Chain
+       Relay chain with connected nodes
+  ══════════════════════════════════════════════ -->
+  <div class="panel" id="screen5">
+    <div class="panel-header">
+      <h2>Sequence Screen</h2>
+      <span class="panel-tag">chain · relay · N nodes</span>
     </div>
-    <div class="slide-body">
-      <div class="sm-map-placeholder">[Map / spatial visualization here]</div>
-      <div class="sm-overlay">
-        <h2>Map Title</h2>
-        <p>Brief description of what the map shows and the key spatial patterns to observe.</p>
+    <div class="panel-body">
+      <div class="relay-chain">
+        <div class="relay-node">
+          <span class="relay-node-num">01</span>
+          <div class="relay-node-content">
+            <div class="relay-node-name">Node Name <span style="font-family:var(--font-mono);font-size:7px;color:var(--chrome-blue);margin-left:6px;">type label</span></div>
+            <div class="relay-node-gap">condition <span class="gap-arrow">→</span> result</div>
+            <div class="relay-node-gap" style="color:rgba(138,136,128,0.6)">supporting detail · numbers</div>
+          </div>
+        </div>
+        <div class="relay-node critical">
+          <span class="relay-node-num">02</span>
+          <div class="relay-node-content">
+            <div class="relay-node-name">Critical Node <span style="font-family:var(--font-mono);font-size:7px;color:var(--chrome-orange);margin-left:6px;">critical type</span></div>
+            <div class="relay-node-gap"><span class="gap-arrow">gap or break description</span></div>
+            <div class="relay-node-gap" style="color:rgba(138,136,128,0.6)">supporting detail · numbers</div>
+          </div>
+        </div>
+        <div class="relay-node">
+          <span class="relay-node-num">03</span>
+          <div class="relay-node-content">
+            <div class="relay-node-name">Node Name <span style="font-family:var(--font-mono);font-size:7px;color:var(--chrome-cyan);margin-left:6px;">type label</span></div>
+            <div class="relay-node-gap">condition <span class="gap-arrow">→</span> result</div>
+            <div class="relay-node-gap" style="color:rgba(138,136,128,0.6)">supporting detail · numbers</div>
+          </div>
+        </div>
+        <div class="relay-node">
+          <span class="relay-node-num">04</span>
+          <div class="relay-node-content">
+            <div class="relay-node-name">Node Name <span style="font-family:var(--font-mono);font-size:7px;color:var(--chrome-green);margin-left:6px;">type label</span></div>
+            <div class="relay-node-gap">condition <span class="gap-arrow">→</span> result</div>
+            <div class="relay-node-gap" style="color:rgba(138,136,128,0.6)">supporting detail · numbers</div>
+          </div>
+        </div>
+        <div class="relay-footer">
+          Concluding statement with <em>emphasis</em> on the key finding.<br>
+          Additional line with <em>highlighted detail</em>.
+        </div>
       </div>
-      <div class="sm-legend">
-        <div class="leg-title">Legend</div>
-        <div class="leg-item"><span class="leg-dot" style="background: var(--gold);"></span> IC lines</div>
-        <div class="leg-item"><span class="leg-dot" style="background: var(--copper);"></span> S-Bahn</div>
-        <div class="leg-item"><span class="leg-dot" style="background: var(--teal);"></span> Regional</div>
-      </div>
-    </div>
-    <div class="datum-bottom">
-      <div class="db-brand"><span class="b-still">STILL</span> <span class="b-otl">ON THE LINE</span></div>
-      <span class="db-center">Geneva &ndash; Villeneuve &middot; 101km</span>
-      <span class="db-nav"><span class="current">06</span> / <span>06</span></span>
     </div>
   </div>
+
+  <!-- ══════════════════════════════════════════════
+       SCREEN 6 — Proposition / Conclusion
+       Persona cards + principles + narrative arc
+  ══════════════════════════════════════════════ -->
+  <div class="panel" id="screen6">
+    <div class="panel-header">
+      <h2>Proposition Screen</h2>
+      <span class="panel-tag">conclusion · N users · prototype</span>
+    </div>
+    <div class="panel-body">
+      <div class="prop-title">The <span>Design</span> Proposition</div>
+      <div style="font-family:var(--font-mono);font-size:9px;color:var(--chrome-muted);margin-bottom:10px;border-left:2px solid var(--chrome-accent);padding-left:8px;line-height:1.6;">
+        Framing statement line one.<br>
+        Framing statement line two.
+      </div>
+
+      <div class="persona-grid">
+        <div class="persona-card" style="border:1px solid rgba(76,201,176,0.3);background:rgba(76,201,176,0.03);">
+          <div class="persona-name" style="color:var(--chrome-cyan);">user type A</div>
+          <div class="persona-desc">Description of this user's needs and how the proposition serves them</div>
+        </div>
+        <div class="persona-card" style="border:1px solid rgba(201,168,76,0.3);background:rgba(201,168,76,0.03);">
+          <div class="persona-name" style="color:var(--chrome-accent);">user type B</div>
+          <div class="persona-desc">Description of this user's needs and how the proposition serves them</div>
+        </div>
+        <div class="persona-card" style="border:1px solid rgba(168,139,235,0.3);background:rgba(168,139,235,0.03);">
+          <div class="persona-name" style="color:var(--chrome-purple);">user type C</div>
+          <div class="persona-desc">Description of this user's needs and how the proposition serves them</div>
+        </div>
+      </div>
+
+      <div class="prop-principles" style="margin-bottom:8px;">
+        <div class="prop-principle">
+          <span class="pp-label" style="min-width:52px;">principle</span>
+          <span>Description of principle one — how it works spatially and programmatically</span>
+        </div>
+        <div class="prop-principle">
+          <span class="pp-label" style="min-width:52px;">strategy</span>
+          <span>Description of strategy — spatial or systemic logic behind the proposition</span>
+        </div>
+        <div class="prop-principle">
+          <span class="pp-label" style="min-width:52px;">method</span>
+          <span>Description of method — technical or parametric approach</span>
+        </div>
+      </div>
+
+      <div style="border-top:1px dashed var(--glass-border);padding-top:7px;font-family:var(--font-mono);font-size:8.5px;color:var(--chrome-muted);line-height:1.7;">
+        <span style="color:var(--chrome-accent);">narrative arc →</span>
+        beat one · beat two · beat three · beat four · beat five · conclusion
+      </div>
+    </div>
+  </div>
+
+  <!-- ── BOTTOM STATUS BAR ── -->
+  <div class="bottom-bar">
+    <span>Previous work: context note here</span>
+    <span>Current assignment: key details · due date</span>
+    <span>Still On The Line · EPFL BA6 · 2026</span>
+  </div>
+
 </div>
 
-<div class="key-hint">&larr; &rarr; navigate</div>
-
 <script>
-  // Auto-scale to fit window
-  function scaleBody() {
-    const sx = window.innerWidth / 1920;
-    const sy = window.innerHeight / 1080;
-    const s = Math.min(sx, sy);
-    document.body.style.transform = `scale(${s})`;
+  // ── CORRIDOR STRIP: sample data (replace with your station data) ──
+  const sampleStations = [
+    { name: "Station 1", value: 0.64 },
+    { name: "Station 2", value: 0.55 },
+    { name: "Station 3", value: 0.42 },
+    { name: "Station 4", value: 0.30 },
+    { name: "Station 5", value: 0.20 },
+    { name: "Station 6", value: 0.15 },
+    { name: "Station 7", value: 0.08 },
+    { name: "Station 8", value: 0.05 },
+    { name: "Station 9", value: 0.18 },
+    { name: "Station 10", value: 0.35 },
+    { name: "Station 11", value: 0.58 },
+    { name: "Station 12", value: 0.28 },
+    { name: "Station 13", value: 0.12 },
+    { name: "Station 14", value: 0.04 },
+    { name: "Station 15", value: 0.22 },
+    { name: "Station 16", value: 0.25 },
+    { name: "Station 17", value: 0.10 },
+    { name: "Station 18", value: 0.08 },
+    { name: "Station 19", value: 0.04 },
+    { name: "Station 20", value: 0.12 }
+  ];
+
+  // WCI-style color mapping (red → gold → green)
+  function valueToColor(v) {
+    const n = Math.min(v / 0.65, 1);
+    if (n < 0.5) {
+      const r = Math.round(224 + (232 - 224) * (n * 2));
+      const g = Math.round(85 + (168 - 85) * (n * 2));
+      const b = 40;
+      return `rgb(${r},${g},${b})`;
+    } else {
+      const t = (n - 0.5) * 2;
+      const r = Math.round(232 - (232 - 76) * t);
+      const g = Math.round(168 + (175 - 168) * t);
+      const b = Math.round(40 + (80 - 40) * t);
+      return `rgb(${r},${g},${b})`;
+    }
   }
-  scaleBody();
-  window.addEventListener('resize', scaleBody);
 
-  // Slide navigation
-  const slides = document.querySelectorAll('.slide');
-  const total = slides.length;
-  let current = 0;
+  function buildCorridorStrip() {
+    const strip = document.getElementById('corridorStrip');
+    if (!strip) return;
+    sampleStations.forEach((st) => {
+      const dot = document.createElement('div');
+      dot.className = 'st-dot';
+      const h = Math.max(8, Math.round(st.value / 0.65 * 28) + 4);
+      dot.style.height = h + 'px';
+      dot.style.background = valueToColor(st.value);
+      dot.style.opacity = '0.85';
+      dot.setAttribute('data-name', st.name + ' ' + st.value.toFixed(3));
+      strip.appendChild(dot);
+    });
 
-  document.getElementById('totalSlides').textContent = String(total).padStart(2, '0');
+    // Sample gap zones
+    const gapContainer = document.getElementById('gapZones');
+    if (!gapContainer) return;
+    const totalWidth = strip.offsetWidth || 340;
+    const dotWidth = totalWidth / sampleStations.length;
 
-  function goTo(index) {
-    if (index < 0 || index >= total) return;
-    slides[current].classList.remove('active');
-    current = index;
-    slides[current].classList.add('active');
-    document.getElementById('progressFill').style.width = `${((current + 1) / total) * 100}%`;
+    const gaps = [
+      { start: 5, end: 7, label: 'Gap A' },
+      { start: 12, end: 14, label: 'Gap B' }
+    ];
+
+    gaps.forEach(g => {
+      const zone = document.createElement('div');
+      zone.className = 'gap-zone';
+      zone.style.left = (g.start * dotWidth) + 'px';
+      zone.style.width = ((g.end - g.start + 1) * dotWidth) + 'px';
+      zone.textContent = g.label;
+      gapContainer.appendChild(zone);
+    });
   }
 
-  document.addEventListener('keydown', e => {
-    if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); goTo(current + 1); }
-    if (e.key === 'ArrowLeft') { e.preventDefault(); goTo(current - 1); }
-    if (e.key === 'Home') goTo(0);
-    if (e.key === 'End') goTo(total - 1);
+  // ── PLAY SEQUENCE ──
+  let playing = false;
+  let playTimeout = null;
+
+  function togglePlay() {
+    const btn = document.getElementById('playBtn');
+    if (playing) {
+      playing = false;
+      btn.innerHTML = '&#9654; play sequence';
+      btn.classList.remove('playing');
+      clearTimeout(playTimeout);
+      document.querySelectorAll('.panel').forEach(p => p.classList.remove('highlight'));
+      return;
+    }
+
+    playing = true;
+    btn.innerHTML = '&#9724; stop';
+    btn.classList.add('playing');
+
+    document.querySelectorAll('.stat-cell').forEach(c => c.classList.remove('visible'));
+
+    const screens = ['screen1', 'screen2', 'screen3', 'screen4', 'screen5', 'screen6'];
+    let currentScreen = 0;
+
+    function highlightNext() {
+      if (!playing) return;
+      document.querySelectorAll('.panel').forEach(p => p.classList.remove('highlight'));
+
+      if (currentScreen >= screens.length) {
+        playing = false;
+        btn.innerHTML = '&#9654; play sequence';
+        btn.classList.remove('playing');
+        return;
+      }
+
+      const panel = document.getElementById(screens[currentScreen]);
+      panel.classList.add('highlight');
+
+      if (currentScreen === 0) {
+        animateStats();
+      }
+
+      currentScreen++;
+      playTimeout = setTimeout(highlightNext, 3500);
+    }
+
+    highlightNext();
+  }
+
+  function animateStats() {
+    const cells = document.querySelectorAll('.stat-cell');
+    cells.forEach((cell, i) => {
+      setTimeout(() => cell.classList.add('visible'), i * 120);
+    });
+  }
+
+  // ── 24H PULSE MINI-CHART ──
+  function drawPulseChart() {
+    const canvas = document.getElementById('pulseCanvas');
+    if (!canvas) return;
+    const wrap = canvas.parentElement;
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = wrap.offsetWidth * dpr;
+    canvas.height = wrap.offsetHeight * dpr;
+    canvas.style.width = wrap.offsetWidth + 'px';
+    canvas.style.height = wrap.offsetHeight + 'px';
+    const ctx = canvas.getContext('2d');
+    ctx.scale(dpr, dpr);
+    const W = wrap.offsetWidth;
+    const H = wrap.offsetHeight;
+
+    // Sample curves (replace with your data)
+    const curveA = [0,0,0,0,0,4,6,8,8,6,6,6,6,6,6,6,6,8,8,6,6,4,2,0];
+    const curveB = [0,0,0,0,0,3,6,11,11,8,8,8,8,8,8,8,8,11,11,8,6,3,1,0];
+
+    const maxVal = 12;
+    const pad = { top: 2, bottom: 10, left: 0, right: 0 };
+    const plotW = W - pad.left - pad.right;
+    const plotH = H - pad.top - pad.bottom;
+
+    function xAt(h) { return pad.left + (h / 23) * plotW; }
+    function yAt(v) { return pad.top + plotH - (v / maxVal) * plotH; }
+
+    // Gap window shading (customize hours)
+    ctx.fillStyle = 'rgba(229, 85, 85, 0.08)';
+    ctx.fillRect(xAt(1), pad.top, xAt(5) - xAt(1), plotH);
+
+    // Hour grid
+    ctx.strokeStyle = 'rgba(255,255,255,0.04)';
+    ctx.lineWidth = 0.5;
+    for (let h = 0; h <= 23; h += 6) {
+      ctx.beginPath();
+      ctx.moveTo(xAt(h), pad.top);
+      ctx.lineTo(xAt(h), pad.top + plotH);
+      ctx.stroke();
+    }
+
+    // Hour labels
+    ctx.fillStyle = 'rgba(138,136,128,0.5)';
+    ctx.font = '7px "DM Mono", monospace';
+    ctx.textAlign = 'center';
+    [0,6,12,18,23].forEach(h => {
+      ctx.fillText(String(h).padStart(2,'0'), xAt(h), H - 1);
+    });
+
+    function drawCurve(data, color, alpha) {
+      ctx.beginPath();
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 1.5;
+      ctx.globalAlpha = alpha;
+      data.forEach((v, i) => {
+        const x = xAt(i);
+        const y = yAt(v);
+        if (i === 0) ctx.moveTo(x, y);
+        else {
+          const prevX = xAt(i - 1);
+          const prevY = yAt(data[i - 1]);
+          const cpx = (prevX + x) / 2;
+          ctx.bezierCurveTo(cpx, prevY, cpx, y, x, y);
+        }
+      });
+      ctx.stroke();
+
+      ctx.lineTo(xAt(23), yAt(0));
+      ctx.lineTo(xAt(0), yAt(0));
+      ctx.closePath();
+      ctx.globalAlpha = alpha * 0.12;
+      ctx.fillStyle = color;
+      ctx.fill();
+      ctx.globalAlpha = 1;
+    }
+
+    drawCurve(curveB, '#e05555', 0.7);
+    drawCurve(curveA, '#5b9bd5', 0.85);
+  }
+
+  // ── INIT ──
+  window.addEventListener('load', () => {
+    buildCorridorStrip();
+    drawPulseChart();
+
+    // Auto-show stats
+    setTimeout(() => {
+      document.querySelectorAll('.stat-cell').forEach((cell, i) => {
+        setTimeout(() => cell.classList.add('visible'), i * 100);
+      });
+    }, 400);
   });
 
-  // Click to advance
-  document.addEventListener('click', e => {
-    if (e.clientX > window.innerWidth / 2) goTo(current + 1);
-    else goTo(current - 1);
-  });
-
-  // Init progress
-  document.getElementById('progressFill').style.width = `${(1 / total) * 100}%`;
+  window.addEventListener('resize', drawPulseChart);
 </script>
 </body>
 </html>
