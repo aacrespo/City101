@@ -12,6 +12,8 @@ This playbook uses a legal framework to organize modeling knowledge:
 
 **Doctrine is short and universal.** If you find yourself writing a specific dimension, a material name, or a build-specific solution in this file, it belongs in jurisprudence (learnings) or law (archibase) instead.
 
+**The pieces are known. The composition is the creative act.** Law, doctrine, and jurisprudence are not separate silos — they are combined to create something new. A lawyer doesn't invent statutes; they compose existing law, principles, and precedent into novel arguments. An architect doesn't invent materials; they compose known systems into buildings that never existed before. The unique contribution is always in the combination — how you bring the pieces together for a specific site, program, and set of constraints.
+
 ---
 
 ## Doctrine
@@ -26,7 +28,7 @@ Query archibase for the assembly layers before modeling any element. If the asse
 
 ### 3. The section test is the gold standard
 
-Put a clipping plane through your model. Read the section bottom to top. Can you identify every layer? Does every material have credible thickness? If you see a single rectangle where there should be layers, or a zero-thickness line where there should be a solid, go back and fix it.
+Put a clipping plane through your model in BOTH directions — cut along X and cut along Y. Problems hide in the direction you didn't check. A corner gap, a transition hole, a missing seal — these are often only visible in one orientation. Read each section bottom to top. Can you identify every layer? Does every material have credible thickness? If you see a single rectangle where there should be layers, or a zero-thickness line where there should be a solid, go back and fix it.
 
 ### 4. The envelope must be continuous
 
