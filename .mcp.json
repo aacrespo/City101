@@ -12,7 +12,7 @@
       "command": "uv",
       "args": ["run", "tools/blender/blender_router_mcp.py"],
       "env": {
-        "BLENDER_INSTANCES": "{\"main\": 9876}"
+        "BLENDER_INSTANCES": "{\"main\": 9876, \"second\": 9877, \"third\": 9878}"
       }
     }
   }
