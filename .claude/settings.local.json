@@ -216,7 +216,17 @@
       "Read(//private/var/folders/**)",
       "Bash(mkdir -p /Users/andreacrespo/CLAUDE/city101/output/agent_training/visual_review)",
       "Bash(mkdir -p /Users/andreacrespo/CLAUDE/city101/output/agent_training/learnings)",
-      "Bash(touch /Users/andreacrespo/CLAUDE/city101/output/agent_training/DISTILLED_LEARNINGS.md)"
+      "Bash(touch /Users/andreacrespo/CLAUDE/city101/output/agent_training/DISTILLED_LEARNINGS.md)",
+      "WebFetch(domain:www.rhino3d.com)",
+      "WebFetch(domain:instances.vantage.sh)",
+      "WebFetch(domain:azure.microsoft.com)",
+      "WebFetch(domain:cloudprice.net)",
+      "WebFetch(domain:sparecores.com)",
+      "WebFetch(domain:costcalc.cloudoptimo.com)",
+      "WebFetch(domain:pypi.org)",
+      "WebFetch(domain:www.pulsemcp.com)",
+      "Bash(mkdir -p /Users/andreacrespo/CLAUDE/city101/tools/blender)",
+      "Bash(echo \"Exit: $?\")"
     ]
   },
   "enableAllProjectMcpServers": true,

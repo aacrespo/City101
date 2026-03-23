@@ -1,0 +1,1080 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Infrastructure Cost Sheet — Still On The Line</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=DM+Sans:wght@400;500;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0c0c14;
+    --bg-elevated: #12121c;
+    --surface: rgba(255,255,255,0.04);
+    --gold: #c9a84c;
+    --gold-dim: rgba(201,168,76,0.12);
+    --text: #e8e6e1;
+    --text-muted: #9a9690;
+    --copper: #b87a56;
+    --teal: #5b8fa8;
+    --success: #5a9e6f;
+    --error: #c45d4a;
+    --font-display: 'Instrument Serif', serif;
+    --font-body: 'DM Sans', sans-serif;
+    --font-mono: 'DM Mono', monospace;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 14px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 60px 48px;
+  }
+
+  /* Header */
+  .header {
+    border-bottom: 1px solid var(--gold-dim);
+    padding-bottom: 32px;
+    margin-bottom: 48px;
+  }
+
+  .header-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 12px;
+  }
+
+  .header h1 {
+    font-family: var(--font-display);
+    font-size: 36px;
+    font-weight: 400;
+    color: var(--gold);
+    margin-bottom: 8px;
+  }
+
+  .header-meta {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  /* Sections */
+  section {
+    margin-bottom: 48px;
+  }
+
+  h2 {
+    font-family: var(--font-display);
+    font-size: 22px;
+    font-weight: 400;
+    color: var(--gold);
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--gold-dim);
+  }
+
+  h3 {
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 10px;
+    margin-top: 24px;
+  }
+
+  h3:first-child { margin-top: 0; }
+
+  p {
+    margin-bottom: 12px;
+    color: var(--text);
+    line-height: 1.7;
+  }
+
+  .muted { color: var(--text-muted); }
+  .gold { color: var(--gold); }
+  .mono { font-family: var(--font-mono); }
+
+  /* Summary box */
+  .summary-box {
+    background: var(--surface);
+    border: 1px solid var(--gold-dim);
+    border-radius: 8px;
+    padding: 24px 28px;
+    margin-bottom: 32px;
+  }
+
+  .summary-box p {
+    margin-bottom: 0;
+    font-size: 14px;
+    line-height: 1.8;
+  }
+
+  /* Tables */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 16px;
+    font-size: 13px;
+  }
+
+  thead th {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+    text-align: left;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--gold-dim);
+    font-weight: 500;
+  }
+
+  thead th.right { text-align: right; }
+  thead th.center { text-align: center; }
+
+  tbody td {
+    padding: 10px 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+    vertical-align: top;
+  }
+
+  tbody td.right {
+    text-align: right;
+    font-family: var(--font-mono);
+    font-size: 13px;
+  }
+
+  tbody td.center { text-align: center; }
+  tbody td.item { font-weight: 500; }
+
+  tbody tr.subtotal td {
+    border-top: 1px solid var(--gold-dim);
+    font-weight: 700;
+    color: var(--gold);
+    padding-top: 12px;
+  }
+
+  tbody td .note {
+    display: block;
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 2px;
+    line-height: 1.4;
+  }
+
+  .status {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 2px 8px;
+    border-radius: 3px;
+    white-space: nowrap;
+  }
+
+  .status.active {
+    color: var(--success);
+    background: rgba(90,158,111,0.12);
+  }
+
+  .status.needed {
+    color: var(--copper);
+    background: rgba(184,122,86,0.12);
+  }
+
+  .status.free {
+    color: var(--teal);
+    background: rgba(91,143,168,0.12);
+  }
+
+  .status.done {
+    color: var(--gold);
+    background: rgba(201,168,76,0.12);
+  }
+
+  .status.partial {
+    color: var(--copper);
+    background: rgba(184,122,86,0.08);
+  }
+
+  .status.blocked {
+    color: var(--error);
+    background: rgba(196,93,74,0.12);
+  }
+
+  /* Audit grid */
+  .audit-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .audit-card {
+    background: var(--surface);
+    border: 1px solid var(--gold-dim);
+    border-radius: 8px;
+    padding: 20px;
+  }
+
+  .audit-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 10px;
+  }
+
+  .audit-card-title {
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .audit-card-detail {
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  .audit-card-detail strong {
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  .audit-metric {
+    font-family: var(--font-mono);
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--gold);
+    margin: 8px 0 4px;
+  }
+
+  .audit-metric-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  /* Full-width audit card */
+  .audit-card.full {
+    grid-column: 1 / -1;
+  }
+
+  /* Inline list for audit cards */
+  .audit-list {
+    list-style: none;
+    padding: 0;
+    margin: 8px 0 0;
+  }
+
+  .audit-list li {
+    font-size: 12px;
+    color: var(--text-muted);
+    padding: 3px 0;
+    padding-left: 14px;
+    position: relative;
+  }
+
+  .audit-list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 10px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+  }
+
+  .audit-list li.have::before { background: var(--success); }
+  .audit-list li.need::before { background: var(--copper); }
+  .audit-list li.blocked::before { background: var(--error); }
+
+  /* Divider */
+  .divider {
+    border: none;
+    border-top: 1px solid var(--gold-dim);
+    margin: 48px 0;
+  }
+
+  /* Phase cards */
+  .phase-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .phase-card {
+    background: var(--surface);
+    border: 1px solid var(--gold-dim);
+    border-radius: 8px;
+    padding: 20px;
+  }
+
+  .phase-card.done { border-left: 3px solid var(--success); }
+  .phase-card.current { border-left: 3px solid var(--gold); }
+  .phase-card.next { border-left: 3px solid var(--copper); }
+
+  .phase-num {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+  }
+
+  .phase-title {
+    font-family: var(--font-display);
+    font-size: 18px;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+
+  .phase-cost {
+    font-family: var(--font-mono);
+    font-size: 20px;
+    color: var(--gold);
+    margin-bottom: 8px;
+  }
+
+  .phase-cost .unit {
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  .phase-duration {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+  }
+
+  .phase-desc {
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  /* Variant table */
+  .variant-table {
+    margin-top: 12px;
+  }
+
+  .variant-table th {
+    font-size: 10px;
+  }
+
+  .variant-table td {
+    font-size: 12px;
+    padding: 6px 12px;
+  }
+
+  .variant-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+
+  /* Chart */
+  .chart-container {
+    background: var(--surface);
+    border: 1px solid var(--gold-dim);
+    border-radius: 8px;
+    padding: 32px 28px 24px;
+    margin-bottom: 24px;
+  }
+
+  .chart-title {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--text-muted);
+    margin-bottom: 20px;
+  }
+
+  /* Proof box */
+  .proof-box {
+    background: rgba(201,168,76,0.06);
+    border: 1px solid var(--gold-dim);
+    border-left: 3px solid var(--gold);
+    border-radius: 8px;
+    padding: 24px 28px;
+    margin-bottom: 32px;
+  }
+
+  .proof-box h3 {
+    color: var(--gold);
+    margin-top: 0;
+    margin-bottom: 8px;
+  }
+
+  .proof-box p {
+    margin-bottom: 0;
+    font-size: 14px;
+  }
+
+  .proof-stats {
+    display: flex;
+    gap: 32px;
+    margin-top: 16px;
+  }
+
+  .proof-stat {
+    text-align: center;
+  }
+
+  .proof-stat .num {
+    font-family: var(--font-mono);
+    font-size: 28px;
+    font-weight: 500;
+    color: var(--gold);
+    display: block;
+  }
+
+  .proof-stat .label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  /* Risk list */
+  .risk-list {
+    list-style: none;
+    padding: 0;
+  }
+
+  .risk-list li {
+    padding: 8px 0 8px 20px;
+    position: relative;
+    font-size: 13px;
+    color: var(--text);
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+  }
+
+  .risk-list li::before {
+    content: '—';
+    position: absolute;
+    left: 0;
+    color: var(--gold);
+  }
+
+  .risk-list li strong {
+    color: var(--text);
+  }
+
+  /* Cumulative table */
+  .cumulative-row td { font-size: 12px; }
+  .cumulative-row td:nth-child(2),
+  .cumulative-row td:nth-child(3) {
+    font-family: var(--font-mono);
+  }
+
+  /* Footer */
+  .footer {
+    margin-top: 64px;
+    padding-top: 24px;
+    border-top: 1px solid var(--gold-dim);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer-brand {
+    font-family: var(--font-display);
+    font-size: 16px;
+    color: var(--gold);
+  }
+
+  .footer-brand span {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  .footer-info {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-muted);
+    text-align: right;
+  }
+
+  /* Print styles */
+  @media print {
+    body { background: white; color: #1a1a1a; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .page { padding: 20px; max-width: 100%; }
+    .header h1 { color: #8a7530; }
+    h2 { color: #8a7530; }
+    .phase-card, .summary-box, .chart-container, .proof-box, .audit-card {
+      break-inside: avoid;
+      background: #f8f7f4;
+      border-color: #ddd;
+    }
+    .status { border: 1px solid currentColor; }
+    .proof-stat .num, .audit-metric { color: #8a7530; }
+    .gold { color: #8a7530; }
+    table { font-size: 11px; }
+    .audit-grid, .phase-grid { gap: 10px; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-label">EPFL AR-302k · Studio Huang · Sentient Cities</div>
+    <h1>Infrastructure Cost Sheet</h1>
+    <div class="header-meta">Andrea Crespo & Henna Rafik · March 2026</div>
+  </div>
+
+  <!-- ============================================ -->
+  <!-- PART 1: WHAT WE HAVE                         -->
+  <!-- ============================================ -->
+
+  <section>
+    <h2>What we have today</h2>
+    <p>
+      Everything below was built over 6 weeks at a total infrastructure cost of ~2 CHF.
+      The only recurring expense has been Claude Max subscriptions (200 CHF/month since March).
+    </p>
+
+    <!-- Row 1: AI + Knowledge -->
+    <div class="audit-grid">
+      <div class="audit-card">
+        <div class="audit-card-header">
+          <div class="audit-card-title">AI Capability</div>
+          <span class="status active">Operational</span>
+        </div>
+        <div class="audit-metric">2 seats</div>
+        <div class="audit-metric-label">Claude Max subscriptions</div>
+        <p class="audit-card-detail" style="margin-top:10px;">
+          Andrea (since February) + Henna (since March). 100 CHF/month each.
+          Powers all modeling, code generation, data analysis, and agent coordination.
+        </p>
+      </div>
+
+      <div class="audit-card">
+        <div class="audit-card-header">
+          <div class="audit-card-title">Construction Knowledge Base</div>
+          <span class="status active">Operational</span>
+        </div>
+        <div class="audit-metric">35,244</div>
+        <div class="audit-metric-label">Indexed knowledge chunks</div>
+        <ul class="audit-list">
+          <li class="have"><strong>L1 SQLite</strong> — 375 KBOB materials, SIA loads, steel profiles, fire codes, spans</li>
+          <li class="have"><strong>L2 Markdown</strong> — 33 curated guides (materials, systems, typologies, norms)</li>
+          <li class="have"><strong>L3 Scripts</strong> — 13 parametric Rhino scripts, knowledge-grounded</li>
+          <li class="have"><strong>L4 RAG</strong> — Dicobat, 21 SIA norms, Deplazes, Vittone, Alexander patterns</li>
+          <li class="need"><strong>DB migration</strong> — ChromaDB unstable at scale, needs Qdrant migration</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Row 2: Rhino + Training -->
+    <div class="audit-grid">
+      <div class="audit-card">
+        <div class="audit-card-header">
+          <div class="audit-card-title">Rhino MCP Infrastructure</div>
+          <span class="status active">Operational</span>
+        </div>
+        <div class="audit-metric">28 tools</div>
+        <div class="audit-metric-label">Custom MCP router</div>
+        <ul class="audit-list">
+          <li class="have"><strong>Router server</strong> — multi-instance routing with per-instance locks</li>
+          <li class="have"><strong>Modified plugin</strong> — custom port support (forked rhinomcp, 2 C# files)</li>
+          <li class="have"><strong>Geometry transfer</strong> — inter-agent file-based exchange</li>
+          <li class="have"><strong>28 tools</strong> — creation, modification, booleans, loft, sweep, extrude, code exec</li>
+          <li class="need"><strong>Cloud deployment</strong> — currently Mac-only (single Rhino process limitation)</li>
+        </ul>
+      </div>
+
+      <div class="audit-card">
+        <div class="audit-card-header">
+          <div class="audit-card-title">Agent Training Pipeline</div>
+          <span class="status done">Complete</span>
+        </div>
+        <div class="audit-metric">5,248</div>
+        <div class="audit-metric-label">Objects across 80 exercises</div>
+        <ul class="audit-list">
+          <li class="have"><strong>10-phase curriculum</strong> — foundations through full assembly</li>
+          <li class="have"><strong>Visual review system</strong> — 16 QA reviews with constraint checking</li>
+          <li class="have"><strong>Distilled knowledge</strong> — 9 domain-specific learnings files</li>
+          <li class="have"><strong>Furniture library</strong> — tables, chairs, cabinetry, fixtures (reusable)</li>
+          <li class="have"><strong>Rhino playbook</strong> — procedural modeling patterns for agents</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Row 3: Agent Teams + Data -->
+    <div class="audit-grid">
+      <div class="audit-card">
+        <div class="audit-card-header">
+          <div class="audit-card-title">Multi-Agent Architecture</div>
+          <span class="status active">Operational</span>
+        </div>
+        <div class="audit-metric">12 agents</div>
+        <div class="audit-metric-label">Defined roles (5 core + 7 reviewers)</div>
+        <ul class="audit-list">
+          <li class="have"><strong>Agent definitions</strong> — analyst, cartographer, modeler, visualizer, builder</li>
+          <li class="have"><strong>Specialist reviewers</strong> — accessibility, envelope, structural, LOG compliance, concept critic</li>
+          <li class="have"><strong>15 workflows</strong> — modeling, data, maps, charts, sessions, verification</li>
+          <li class="have"><strong>Proven at scale</strong> — 7 agents, 709 objects, Lock 05 CHUV (single session)</li>
+          <li class="have"><strong>Self-review + cross-review</strong> — agents catch code violations, spatial conflicts</li>
+        </ul>
+      </div>
+
+      <div class="audit-card">
+        <div class="audit-card-header">
+          <div class="audit-card-title">Data Pipeline</div>
+          <span class="status active">Operational</span>
+        </div>
+        <div class="audit-metric">40</div>
+        <div class="audit-metric-label">Verified production datasets</div>
+        <ul class="audit-list">
+          <li class="have"><strong>8 categories</strong> — corridor, EV, remote work, transit, stations, Zurich, venues, healthcare</li>
+          <li class="have"><strong>Quality gates</strong> — coordinate validation, null checks, outlier detection</li>
+          <li class="have"><strong>33 classmate datasets</strong> integrated (2,093 data points)</li>
+          <li class="have"><strong>Verification tooling</strong> — automated checks before promotion to production</li>
+          <li class="have"><strong>49 stations</strong> — full Geneva-Villeneuve corridor mapped</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Row 4: Viz + Design + Site Models -->
+    <div class="audit-grid">
+      <div class="audit-card">
+        <div class="audit-card-header">
+          <div class="audit-card-title">Visualizations + Design System</div>
+          <span class="status done">Complete</span>
+        </div>
+        <div class="audit-metric">9</div>
+        <div class="audit-metric-label">Interactive visualizations</div>
+        <ul class="audit-list">
+          <li class="have"><strong>Full design system</strong> — palette, typography, CSS variables, brand guide</li>
+          <li class="have"><strong>9 interactive viz</strong> — GA cost, temporal pulse, diversity, journeys, scrollytelling</li>
+          <li class="have"><strong>Presentation template</strong> — 1920x1080, 6 slide types</li>
+          <li class="have"><strong>Map template</strong> — branded header/footer overlay</li>
+        </ul>
+      </div>
+
+      <div class="audit-card">
+        <div class="audit-card-header">
+          <div class="audit-card-title">Site Models + Prototypology</div>
+          <span class="status partial">3 of 9 nodes</span>
+        </div>
+        <div class="audit-metric">3</div>
+        <div class="audit-metric-label">Site context models (.3dm)</div>
+        <ul class="audit-list">
+          <li class="have"><strong>Lock 05 CHUV</strong> — full building (709 objects) + site context (19 MB)</li>
+          <li class="have"><strong>Lock 03 Morges</strong> — site context + 4 script versions</li>
+          <li class="have"><strong>Lock 07 Rennaz</strong> — site context + 3 script versions</li>
+          <li class="need"><strong>6 remaining nodes</strong> — Lancy, Geneva North, Nyon, Crissier, Vevey, Montreux</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Row 5: What's configured but not yet active -->
+    <div class="audit-grid">
+      <div class="audit-card">
+        <div class="audit-card-header">
+          <div class="audit-card-title">Blender MCP</div>
+          <span class="status partial">Configured</span>
+        </div>
+        <p class="audit-card-detail">
+          MCP server configured in project. Addon script built. Not yet used in production workflows.
+          Available for visualization rendering and animation pipeline.
+        </p>
+      </div>
+
+      <div class="audit-card">
+        <div class="audit-card-header">
+          <div class="audit-card-title">Gemini Embeddings</div>
+          <span class="status partial">Partial</span>
+        </div>
+        <p class="audit-card-detail">
+          Vision embedding pipeline built and tested. 2,480 entries from architecture PDFs.
+          300 USD free credits active. DB migration needed before expanding.
+          Cost: ~0.65 CHF per 2,500 pages.
+        </p>
+      </div>
+    </div>
+
+  </section>
+
+  <hr class="divider">
+
+  <!-- ============================================ -->
+  <!-- PART 2: WHAT WE NEED                         -->
+  <!-- ============================================ -->
+
+  <section>
+    <h2>What we need</h2>
+    <p>
+      The system works locally. The bottleneck is compute: macOS allows only one Rhino process,
+      so we can't model multiple nodes in parallel. Cloud VMs remove this constraint.
+    </p>
+
+    <table>
+      <thead>
+        <tr><th>Item</th><th>What it unlocks</th><th>Cost</th><th class="right">Status</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="item">Rhino 8 educational license<span class="note">Single seat, Windows. No expiry. Cloud Zoo enables VM deployment.</span></td>
+          <td>Run Rhino on cloud VMs (not just local Mac)</td>
+          <td class="right">~95 CHF one-time</td>
+          <td class="right"><span class="status needed">Needed</span></td>
+        </tr>
+        <tr>
+          <td class="item">Azure VM compute (B2ms)<span class="note">2 vCPU, 8 GB RAM, Windows. ~0.10 CHF/hr per instance.</span></td>
+          <td>Parallel Rhino instances — model 3 nodes simultaneously</td>
+          <td class="right">50–100 CHF/month</td>
+          <td class="right"><span class="status needed">Needed</span></td>
+        </tr>
+        <tr>
+          <td class="item">Rhino core-hour billing<span class="note">Cloud Zoo metered usage, ~0.10 CHF/core-hour per VM</span></td>
+          <td>One license covers all VM clones</td>
+          <td class="right">16–48 CHF/month</td>
+          <td class="right"><span class="status needed">Needed</span></td>
+        </tr>
+        <tr>
+          <td class="item">Managed SSD storage<span class="note">128 GB per VM golden image</span></td>
+          <td>Persistent VM images (clone on demand)</td>
+          <td class="right">~20 CHF/month per disk</td>
+          <td class="right"><span class="status needed">Needed</span></td>
+        </tr>
+        <tr>
+          <td class="item">EPFL Azure credits<span class="note">Available to all EPFL students, no credit card</span></td>
+          <td>Offsets first month of Azure costs</td>
+          <td class="right" style="color:var(--success)">–100 CHF</td>
+          <td class="right"><span class="status free">Available</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>Scaling approach</h3>
+    <p class="muted" style="font-size:13px;">
+      We set up one VM with Rhino + our custom MCP server, capture a <strong style="color:var(--text)">golden image</strong>,
+      then clone it to spin up parallel instances on demand. Each clone connects back to Claude
+      via SSH tunnel and our routing server (already built and tested locally).
+      VMs are deallocated when idle — compute costs stop immediately, only storage continues.
+    </p>
+
+    <h3>What remains free</h3>
+    <table>
+      <thead>
+        <tr><th>Item</th><th>Cost</th><th class="right">Status</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="item">Claude Max (2 seats)<span class="note">Already paid — 100 CHF/month each</span></td>
+          <td class="right">200 CHF/month (existing)</td>
+          <td class="right"><span class="status active">Active</span></td>
+        </tr>
+        <tr>
+          <td class="item">Gemini API embeddings<span class="note">300 USD free credits, ~0.65 CHF per 2,500 pages</span></td>
+          <td class="right">~0 CHF</td>
+          <td class="right"><span class="status free">Free credits</span></td>
+        </tr>
+        <tr>
+          <td class="item">Blender + BlenderMCP<span class="note">Open source, MCP integration available</span></td>
+          <td class="right">0 CHF</td>
+          <td class="right"><span class="status free">Free</span></td>
+        </tr>
+        <tr>
+          <td class="item">GitHub Pages hosting<span class="note">Dashboard, visualizations, documentation</span></td>
+          <td class="right">0 CHF</td>
+          <td class="right"><span class="status free">Free</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ============================================ -->
+  <!-- PART 3: COST BY PHASE                        -->
+  <!-- ============================================ -->
+
+  <section>
+    <h2>Cost by phase</h2>
+    <p>Each phase is a cost gate. We only proceed if the previous phase succeeds.</p>
+
+    <div class="phase-grid">
+      <div class="phase-card done">
+        <div class="phase-num">Phase 0 — Complete</div>
+        <div class="phase-title">Knowledge + Training</div>
+        <div class="phase-cost">~2 <span class="unit">CHF spent</span></div>
+        <div class="phase-duration">6 weeks (done)</div>
+        <p class="phase-desc">
+          Knowledge base (4 layers, 35K+ chunks). Training pipeline (80 exercises, 5,248 objects).
+          Multi-agent proof of concept (7 agents, 709 objects). MCP router infrastructure.
+          Design system. 9 interactive visualizations. 40 verified datasets.
+        </p>
+      </div>
+
+      <div class="phase-card current">
+        <div class="phase-num">Phase 1 — This week</div>
+        <div class="phase-title">Validation</div>
+        <div class="phase-cost">&lt;5 <span class="unit">CHF new spend</span></div>
+        <div class="phase-duration">~5 days (March 23–28)</div>
+        <p class="phase-desc">
+          Complete PDF embeddings. Set up Blender MCP. Validate multi-instance Rhino routing
+          on Henna's Windows laptop (free — uses existing hardware).
+        </p>
+        <table class="variant-table">
+          <thead><tr><th></th><th class="right">Min</th><th class="right">Max</th></tr></thead>
+          <tbody>
+            <tr><td class="variant-label">Gemini embeddings</td><td class="right">0</td><td class="right">5</td></tr>
+            <tr><td class="variant-label">Hardware/software</td><td class="right">0</td><td class="right">0</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="phase-card current">
+        <div class="phase-num">Phase 2 — This week</div>
+        <div class="phase-title">Cloud Infrastructure</div>
+        <div class="phase-cost">~95 <span class="unit">CHF new spend</span></div>
+        <div class="phase-duration">~3 days (March 26–28)</div>
+        <p class="phase-desc">
+          Rhino license + first Azure VM from golden image. End-to-end validation:
+          Claude on Mac &rarr; SSH tunnel &rarr; Azure VM &rarr; Rhino headless &rarr; geometry back.
+          If this fails, the Rhino license still works locally on any Windows machine.
+        </p>
+        <table class="variant-table">
+          <thead><tr><th></th><th class="right">Min</th><th class="right">Max</th></tr></thead>
+          <tbody>
+            <tr><td class="variant-label">Rhino license</td><td class="right">95</td><td class="right">95</td></tr>
+            <tr><td class="variant-label">Azure VM (testing)</td><td class="right">5</td><td class="right">17</td></tr>
+            <tr><td class="variant-label">Storage (1 disk)</td><td class="right">5</td><td class="right">20</td></tr>
+            <tr><td class="variant-label">Rhino core-hours</td><td class="right">3</td><td class="right">16</td></tr>
+            <tr><td class="variant-label" style="color:var(--success)">EPFL credit offset</td><td class="right" style="color:var(--success)">–13</td><td class="right" style="color:var(--success)">–53</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="phase-card next">
+        <div class="phase-num">Phase 3 — Weeks 2–4</div>
+        <div class="phase-title">Full Corridor Modeling</div>
+        <div class="phase-cost">100–170 <span class="unit">CHF/month (infra only)</span></div>
+        <div class="phase-duration">~3 weeks (March 30 – April 20)</div>
+        <p class="phase-desc">
+          Scale from 1 to 3 VMs. Model all 9 corridor nodes with parallel agent teams.
+          Multiple design iterations per node. Each VM cloned from golden image.
+        </p>
+        <table class="variant-table">
+          <thead><tr><th></th><th class="right">1 VM</th><th class="right">3 VMs</th></tr></thead>
+          <tbody>
+            <tr><td class="variant-label">Claude Max</td><td class="right">200</td><td class="right">200</td></tr>
+            <tr><td class="variant-label">Azure compute</td><td class="right">17</td><td class="right">50</td></tr>
+            <tr><td class="variant-label">Storage</td><td class="right">20</td><td class="right">60</td></tr>
+            <tr><td class="variant-label">Rhino core-hours</td><td class="right">16</td><td class="right">48</td></tr>
+            <tr class="subtotal"><td>Monthly total</td><td class="right">~253</td><td class="right">~358</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================ -->
+  <!-- PART 4: SCALING OVER TIME                    -->
+  <!-- ============================================ -->
+
+  <section>
+    <h2>Scaling over time</h2>
+    <div class="chart-container">
+      <div class="chart-title">Monthly cost projection (CHF) — February to May 2026</div>
+      <svg viewBox="0 0 800 320" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;">
+        <!-- Grid -->
+        <line x1="80" y1="30" x2="80" y2="250" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+        <line x1="80" y1="250" x2="760" y2="250" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+        <line x1="80" y1="195" x2="760" y2="195" stroke="rgba(255,255,255,0.03)" stroke-width="1" stroke-dasharray="4"/>
+        <line x1="80" y1="140" x2="760" y2="140" stroke="rgba(255,255,255,0.03)" stroke-width="1" stroke-dasharray="4"/>
+        <line x1="80" y1="85" x2="760" y2="85" stroke="rgba(255,255,255,0.03)" stroke-width="1" stroke-dasharray="4"/>
+        <line x1="80" y1="30" x2="760" y2="30" stroke="rgba(255,255,255,0.03)" stroke-width="1" stroke-dasharray="4"/>
+
+        <!-- Y-axis -->
+        <text x="70" y="254" fill="#9a9690" font-family="DM Mono, monospace" font-size="10" text-anchor="end">0</text>
+        <text x="70" y="199" fill="#9a9690" font-family="DM Mono, monospace" font-size="10" text-anchor="end">100</text>
+        <text x="70" y="144" fill="#9a9690" font-family="DM Mono, monospace" font-size="10" text-anchor="end">200</text>
+        <text x="70" y="89" fill="#9a9690" font-family="DM Mono, monospace" font-size="10" text-anchor="end">300</text>
+        <text x="70" y="34" fill="#9a9690" font-family="DM Mono, monospace" font-size="10" text-anchor="end">400</text>
+
+        <!-- X-axis -->
+        <text x="140" y="272" fill="#9a9690" font-family="DM Mono, monospace" font-size="10" text-anchor="middle">FEB</text>
+        <text x="310" y="272" fill="#9a9690" font-family="DM Mono, monospace" font-size="10" text-anchor="middle">MAR</text>
+        <text x="480" y="272" fill="#9a9690" font-family="DM Mono, monospace" font-size="10" text-anchor="middle">APR</text>
+        <text x="650" y="272" fill="#9a9690" font-family="DM Mono, monospace" font-size="10" text-anchor="middle">MAY</text>
+
+        <!-- Phase labels below X-axis -->
+        <text x="140" y="286" fill="#9a9690" font-family="DM Mono, monospace" font-size="9" text-anchor="middle" opacity="0.6">Phase 0</text>
+        <text x="310" y="286" fill="#9a9690" font-family="DM Mono, monospace" font-size="9" text-anchor="middle" opacity="0.6">Phase 0–2</text>
+        <text x="480" y="286" fill="#9a9690" font-family="DM Mono, monospace" font-size="9" text-anchor="middle" opacity="0.6">Phase 3a</text>
+        <text x="650" y="286" fill="#9a9690" font-family="DM Mono, monospace" font-size="9" text-anchor="middle" opacity="0.6">Phase 3b</text>
+
+        <!-- Feb: Andrea only = 100 -->
+        <!-- Claude Max layer -->
+        <rect x="100" y="195" width="120" height="55" rx="3" fill="rgba(201,168,76,0.35)"/>
+
+        <!-- Mar: Andrea + Henna = 200, infra ~5 -->
+        <rect x="240" y="140" width="150" height="110" rx="3" fill="rgba(201,168,76,0.25)"/>
+        <rect x="240" y="137" width="150" height="3" rx="2" fill="rgba(91,143,168,0.5)"/>
+
+        <!-- Apr: 200 Claude + ~105 infra = ~305 -->
+        <rect x="410" y="140" width="150" height="110" rx="3" fill="rgba(201,168,76,0.25)"/>
+        <rect x="410" y="82" width="150" height="58" rx="3" fill="rgba(91,143,168,0.4)"/>
+
+        <!-- May: 200 Claude + ~160 infra = ~360 -->
+        <rect x="580" y="140" width="150" height="110" rx="3" fill="rgba(201,168,76,0.25)"/>
+        <rect x="580" y="52" width="150" height="88" rx="3" fill="rgba(91,143,168,0.4)"/>
+
+        <!-- Value labels -->
+        <text x="160" y="185" fill="#c9a84c" font-family="DM Mono, monospace" font-size="14" text-anchor="middle" font-weight="500">100</text>
+        <text x="315" y="128" fill="#e8e6e1" font-family="DM Mono, monospace" font-size="14" text-anchor="middle" font-weight="500">~205</text>
+        <text x="485" y="72" fill="#e8e6e1" font-family="DM Mono, monospace" font-size="14" text-anchor="middle" font-weight="500">~305</text>
+        <text x="655" y="42" fill="#e8e6e1" font-family="DM Mono, monospace" font-size="14" text-anchor="middle" font-weight="500">~360</text>
+
+        <!-- Legend -->
+        <rect x="100" y="302" width="12" height="8" rx="2" fill="rgba(201,168,76,0.35)"/>
+        <text x="118" y="310" fill="#9a9690" font-family="DM Mono, monospace" font-size="10">Claude Max (existing)</text>
+        <rect x="280" y="302" width="12" height="8" rx="2" fill="rgba(91,143,168,0.5)"/>
+        <text x="298" y="310" fill="#9a9690" font-family="DM Mono, monospace" font-size="10">New infrastructure (VMs + Rhino + storage)</text>
+      </svg>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Period</th>
+          <th class="right">Monthly</th>
+          <th class="right">Cumulative</th>
+          <th>What's running</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="cumulative-row">
+          <td>February</td>
+          <td class="right">100</td>
+          <td class="right">100</td>
+          <td class="muted">Andrea's Claude Max</td>
+        </tr>
+        <tr class="cumulative-row">
+          <td>March 1–22</td>
+          <td class="right">200</td>
+          <td class="right">500</td>
+          <td class="muted">+ Henna's Claude Max. Knowledge base, training, 709-object proof of concept — all built.</td>
+        </tr>
+        <tr class="cumulative-row">
+          <td>March 23–31 <span class="muted">(Phase 1–2)</span></td>
+          <td class="right">~205</td>
+          <td class="right">~555</td>
+          <td class="muted">+ Rhino license (95 one-time) + first Azure VM testing</td>
+        </tr>
+        <tr class="cumulative-row">
+          <td>April <span class="muted">(Phase 3a)</span></td>
+          <td class="right">~305</td>
+          <td class="right">~860</td>
+          <td class="muted">1–2 VMs active, corridor modeling begins (3–5 nodes)</td>
+        </tr>
+        <tr class="cumulative-row">
+          <td>May <span class="muted">(Phase 3b)</span></td>
+          <td class="right">~360</td>
+          <td class="right">~1,220</td>
+          <td class="muted">3 VMs, all 9 nodes modeled, design iterations</td>
+        </tr>
+        <tr class="subtotal">
+          <td>Total through May</td>
+          <td class="right"></td>
+          <td class="right">~1,220 CHF</td>
+          <td class="muted">Of which ~1,000 is Claude Max (already committed)</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ============================================ -->
+  <!-- PART 5: PROOF + RISK                         -->
+  <!-- ============================================ -->
+
+  <section>
+    <h2>Proof of concept</h2>
+    <div class="proof-box">
+      <h3>Lock 05 — CHUV Node</h3>
+      <p>
+        7 AI agents collaboratively built a complete building — shell, windows, structure,
+        circulation, elevator, roof, ground — in a single coordinated session. Every dimension
+        traces to Swiss construction references (SIA loads, KBOB materials, fire codes).
+        Agents caught and resolved spatial conflicts between building systems without human intervention.
+      </p>
+      <div class="proof-stats">
+        <div class="proof-stat">
+          <span class="num">7</span>
+          <span class="label">Agents</span>
+        </div>
+        <div class="proof-stat">
+          <span class="num">709</span>
+          <span class="label">Objects</span>
+        </div>
+        <div class="proof-stat">
+          <span class="num">~2</span>
+          <span class="label">CHF total cost</span>
+        </div>
+        <div class="proof-stat">
+          <span class="num">35K+</span>
+          <span class="label">Knowledge chunks</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Risk mitigation</h2>
+    <ul class="risk-list">
+      <li><strong>Phased cost gates</strong> — each phase requires the previous to succeed. No bulk commitment.</li>
+      <li><strong>Dominant cost is Claude Max</strong> (200 CHF/month) — already running, already proven. New infrastructure adds only 100–160 CHF/month at full capacity.</li>
+      <li><strong>Free tiers cover secondary tools</strong> — Gemini credits, Blender, GitHub Pages all at zero cost.</li>
+      <li><strong>Golden image approach</strong> — set up one VM, clone as needed, deallocate when idle. No wasted compute.</li>
+      <li><strong>EPFL credits</strong> — 100 CHF Azure offset, no credit card required.</li>
+      <li><strong>Everything built by the team</strong> — multi-instance MCP routing, SSH tunneling, agent coordination, knowledge base — all developed and tested in-house.</li>
+      <li><strong>Rhino license retains value</strong> — if cloud approach fails, the license works locally on any Windows machine.</li>
+    </ul>
+  </section>
+
+  <!-- Footer -->
+  <div class="footer">
+    <div class="footer-brand">
+      Still <span>On The Line</span>
+    </div>
+    <div class="footer-info">
+      EPFL AR-302k · Studio Huang<br>
+      March 2026
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

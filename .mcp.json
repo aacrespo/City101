@@ -7,6 +7,10 @@
         "RHINO_INSTANCES": "{\"structure\": 9001, \"envelope\": 9002, \"interior\": 9003}",
         "ARCHIBASE_PATH": "H:/Shared drives/City 101/archibase"
       }
+    },
+    "blender": {
+      "command": "uvx",
+      "args": ["blender-mcp"]
     }
   }
 }
