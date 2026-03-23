@@ -9,8 +9,11 @@
       }
     },
     "blender": {
-      "command": "uvx",
-      "args": ["blender-mcp"]
+      "command": "uv",
+      "args": ["run", "tools/blender/blender_router_mcp.py"],
+      "env": {
+        "BLENDER_INSTANCES": "{\"main\": 9876}"
+      }
     }
   }
 }
