@@ -3,6 +3,13 @@
 
 ---
 
+## Tools & infrastructure
+
+### Archibase exists — use it
+There is a standalone construction knowledge repo (location: `ARCHIBASE_PATH` env var, default `~/CLAUDE/archibase`) with 4 layers of construction/architecture knowledge (SQLite database, 33 curated markdown guides, parametric scripts, 35K+ RAG chunks from Dicobat, SIA norms, etc.). Access via `tools/data/knowledge_bridge.py` which reads the env var. See CLAUDE.md "Archibase" section for details. Built March 21, 2026.
+
+---
+
 ## Spatial findings
 
 ### The lakeside disconnect
