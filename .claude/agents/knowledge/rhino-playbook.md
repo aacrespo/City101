@@ -124,7 +124,15 @@ Neither mode alone is sufficient.
 - **Counter-batten = ventilation gap**: The counter-batten height IS the ventilation gap dimension. No separate "air gap" object needed.
 - **Tile arrays dominate object count**: A 50cm roof strip generates 33 tiles. Plan for this when estimating object counts for full buildings.
 - **Chair back legs as structure**: Back legs extending above seat height to form backrest supports is the canonical joinery pattern for simple timber chairs.
+- **Monolithic vs discrete rule**: Poured concrete, steel, glass, and membrane sheets are correctly modeled as single solids. Masonry, tiles, timber boards, battens, insulation boards, hollow blocks, and joists MUST be modeled as individual discrete pieces. If you laid/placed/coursed it in real construction, model each piece separately.
+- **Duplicate cleanup after every build**: Prior build attempts leave orphan objects. After every exercise, audit each layer for overlapping bounding boxes and delete extras. Two objects at the same position = delete one. This is the #1 failure mode in team builds.
+- **State doesn't persist between scripts**: Redefine the box helper, imports, and any variables in every `rhino_execute_python_code` call. Nothing carries over.
+- **Print object counts**: After every script run, print the count of objects created. Empty exercises (0 objects despite "complete" status) are a real failure mode — verify geometry exists.
+- **Tag metadata immediately**: `rs.ObjectName()`, `rs.SetUserText("material", ...)`, and `rs.SetUserText("thickness_mm", ...)` on every object at creation time. Untagged objects get lost in team builds.
+- **Agree on layer prefix before starting**: Layer naming mismatches (e.g., `TrainingS3::` vs `Training{Phase}::`) cause reviewers to find "empty" exercises that actually have geometry. Establish convention before first build.
+- **Containment is not overlap**: Mineral wool inside a box-section stringer, or insulation between joists, is containment — not a Law 2 violation. Evaluate each bounding-box overlap for architectural justification before flagging.
+- **Discrete element dimensions**: Brick course = 62.5mm + 12.5mm mortar = 75mm. Insulation board = 600mm wide + 2mm gap. Shingle = 80mm wide, 150mm exposed. Floor tile = 300×300mm + 2mm grout. Batten = 50×30mm at 400mm centers.
 
 ---
 
-*Doctrine distilled from cabin v1–v3 and full training session (10 exercises, 6 furniture scripts, 418 objects across 4 phases). Jurisprudence lives in the learnings files. Law lives in archibase.*
+*Doctrine distilled from cabin v1–v3, full training session (10 exercises, 6 furniture scripts, 418 objects across 4 phases), and training-s3 session (63 exercises, 2989 objects, 6 agents, 189 tasks). Jurisprudence lives in the learnings files. Law lives in archibase.*

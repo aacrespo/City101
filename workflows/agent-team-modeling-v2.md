@@ -460,6 +460,93 @@ Principles:
 - Parseable (underscores, no spaces)
 - Traceable (maps to spec opening/element ID)
 
+## Training Run Recommendations
+
+Lessons from training-s3: 63 construction detail exercises, 6 agents, 5,248 objects, 189 tasks, ~60 minutes.
+
+### Team sizing
+
+| Scale | Modelers | Reviewers | Best for |
+|-------|----------|-----------|----------|
+| Focused (15–20 exercises) | 2 | 1 | Learning a new domain, establishing quality baseline |
+| Full curriculum (60+) | 3–4 | 1–2 | Exhaustive coverage after quality is proven |
+
+**Prefer fewer modelers building carefully over many modelers building fast.** 4 modelers produced 63 exercises in 30 minutes — all at wrong quality. Rework took another 30 minutes. 2 modelers building right the first time would have been faster end-to-end.
+
+### Prompt quality is the #1 lever
+
+Abstract instructions produce abstract models. Concrete dimensions produce correct models.
+
+**Bad (produces LOG 200):**
+> "Model every layer with correct thickness"
+
+**Good (produces LOG 400):**
+> "Model 3 floor tiles at 300×300mm with 2mm grout gaps. Model masonry as individual courses: 62.5mm brick + 12.5mm mortar = 75mm per course. Model insulation as 600mm-wide boards with 2mm joints. Model battens as individual members at 400mm centers."
+
+Bake the discrete element dimensions directly into the agent prompt. Don't rely on agents inferring LOG 300-400 from doctrine alone.
+
+### Include a reference script
+
+Attach one complete LOG 400 exercise script to the modeler prompt — not as doctrine, but as working code they can study before their first build. Ex66 (143 objects, individual brick courses + 9-layer acoustic door leaf) is the current gold standard. Seeing correct output is worth more than paragraphs of rules.
+
+### Lock conventions before starting
+
+Agree on these BEFORE spawning agents:
+1. **Layer naming prefix** — e.g., `Training4::Ex30::SystemName::LayerName`. Mixed prefixes (TrainingS3 vs Training{Phase}) caused 3 exercises to appear "empty" to reviewers.
+2. **Strip width** — 1000mm, not 500mm. State it explicitly.
+3. **Offset grid** — X and Y offsets per exercise to prevent spatial collision.
+4. **Metadata tags** — `exercise`, `material`, `thickness_mm` on every object at creation time.
+
+### Learning loop structure
+
+Each agent gets ONE personal log file (e.g., `log_modeler-1.md`). They append after each exercise: what they built, object count, techniques learned. They read their own log + a shared `DISTILLED_LEARNINGS.md` before each new exercise.
+
+The lead distills from agent logs into the shared file periodically (every ~15 exercises). Agents read the distilled file, not each other's raw logs.
+
+**Broadcast sparingly.** SendMessage to `*` is expensive (1 message per agent). Use it for critical directives only. Learnings propagate better through files.
+
+### The duplicate geometry problem
+
+The #1 failure mode in multi-agent Rhino builds. When an agent rebuilds an exercise, prior objects stay in the file. Prevention:
+
+1. **Unique object names** — include exercise number in every name
+2. **Cleanup audit after every build** — query layer, check for overlapping bounding boxes, delete extras
+3. **Print object counts** — verify geometry exists and count matches expectations
+4. **Never mark complete without auditing** — "done" means "audited and clean," not "script ran"
+
+### Gateless vs wave gates
+
+**Gateless for training runs** where exercises are independent (no shared geometry). All exercises available immediately. Faster throughput, no idle time.
+
+**Wave gates for building models** where systems depend on each other (structure before envelope before detail). Gates prevent cascade failures.
+
+### Optimal training curriculum
+
+For a new construction domain, pick **one representative exercise per type** rather than exhaustive coverage:
+
+| Domain | Pick 1–2 of | Why |
+|--------|-------------|-----|
+| Floors | Hollow block + timber joist | One prefab, one in-situ |
+| Walls | Single-leaf rendered + facing masonry cavity | One monolithic, one multi-leaf |
+| Roofs | Warm deck flat + cold deck pitched | Both thermal strategies |
+| Windows | Masonry + timber frame | Different host wall types |
+| Doors | External hinged + internal pocket | Different complexity levels |
+| Foundations | Strip + pad | Wall-bearing vs column-bearing |
+| Stairs | RC + metal | Cast vs fabricated |
+| Structural | Column-beam + bearing wall | Frame vs mass |
+
+That's ~15 exercises. Build each one properly at LOG 400. The remaining variations (e.g., 10 different floor types) are repetitive once the pattern is established — save them for a speed run after quality is proven.
+
+### Round structure
+
+| Round | Focus | Expected outcome |
+|-------|-------|-----------------|
+| 1 | Build at LOG 400 with reference script | Most exercises near-PASS |
+| 2 | Review + targeted fixes | All exercises PASS or WARN |
+| 3 (optional) | LOG 400 upgrades on WARN exercises | Full compliance |
+
+2 rounds is the target. 3 rounds means the initial prompt wasn't specific enough.
+
 ## History
 | Date | Change | Result |
 |------|--------|--------|
@@ -467,3 +554,4 @@ Principles:
 | 2026-03-20 | v2: added Phase 5 output strategy | 3 paths (Spec→Code, Bake, .3dm), hybrid recommended |
 | 2026-03-22 | v2.1: mandatory knowledge base query, learnings capture | From cabin v2 build — agents must query archibase before modeling, write learnings after |
 | 2026-03-22 | v2.2: Gate 3 dual-mode review (constraint + visual coherence) | From cabin v2 feedback — reviewer must check both dimensional constraints AND visual/proportional coherence against building type reference |
+| 2026-03-23 | v2.3: Training run recommendations | From training-s3: 63 exercises, 5248 objects, 6 agents. Key findings: prompt specificity > doctrine, fewer agents better, lock conventions first, include reference script |
