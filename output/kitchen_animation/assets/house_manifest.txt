@@ -1,0 +1,93 @@
+House Set Manifest — Kitchen Analogy Animations
+=================================================
+Generated: 2026-03-24
+File: output/kitchen_animation/assets/house_set.blend
+Total Objects: 339 across 10 collections + scene root
+
+COLLECTIONS
+-----------
+
+Kitchen (54 objects) — MAIN FLOOR
+  Structure: Floor, 4 wall segments (back split for hatch, left split for door, right split for pantry), front base
+  Door: Kitchen_Door_Front (separate object for animation)
+  Furniture: Counter_Main (center island), Stove_Body + 4 burners, Counter_Prep, Counter_Seal
+  Details: RecipeBook_Stand + Pages, KnifeBlock_Base + 3 blades, TicketWire + 4 tickets,
+           SpiceRack_Shelf + 5 jars, Timer, 3 CoatHooks, Corkboard + 3 notes,
+           Frame_ClaudeMD + paper, VacuumSealer, LabelPrinter
+  Serving Hatch: Opening in back wall with shelf
+  Prep area: Bowl, plate, item (messy staging look), sign
+
+Pantry (39 objects) — ATTACHED ROOM (Archibase L1-L3)
+  Structure: Floor, 3 walls, door
+  Left wall: 2 shelves + 6 ingredient bins + 6 labels
+  Back wall: CardCabinet + 12 drawers
+  Right wall: Pegboard + 6 tool shapes
+
+Workshop_Rhino (9 objects) — WINDOW ROOM (Rhino MCP)
+  Structure: Floor, 3 walls, window frame
+  Contents: Workbench, screen, 2 small 3D models
+
+Studio_Blender (15 objects) — WINDOW ROOM (Blender MCP)
+  Structure: Floor, 3 walls, window frame
+  Contents: Tripod, camera, 2 lights + panels, 4 texture swatches
+
+Comms_Discord (13 objects) — WINDOW ROOM (Discord MCP)
+  Structure: Floor, 3 walls, window frame
+  Contents: Intercom, speaker, message board, 3 messages, desk, button
+
+Library_Study (59 objects) — UPPER FLOOR LEFT (Archibase L4 / RAG)
+  Structure: Floor, 3 walls, divider wall
+  Left wall: 3 bookshelves + 24 books
+  Back wall: 2 bookshelves + 12 books
+  Furniture: Desk, chair (seat + back + 4 legs), lightbox + base, filing cabinet + 3 drawers
+
+Gallery (28 objects) — UPPER FLOOR RIGHT (Visualizations)
+  Structure: Floor, 3 walls
+  5 pedestals with screens, 6 wall frames with art, central large screen + stand
+
+Attic (13 objects) — TOP FLOOR (Archive)
+  Structure: Floor, roof prism (custom mesh), back wall
+  5 storage boxes, 3 draped sheets, 2 labels
+
+Basement_Freezer (66 objects) — BELOW GROUND (source/ frozen data)
+  Structure: Floor, ceiling, 4 walls
+  3 shelving racks: each with 4 posts, 3 shelves, 6 boxes, 6 labels
+  Frost light (blue point light), warning sign
+
+Exterior (41 objects) — OUTSIDE
+  Chimney + cap, ground plane, street
+  Garden: path, mailbox (post + box), 4 bushes, fence + 8 posts
+  3 neighboring buildings (each with body, roof, windows)
+  5 pneumatic tube segments connecting buildings
+
+Scene Root (2 objects)
+  Camera (orthographic, isometric 30deg)
+  Sun (warm directional light ~4500K)
+
+RENDER SETTINGS
+---------------
+Engine: BLENDER_EEVEE
+Resolution: 1920x1080 @ 24fps
+Freestyle: Enabled, 2px black lines
+Camera: Orthographic, ortho_scale=35
+World: Warm light gray ambient (#F5F0EB approx)
+
+MISSING / DEFERRED
+-------------------
+- Blueprints Room (app/) — mentioned in spec, not built (lower priority)
+- Journal/Desk by Bed (state/handoffs/) — mentioned in spec, not built (lower priority)
+- Trash/Recycling bin (.gitignore) — could add to kitchen
+- Taste-Testing Station — could add to kitchen
+- Daily Planner clipboard — could add to kitchen wall
+- Context shelf by door — small shelf for personal items (CONTEXT files)
+- Character blobs (built separately per spec instruction)
+
+NOTES
+-----
+- Front wall of all rooms removed for cross-section view
+- All materials are flat-shaded (use_nodes=False), no PBR
+- Every object follows Room_Element_Detail naming convention
+- Collections map 1:1 to rooms for per-video visibility toggling
+- Pantry connects through gap in kitchen right wall
+- Window rooms are behind kitchen back wall (Y > 4)
+- Upper floor at Z=3.0, Attic at Z=6.0, Basement at Z=-3.0

@@ -1,0 +1,90 @@
+EXTERIOR RIGS MANIFEST
+======================
+File: exterior_rigs.blend
+Built: 2026-03-24
+Builder: Exterior Builder agent (Blender instance "third")
+Blender version: 3.3.9
+Render engine: EEVEE with Freestyle (2px black lines)
+
+COLLECTIONS
+-----------
+Camera_Rigs (6 objects):
+  Cam_Wide [CAMERA] - ortho_scale=10, 30-deg isometric, parent: Cam_Wide_Target
+  Cam_Wide_Target [EMPTY] - at (0, 0, 2), animate this for camera movement
+  Cam_CloseUp [CAMERA] - ortho_scale=5, 30-deg isometric, parent: Cam_CloseUp_Target
+  Cam_CloseUp_Target [EMPTY] - at (0, 0, 2), animate this for close-up pans
+  Cam_StreetView [CAMERA] - ortho_scale=35, for Video 5 wide street shots
+  Cam_StreetView_Target [EMPTY] - at (0, 7, 2), centered on street
+
+Lighting (2 objects):
+  Sun_Main [SUN] - energy=3.0, warm ~4500K (1.0, 0.91, 0.78), upper-left direction
+  Fill_Ambient [SUN] - energy=0.8, no shadow, ambient fill
+
+Exterior_Ground (4 objects):
+  Ground_Plane [MESH] - 60x60 sandy beige (#D4C5A9)
+  Garden_Area [MESH] - 16x10 green (#8BC34A), behind house
+  Mailbox_Post [MESH] - thin post
+  Mailbox_Box [MESH] - red (#C44E52) mailbox
+
+Exterior_Buildings (22 objects):
+  House_Placeholder [MESH] - 12x8x4, cream (#F5F0EB), will be replaced with detailed house
+  Building_A_Shell [MESH] - 6x6x6, stone color, at X=-8, 6 dark windows
+  Building_B_Shell [MESH] - 7x5x5, gray, at X=1, 6 dark windows
+  Building_C_Shell [MESH] - 8x5x4, warm, at X=10, 6 dark windows
+  18x Building_*_Window_*_* [MESH] - dark (#2C2C2C) window boxes on building faces
+
+Exterior_Street (6 objects):
+  Street_Main [MESH] - 60x6 dark gray (#888888)
+  Sidewalk_Near [MESH] - near side of street
+  Sidewalk_Far [MESH] - far side of street
+  PneumaticTube_A [MESH] - connects house to Building A
+  PneumaticTube_B [MESH] - connects house to Building B
+  PneumaticTube_C [MESH] - connects house to Building C
+
+MATERIALS (12 production materials)
+------------------------------------
+Mat_House_Cream: #F5F0EB (walls/structure)
+Mat_Ground_Sandy: #D4C5A9 (ground)
+Mat_Street_Dark: #888888 (road)
+Mat_Sidewalk: #C8BFA8 (sidewalks)
+Mat_Garden_Green: #8BC34A (garden)
+Mat_Building_Stone: #D5CBC0 (Building A)
+Mat_Building_Gray: #B8AFA6 (Building B)
+Mat_Building_Warm: #C8B8A8 (Building C)
+Mat_Windows_Dark: #2C2C2C (all windows)
+Mat_Mailbox_Red: #C44E52 (mailbox)
+Mat_Mailbox_Post: #8B7355 (mailbox post)
+Mat_PneumaticTube: #A0A0A0 (tubes)
+
+RENDER SETTINGS
+---------------
+Resolution: 960x540 (draft — upscale later)
+Frame rate: 24fps
+Engine: BLENDER_EEVEE
+Freestyle: enabled, 2px black lines
+World background: #F5F0EB (warm light gray)
+Color management: Standard sRGB
+Output format: PNG RGBA
+
+CAMERA GUIDE
+------------
+- Cam_Wide (ortho=10): Frames the house itself. Use for Videos 1-4 (interior focus).
+- Cam_CloseUp (ortho=5): Tight shot on specific area. Use for detail moments.
+- Cam_StreetView (ortho=35): Full street with all buildings. Use for Video 5 pull-back.
+- All cameras parent to empties — animate the empty for smooth camera movement.
+
+LAYOUT (top-down, Y axis = depth from camera)
+----------------------------------------------
+Y < 0: Garden area, back of house
+Y = 0: House center
+Y = 4-6: Front of house, sidewalk
+Y = 6.5-9.5: Street
+Y = 10-17: Neighbor buildings (A at X=-8, B at X=1, C at X=10)
+
+INTEGRATION NOTES
+-----------------
+- House_Placeholder will be replaced by Phase 1 (interior house build)
+- Buildings A/B/C represent cloud VMs for Video 5 — their interiors will be
+  populated with cross-section kitchens when Video 5 is built
+- Pneumatic tubes are at Y=0.5 height, connecting house to each building
+- The mailbox is at (5, 5.5) near the front sidewalk = briefs/assignment delivery

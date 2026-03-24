@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Funding Request — AI-Assisted Architectural Modeling Infrastructure</title>
+  <style>
+    body {
+      background: #0a0a0f;
+      color: #e8e6e1;
+      font-family: 'Courier New', 'DM Mono', monospace;
+      font-size: 14px;
+      line-height: 1.75;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 60px 40px;
+    }
+    h1 {
+      color: #c9a84c;
+      font-size: 28px;
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      border-bottom: 1px solid #333;
+      padding-bottom: 12px;
+      margin-top: 48px;
+      margin-bottom: 24px;
+    }
+    h2 {
+      color: #c9a84c;
+      font-size: 20px;
+      font-weight: 400;
+      letter-spacing: 0.03em;
+      margin-top: 40px;
+      margin-bottom: 16px;
+    }
+    h3 {
+      color: #d4c08a;
+      font-size: 16px;
+      font-weight: 600;
+      margin-top: 32px;
+      margin-bottom: 12px;
+    }
+    h4, h5, h6 {
+      color: #8a8880;
+      font-size: 14px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-top: 24px;
+      margin-bottom: 8px;
+    }
+    p { margin: 0 0 16px 0; }
+    strong { color: #e8e6e1; font-weight: 700; }
+    em { font-style: italic; color: #c9a84c; }
+    a { color: #c9a84c; text-decoration: underline; text-underline-offset: 3px; }
+    ul, ol {
+      margin: 0 0 16px 0;
+      padding-left: 24px;
+    }
+    li { margin-bottom: 6px; }
+    li::marker { color: #8a8880; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 24px 0;
+      font-size: 13px;
+    }
+    th {
+      background: #1a1a22;
+      color: #c9a84c;
+      text-align: left;
+      padding: 10px 14px;
+      border-bottom: 2px solid #c9a84c;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      font-size: 11px;
+    }
+    td {
+      padding: 8px 14px;
+      border-bottom: 1px solid #1a1a22;
+    }
+    tr:nth-child(even) { background: #0f0f17; }
+    tr:hover { background: #1a1a25; }
+    code {
+      background: #1a1a22;
+      color: #d4c08a;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+    }
+    pre {
+      background: #0f0f17;
+      border: 1px solid #1a1a22;
+      border-left: 3px solid #c9a84c;
+      padding: 16px 20px;
+      overflow-x: auto;
+      margin: 20px 0;
+      border-radius: 2px;
+    }
+    pre code {
+      background: none;
+      padding: 0;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+    blockquote {
+      border-left: 3px solid #c9a84c;
+      margin: 20px 0;
+      padding: 12px 20px;
+      background: #0f0f17;
+      color: #8a8880;
+      font-style: italic;
+    }
+    blockquote p { margin-bottom: 8px; }
+    blockquote p:last-child { margin-bottom: 0; }
+    hr {
+      border: none;
+      border-top: 1px solid #333;
+      margin: 40px 0;
+    }
+    img { max-width: 100%; height: auto; margin: 20px 0; }
+    .print-button-wrap {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1000;
+    }
+    .print-button-wrap button {
+      background: #c9a84c;
+      color: #0a0a0f;
+      border: none;
+      padding: 10px 24px;
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      cursor: pointer;
+    }
+    .print-button-wrap button:hover { background: #d4c08a; }
+
+    @media print {
+      @page {
+        size: A4;
+        margin: 25mm 20mm 30mm 20mm;
+      }
+      body {
+        background: #fff;
+        color: #1a1a1a;
+        font-family: Georgia, 'Times New Roman', serif;
+        font-size: 11pt;
+        line-height: 1.6;
+      }
+      .container {
+        max-width: none;
+        padding: 0;
+        margin: 0;
+      }
+      .print-button-wrap { display: none; }
+      h1 {
+        color: #000;
+        font-family: Georgia, serif;
+        font-size: 22pt;
+        text-transform: none;
+        letter-spacing: 0;
+        border-bottom: 2px solid #000;
+        page-break-after: avoid;
+      }
+      h2 {
+        color: #000;
+        font-family: Georgia, serif;
+        font-size: 16pt;
+        page-break-after: avoid;
+      }
+      h3 {
+        color: #333;
+        font-size: 13pt;
+        page-break-after: avoid;
+      }
+      h4, h5, h6 {
+        color: #333;
+        font-size: 11pt;
+        page-break-after: avoid;
+      }
+      strong { color: #000; }
+      em { color: #333; font-style: italic; }
+      a { color: #000; text-decoration: none; }
+      table {
+        font-size: 9pt;
+        page-break-inside: avoid;
+      }
+      th {
+        background: #f0f0f0;
+        color: #000;
+        border-bottom: 2px solid #000;
+        text-transform: none;
+      }
+      td {
+        border-bottom: 1px solid #ccc;
+      }
+      tr:nth-child(even) { background: none; }
+      tr:hover { background: none; }
+      thead { display: table-header-group; }
+      code {
+        background: #f5f5f5;
+        color: #333;
+        border: 1px solid #ddd;
+      }
+      pre {
+        background: #f8f8f8;
+        border: 1px solid #ddd;
+        border-left: 3px solid #333;
+        font-size: 9pt;
+        page-break-inside: avoid;
+      }
+      pre code { border: none; background: none; }
+      blockquote {
+        border-left: 3px solid #666;
+        background: #f8f8f8;
+        color: #333;
+      }
+      h1 { page-break-before: always; }
+      h1:first-of-type { page-break-before: avoid; }
+      p, li, blockquote {
+        orphans: 3;
+        widows: 3;
+      }
+      img {
+        max-width: 100%;
+        page-break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="print-button-wrap">
+      <button onclick="window.print()">Print to PDF</button>
+    </div>
+
+    <h1>Funding Request &mdash; AI-Assisted Architectural Modeling Infrastructure</h1>
+
+    <p><strong>EPFL AR-302k, Studio Huang &mdash; &ldquo;Sentient Cities&rdquo;</strong><br>
+    Andrea Crespo &amp; Henna Rafik | March 2026</p>
+
+    <p><em>All costs are approximate projections based on publicly available pricing. Actual rates may vary depending on RCP allocation, usage, and licensing arrangements.</em></p>
+
+    <hr>
+
+    <h2>What we built</h2>
+
+    <p>In a proof-of-concept test, 7 AI agents collaboratively built 709 objects on a single site, with all dimensions traceable to Swiss construction references &mdash; at a cost of ~2 CHF in API fees.</p>
+
+    <p>The system behind it: a knowledge-grounded AI modeling pipeline connecting a 4-layer construction knowledge base (375 Swiss LCA records, 33 curated guides, 35,000+ embedded document chunks from Dicobat, SIA norms, and academic sources) to Rhino and Blender via MCP (Model Context Protocol) for multi-agent 3D modeling and animation. We built custom routing servers for both tools so multiple AI agents can work on different tasks in parallel.</p>
+
+    <hr>
+
+    <h2>Cost by category</h2>
+
+    <h3>1. AI Capability &mdash; Claude Max</h3>
+
+    <table>
+      <thead>
+        <tr><th></th><th>Cost</th><th>Status</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Andrea (since February 2026)</td><td>100 CHF/month</td><td>Active</td></tr>
+        <tr><td>Henna (since March 2026)</td><td>100 CHF/month</td><td>Active</td></tr>
+        <tr><td><strong>Subtotal</strong></td><td><strong>200 CHF/month</strong></td><td></td></tr>
+      </tbody>
+    </table>
+
+    <p>Powers all AI modeling, code generation, agent coordination, research, and data analysis. This is the core of the system &mdash; everything else is infrastructure that extends its reach.</p>
+
+    <h3>2. Software &mdash; Rhino + Blender</h3>
+
+    <table>
+      <thead>
+        <tr><th></th><th>Cost</th><th>Status</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Rhino 8 educational license (Windows)</td><td>~95 CHF one-time</td><td>Needed (if no ENAC seats available)</td></tr>
+        <tr><td>Rhino core-hour billing (Cloud Zoo)</td><td>~0.10 CHF/core-hour per VM</td><td>Needed with VMs</td></tr>
+        <tr><td>Blender + Blender MCP</td><td>Free (open source)</td><td>Available</td></tr>
+        <tr><td><strong>Subtotal</strong></td><td><strong>0&ndash;95 CHF one-time + usage</strong></td><td></td></tr>
+      </tbody>
+    </table>
+
+    <p>One educational license covers all VM clones via Cloud Zoo. Core-hour billing scales with actual usage &mdash; pay only when Rhino is running. If ENAC-IT has floating seats available, the one-time license cost drops to zero.</p>
+
+    <h3>3. Infrastructure &mdash; EPFL RCP (preferred) or Azure (fallback)</h3>
+
+    <p>EPFL RCP is 10&ndash;22&times; cheaper than Azure for equivalent resources:</p>
+
+    <table>
+      <thead>
+        <tr><th>Resource</th><th>EPFL RCP (U1 rate)</th><th>Azure (Switzerland)</th><th>Savings</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Dedicated server/day</td><td>6.40 CHF</td><td>~84 CHF</td><td>13&times;</td></tr>
+        <tr><td>GPU-hour (V100)</td><td>0.14 CHF</td><td>~3.06 CHF</td><td>22&times;</td></tr>
+        <tr><td>Storage TB/year</td><td>20.75 CHF</td><td>~250 CHF</td><td>12&times;</td></tr>
+        <tr><td>AI inference</td><td>70+ models, possibly included</td><td>Pay per token</td><td>&mdash;</td></tr>
+      </tbody>
+    </table>
+
+    <table>
+      <thead>
+        <tr><th></th><th>RCP estimate</th><th>Azure estimate</th><th>Status</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>VM compute (3&ndash;4 instances, 4 vCPU / 16&ndash;32 GB)</td><td>~19&ndash;26 CHF/day</td><td>~250&ndash;340 CHF/day</td><td>Needed</td></tr>
+        <tr><td>Persistent storage (golden image + clones)</td><td>~21 CHF/year per TB</td><td>~250 CHF/year per TB</td><td>Needed</td></tr>
+        <tr><td><strong>Subtotal</strong></td><td><strong>scales with usage</strong></td><td></td><td></td></tr>
+      </tbody>
+    </table>
+
+    <p>Golden image approach: set up one VM (Rhino + custom MCP server + SSH tunnel), capture the image, clone to spin up parallel instances on demand. Our routing server (already built and tested) distributes agent work across instances. VMs deallocate when idle &mdash; compute stops, only storage billed.</p>
+
+    <p><strong>Pending:</strong> Windows support on RCP HAAS servers to be confirmed. Rhino requires Windows &mdash; if unavailable, fallback is Azure (at significantly higher cost).</p>
+
+    <h3>4. Knowledge Base &mdash; Embeddings + RAG</h3>
+
+    <table>
+      <thead>
+        <tr><th></th><th>Cost</th><th>Status</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Gemini API (300 USD free credits)</td><td>~0 CHF</td><td>Active</td></tr>
+        <tr><td>Embedding cost (text)</td><td>~0.65 CHF per 2,500 pages</td><td>Negligible</td></tr>
+        <tr><td><strong>Subtotal</strong></td><td><strong>~0 CHF (covered by free credits)</strong></td><td></td></tr>
+      </tbody>
+    </table>
+
+    <h3>5. Hosting + Publishing</h3>
+
+    <table>
+      <thead>
+        <tr><th></th><th>Cost</th><th>Status</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>GitHub Pages (dashboard, visualizations)</td><td>Free</td><td>Active</td></tr>
+        <tr><td><strong>Subtotal</strong></td><td><strong>0 CHF</strong></td><td></td></tr>
+      </tbody>
+    </table>
+
+    <hr>
+
+    <h2>Cost scenarios (4 concurrent agents, 1 month)</h2>
+
+    <table>
+      <thead>
+        <tr><th>Scenario</th><th>Compute</th><th>Rhino</th><th>Total/month</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Best: EPFL RCP + ENAC licenses</strong></td><td>~770 CHF</td><td>0 CHF</td><td><strong>~770 CHF</strong></td></tr>
+        <tr><td>Mid: EPFL RCP + buy licenses</td><td>~770 CHF</td><td>~720 CHF one-time</td><td>~1,490 CHF first month</td></tr>
+        <tr><td>Worst: Azure + buy licenses</td><td>~2,500 CHF</td><td>~720 CHF one-time</td><td>~3,220 CHF first month</td></tr>
+      </tbody>
+    </table>
+
+    <hr>
+
+    <h2>Cost by phase</h2>
+
+    <h3>Phase 0 &mdash; Knowledge + Training (complete)</h3>
+
+    <p><strong>Duration:</strong> 2 weeks (done)<br>
+    <strong>Cost:</strong> ~2 CHF</p>
+
+    <p>Built: 4-layer knowledge base (35K+ chunks), training pipeline (80 exercises, 5,248 objects), multi-agent proof of concept (7 agents, 709 objects on Lock 05).</p>
+
+    <h3>Phase 1 &mdash; Validation + Setup (this week, March 23&ndash;28)</h3>
+
+    <p><strong>Duration:</strong> ~5 days<br>
+    <strong>New cost:</strong> &lt; 5 CHF</p>
+
+    <p>Validate Rhino routing across machines (Henna&rsquo;s Windows laptop). Complete knowledge base embeddings. Set up Blender MCP routing as secondary modeling/animation tool.</p>
+
+    <h3>Phase 2 &mdash; Cloud Infrastructure (March 26&ndash;28)</h3>
+
+    <p><strong>Duration:</strong> ~3 days<br>
+    <strong>New cost:</strong> ~95&ndash;150 CHF (Azure fallback) or near-zero (RCP)</p>
+
+    <p>The gate: validate end-to-end cloud modeling &mdash; Claude on Mac &rarr; SSH tunnel &rarr; cloud VM &rarr; Rhino headless &rarr; geometry back. If this works, we scale. If not, we&rsquo;ve spent only a Rhino license (usable locally regardless).</p>
+
+    <h3>Phase 3 &mdash; Production Modeling (March 30 &ndash; May)</h3>
+
+    <p><strong>Duration:</strong> ~8 weeks<br>
+    <strong>New cost:</strong> depends on infrastructure path</p>
+
+    <table>
+      <thead>
+        <tr><th>Scenario</th><th>Monthly (at full scale)</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>RCP + ENAC licenses</td><td>~200 CHF (Claude Max only &mdash; compute covered by RCP)</td></tr>
+        <tr><td>RCP + bought licenses</td><td>~200 CHF + 720 CHF one-time</td></tr>
+        <tr><td>Azure + bought licenses</td><td>~360 CHF + 720 CHF one-time</td></tr>
+      </tbody>
+    </table>
+
+    <p>Scale from 1 to 3&ndash;4 VMs as modeling demands grow. Model all 9 corridor nodes with parallel agent teams. Multiple design iterations per node. VMs deallocated between sessions.</p>
+
+    <hr>
+
+    <h2>Scaling over time (cumulative)</h2>
+
+    <table>
+      <thead>
+        <tr><th>Period</th><th>Monthly</th><th>Cumulative</th><th>What&rsquo;s running</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Feb 2026</td><td>100</td><td>100</td><td>Andrea&rsquo;s Claude Max</td></tr>
+        <tr><td>Mar 1&ndash;22</td><td>200</td><td>500</td><td>+ Henna&rsquo;s Claude Max</td></tr>
+        <tr><td>Mar 23&ndash;31 (Phase 1&ndash;2)</td><td>~200&ndash;205</td><td>~555</td><td>+ Rhino license (if needed) + first VM testing</td></tr>
+        <tr><td>Apr (Phase 3a)</td><td>~200&ndash;305</td><td>~755&ndash;860</td><td>1&ndash;2 VMs, corridor modeling begins</td></tr>
+        <tr><td>May (Phase 3b)</td><td>~200&ndash;360</td><td>~955&ndash;1,220</td><td>3&ndash;4 VMs, full parallel modeling</td></tr>
+      </tbody>
+    </table>
+
+    <p><strong>Total project cost through end of May: ~955&ndash;1,300 CHF</strong> depending on infrastructure path.<br>
+    Of which ~1,000 CHF is Claude Max subscriptions (the AI capability itself).</p>
+
+    <hr>
+
+    <h2>Tools already built</h2>
+
+    <ul>
+      <li><strong>Rhino MCP Router</strong> &mdash; distributes modeling commands across multiple Rhino instances on different ports. Tested locally with 7 concurrent agents.</li>
+      <li><strong>Blender MCP Router</strong> &mdash; same pattern, for animation and visualization. Built and tested.</li>
+      <li><strong>4-layer knowledge base</strong> &mdash; SQLite (materials, codes, dimensions) + curated markdown guides + parametric scripts + RAG (35K+ embedded chunks from construction references).</li>
+      <li><strong>Agent coordination</strong> &mdash; multi-agent teams that divide building systems (shell, structure, facade, circulation, etc.) and resolve spatial conflicts autonomously.</li>
+    </ul>
+
+    <hr>
+
+    <h2>Proof of concept</h2>
+
+    <p>Lock 05 (CHUV node): 7 AI agents built 709 objects &mdash; shell, windows, structure, circulation, elevator, roof, ground &mdash; in a single coordinated session. Every dimension traces to Swiss construction references (SIA loads, KBOB materials, fire codes). Agents caught and resolved spatial conflicts between building systems without human intervention.</p>
+
+    <hr>
+
+    <h2>Risk mitigation</h2>
+
+    <ul>
+      <li><strong>Phased cost gates</strong>: each phase requires the previous to succeed. No bulk commitment.</li>
+      <li><strong>Dominant cost is Claude Max</strong> (200 CHF/month) &mdash; already running, already proven. Infrastructure adds only ~100&ndash;160 CHF/month at full capacity.</li>
+      <li><strong>Free tiers cover secondary tools</strong>: Gemini credits, Blender, GitHub Pages &mdash; all zero cost.</li>
+      <li><strong>Golden image approach</strong>: set up once, clone as needed, deallocate when idle. No wasted compute.</li>
+      <li><strong>EPFL credits</strong>: 100 CHF Azure offset available if needed as fallback.</li>
+      <li><strong>Technical infrastructure built by the team</strong>: multi-instance MCP routing (Rhino + Blender), SSH tunneling, agent coordination &mdash; all developed and tested in-house.</li>
+      <li><strong>Rhino license retains value</strong>: if cloud approach fails, the license works locally on any Windows machine.</li>
+    </ul>
+
+    <hr>
+
+    <h2>Contacts</h2>
+
+    <table>
+      <thead>
+        <tr><th>Who</th><th>For what</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>EPFL RCP (via Monique)</td><td>VM access, HAAS Windows support, AI inference</td></tr>
+        <tr><td>ENAC-IT (enac-it@epfl.ch)</td><td>Existing Rhino floating seats, Cloud Zoo, VM policy</td></tr>
+        <tr><td>McNeel (sales@mcneel.com)</td><td>Multi-seat research pricing (if ENAC has no seats)</td></tr>
+      </tbody>
+    </table>
+
+  </div>
+</body>
+</html>

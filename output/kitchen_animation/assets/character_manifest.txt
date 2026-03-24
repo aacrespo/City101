@@ -1,0 +1,91 @@
+CHARACTER MANIFEST — Kitchen Analogy Animations
+=================================================
+File: characters.blend
+Built: 2026-03-24
+Blender: 3.3.9, EEVEE engine, Freestyle outlines enabled
+
+COLLECTIONS & CHARACTERS
+=========================
+
+1. Char_BaseBlob (TEMPLATE — do not animate directly, duplicate first)
+   - BaseBlob_Body (UV sphere, subdivided, with shape keys: Basis, squash, stretch)
+   - BaseBlob_Eye_L (shape keys: Basis, blink, look_left, look_right, surprise)
+   - BaseBlob_Eye_R (shape keys: Basis, blink, look_left, look_right, surprise)
+   - BaseBlob_Spark (emission material, diamond shape)
+   - BaseBlob_Backpack (rounded cube, darker shade)
+
+2. Char_Cairn — Andrea CLI persona
+   Body: #D4A574 (warm amber) | Spark: #FF8C42 (orange) | Eyes: slightly narrowed
+
+3. Char_Lumen — Andrea Desktop persona
+   Body: #FFD700 (soft gold) | Spark: #FFEB3B (yellow) | Eyes: wide open (+10%)
+
+4. Char_Meridian — Henna school persona
+   Body: #6B9BD2 (cool blue) | Spark: #81D4FA (ice blue) | Eyes: default, calm
+
+5. Char_Cadence — Henna personal persona
+   Body: #9B8EC4 (soft purple) | Spark: #CE93D8 (lavender) | Eyes: one tilted 5 deg
+
+6. Char_Teammate_Analyst
+   Body: #B0B0B0 | Accent: #66BB6A green | Prop: magnifying glass near eye
+
+7. Char_Teammate_Cartographer
+   Body: #B0B0B0 | Accent: #42A5F5 blue | Prop: compass torus orbiting body
+
+8. Char_Teammate_Modeler
+   Body: #B0B0B0 | Accent: #FFA726 orange | Prop: hard hat on head
+
+9. Char_Teammate_Visualizer
+   Body: #B0B0B0 | Accent: #EC407A pink | Prop: paintbrush with pink tip
+
+10. Char_Teammate_Builder
+    Body: #B0B0B0 | Accent: #78909C gray | Prop: wrench with torus head
+
+11. Char_Teammate_Knowledge
+    Body: #B0B0B0 | Accent: #8D6E63 brown | Prop: open book (two planes in V)
+
+12. Char_Teammate_Coordinator
+    Body: #B0B0B0 | Accent: #ECEFF1 white | Prop: tablet with blue screen
+
+13. Char_Subagent
+    Body: #D4A574 alpha=0.85 (translucent) | 40% scale | TetherAnchor empty for parent connection
+
+REUSABLE ACTIONS (all have fake_user=True)
+==========================================
+
+Action_Walk (24 frames / 1 sec)
+  - Location Y: 0 -> 2.0 linear movement
+  - Cyclic modifier applied
+
+Action_Walk_ShapeKeys (24 frames / 1 sec)
+  - Body squash: bounces 0 -> 0.3 -> 0 twice per cycle
+  - Pair with Action_Walk on the object
+
+Action_Idle (72 frames / 3 sec)
+  - Scale oscillation: +/- 2% sine wave
+  - Cyclic modifier applied
+
+Action_Idle_Spark (72 frames / 3 sec)
+  - Spark Z rotation: full 360 over 3 seconds
+
+Action_Blink_L / Action_Blink_R (72 frames / 3 sec)
+  - Blink at ~frame 48: value 0 -> 1 -> 0 over 4 frames
+
+Action_Spawn (12 frames / 0.5 sec)
+  - Scale: 0 -> 1.15 -> 0.95 -> 1.0 (overshoot + settle)
+
+Action_Despawn (10 frames / ~0.4 sec)
+  - Scale: 1.0 -> 1.05 -> 0.0 with upward drift
+  - Location Z rises during despawn
+
+Action_Working_ShapeKeys (48 frames / 2 sec)
+  - Rapid alternating squash/stretch at 0.15 amplitude
+  - Cyclic modifier applied
+
+HOW TO USE
+==========
+1. Append/link the desired Char_ collection into your scene file
+2. Assign actions via object.animation_data.action (object actions)
+   and object.data.shape_keys.animation_data.action (shape key actions)
+3. Never animate directly on the master characters.blend — always work on copies
+4. Teammates and subagent can be recolored by swapping the body material

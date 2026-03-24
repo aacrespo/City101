@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Infrastructure Request — Email Draft for Alex</title>
+  <style>
+    body {
+      background: #0a0a0f;
+      color: #e8e6e1;
+      font-family: 'Courier New', 'DM Mono', monospace;
+      font-size: 14px;
+      line-height: 1.75;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 60px 40px;
+    }
+    h1 {
+      color: #c9a84c;
+      font-size: 28px;
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      border-bottom: 1px solid #333;
+      padding-bottom: 12px;
+      margin-top: 48px;
+      margin-bottom: 24px;
+    }
+    h2 {
+      color: #c9a84c;
+      font-size: 20px;
+      font-weight: 400;
+      letter-spacing: 0.03em;
+      margin-top: 40px;
+      margin-bottom: 16px;
+    }
+    h3 {
+      color: #d4c08a;
+      font-size: 16px;
+      font-weight: 600;
+      margin-top: 32px;
+      margin-bottom: 12px;
+    }
+    h4, h5, h6 {
+      color: #8a8880;
+      font-size: 14px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-top: 24px;
+      margin-bottom: 8px;
+    }
+    p { margin: 0 0 16px 0; }
+    strong { color: #e8e6e1; font-weight: 700; }
+    em { font-style: italic; color: #c9a84c; }
+    a { color: #c9a84c; text-decoration: underline; text-underline-offset: 3px; }
+    ul, ol {
+      margin: 0 0 16px 0;
+      padding-left: 24px;
+    }
+    li { margin-bottom: 6px; }
+    li::marker { color: #8a8880; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 24px 0;
+      font-size: 13px;
+    }
+    th {
+      background: #1a1a22;
+      color: #c9a84c;
+      text-align: left;
+      padding: 10px 14px;
+      border-bottom: 2px solid #c9a84c;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      font-size: 11px;
+    }
+    td {
+      padding: 8px 14px;
+      border-bottom: 1px solid #1a1a22;
+    }
+    tr:nth-child(even) { background: #0f0f17; }
+    tr:hover { background: #1a1a25; }
+    code {
+      background: #1a1a22;
+      color: #d4c08a;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+    }
+    pre {
+      background: #0f0f17;
+      border: 1px solid #1a1a22;
+      border-left: 3px solid #c9a84c;
+      padding: 16px 20px;
+      overflow-x: auto;
+      margin: 20px 0;
+      border-radius: 2px;
+    }
+    pre code {
+      background: none;
+      padding: 0;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+    blockquote {
+      border-left: 3px solid #c9a84c;
+      margin: 20px 0;
+      padding: 12px 20px;
+      background: #0f0f17;
+      color: #8a8880;
+      font-style: italic;
+    }
+    blockquote p { margin-bottom: 8px; }
+    blockquote p:last-child { margin-bottom: 0; }
+    hr {
+      border: none;
+      border-top: 1px solid #333;
+      margin: 40px 0;
+    }
+    img { max-width: 100%; height: auto; margin: 20px 0; }
+    .print-button-wrap {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1000;
+    }
+    .print-button-wrap button {
+      background: #c9a84c;
+      color: #0a0a0f;
+      border: none;
+      padding: 10px 24px;
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      cursor: pointer;
+    }
+    .print-button-wrap button:hover { background: #d4c08a; }
+
+    @media print {
+      @page {
+        size: A4;
+        margin: 25mm 20mm 30mm 20mm;
+      }
+      body {
+        background: #fff;
+        color: #1a1a1a;
+        font-family: Georgia, 'Times New Roman', serif;
+        font-size: 11pt;
+        line-height: 1.6;
+      }
+      .container {
+        max-width: none;
+        padding: 0;
+        margin: 0;
+      }
+      .print-button-wrap { display: none; }
+      h1 {
+        color: #000;
+        font-family: Georgia, serif;
+        font-size: 22pt;
+        text-transform: none;
+        letter-spacing: 0;
+        border-bottom: 2px solid #000;
+        page-break-after: avoid;
+      }
+      h2 {
+        color: #000;
+        font-family: Georgia, serif;
+        font-size: 16pt;
+        page-break-after: avoid;
+      }
+      h3 {
+        color: #333;
+        font-size: 13pt;
+        page-break-after: avoid;
+      }
+      h4, h5, h6 {
+        color: #333;
+        font-size: 11pt;
+        page-break-after: avoid;
+      }
+      strong { color: #000; }
+      em { color: #333; font-style: italic; }
+      a { color: #000; text-decoration: none; }
+      table {
+        font-size: 9pt;
+        page-break-inside: avoid;
+      }
+      th {
+        background: #f0f0f0;
+        color: #000;
+        border-bottom: 2px solid #000;
+        text-transform: none;
+      }
+      td {
+        border-bottom: 1px solid #ccc;
+      }
+      tr:nth-child(even) { background: none; }
+      tr:hover { background: none; }
+      thead { display: table-header-group; }
+      code {
+        background: #f5f5f5;
+        color: #333;
+        border: 1px solid #ddd;
+      }
+      pre {
+        background: #f8f8f8;
+        border: 1px solid #ddd;
+        border-left: 3px solid #333;
+        font-size: 9pt;
+        page-break-inside: avoid;
+      }
+      pre code { border: none; background: none; }
+      blockquote {
+        border-left: 3px solid #666;
+        background: #f8f8f8;
+        color: #333;
+      }
+      h1 { page-break-before: always; }
+      h1:first-of-type { page-break-before: avoid; }
+      p, li, blockquote {
+        orphans: 3;
+        widows: 3;
+      }
+      img {
+        max-width: 100%;
+        page-break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="print-button-wrap">
+      <button onclick="window.print()">Print to PDF</button>
+    </div>
+
+    <h1>Infrastructure Request &mdash; Email Draft for Alex</h1>
+
+    <p><strong>To:</strong> Alex, CC Monique<br>
+    <strong>From:</strong> Andrea<br>
+    <strong>Subject:</strong> Infrastructure request &mdash; AI-assisted modeling pipeline (EPFL RCP + Rhino licenses)</p>
+
+    <hr>
+
+    <p>Hi Alex,</p>
+
+    <p>Following our conversation this morning, here&rsquo;s the brief so Monique can bring it to the RCP team. Miguel Fontes is meeting them this afternoon, so this is what we&rsquo;re trying to do and what we need.</p>
+
+    <h2>What we built</h2>
+
+    <p>We developed an AI-assisted architectural modeling system for the studio: Claude Code agents coordinated via MCP (Model Context Protocol) to build 3D geometry in Rhino and animations in Blender. In a proof of concept, 7 agents collaboratively built 709 objects on a single site, with all dimensions traced to Swiss construction references (SIA, KBOB). We also built our own routing servers for both Rhino and Blender, so multiple agents can work on different tasks in parallel.</p>
+
+    <p>Right now Andrea works on a Mac (limited to one Rhino instance) and Henna on a Windows laptop. To model our 9 corridor sites in parallel, we need dedicated VMs &mdash; each running its own Rhino instance with resources fully allocated to modeling, rather than competing with everything else on our local machines.</p>
+
+    <h2>Why EPFL RCP (not Azure)</h2>
+
+    <p>RCP is 10&ndash;22&times; cheaper than Azure for equivalent resources:</p>
+
+    <table>
+      <thead>
+        <tr><th>Resource</th><th>EPFL RCP</th><th>Azure (Switzerland)</th><th>Savings</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Dedicated server/day</td><td>6.40 CHF</td><td>~84 CHF</td><td>13&times;</td></tr>
+        <tr><td>GPU-hour (V100)</td><td>0.14 CHF</td><td>~3.06 CHF</td><td>22&times;</td></tr>
+        <tr><td>Storage TB/year</td><td>20.75 CHF</td><td>~250 CHF</td><td>12&times;</td></tr>
+      </tbody>
+    </table>
+
+    <p>RCP also offers 70+ AI inference models that may be included &mdash; we could potentially use these for parts of our pipeline instead of paying per-token externally.</p>
+
+    <h2>What we need from RCP</h2>
+
+    <ol>
+      <li><strong>3&ndash;4 Windows server instances</strong> (4 vCPU, 16&ndash;32 GB RAM each) to run headless Rhino with our custom MCP server. Each VM runs one Rhino instance that receives modeling commands from Claude Code agents on our local machines via SSH tunnel.</li>
+
+      <li><strong>Persistent storage</strong> for a golden image: we set up one VM (Rhino + MCP server + SSH config), capture it, and clone to spin up parallel instances on demand. VMs deallocate when idle &mdash; only storage billed between sessions.</li>
+
+      <li><strong>SSH access to the VMs.</strong> We already have EPFL VPN on our laptops, so reaching the campus network isn&rsquo;t an issue &mdash; we just need the VMs to be SSH-accessible so our local routing server can distribute agent work across the remote Rhino instances.</li>
+
+      <li><strong>Critical question: Can HAAS servers run Windows?</strong> Rhino requires Windows. If not, we need to know so we can fall back to Azure (at much higher cost) or explore Rhino.Compute (headless, REST-based &mdash; would require us to rewrite the MCP layer).</li>
+
+      <li><strong>AI inference access</strong> (nice-to-have): If RCP&rsquo;s hosted models include embedding or generation endpoints, we could route parts of our knowledge base pipeline through them instead of external APIs.</li>
+    </ol>
+
+    <h2>Rhino licenses &mdash; separate ask for ENAC-IT</h2>
+
+    <p>We need <strong>4 concurrent Rhino seats</strong> for the VMs. One license = one simultaneous Rhino, even with floating licenses.</p>
+
+    <table>
+      <thead>
+        <tr><th>Option</th><th>Cost</th><th>Notes</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Borrow ENAC-IT floating seats</td><td>0 CHF</td><td>Best path &mdash; ask if spare seats exist</td></tr>
+        <tr><td>Alex&rsquo;s lab seats (backup)</td><td>0 CHF</td><td>If lab has unused licenses</td></tr>
+        <tr><td>Educational purchase</td><td>~720 CHF (4 &times; $195)</td><td>Last resort</td></tr>
+        <tr><td>Rhino.Compute (future)</td><td>Free + 1 license</td><td>Headless mode, needs MCP rewrite &mdash; not ready yet</td></tr>
+      </tbody>
+    </table>
+
+    <p><strong>Suggested first step:</strong> ask ENAC-IT (enac-it@epfl.ch) if there are existing floating seats we could use on cloud VMs.</p>
+
+    <h2>Cost scenarios (4 concurrent agents, 1 month)</h2>
+
+    <table>
+      <thead>
+        <tr><th>Scenario</th><th>Compute</th><th>Rhino</th><th>Total</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Best: RCP + ENAC licenses</strong></td><td>~770 CHF</td><td>0 CHF</td><td><strong>~770 CHF</strong></td></tr>
+        <tr><td>Mid: RCP + buy licenses</td><td>~770 CHF</td><td>~720 CHF one-time</td><td>~1,490 CHF first month</td></tr>
+        <tr><td>Worst: Azure + buy licenses</td><td>~2,500 CHF</td><td>~720 CHF one-time</td><td>~3,220 CHF first month</td></tr>
+      </tbody>
+    </table>
+
+    <p>Our original estimate of ~1,200 CHF through May assumed Azure. With RCP, the infrastructure portion drops significantly &mdash; the dominant cost becomes the Claude Max subscriptions we&rsquo;re already paying (200 CHF/month for two people).</p>
+
+    <h2>Tools already built</h2>
+
+    <ul>
+      <li><strong>Rhino MCP Router</strong> &mdash; distributes modeling commands across multiple Rhino instances on different ports. Tested locally, ready for remote VMs.</li>
+      <li><strong>Blender MCP Router</strong> &mdash; same pattern, for animation and visualization. Also built and tested.</li>
+      <li><strong>4-layer knowledge base</strong> &mdash; 35,000+ embedded document chunks (Swiss construction norms, materials, typologies) that ground the agents&rsquo; modeling decisions.</li>
+      <li><strong>Agent coordination system</strong> &mdash; 7 agents working in parallel on one building, resolving spatial conflicts autonomously.</li>
+    </ul>
+
+    <p>We just need the compute underneath.</p>
+
+    <p>Best,<br>Andrea</p>
+
+    <hr>
+
+    <p><em>Attachments:</em></p>
+    <ul>
+      <li><em>Full cost breakdown (attached PDF)</em></li>
+      <li><em>Infrastructure comparison: EPFL RCP vs Azure</em></li>
+    </ul>
+
+  </div>
+</body>
+</html>
