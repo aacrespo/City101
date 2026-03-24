@@ -118,3 +118,5 @@
 - Tuesday 14:53
 - Tuesday 14:54
 - Tuesday 19:22 [break] session saved — email to Alex finalized, cost sheet v2 updated
+- Tuesday 19:22
+- Tuesday 19:23 [break] session saved
