@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VT Research — 2. Organizational Concepts for the Chamber</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Instrument+Serif&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #0c0c14;
+    color: #e8e6e1;
+    font-family: 'DM Mono', monospace;
+    min-height: 100vh;
+    padding: 48px 32px;
+  }
+  h1 { font-family: 'Instrument Serif', serif; color: #c9a84c; font-size: 2rem; font-weight: 400; margin-bottom: 4px; text-align: center; }
+  .subtitle { color: #9a9690; font-size: 0.8rem; text-align: center; margin-bottom: 48px; }
+  .section { margin-bottom: 48px; }
+  .section-header {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 20px; padding-bottom: 8px;
+  }
+  .section-header h2 {
+    font-family: 'Instrument Serif', serif;
+    font-weight: 400; font-size: 1.2rem;
+    white-space: nowrap; color: #c9a84c;
+  }
+  .section-header .line { flex: 1; height: 1px; background: rgba(201,168,76,0.3); }
+
+  /* Lock sequence */
+  .lock-seq {
+    display: flex; gap: 0; align-items: stretch;
+    overflow-x: auto; padding-bottom: 8px;
+  }
+  .lock-step {
+    flex: 1; min-width: 180px;
+    padding: 20px 16px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    position: relative;
+  }
+  .lock-step:first-child { border-radius: 8px 0 0 8px; }
+  .lock-step:last-child { border-radius: 0 8px 8px 0; }
+  .lock-step::after {
+    content: "→";
+    position: absolute;
+    right: -8px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #c9a84c;
+    font-size: 1.2rem;
+    z-index: 1;
+  }
+  .lock-step:last-child::after { display: none; }
+  .lock-num { color: #c9a84c; font-size: 1.4rem; font-weight: 500; margin-bottom: 6px; }
+  .lock-name { color: #e8e6e1; font-size: 0.8rem; font-weight: 500; margin-bottom: 8px; letter-spacing: 0.04em; }
+  .lock-desc { color: #9a9690; font-size: 0.72rem; line-height: 1.6; }
+
+  /* Generic card grid */
+  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 16px; }
+  .card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-left: 3px solid #c9a84c;
+    border-radius: 8px;
+    padding: 20px;
+  }
+  .card.teal { border-left-color: #5b8fa8; }
+  .card.copper { border-left-color: #b87a56; }
+  .card.green { border-left-color: #5a9e6f; }
+  .card.red { border-left-color: #c45d4a; }
+  .card-title { font-size: 0.8rem; font-weight: 500; color: #c9a84c; letter-spacing: 0.05em; margin-bottom: 10px; }
+  .card.teal .card-title { color: #5b8fa8; }
+  .card.copper .card-title { color: #b87a56; }
+  .card.green .card-title { color: #5a9e6f; }
+  .card.red .card-title { color: #c45d4a; }
+  .card p { font-size: 0.75rem; color: #9a9690; line-height: 1.6; margin-bottom: 8px; }
+  .card p:last-child { margin-bottom: 0; }
+  .card .highlight { color: #e8e6e1; }
+
+  /* Comparison table */
+  .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+  .compare-box {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 8px; padding: 20px;
+  }
+  .compare-box h3 { font-size: 0.8rem; font-weight: 500; margin-bottom: 12px; letter-spacing: 0.04em; }
+  .compare-box ul { list-style: none; padding: 0; }
+  .compare-box li { font-size: 0.72rem; color: #9a9690; line-height: 1.8; padding-left: 12px; position: relative; }
+  .compare-box li::before { content: "·"; position: absolute; left: 0; color: #9a9690; }
+  .result-box {
+    background: rgba(196,93,74,0.08);
+    border: 1px solid rgba(196,93,74,0.2);
+    border-radius: 8px; padding: 20px;
+  }
+  .result-box p { font-size: 0.75rem; color: #e8e6e1; line-height: 1.6; }
+
+  /* Sky lobby row */
+  .sky-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .sky-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-top: 3px solid #5b8fa8;
+    border-radius: 8px; padding: 20px; text-align: center;
+  }
+  .sky-name { color: #5b8fa8; font-size: 0.85rem; font-weight: 500; margin-bottom: 6px; }
+  .sky-detail { color: #9a9690; font-size: 0.72rem; line-height: 1.6; }
+  .sky-detail span { color: #e8e6e1; }
+</style>
+</head>
+<body>
+
+<h1>Organizational Concepts for the Chamber</h1>
+<p class="subtitle">8 concepts derived from vertical transport, applied to the relay-lock</p>
+
+<!-- 2.1 LOCK SEQUENCE -->
+<div class="section">
+  <div class="section-header">
+    <h2>2.1 The Lock Sequence</h2>
+    <div class="line"></div>
+  </div>
+  <div class="lock-seq">
+    <div class="lock-step">
+      <div class="lock-num">1</div>
+      <div class="lock-name">ENTRY</div>
+      <div class="lock-desc">Arrive from one state: night shift ends, last train missed, cargo delivered</div>
+    </div>
+    <div class="lock-step">
+      <div class="lock-num">2</div>
+      <div class="lock-name">SEALING</div>
+      <div class="lock-desc">The chamber closes around you: shelter, warmth, information, safety</div>
+    </div>
+    <div class="lock-step">
+      <div class="lock-num">3</div>
+      <div class="lock-name">EQUALIZATION</div>
+      <div class="lock-desc">The chamber adjusts your state: rest, food, connection to next mode, psychological decompression</div>
+    </div>
+    <div class="lock-step">
+      <div class="lock-num">4</div>
+      <div class="lock-name">LEVEL MATCH</div>
+      <div class="lock-desc">You're now ready for the other side: first bus arrives, shuttle dispatched, cargo sorted</div>
+    </div>
+    <div class="lock-step">
+      <div class="lock-num">5</div>
+      <div class="lock-name">EXIT</div>
+      <div class="lock-desc">Leave into the new state: home, next shift, hospital, delivery destination</div>
+    </div>
+  </div>
+  <div style="margin-top: 12px; text-align: center; color: #c9a84c; font-size: 0.8rem; font-style: italic;">
+    The dwell time IS the architecture. The value is proportional to how well it manages the wait — not how fast it eliminates it.
+  </div>
+</div>
+
+<!-- 2.2 DESTINATION DISPATCH -->
+<div class="section">
+  <div class="section-header">
+    <h2>2.2 Destination Dispatch</h2>
+    <div class="line"></div>
+  </div>
+  <div class="cards">
+    <div class="card teal">
+      <div class="card-title">SCHINDLER PORT (2009)</div>
+      <p>Passengers enter destination on a touchscreen in the lobby. System groups people heading to similar floors, assigns a specific car. No buttons inside the car.</p>
+      <p class="highlight">The key shift: intelligence moves from the cab to the lobby. The cab becomes dumb transport; the lobby becomes the smart interface.</p>
+    </div>
+    <div class="card teal">
+      <div class="card-title">CHAMBER APPLICATION</div>
+      <p class="highlight">A night nurse finishes at CHUV at 01:30, needs to reach Renens. The chamber dispatches: "Shared ride with 3 others heading to Prilly/Renens. Bay 2, departing 01:45."</p>
+      <p>Pre-sorting eliminates the worst part of the dead window: not the wait itself, but the <span class="highlight">uncertainty</span> of whether anything is coming.</p>
+    </div>
+  </div>
+</div>
+
+<!-- 2.3 PATERNOSTER vs ELEVATOR -->
+<div class="section">
+  <div class="section-header">
+    <h2>2.3 Paternoster vs. Elevator</h2>
+    <div class="line"></div>
+  </div>
+  <div class="compare">
+    <div class="compare-box" style="border-left: 3px solid #b87a56;">
+      <h3 style="color: #b87a56;">PATERNOSTER = Bus/Tram</h3>
+      <ul>
+        <li>Continuous — always moving, never stops</li>
+        <li>User synchronizes with the machine</li>
+        <li>Zero wait (but you must time your entry)</li>
+        <li>Low per-cabin, high aggregate capacity</li>
+        <li>84 dep/hr at Vernier-Blandonnet</li>
+      </ul>
+    </div>
+    <div class="compare-box" style="border-left: 3px solid #5b8fa8;">
+      <h3 style="color: #5b8fa8;">ELEVATOR = IC Train</h3>
+      <ul>
+        <li>On-demand — responds to calls</li>
+        <li>The machine synchronizes with you</li>
+        <li>Variable wait (press button, wait)</li>
+        <li>High per-cabin, lower aggregate capacity</li>
+        <li>Plan your trip around a specific departure</li>
+      </ul>
+    </div>
+  </div>
+  <div class="result-box">
+    <p><strong style="color: #c45d4a;">DEAD WINDOW (01:30–03:30 weekdays):</strong> Both systems stop. The paternoster goes silent and the elevator has zero cabs running. The weekday/weekend split is fundamental — Friday and Saturday, Noctambus provides a partial paternoster (38 trips, 9 routes). Monday through Thursday: nothing.</p>
+  </div>
+</div>
+
+<!-- 2.4 SKY LOBBIES -->
+<div class="section">
+  <div class="section-header">
+    <h2>2.4 Sky Lobbies — 3 Redistribution Hubs</h2>
+    <div class="line"></div>
+  </div>
+  <div class="sky-row">
+    <div class="sky-card">
+      <div class="sky-name">GENEVA</div>
+      <div class="sky-detail">Nodes 1–2 · <span>7 modes</span> · Shannon 1.95<br>Western anchor · CEVA/Léman Express cross-border · CGN boat</div>
+    </div>
+    <div class="sky-card">
+      <div class="sky-name">LAUSANNE</div>
+      <div class="sky-detail">Node 6 · <span>8 modes</span> · Shannon 2.08<br>Central anchor · M2 metro, bus, CGN, funicular · Highest modal diversity</div>
+    </div>
+    <div class="sky-card">
+      <div class="sky-name">VEVEY</div>
+      <div class="sky-detail">Node 7 · <span>7 modes</span> · Shannon 1.95<br>Eastern relay · Funicular, CGN, VMCV bus, IR stop · Bridges Lavaux Fracture</div>
+    </div>
+  </div>
+  <div style="margin-top: 12px; text-align: center; color: #9a9690; font-size: 0.72rem;">
+    The other 6 nodes are "local elevator" stops. Sky lobby chambers are fundamentally different: higher throughput, more modes converging, more complex dispatch.
+  </div>
+</div>
+
+<!-- 2.5 RELAY STATIONS -->
+<div class="section">
+  <div class="section-header">
+    <h2>2.5 Relay Station Architecture</h2>
+    <div class="line"></div>
+  </div>
+  <div class="cards">
+    <div class="card green">
+      <div class="card-title">SWING STATION (quick handoff)</div>
+      <p class="highlight">Under 1 minute. Minimal structure: a corral, a trough, a roof.</p>
+      <p>Corridor nodes: Geneva North (Node 2), Crissier-Bussigny-Ecublens (Node 5). Cargo transfer, logistics interface. Minutes, not hours.</p>
+    </div>
+    <div class="card green">
+      <div class="card-title">HOME STATION (rest/recovery)</div>
+      <p class="highlight">Every 100–160 km. Full program: bunkhouse, kitchen, stable, blacksmith.</p>
+      <p>Corridor nodes: Morges (Node 4), Montreux-Glion (Node 8). Night shelter, waiting, capsule rest. Hours — the full dead window.</p>
+    </div>
+    <div class="card green">
+      <div class="card-title">CARAVANSERAI LOGIC</div>
+      <p>Relay/rest stations spaced one day's journey apart (~30–40 km). UNESCO inscribed 56 Persian caravanserais as a single network — not individual buildings.</p>
+      <p class="highlight">9 chambers × ~11 km spacing = caravanserai spacing scaled for motorized travel. The value is in the system, not any individual node.</p>
+    </div>
+  </div>
+</div>
+
+<!-- 2.6 THRESHOLD CHAMBERS -->
+<div class="section">
+  <div class="section-header">
+    <h2>2.6 Threshold Chambers</h2>
+    <div class="line"></div>
+  </div>
+  <div class="cards">
+    <div class="card red">
+      <div class="card-title">AIRLOCK</div>
+      <p>Two doors, never both open simultaneously. Gradual pressure transition. <span class="highlight">Asymmetric timing:</span> lock-in is fast (minutes), lock-out/decompression can take hours.</p>
+      <p class="highlight">Chamber lesson: Entry is quick (night shift ends, you're in). Exit may require waiting. The asymmetry is the design.</p>
+    </div>
+    <div class="card red">
+      <div class="card-title">NARTHEX</div>
+      <p>Threshold between secular exterior and sacred interior. Functions: climatic buffer, gathering space, psychological preparation, social filter.</p>
+      <p class="highlight">Chamber lesson: The chamber prepares you for a state change. Leaving a night shift is not the same state as arriving home. The narthex is where the shift from "professional" to "personal" begins.</p>
+    </div>
+    <div class="card red">
+      <div class="card-title">GENKAN</div>
+      <p>Japanese entrance. Ground-level foyer with a raised wooden platform. Shoe removal = ritual marking the boundary. Dates back 1,000+ years.</p>
+      <p class="highlight">Chamber lesson: The GA tap-in COULD be a genkan moment — a ritual marking "you are now in the corridor's care." Currently invisible. The chamber could make this threshold legible.</p>
+    </div>
+  </div>
+</div>
+
+<!-- 2.7 ADAPTIVE -->
+<div class="section">
+  <div class="section-header">
+    <h2>2.7 Adaptive Architecture — Cedric Price</h2>
+    <div class="line"></div>
+  </div>
+  <div class="cards">
+    <div class="card copper">
+      <div class="card-title">FUN PALACE (1961–1972, unbuilt)</div>
+      <p>A structural framework with daily reconfigurable components. "Behaviour would be unstable, indeterminate, and unknown in advance." Planned obsolescence — intended for dismantling after 10 years. Directly influenced the Centre Pompidou.</p>
+    </div>
+    <div class="card copper">
+      <div class="card-title">GENERATOR (1976–1979, unbuilt)</div>
+      <p>150 mobile 12'×12' cubes on a grid. The building "knew itself" and readjusted. Key innovation: the computer could <span class="highlight">"become bored and induce changes"</span> if users weren't changing anything. First conceived "intelligent building."</p>
+    </div>
+    <div class="card copper">
+      <div class="card-title">CHAMBER APPLICATION</div>
+      <p class="highlight">Time-adaptive: co-working by day, social space by evening, shelter by night, logistics interface at 03:00.</p>
+      <p class="highlight">Programmatically uncertain: built for 10–15 years until the corridor's identity solidifies.</p>
+      <p class="highlight">Self-reconfiguring: ridership patterns, shift schedules, and usage sensors drive reconfiguration.</p>
+    </div>
+  </div>
+</div>
+
+<!-- 2.8 HOME CARE -->
+<div class="section">
+  <div class="section-header">
+    <h2>2.8 Home Care — A New Transport Type (4th Circulation)</h2>
+    <div class="line"></div>
+  </div>
+  <div class="cards">
+    <div class="card">
+      <div class="card-title">AVASAD + IMAD = 7,300 FIELD WORKERS</div>
+      <p>AVASAD (Canton Vaud, 5,000 employees) and IMAD (Canton Geneva, 2,300 employees). 90% field-based. IMAD confirms a dedicated EMD de nuit (night team) on route until 01:00.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">NETWORK TRAVERSAL, NOT POINT-TO-POINT</div>
+      <p>Home care workers do not commute to a fixed workplace. They <span class="highlight">traverse</span> — making 6–10 stops per shift across multiple communes. Insulin injections, wound care, palliative care checks.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">CLOSEST ANALOGY: MULTI SYSTEM</div>
+      <p>Neither paternoster (scheduled loop) nor elevator (on-demand point-to-point). It is a <span class="highlight">traveling network traversal</span> — autonomous agents with no fixed route. The chamber must accommodate <span class="highlight">waypoint logic</span>: not origin-destination but pit stop where you resupply and continue.</p>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

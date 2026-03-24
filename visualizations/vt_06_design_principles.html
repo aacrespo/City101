@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VT Research — 6. Four Design Principles</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Instrument+Serif&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #0c0c14; color: #e8e6e1; font-family: 'DM Mono', monospace; min-height: 100vh; padding: 48px 32px; }
+  h1 { font-family: 'Instrument Serif', serif; color: #c9a84c; font-size: 2rem; font-weight: 400; margin-bottom: 4px; text-align: center; }
+  .subtitle { color: #9a9690; font-size: 0.8rem; text-align: center; margin-bottom: 48px; }
+
+  .principle {
+    margin-bottom: 48px;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .principle-header {
+    padding: 24px 28px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .principle-num {
+    font-size: 2rem;
+    font-weight: 500;
+    min-width: 50px;
+  }
+  .principle-title {
+    font-family: 'Instrument Serif', serif;
+    font-size: 1.15rem;
+    font-weight: 400;
+  }
+  .principle-body {
+    padding: 0 28px 28px;
+  }
+  .principle-body p {
+    font-size: 0.78rem;
+    color: #9a9690;
+    line-height: 1.7;
+    margin-bottom: 12px;
+  }
+  .principle-body p:last-child { margin-bottom: 0; }
+  .principle-body span { color: #e8e6e1; }
+
+  /* P1 */
+  .p1 .principle-header { background: rgba(196,93,74,0.06); border-bottom: 1px solid rgba(196,93,74,0.15); }
+  .p1 .principle-num { color: #c45d4a; }
+  .p1 .principle-title { color: #c45d4a; }
+
+  /* P2 */
+  .p2 .principle-header { background: rgba(91,143,168,0.06); border-bottom: 1px solid rgba(91,143,168,0.15); }
+  .p2 .principle-num { color: #5b8fa8; }
+  .p2 .principle-title { color: #5b8fa8; }
+
+  /* P3 */
+  .p3 .principle-header { background: rgba(201,168,76,0.06); border-bottom: 1px solid rgba(201,168,76,0.15); }
+  .p3 .principle-num { color: #c9a84c; }
+  .p3 .principle-title { color: #c9a84c; }
+
+  /* P4 */
+  .p4 .principle-header { background: rgba(184,122,86,0.06); border-bottom: 1px solid rgba(184,122,86,0.15); }
+  .p4 .principle-num { color: #b87a56; }
+  .p4 .principle-title { color: #b87a56; }
+
+  .circ-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin: 16px 0;
+  }
+  .circ-card {
+    background: rgba(91,143,168,0.06);
+    border: 1px solid rgba(91,143,168,0.1);
+    border-radius: 8px;
+    padding: 14px;
+    text-align: center;
+  }
+  .circ-num { color: #5b8fa8; font-size: 1.2rem; font-weight: 500; margin-bottom: 4px; }
+  .circ-name { color: #e8e6e1; font-size: 0.75rem; font-weight: 500; margin-bottom: 6px; }
+  .circ-desc { color: #9a9690; font-size: 0.68rem; line-height: 1.5; }
+
+  .key-stat {
+    display: inline-block;
+    background: rgba(201,168,76,0.08);
+    border: 1px solid rgba(201,168,76,0.15);
+    border-radius: 4px;
+    padding: 3px 8px;
+    color: #c9a84c;
+    font-size: 0.72rem;
+    font-weight: 500;
+    margin: 0 2px;
+  }
+</style>
+</head>
+<body>
+
+<h1>Four Design Principles</h1>
+<p class="subtitle">Core rules for the relay-lock chamber</p>
+
+<!-- P1 -->
+<div class="principle p1">
+  <div class="principle-header">
+    <div class="principle-num">1</div>
+    <div class="principle-title">The chamber manages dwell, not speed</div>
+  </div>
+  <div class="principle-body">
+    <p><span>Like a canal lock, the value is in how well it manages the wait.</span> The equalization time is the architecture. Don't try to make the gap disappear — design the experience of being inside it.</p>
+    <p>The true dead window is <span class="key-stat">01:30–03:30 weekdays</span> — 2 hours, not 4. The remaining hours (00:30–01:30 and 03:30–05:00) have scattered service — <span>188 trips</span> active in the broader window. The chamber's program must account for this: <span>shelter mode</span> during the 2-hour absolute void, <span>dispatch mode</span> during the flanking hours.</p>
+    <p>The weekday/weekend split is critical. Friday and Saturday, Noctambus provides partial coverage (38 trips, 9 routes). <span>Monday through Thursday: nothing.</span> The Nine Hours Hotel and the caravanserai understood this — the architecture of waiting is the architecture of certainty. Even if the wait is long, knowing it will end is the design.</p>
+  </div>
+</div>
+
+<!-- P2 -->
+<div class="principle p2">
+  <div class="principle-header">
+    <div class="principle-num">2</div>
+    <div class="principle-title">Four circulations, one chamber</div>
+  </div>
+  <div class="principle-body">
+    <p>Hospitals use segregated vertical systems (staff, patient, cargo). The full supply chain research reveals a <span>fourth circulation</span> that the v1 paper missed:</p>
+    <div class="circ-grid">
+      <div class="circ-card">
+        <div class="circ-num">1</div>
+        <div class="circ-name">STAFF</div>
+        <div class="circ-desc">A night nurse resting between shifts</div>
+      </div>
+      <div class="circ-card">
+        <div class="circ-num">2</div>
+        <div class="circ-name">PATIENT</div>
+        <div class="circ-desc">An elderly person waiting for morning transport home</div>
+      </div>
+      <div class="circ-card">
+        <div class="circ-num">3</div>
+        <div class="circ-name">CARGO</div>
+        <div class="circ-desc">A pharma pallet being sorted for morning delivery</div>
+      </div>
+      <div class="circ-card">
+        <div class="circ-num">4</div>
+        <div class="circ-name">HOME CARE</div>
+        <div class="circ-desc">An AVASAD worker regrouping between house visits, restocking, checking dispatch</div>
+      </div>
+    </div>
+    <p>These are four different "elevator programs" sharing infrastructure. The chamber keeps them legible and separate, like clean/dirty elevator shafts in a hospital. Home care demands <span>waypoint logic</span>: not a terminus where you arrive and leave, but a pit stop where you resupply and continue.</p>
+  </div>
+</div>
+
+<!-- P3 -->
+<div class="principle p3">
+  <div class="principle-header">
+    <div class="principle-num">3</div>
+    <div class="principle-title">The network is the building</div>
+  </div>
+  <div class="principle-body">
+    <p>Like the caravanserai (<span>56 buildings = 1 UNESCO inscription</span>) and MULTI (<span>multiple cabins = 1 system</span>), the 9 chambers are one horizontal elevator. <span>Remove a node and the chain breaks.</span></p>
+    <p>The Lavaux Fracture (km 72–80) is the void that proves the network thesis. It is the <span>anti-node</span> — a structural gap that no single chamber can fill (UNESCO constraints, zero trains, permanent TOTAL RUPTURE at St-Saphorin). The network routes around it: Vevey (Node 7) to the east and Lausanne (Node 6) to the west bracket the fracture. The gap is not solved — it is acknowledged and managed.</p>
+    <p>The dispatch intelligence is distributed. A nurse at CHUV (Node 6) who needs to reach Morges is served by the <span>CHUV dispatcher coordinating with the Morges shelter (Node 4)</span>. The nodes talk to each other.</p>
+  </div>
+</div>
+
+<!-- P4 -->
+<div class="principle p4">
+  <div class="principle-header">
+    <div class="principle-num">4</div>
+    <div class="principle-title">The bus is the invisible elevator</div>
+  </div>
+  <div class="principle-body">
+    <p>The v1 paper treated the corridor as a rail system. The v2 data shows it is overwhelmingly a bus system — <span class="key-stat">buses outnumber trains 30:1</span> in total trip count (29,135 trips mapped).</p>
+    <p>At Morges (Node 4), the <span>MBC bus hub moves more people locally than the IR trains</span>. At Nyon (Node 3), the NStCM narrow gauge is the lifeline to Genolier. At Vevey (Node 7), VMCV urban buses connect hillside communes. At Rennaz (Node 9), buses are the <span>only</span> public transport.</p>
+    <p>Each chamber must include: <span>bus bay design, bus schedule display, and physical adjacency to bus stops</span> — not just rail platform integration. The bus is the paternoster the corridor already has.</p>
+    <p>When the bus paternoster stops on weekday nights, the chamber must fill its role: on-demand dispatch, shared rides, or simply the assurance that <span>the system hasn't forgotten you</span>.</p>
+  </div>
+</div>
+
+</body>
+</html>

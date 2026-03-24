@@ -4,7 +4,8 @@
       "command": "uv",
       "args": ["run", "experiments/rhino mcp server/rhino_router_mcp.py"],
       "env": {
-        "RHINO_INSTANCES": "{\"main\": 9002}"
+        "RHINO_INSTANCES": "{\"structure\": 9001, \"envelope\": 9002, \"interior\": 9003}",
+        "ARCHIBASE_PATH": "H:/Shared drives/City 101/archibase"
       }
     }
   }

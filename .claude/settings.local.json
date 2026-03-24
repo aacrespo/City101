@@ -74,7 +74,13 @@
       "mcp__rhino_router__rhino_capture_viewport",
       "WebFetch(domain:ibois-epfl.github.io)",
       "WebFetch(domain:www.epfl.ch)",
-      "WebFetch(domain:petrasvestartas.github.io)"
+      "WebFetch(domain:petrasvestartas.github.io)",
+      "Bash(ARCHIBASE_PATH=\"H:/Shared drives/City 101/archibase\" python -c \":*)",
+      "mcp__rhino__rhino_execute_python_code",
+      "mcp__rhino__rhino_capture_viewport",
+      "Bash(python -c \"import sys,json; d=json.loads\\(sys.stdin.read\\(\\)\\); r=json.loads\\(d[''''result'''']\\); print\\(''''object_count:'''', r[''''object_count'''']\\)\")",
+      "mcp__rhino__rhino_get_document_summary",
+      "Bash(python -c \":*)"
     ]
   },
   "enableAllProjectMcpServers": true,

@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VT Research — 1. Taxonomy of Vertical Transport Systems</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Instrument+Serif&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #0c0c14;
+    color: #e8e6e1;
+    font-family: 'DM Mono', monospace;
+    min-height: 100vh;
+    padding: 48px 32px;
+  }
+  h1 {
+    font-family: 'Instrument Serif', serif;
+    color: #c9a84c;
+    font-size: 2rem;
+    font-weight: 400;
+    margin-bottom: 4px;
+    text-align: center;
+  }
+  .subtitle {
+    color: #9a9690;
+    font-size: 0.8rem;
+    text-align: center;
+    margin-bottom: 48px;
+  }
+  .category {
+    margin-bottom: 48px;
+  }
+  .category-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+    padding-bottom: 8px;
+  }
+  .category-header h2 {
+    font-family: 'Instrument Serif', serif;
+    font-weight: 400;
+    font-size: 1.2rem;
+    white-space: nowrap;
+  }
+  .category-header .line {
+    flex: 1;
+    height: 1px;
+  }
+  .cat-gold .category-header h2 { color: #c9a84c; }
+  .cat-gold .category-header .line { background: rgba(201,168,76,0.3); }
+  .cat-teal .category-header h2 { color: #5b8fa8; }
+  .cat-teal .category-header .line { background: rgba(91,143,168,0.3); }
+  .cat-copper .category-header h2 { color: #b87a56; }
+  .cat-copper .category-header .line { background: rgba(184,122,86,0.3); }
+  .cat-green .category-header h2 { color: #5a9e6f; }
+  .cat-green .category-header .line { background: rgba(90,158,111,0.3); }
+  .cat-red .category-header h2 { color: #c45d4a; }
+  .cat-red .category-header .line { background: rgba(196,93,74,0.3); }
+
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 16px;
+  }
+  .card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 8px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .cat-gold .card { border-left: 3px solid #c9a84c; }
+  .cat-teal .card { border-left: 3px solid #5b8fa8; }
+  .cat-copper .card { border-left: 3px solid #b87a56; }
+  .cat-green .card { border-left: 3px solid #5a9e6f; }
+  .cat-red .card { border-left: 3px solid #c45d4a; }
+
+  .card-title {
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+  }
+  .cat-gold .card-title { color: #c9a84c; }
+  .cat-teal .card-title { color: #5b8fa8; }
+  .cat-copper .card-title { color: #b87a56; }
+  .cat-green .card-title { color: #5a9e6f; }
+  .cat-red .card-title { color: #c45d4a; }
+
+  .card-desc {
+    font-size: 0.75rem;
+    color: #9a9690;
+    line-height: 1.6;
+  }
+  .card-lesson {
+    font-size: 0.75rem;
+    color: #e8e6e1;
+    line-height: 1.6;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+  .card-lesson strong {
+    color: #c9a84c;
+    font-weight: 500;
+  }
+  .negative .card-lesson strong { color: #c45d4a; }
+</style>
+</head>
+<body>
+
+<h1>Taxonomy of Vertical Transport Systems</h1>
+<p class="subtitle">13 systems — what each teaches the relay-lock chamber</p>
+
+<!-- SEALED BOX -->
+<div class="category cat-gold">
+  <div class="category-header">
+    <h2>Sealed Box Systems</h2>
+    <div class="line"></div>
+  </div>
+  <div class="cards">
+    <div class="card">
+      <div class="card-title">TRACTION ELEVATOR</div>
+      <div class="card-desc">Motor + sheave + counterweight. Steel ropes. Discrete trips, on-demand. Dwell 3–5s per floor. Industry wait target: 20s.</div>
+      <div class="card-lesson"><strong>Chamber lesson:</strong> Sealed box, sensory disconnection. You enter one world and exit another. The transition is invisible.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">HYDRAULIC ELEVATOR</div>
+      <div class="card-desc">Piston pushes from below. Low-rise only (max ~6 floors). No overhead machine room. Slower, simpler, cheaper.</div>
+      <div class="card-lesson"><strong>Chamber lesson:</strong> Not every connection needs the same infrastructure. Some gaps are small and need simple solutions.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">MACHINE-ROOM-LESS (MRL)</div>
+      <div class="card-desc">Motor embedded in the shaft wall — no dedicated machine room. Saves 10% building footprint.</div>
+      <div class="card-lesson"><strong>Chamber lesson:</strong> The mechanism can be invisible. The chamber IS the machine. No "back of house" needed.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">DOUBLE-DECK ELEVATOR</div>
+      <div class="card-desc">Two cabs stacked vertically, serving odd/even floors simultaneously. Passengers pre-sorted by floor parity in the lobby.</div>
+      <div class="card-lesson"><strong>Chamber lesson:</strong> One shaft, two programs. Parallel processing of different user types in the same infrastructure. IC + S-Bahn = double-deck corridor.</div>
+    </div>
+  </div>
+</div>
+
+<!-- INTELLIGENT DISPATCH -->
+<div class="category cat-teal">
+  <div class="category-header">
+    <h2>Intelligent Dispatch</h2>
+    <div class="line"></div>
+  </div>
+  <div class="cards">
+    <div class="card">
+      <div class="card-title">DESTINATION DISPATCH</div>
+      <div class="card-desc">Schindler PORT (2009). Passengers select destination BEFORE entering. System groups by destination, assigns a specific car. No buttons inside. Evolved from Miconic 10 (1992).</div>
+      <div class="card-lesson"><strong>Chamber lesson:</strong> Pre-sorting changes the lobby from anxious to certain. The intelligence is in the dispatch, not the cab. Converts anxiety into scheduled certainty.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">MULTI (ThyssenKrupp)</div>
+      <div class="card-desc">Rope-free, linear induction motor. Multiple cabins circulate in loops — up one shaft, across horizontally, down another. Each cabin autonomous. Prototype in Rottweil since 2017.</div>
+      <div class="card-lesson"><strong>Chamber lesson:</strong> The building becomes a network, not a stack. Cabins are autonomous agents. Increases usable area 25–30%. Eliminates single-path constraints.</div>
+    </div>
+  </div>
+</div>
+
+<!-- CONTINUOUS FLOW -->
+<div class="category cat-copper">
+  <div class="category-header">
+    <h2>Continuous Flow</h2>
+    <div class="line"></div>
+  </div>
+  <div class="cards">
+    <div class="card">
+      <div class="card-title">PATERNOSTER</div>
+      <div class="card-desc">Continuous chain of open compartments in a vertical loop. Never stops. User must jump on in sync with the machine. Invented 1866 (Peter Ellis).</div>
+      <div class="card-lesson"><strong>Chamber lesson:</strong> Continuous flow vs. discrete trips — two fundamentally different philosophies. The user synchronizes with the machine, not the other way around. Bus = corridor's paternoster.</div>
+    </div>
+    <div class="card negative">
+      <div class="card-title">MOVING WALKWAY / TRAVELATOR</div>
+      <div class="card-desc">Horizontal belt or pallet system. Speed assist only. No enclosure, no threshold moment.</div>
+      <div class="card-lesson"><strong>NEGATIVE example:</strong> Speed assist alone doesn't create a chamber experience. The chamber needs enclosure, transition, threshold.</div>
+    </div>
+  </div>
+</div>
+
+<!-- GRADIENT -->
+<div class="category cat-green">
+  <div class="category-header">
+    <h2>Gradient Systems</h2>
+    <div class="line"></div>
+  </div>
+  <div class="cards">
+    <div class="card">
+      <div class="card-title">FUNICULAR</div>
+      <div class="card-desc">Two cars on a single track, counterbalanced by cable. One goes up as the other comes down. Fixed route, fixed gradient.</div>
+      <div class="card-lesson"><strong>Chamber lesson:</strong> The connection creates twin settlements. Valley town + hilltop town become functionally interdependent. When it stops at night, the hilltop is severed.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">CABLE CAR / GONDOLA</div>
+      <div class="card-desc">Aerial transit over terrain that resists surface infrastructure. Cabins as mobile micro-rooms. 30,000 pax/hr in La Paz.</div>
+      <div class="card-lesson"><strong>Chamber lesson:</strong> When the ground doesn't cooperate, you leave it. Each cabin is a miniature chamber in motion.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">INCLINED ELEVATOR</div>
+      <div class="card-desc">Oblique movement — neither purely vertical nor horizontal. Follows terrain.</div>
+      <div class="card-lesson"><strong>Chamber lesson:</strong> The real-world gap is rarely purely one axis. Nyon→Genolier is an inclined elevator problem.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">RACK RAILWAY</div>
+      <div class="card-desc">Toothed rail engages a cogwheel for steep grades (up to 48%). Three tooth systems (Riggenbach, Abt, Strub) for different gradients.</div>
+      <div class="card-lesson"><strong>Chamber lesson:</strong> The infrastructure must match the gradient. Different gaps need different teeth.</div>
+    </div>
+  </div>
+</div>
+
+<!-- THRESHOLD -->
+<div class="category cat-red">
+  <div class="category-header">
+    <h2>Threshold System</h2>
+    <div class="line"></div>
+  </div>
+  <div class="cards">
+    <div class="card">
+      <div class="card-title">SHIP LOCK / CANAL LOCK</div>
+      <div class="card-desc">Chamber fills/empties to equalize water levels. Vessel enters, gates close, water level changes, gates open on the other side. 5 stages: entry → sealing → equalization → level-matching → exit.</div>
+      <div class="card-lesson"><strong>Chamber lesson:</strong> The occupant is stationary; the SPACE transitions around them. Gates enforce directionality. The dwell time IS the mechanism.</div>
+    </div>
+  </div>
+</div>
+
+<!-- SWISS PRECEDENTS -->
+<div class="category cat-gold">
+  <div class="category-header">
+    <h2>Swiss Vertical Transport Precedents</h2>
+    <div class="line"></div>
+  </div>
+  <div class="cards">
+    <div class="card">
+      <div class="card-title">LAUSANNE M2</div>
+      <div class="card-desc">Ouchy (373m) → Épalinges (711m). World's steepest metro. 338m rise in 6km. 12% max gradient. Fully automated.</div>
+      <div class="card-lesson"><strong>Teaches:</strong> A short steep connection can unify a vertically stratified city.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">FRIBOURG FUNICULAR</div>
+      <div class="card-desc">Running since 1899. Powered by wastewater — no motor. 2,700 litres fill a tank at top; weight difference drives the system.</div>
+      <div class="card-lesson"><strong>Teaches:</strong> An economic necessity that became heritage. Light, gravity-driven intervention.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">BERN MARZILI</div>
+      <div class="card-desc">105m of track, 1M pax/year, since 1885. Connects Aare river leisure zone to Bundeshaus institutional zone.</div>
+      <div class="card-lesson"><strong>Teaches:</strong> A 105-meter "elevator" between two completely different urban programs.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">GLION-ROCHERS-DE-NAYE</div>
+      <div class="card-desc">Montreux → Glion → summit. Funicular stops at night.</div>
+      <div class="card-lesson"><strong>Teaches:</strong> Directly relevant — this IS Node 8. Creates the mountain↔lake split that defines the Montreux health ecosystem.</div>
+    </div>
+  </div>
+</div>
+
+<!-- HOSPITAL -->
+<div class="category cat-teal">
+  <div class="category-header">
+    <h2>Hospital Vertical Transport — 3 Segregated Systems</h2>
+    <div class="line"></div>
+  </div>
+  <div class="cards">
+    <div class="card">
+      <div class="card-title">1. STAFF CIRCULATION</div>
+      <div class="card-desc">Standard elevators, card-access restricted, shift-change peaks.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">2. PATIENT / BED TRANSPORT</div>
+      <div class="card-desc">Oversized cabs (2.4m deep minimum), slow speed, smooth acceleration, priority override for emergencies (one button clears all other calls).</div>
+    </div>
+    <div class="card">
+      <div class="card-title">3. LOGISTICS</div>
+      <div class="card-desc">Clean supply goes up one shaft, dirty/waste goes down another. AGVs handle 300–2,000 carts/day. Pneumatic tubes at 7.6 m/s for lab samples, blood, pharmaceuticals.</div>
+    </div>
+    <div class="card">
+      <div class="card-title" style="color: #c9a84c;">KEY PRINCIPLE</div>
+      <div class="card-lesson">These three circulations share a building but NEVER mix. Clean/dirty, urgent/scheduled, staff/patient — each has its own path. The healthcare corridor has the same three systems + a <strong>fourth circulation</strong>: home care workers who traverse the corridor in network patterns.</div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

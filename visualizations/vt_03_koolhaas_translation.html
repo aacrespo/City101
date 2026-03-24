@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VT Research — 3. Koolhaas Frame + Translation</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Instrument+Serif&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #0c0c14; color: #e8e6e1; font-family: 'DM Mono', monospace; min-height: 100vh; padding: 48px 32px; }
+  h1 { font-family: 'Instrument Serif', serif; color: #c9a84c; font-size: 2rem; font-weight: 400; margin-bottom: 4px; text-align: center; }
+  .subtitle { color: #9a9690; font-size: 0.8rem; text-align: center; margin-bottom: 48px; }
+  .section { margin-bottom: 48px; }
+  .section-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+  .section-header h2 { font-family: 'Instrument Serif', serif; font-weight: 400; font-size: 1.2rem; white-space: nowrap; color: #c9a84c; }
+  .section-header .line { flex: 1; height: 1px; background: rgba(201,168,76,0.3); }
+
+  .quote-block {
+    background: rgba(201,168,76,0.06);
+    border-left: 3px solid #c9a84c;
+    border-radius: 0 8px 8px 0;
+    padding: 24px 28px;
+    margin-bottom: 16px;
+  }
+  .quote-block .source { color: #c9a84c; font-size: 0.8rem; font-weight: 500; margin-bottom: 8px; }
+  .quote-block p { color: #e8e6e1; font-size: 0.78rem; line-height: 1.7; font-style: italic; }
+
+  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 16px; }
+  .card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 8px; padding: 20px;
+  }
+  .card-title { font-size: 0.8rem; font-weight: 500; color: #c9a84c; letter-spacing: 0.05em; margin-bottom: 10px; }
+  .card p { font-size: 0.75rem; color: #9a9690; line-height: 1.6; margin-bottom: 8px; }
+  .card p:last-child { margin-bottom: 0; }
+  .hl { color: #e8e6e1; }
+
+  /* Inversion table */
+  .inv-table { width: 100%; border-collapse: collapse; margin-bottom: 16px; }
+  .inv-table th, .inv-table td {
+    padding: 16px 20px;
+    text-align: left;
+    font-size: 0.75rem;
+    line-height: 1.6;
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+  .inv-table th {
+    background: rgba(201,168,76,0.08);
+    color: #c9a84c;
+    font-weight: 500;
+    font-size: 0.78rem;
+  }
+  .inv-table td { color: #9a9690; background: rgba(255,255,255,0.02); }
+  .inv-table td span { color: #e8e6e1; }
+  .inv-table .era { color: #c9a84c; font-weight: 500; white-space: nowrap; }
+
+  /* Translation pairs */
+  .trans-grid {
+    display: grid;
+    grid-template-columns: 1fr 40px 1fr;
+    gap: 8px 0;
+    align-items: center;
+  }
+  .trans-left, .trans-right {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 0.72rem;
+    line-height: 1.5;
+  }
+  .trans-left { color: #9a9690; text-align: right; border-right: 2px solid #5b8fa8; }
+  .trans-right { color: #e8e6e1; border-left: 2px solid #c9a84c; }
+  .trans-arrow { text-align: center; color: #c9a84c; font-size: 1rem; }
+  .trans-label-left { color: #5b8fa8; font-size: 0.7rem; font-weight: 500; }
+  .trans-label-right { color: #c9a84c; font-size: 0.7rem; font-weight: 500; }
+
+  .conclusion {
+    background: rgba(196,93,74,0.08);
+    border: 1px solid rgba(196,93,74,0.2);
+    border-radius: 8px; padding: 24px;
+    text-align: center; margin-top: 24px;
+  }
+  .conclusion p { color: #e8e6e1; font-size: 0.85rem; line-height: 1.7; }
+  .conclusion strong { color: #c9a84c; }
+</style>
+</head>
+<body>
+
+<h1>The Koolhaas Frame</h1>
+<p class="subtitle">Elevator as anti-architecture → Train as anti-urban — and the social hierarchy inversion</p>
+
+<!-- KOOLHAAS THEORY -->
+<div class="section">
+  <div class="section-header">
+    <h2>Koolhaas on the Elevator</h2>
+    <div class="line"></div>
+  </div>
+  <div class="quote-block">
+    <div class="source">Delirious New York (1978)</div>
+    <p>The elevator, with steel frame + electricity + air conditioning, created "another species of architecture." The 1909 Theorem: once the elevator meets the steel frame, "any given site can now be multiplied ad infinitum." Each floor becomes independent.</p>
+  </div>
+  <div class="quote-block">
+    <div class="source">S,M,L,XL (1995) — "Bigness"</div>
+    <p>"The elevator — with its potential to establish mechanical rather than architectural connections — and its family of related inventions render null and void the classical repertoire of architecture. Issues of composition, scale, proportion, and detail are now moot."</p>
+  </div>
+  <div class="quote-block">
+    <div class="source">Downtown Athletic Club</div>
+    <p>Each level describes a different "performance" — 7th floor = golf course, 9th = boxing + oyster bar, 10th = Turkish bath, 12th = swimming pool. The elevator enables layering of wildly different programs that would be impossible if connected by stairs or ramps.</p>
+  </div>
+</div>
+
+<!-- TRANSLATION -->
+<div class="section">
+  <div class="section-header">
+    <h2>Translation: Vertical → Horizontal</h2>
+    <div class="line"></div>
+  </div>
+  <div class="cards">
+    <div class="card" style="border-left: 3px solid #5b8fa8;">
+      <div class="card-title" style="color: #5b8fa8;">THE ELEVATOR IS ANTI-ARCHITECTURE</div>
+      <p class="hl">Changes the relationship of proportionality — a small elevator enables radically different usage per floor, beyond what architectural proportions consider realistic.</p>
+    </div>
+    <div class="card" style="border-left: 3px solid #c9a84c;">
+      <div class="card-title">THE TRAIN IS ANTI-URBAN</div>
+      <p class="hl">Creates mechanical connections between communes, making each station-commune independent. The 49 stations are 49 "floors" stacked horizontally, connected only by the common data of rail, electricity, and schedule.</p>
+    </div>
+    <div class="card" style="border-left: 3px solid #b87a56;">
+      <div class="card-title" style="color: #b87a56;">PROGRAMMATIC DISCONTINUITY</div>
+      <p class="hl">Like the Downtown Athletic Club: the 9 lock-chambers should embrace programmatic discontinuity. Lancy-Pont-Rouge (border equalization) has no reason to resemble Montreux-Glion (altitude medicine). They share DNA (lock sequence, threshold logic, dispatch intelligence) but their programs are as different as a golf course and a Turkish bath.</p>
+    </div>
+  </div>
+</div>
+
+<!-- INVERSION TABLE -->
+<div class="section">
+  <div class="section-header">
+    <h2>Social Hierarchy Inversion</h2>
+    <div class="line"></div>
+  </div>
+  <table class="inv-table">
+    <thead>
+      <tr>
+        <th>Era</th>
+        <th>Vertical (building)</th>
+        <th>Horizontal (corridor)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="era">Before the technology</td>
+        <td>Wealthy live low (easy access). Poor live high (walk-up garrets).</td>
+        <td>Proximity to Geneva/Lausanne = premium. Distance = friction.</td>
+      </tr>
+      <tr>
+        <td class="era">After the technology</td>
+        <td><span>Elevator inverts:</span> penthouse = premium. Height = status.</td>
+        <td><span>GA inverts:</span> Lavaux/Montreux = desirable. The whole corridor is "one floor."</td>
+      </tr>
+      <tr>
+        <td class="era">When the technology stops</td>
+        <td><span>Power outage:</span> upper floors are trapped. Hierarchy re-inverts.</td>
+        <td><span>01:30–03:30 dead window:</span> distance = disadvantage again. The inversion fractures — but only on weekdays. Friday/Saturday, Noctambus provides partial coverage.</td>
+      </tr>
+      <tr>
+        <td class="era">The border dimension</td>
+        <td>N/A — buildings don't cross borders.</td>
+        <td><span>7,200 frontalier healthcare workers</span> exist in permanent partial inversion. Swiss wages, French transit. At 02:00, a French nurse leaving HUG faces a double inversion: no Swiss transit AND no French transit. <span>The border is an elevator shaft with no cab.</span></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- KEY TRANSLATIONS -->
+<div class="section">
+  <div class="section-header">
+    <h2>Key Translations — Vertical → Horizontal</h2>
+    <div class="line"></div>
+  </div>
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 0.72rem;">
+    <div style="text-align: right; color: #5b8fa8; font-weight: 500; padding: 8px 0;">VERTICAL</div>
+    <div style="color: #c9a84c; font-weight: 500; padding: 8px 0;">HORIZONTAL</div>
+
+    <div class="trans-left">Elevator shaft</div><div class="trans-right">Rail line (101 km)</div>
+    <div class="trans-left">Floor / landing</div><div class="trans-right">Station-commune</div>
+    <div class="trans-left">Penthouse (premium top)</div><div class="trans-right">Lavaux / Montreux (scenic, desirable with GA)</div>
+    <div class="trans-left">Basement / service floor</div><div class="trans-right">Crissier-Bussigny (invisible logistics)</div>
+    <div class="trans-left">Elevator cab</div><div class="trans-right">Train car (IC = luxury; S-Bahn = utility)</div>
+    <div class="trans-left">Sky lobby (transfer floor)</div><div class="trans-right">Lausanne / Geneva / Vevey (redistribution hubs)</div>
+    <div class="trans-left">Destination dispatch</div><div class="trans-right">Chamber dispatch during dead window</div>
+    <div class="trans-left">Paternoster (continuous loop)</div><div class="trans-right">High-frequency bus/tram (show up and go)</div>
+    <div class="trans-left">Counterweight</div><div class="trans-right">Return trip — for every nurse going home, a fresh shift arrives</div>
+    <div class="trans-left">Emergency override</div><div class="trans-right">Priority transport for medical emergencies</div>
+    <div class="trans-left">Clean/dirty separation</div><div class="trans-right">Staff / patient / cargo routing in the chamber</div>
+    <div class="trans-left">Double-deck (two cabs, one shaft)</div><div class="trans-right">Two corridors on same tracks (IC + S-Bahn)</div>
+    <div class="trans-left">Funicular twin settlement</div><div class="trans-right">Valley + hilltop (Nyon+Genolier, Montreux+Glion)</div>
+    <div class="trans-left">Lock equalization</div><div class="trans-right">Dwell time — the wait that enables connection</div>
+    <div class="trans-left">Lock gates</div><div class="trans-right">Operating hours — gates that open/close the corridor</div>
+    <div class="trans-left">Panama water-saving basins</div><div class="trans-right">Stepped equalization — intermediate states</div>
+    <div class="trans-left">Airlock asymmetry</div><div class="trans-right">Fast entry, slow exit (wait for next mode)</div>
+    <div class="trans-left">Narthex</div><div class="trans-right">Professional → personal preparation space</div>
+    <div class="trans-left">Fun Palace adaptivity</div><div class="trans-right">Chamber reconfigures: day ≠ evening ≠ night ≠ 03:00</div>
+    <div class="trans-left">Caravanserai network</div><div class="trans-right">9 chambers as one inscription — the system, not the parts</div>
+    <div class="trans-left">Home care circulation</div><div class="trans-right">MULTI-style network traversal — autonomous agents</div>
+    <div class="trans-left">Frontalier crossing</div><div class="trans-right">Cross-shaft transfer — cab crosses between countries</div>
+  </div>
+</div>
+
+<div class="conclusion">
+  <p><strong>The chamber is the architecture that keeps the inversion working 24 hours, 7 days.</strong><br>It is the emergency generator for the horizontal elevator.</p>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VT Research — 4. The Corridor Breaks</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Instrument+Serif&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #0c0c14; color: #e8e6e1; font-family: 'DM Mono', monospace; min-height: 100vh; padding: 48px 32px; }
+  h1 { font-family: 'Instrument Serif', serif; color: #c9a84c; font-size: 2rem; font-weight: 400; margin-bottom: 4px; text-align: center; }
+  .subtitle { color: #9a9690; font-size: 0.8rem; text-align: center; margin-bottom: 48px; }
+  .section { margin-bottom: 48px; }
+  .section-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+  .section-header h2 { font-family: 'Instrument Serif', serif; font-weight: 400; font-size: 1.2rem; white-space: nowrap; color: #c9a84c; }
+  .section-header .line { flex: 1; height: 1px; background: rgba(201,168,76,0.3); }
+
+  /* Dimensions row */
+  .dim-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+  .dim-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-top: 3px solid #5b8fa8;
+    border-radius: 8px; padding: 16px; text-align: center;
+  }
+  .dim-name { color: #5b8fa8; font-size: 0.78rem; font-weight: 500; margin-bottom: 8px; }
+  .dim-desc { color: #9a9690; font-size: 0.7rem; line-height: 1.5; }
+
+  /* Classification bar */
+  .class-bar { display: flex; gap: 0; border-radius: 8px; overflow: hidden; margin-bottom: 8px; height: 48px; }
+  .class-seg { display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 500; text-align: center; line-height: 1.3; }
+  .class-legend { display: flex; gap: 16px; flex-wrap: wrap; }
+  .class-item { font-size: 0.72rem; line-height: 1.6; color: #9a9690; }
+  .class-item strong { font-weight: 500; }
+
+  /* Gap cards */
+  .gap-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .gap-card {
+    background: rgba(196,93,74,0.06);
+    border: 1px solid rgba(196,93,74,0.15);
+    border-radius: 8px; padding: 20px;
+  }
+  .gap-name { color: #c45d4a; font-size: 0.85rem; font-weight: 500; margin-bottom: 4px; }
+  .gap-dist { color: #e8e6e1; font-size: 1.4rem; font-weight: 500; margin-bottom: 8px; }
+  .gap-detail { color: #9a9690; font-size: 0.72rem; line-height: 1.6; }
+  .gap-detail span { color: #e8e6e1; }
+
+  /* HC layers */
+  .hc-layers { display: grid; grid-template-columns: 1fr; gap: 12px; }
+  .hc-layer {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 8px; padding: 20px;
+    display: grid; grid-template-columns: 200px 1fr; gap: 20px; align-items: start;
+  }
+  .hc-label { font-weight: 500; font-size: 0.8rem; }
+  .hc-content { font-size: 0.75rem; color: #9a9690; line-height: 1.7; }
+  .hc-content span { color: #e8e6e1; }
+
+  /* Bus blind spot */
+  table.bus { width: 100%; border-collapse: collapse; }
+  table.bus th, table.bus td { padding: 12px 16px; text-align: left; font-size: 0.72rem; border: 1px solid rgba(255,255,255,0.06); }
+  table.bus th { background: rgba(184,122,86,0.08); color: #b87a56; font-weight: 500; }
+  table.bus td { color: #9a9690; }
+  table.bus td span { color: #e8e6e1; }
+  table.bus td.collapse { color: #c45d4a; }
+</style>
+</head>
+<body>
+
+<h1>The Corridor Breaks</h1>
+<p class="subtitle">49 stations scored across 5 dimensions — 78% of the corridor is broken</p>
+
+<!-- 5 DIMENSIONS -->
+<div class="section">
+  <div class="section-header">
+    <h2>5 Break Dimensions</h2>
+    <div class="line"></div>
+  </div>
+  <div class="dim-row">
+    <div class="dim-card">
+      <div class="dim-name">TRANSIT</div>
+      <div class="dim-desc">Trains/hr below threshold<br>Wait &gt;15 min<br>Severity 0–3</div>
+    </div>
+    <div class="dim-card">
+      <div class="dim-name">WORKSPACE</div>
+      <div class="dim-desc">No coworking/library<br>within walking distance<br>Severity 0–3</div>
+    </div>
+    <div class="dim-card">
+      <div class="dim-name">CONNECTIVITY</div>
+      <div class="dim-desc">No WiFi within<br>walking distance<br>Severity 0–3</div>
+    </div>
+    <div class="dim-card">
+      <div class="dim-name">AMENITY VOID</div>
+      <div class="dim-desc">Zero workspace AND<br>zero WiFi<br>Boolean</div>
+    </div>
+    <div class="dim-card">
+      <div class="dim-name">MOBILITY</div>
+      <div class="dim-desc">No shared mobility<br>(bikes/scooters)<br>Boolean</div>
+    </div>
+  </div>
+</div>
+
+<!-- CLASSIFICATION -->
+<div class="section">
+  <div class="section-header">
+    <h2>Station Classification</h2>
+    <div class="line"></div>
+  </div>
+  <div class="class-bar">
+    <div class="class-seg" style="flex: 3; background: #c45d4a; color: #0c0c14;">3</div>
+    <div class="class-seg" style="flex: 35; background: rgba(196,93,74,0.4); color: #e8e6e1;">35</div>
+    <div class="class-seg" style="flex: 5; background: rgba(201,168,76,0.3); color: #e8e6e1;">5</div>
+    <div class="class-seg" style="flex: 3; background: rgba(90,158,111,0.3); color: #e8e6e1;">3</div>
+    <div class="class-seg" style="flex: 11; background: #5a9e6f; color: #0c0c14;">11</div>
+  </div>
+  <div class="class-legend">
+    <div class="class-item"><strong style="color: #c45d4a;">TOTAL RUPTURE (3):</strong> St-Saphorin (0 trains, WCI 0.0003), Denges-Echandens, Perroy</div>
+    <div class="class-item"><strong style="color: rgba(196,93,74,0.8);">MAJOR (35):</strong> Most infrastructure missing</div>
+    <div class="class-item"><strong style="color: #c9a84c;">MODERATE (5):</strong> Mixed — e.g. Vernier-Blandonnet (84 tr/hr but no workspace)</div>
+    <div class="class-item"><strong style="color: rgba(90,158,111,0.8);">MINOR (3):</strong> Coppet, Versoix, Rolle</div>
+    <div class="class-item"><strong style="color: #5a9e6f;">CONTINUOUS (11):</strong> Geneva, Lausanne, Vevey, Morges, Montreux, Nyon, Gland, Lausanne-Flon, Villeneuve, Genève-Sécheron, La Tour-de-Peilz</div>
+  </div>
+</div>
+
+<!-- 3 GAPS -->
+<div class="section">
+  <div class="section-header">
+    <h2>3 Permanent Geographic Gaps</h2>
+    <div class="line"></div>
+  </div>
+  <div class="gap-row">
+    <div class="gap-card">
+      <div class="gap-name">NYON → GLAND</div>
+      <div class="gap-dist">19.3 km</div>
+      <div class="gap-detail">Worst WCI: <span>0.014</span> (Founex)<br>Start of the <span>23 km no-ER zone</span> (Nyon to Morges)</div>
+    </div>
+    <div class="gap-card">
+      <div class="gap-name">GLAND → MORGES</div>
+      <div class="gap-dist">20 km</div>
+      <div class="gap-detail">Worst WCI: <span>0.011</span> (Perroy)<br>La Côte's blind spot — <span>51,800 scattered residents</span></div>
+    </div>
+    <div class="gap-card">
+      <div class="gap-name">LAVAUX FRACTURE</div>
+      <div class="gap-dist">17.5 km</div>
+      <div class="gap-detail">Worst WCI: <span>0.0003</span> (St-Saphorin)<br>UNESCO constraints prevent road expansion<br><span>The fracture is permanent</span> — geologically determined</div>
+    </div>
+  </div>
+</div>
+
+<!-- HEALTHCARE OVERLAY -->
+<div class="section">
+  <div class="section-header">
+    <h2>Healthcare Overlay — 4 Failure Layers</h2>
+    <div class="line"></div>
+  </div>
+  <div class="hc-layers">
+    <div class="hc-layer">
+      <div class="hc-label" style="color: #c45d4a;">LAYER 1<br>Emergency Response</div>
+      <div class="hc-content"><span>23 km with no ER</span> between Nyon (km 25) and Morges (km 48). <span>20 km with no ambulance base</span> in Lavaux (km 63–82). Estimated response time: 20–25 min from either direction. Night crew reductions across the corridor.</div>
+    </div>
+    <div class="hc-layer">
+      <div class="hc-label" style="color: #b87a56;">LAYER 2<br>Staff Access</div>
+      <div class="hc-content"><span>ZERO weekday night public transport</span> for 8,000–10,000 healthcare workers on shift. CHUV alone: 2,500–3,000 per night. HUG: 3,000–4,000 per night (60% of nurses from France). Night taxi costs: Morges–Nyon <span>CHF 55</span>, Lausanne–Vevey <span>CHF 80</span>, Nyon round trip <span>CHF 110</span>.</div>
+    </div>
+    <div class="hc-layer">
+      <div class="hc-label" style="color: #c9a84c;">LAYER 3<br>Supply Chain</div>
+      <div class="hc-content">All 8 supply chains (medication, food, staff, patients, postal, lab samples, waste, emergency) are <span>100% road-dependent</span> during the dead window. Swiss Post "Innight Medica" delivers to 220+ hospital operating theaters by 06:00 — entirely by truck. Emergency blood delivery at 03:00: <span>UNCLEAR</span> (not documented by any hospital).</div>
+    </div>
+    <div class="hc-layer">
+      <div class="hc-label" style="color: #5b8fa8;">LAYER 4<br>Facility Access</div>
+      <div class="hc-content"><span>1 true 24h pharmacy</span> (Pharma24 at HUG, Geneva) for the entire 101 km. Pharmacie 24 in Lausanne closes at midnight despite its name. <span>55 km from Morges to Villeneuve: ZERO pharmacy access overnight.</span> Guard pharmacy on-call: CHF 17–50 surcharge, phone-based.</div>
+    </div>
+  </div>
+</div>
+
+<!-- BUS BLIND SPOT -->
+<div class="section">
+  <div class="section-header">
+    <h2>The Bus Blind Spot</h2>
+    <div class="line"></div>
+  </div>
+  <table class="bus">
+    <thead>
+      <tr>
+        <th>Station</th>
+        <th>Daytime modes</th>
+        <th>Daytime dep/2hr</th>
+        <th>Night modes</th>
+        <th>Night dep/2hr</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span>Vernier-Blandonnet</span></td>
+        <td>4 (rail, tram, bus, Léman Express)</td>
+        <td><span>168</span></td>
+        <td class="collapse">~1 (last rail)</td>
+        <td class="collapse">~2–3</td>
+      </tr>
+      <tr>
+        <td><span>Lausanne</span></td>
+        <td>8 (rail, metro, bus, boat, funicular...)</td>
+        <td><span>57</span></td>
+        <td class="collapse">~1 (last rail)</td>
+        <td class="collapse">~4–5</td>
+      </tr>
+      <tr>
+        <td><span>Morges</span></td>
+        <td>5 (rail, bus, boat, shared bikes)</td>
+        <td><span>32</span></td>
+        <td class="collapse">~1 (last rail)</td>
+        <td class="collapse">~3–4</td>
+      </tr>
+      <tr>
+        <td><span>Nyon</span></td>
+        <td>6 (rail, bus, NStCM, boat, shared bikes)</td>
+        <td><span>29</span></td>
+        <td class="collapse">~1 (last rail)</td>
+        <td class="collapse">~2–3</td>
+      </tr>
+    </tbody>
+  </table>
+  <div style="margin-top: 12px; font-size: 0.75rem; color: #9a9690; line-height: 1.6;">
+    IC trains collapse 44% from peak to late night (128 → 72 departures). The "workable corridor" contracts to <span style="color: #e8e6e1;">13 stations by 23:00 — then zero at 01:30.</span>
+  </div>
+</div>
+
+</body>
+</html>

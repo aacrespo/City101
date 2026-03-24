@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VT Research — 5. The 9 Nodes</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Instrument+Serif&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #0c0c14; color: #e8e6e1; font-family: 'DM Mono', monospace; min-height: 100vh; padding: 48px 32px; }
+  h1 { font-family: 'Instrument Serif', serif; color: #c9a84c; font-size: 2rem; font-weight: 400; margin-bottom: 4px; text-align: center; }
+  .subtitle { color: #9a9690; font-size: 0.8rem; text-align: center; margin-bottom: 48px; }
+
+  /* Corridor line */
+  .corridor {
+    position: relative;
+    padding: 0 40px;
+    margin-bottom: 48px;
+  }
+  .corridor-line {
+    position: absolute;
+    top: 20px;
+    left: 40px;
+    right: 40px;
+    height: 3px;
+    background: linear-gradient(to right, #c9a84c, #5b8fa8, #b87a56);
+    border-radius: 2px;
+  }
+  .corridor-dots {
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    z-index: 1;
+  }
+  .dot {
+    width: 40px;
+    text-align: center;
+  }
+  .dot-circle {
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    border: 2px solid #c9a84c;
+    background: #0c0c14;
+    margin: 13px auto 6px;
+  }
+  .dot.critical .dot-circle { background: #c9a84c; }
+  .dot-label { font-size: 0.6rem; color: #9a9690; line-height: 1.3; }
+  .dot-km { font-size: 0.55rem; color: #c9a84c; }
+
+  /* Node cards */
+  .nodes { display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 20px; }
+  .node {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .node-header {
+    padding: 16px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .node.critical .node-header { background: rgba(201,168,76,0.08); border-bottom: 1px solid rgba(201,168,76,0.15); }
+  .node.high .node-header { background: rgba(91,143,168,0.06); border-bottom: 1px solid rgba(91,143,168,0.1); }
+  .node-num { font-size: 1.6rem; font-weight: 500; color: #c9a84c; }
+  .node.high .node-num { color: #5b8fa8; }
+  .node-name { font-size: 0.85rem; font-weight: 500; color: #e8e6e1; }
+  .node-meta { text-align: right; }
+  .node-km { font-size: 0.7rem; color: #9a9690; }
+  .node-score { font-size: 0.75rem; font-weight: 500; }
+  .node.critical .node-score { color: #c9a84c; }
+  .node.high .node-score { color: #5b8fa8; }
+
+  .node-body { padding: 16px 20px; }
+  .node-row { display: flex; gap: 8px; margin-bottom: 8px; font-size: 0.72rem; line-height: 1.5; }
+  .node-label { color: #9a9690; min-width: 80px; flex-shrink: 0; }
+  .node-value { color: #e8e6e1; }
+  .node-chamber {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    font-size: 0.72rem;
+    color: #9a9690;
+    line-height: 1.6;
+  }
+  .node-chamber span { color: #e8e6e1; }
+</style>
+</head>
+<body>
+
+<h1>The 9 Nodes — Chamber Concepts</h1>
+<p class="subtitle">One distributed machine — remove a node and the chain breaks — 9 chambers across 101 km</p>
+
+<!-- CORRIDOR OVERVIEW -->
+<div class="corridor">
+  <div class="corridor-line"></div>
+  <div class="corridor-dots">
+    <div class="dot critical"><div class="dot-circle"></div><div class="dot-label">LPR</div><div class="dot-km">km 4</div></div>
+    <div class="dot"><div class="dot-circle"></div><div class="dot-label">GNI</div><div class="dot-km">km 8</div></div>
+    <div class="dot"><div class="dot-circle"></div><div class="dot-label">NYO</div><div class="dot-km">km 25</div></div>
+    <div class="dot critical"><div class="dot-circle"></div><div class="dot-label">MOR</div><div class="dot-km">km 48</div></div>
+    <div class="dot critical"><div class="dot-circle"></div><div class="dot-label">CBE</div><div class="dot-km">km 60</div></div>
+    <div class="dot critical"><div class="dot-circle"></div><div class="dot-label">CHUV</div><div class="dot-km">km 65</div></div>
+    <div class="dot"><div class="dot-circle"></div><div class="dot-label">VEV</div><div class="dot-km">km 80</div></div>
+    <div class="dot"><div class="dot-circle"></div><div class="dot-label">MTX</div><div class="dot-km">km 85</div></div>
+    <div class="dot critical"><div class="dot-circle"></div><div class="dot-label">REN</div><div class="dot-km">km 89</div></div>
+  </div>
+</div>
+
+<!-- NODE CARDS -->
+<div class="nodes">
+
+  <div class="node critical">
+    <div class="node-header">
+      <div><div class="node-num">1</div><div class="node-name">Lancy-Pont-Rouge</div></div>
+      <div class="node-meta"><div class="node-km">km 4</div><div class="node-score">Score 3.50 CRITICAL</div></div>
+    </div>
+    <div class="node-body">
+      <div class="node-row"><div class="node-label">Lock type</div><div class="node-value">Border ↔ Corridor</div></div>
+      <div class="node-row"><div class="node-label">Analogy</div><div class="node-value">MULTI cross-shaft transfer</div></div>
+      <div class="node-row"><div class="node-label">Key data</div><div class="node-value">5 modes · 7,200 frontalier HC workers cross daily · 60% HUG nurses from France · Last Léman Express Mon–Thu ~00:30</div></div>
+      <div class="node-chamber"><span>Chamber: Border equalizer.</span> The frontalier nurse finishing at HUG at 01:30 faces a double dead window — no Swiss transit AND no French transit. Dispatch for frontaliers: "3 others heading to Annemasse. Bay 1, departing 01:50."</div>
+    </div>
+  </div>
+
+  <div class="node high">
+    <div class="node-header">
+      <div><div class="node-num">2</div><div class="node-name">Geneva North Industrial Belt</div></div>
+      <div class="node-meta"><div class="node-km">km 8</div><div class="node-score">Score 3.45 HIGH</div></div>
+    </div>
+    <div class="node-body">
+      <div class="node-row"><div class="node-label">Lock type</div><div class="node-value">Cargo ↔ City (Visibility)</div></div>
+      <div class="node-row"><div class="node-label">Analogy</div><div class="node-value">Freight elevator</div></div>
+      <div class="node-row"><div class="node-label">Key data</div><div class="node-value">4,600 night workers · 84 dep/hr (ALL bus/tram, 0 trains) · ZIMEYSA 380+ ha, 500+ companies · 54% car dependency despite strong transit</div></div>
+      <div class="node-chamber"><span>Chamber: Visibility lock</span> — not a transport bridge (transit is strong) but an architectural device that makes the supply chain visible as civic infrastructure. Creates social infrastructure for 4,600 invisible night workers.</div>
+    </div>
+  </div>
+
+  <div class="node high">
+    <div class="node-header">
+      <div><div class="node-num">3</div><div class="node-name">Nyon + Genolier Hilltop</div></div>
+      <div class="node-meta"><div class="node-km">km 25</div><div class="node-score">Score 3.75 HIGH</div></div>
+    </div>
+    <div class="node-body">
+      <div class="node-row"><div class="node-label">Lock type</div><div class="node-value">Valley ↔ Hilltop</div></div>
+      <div class="node-row"><div class="node-label">Analogy</div><div class="node-value">Inclined elevator / funicular</div></div>
+      <div class="node-row"><div class="node-label">Key data</div><div class="node-value">350m elevation difference · NStCM last train ~21:29 to Genolier · 730 night workers · GHOL: heliport, SMUR base · Start of 23 km no-ER gap</div></div>
+      <div class="node-chamber"><span>Chamber: Vertical connector / base camp</span> at the SBB/NStCM interchange. Staff shuttle ascending (Genolier shift change), patient/family transport descending. Emergency dispatch visibility for the 23 km no-ER gap.</div>
+    </div>
+  </div>
+
+  <div class="node critical">
+    <div class="node-header">
+      <div><div class="node-num">4</div><div class="node-name">Morges Hospital Gap</div></div>
+      <div class="node-meta"><div class="node-km">km 48</div><div class="node-score">Score 4.30 CRITICAL</div></div>
+    </div>
+    <div class="node-body">
+      <div class="node-row"><div class="node-label">Lock type</div><div class="node-value">Last train ↔ First train</div></div>
+      <div class="node-row"><div class="node-label">Analogy</div><div class="node-value">Night lobby — the elevator isn't coming</div></div>
+      <div class="node-row"><div class="node-label">Key data</div><div class="node-value">Dead window 01:07–04:01 (3 hrs) · 550 stranded · Hospital rated 3.0★ (worst) · Last ER heading east before 23 km gap · 48 km from only 24h pharmacy</div></div>
+      <div class="node-chamber"><span>Chamber: Temporal lock.</span> Purest expression of lock-as-waiting-space. Nine Hours Hotel model: reception → prologue corridor → sanitary lounge → sleep pod. Pharmaceutical micro-dispensing with video pharmacist consultation.</div>
+    </div>
+  </div>
+
+  <div class="node critical">
+    <div class="node-header">
+      <div><div class="node-num">5</div><div class="node-name">Crissier-Bussigny-Ecublens</div></div>
+      <div class="node-meta"><div class="node-km">km 58–62</div><div class="node-score">Score 3.90 CRITICAL</div></div>
+    </div>
+    <div class="node-body">
+      <div class="node-row"><div class="node-label">Lock type</div><div class="node-value">Invisible ↔ Visible</div></div>
+      <div class="node-row"><div class="node-label">Analogy</div><div class="node-value">Machine room</div></div>
+      <div class="node-row"><div class="node-label">Key data</div><div class="node-value">PLEXUS 4,100 m² (CHUV+HUG warehouse, 58,000 boxes, 3,500 orders/day) · Galexis 100,000 packs/day (single hub for all Romandie) · CHUV CPA 6,800+ meals/day · B. Braun 12M units/yr · 1,680 night workers</div></div>
+      <div class="node-chamber"><span>Chamber: Logistics exchange.</span> The engine room of the corridor's healthcare system. Make the machine room visible — viewing gallery onto sorting, worker amenity space, real-time flow display. All 8 supply chains converge here physically.</div>
+    </div>
+  </div>
+
+  <div class="node critical">
+    <div class="node-header">
+      <div><div class="node-num">6</div><div class="node-name">Lausanne CHUV</div></div>
+      <div class="node-meta"><div class="node-km">km 65</div><div class="node-score">Score 4.55 CRITICAL</div></div>
+    </div>
+    <div class="node-body">
+      <div class="node-row"><div class="node-label">Lock type</div><div class="node-value">Uphill ↔ Downhill</div></div>
+      <div class="node-row"><div class="node-label">Analogy</div><div class="node-value">Sky lobby + destination dispatch</div></div>
+      <div class="node-row"><div class="node-label">Key data</div><div class="node-value">8 modes, Shannon 2.08 (highest) · 2,500–3,000 night workers · Blood bank at Épalinges (M2 stops midnight) · Income-transport paradox: CHF 56k nurses need taxis, CHF 95k doctors walk · 36–49 beds blocked by EMS backlog</div></div>
+      <div class="node-chamber"><span>Chamber: Gradient dispatcher.</span> Like Schindler PORT — reads where you need to go and assigns a mode. Renens nurses → shared shuttle Bay 1. Épalinges blood bank → night shuttle Bay 3. Cery psychiatric → dedicated Bay 4. Eliminates income-transport paradox.</div>
+    </div>
+  </div>
+
+  <div class="node high">
+    <div class="node-header">
+      <div><div class="node-num">7</div><div class="node-name">Vevey Mid-Gap Relay</div></div>
+      <div class="node-meta"><div class="node-km">km 80</div><div class="node-score">Score 3.25 HIGH</div></div>
+    </div>
+    <div class="node-body">
+      <div class="node-row"><div class="node-label">Lock type</div><div class="node-value">Gap ↔ Gap</div></div>
+      <div class="node-row"><div class="node-label">Analogy</div><div class="node-value">Panama water-saving basin</div></div>
+      <div class="node-row"><div class="node-label">Key data</div><div class="node-value">7 modes, Shannon 1.95 · Only working node between Lausanne and Villeneuve · Fondation de Nant psychiatric (Vevey + Montreux) · 20–22% elderly in catchment</div></div>
+      <div class="node-chamber"><span>Chamber: Gap relay</span> — lighter program. Information hub, shared mobility dispatch, psychiatric interface connecting Fondation de Nant facilities. Prevents the eastern corridor from being a 24 km void between CHUV and Rennaz.</div>
+    </div>
+  </div>
+
+  <div class="node high">
+    <div class="node-header">
+      <div><div class="node-num">8</div><div class="node-name">Montreux-Glion Altitude</div></div>
+      <div class="node-meta"><div class="node-km">km 85</div><div class="node-score">Score 3.10 HIGH</div></div>
+    </div>
+    <div class="node-body">
+      <div class="node-row"><div class="node-label">Lock type</div><div class="node-value">Mountain ↔ Lake</div></div>
+      <div class="node-row"><div class="node-label">Analogy</div><div class="node-value">Funicular (literally)</div></div>
+      <div class="node-row"><div class="node-label">Key data</div><div class="node-value">7 modes · Funicular stops at night · Clinique Valmont rehab at 600m+ (59 beds, 4.5★) · 23% elderly (highest east of Geneva) · LBG hospital laundry serves 30+ hospitals</div></div>
+      <div class="node-chamber"><span>Chamber: Altitude lock</span> at funicular base. Light intervention — the mountain provides the mechanism (gravity, gradient), the architecture just makes it usable at night. Manages people AND the linen/sterilization circuit.</div>
+    </div>
+  </div>
+
+  <div class="node critical">
+    <div class="node-header">
+      <div><div class="node-num">9</div><div class="node-name">Rennaz Hospital Island</div></div>
+      <div class="node-meta"><div class="node-km">km 89</div><div class="node-score">Score 3.85 CRITICAL</div></div>
+    </div>
+    <div class="node-body">
+      <div class="node-row"><div class="node-label">Lock type</div><div class="node-value">Rail ↔ Off-rail</div></div>
+      <div class="node-row"><div class="node-label">Analogy</div><div class="node-value">The missing elevator — a floor with no stop</div></div>
+      <div class="node-row"><div class="node-label">Key data</div><div class="node-value">Built 2019, 2.1 km from nearest rail · 190,000 catchment (cross-cantonal Vaud+Valais) · Rated 2.6★ (worst hospital) · Proposed monorail never built · 400 night staff · PHEL robot pharmacy</div></div>
+      <div class="node-chamber"><span>Chamber: Bridge lock</span> — connective tissue. Covered, lit, dispatched path from Villeneuve station to HRC Rennaz. 2.1 km = 25 min walk or 8 min bike. The path itself IS the chamber. Retroactive correction of the 2019 placement mistake.</div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>
