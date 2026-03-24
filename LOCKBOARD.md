@@ -42,5 +42,24 @@ Since: 18 March 2026
 
 ---
 
-## Blocked
-- (nothing currently)
+## Claude — Archibase knowledge pipeline
+
+### Done (2026-03-22)
+- Deplazes + Vittone PDFs extracted → 14 curated markdown files (layer buildups, dimensions)
+- EPFL coursework scanned → INDEX written (50+ files identified)
+- SQLite expanded → 99 rows (sizing rules, insulation, glazing, soil bearing)
+- Vision embedder built → Gemini Embedding 2 via Vertex AI
+- Deplazes (470p) + Vittone (1016p) embedded in ChromaDB (2,480 entries)
+- Training Session 2 complete → 7 exercises, 105 objects, 13 learnings
+- YouTube embedding plan written
+
+### Next session
+- **Migrate ChromaDB → Qdrant**: ChromaDB segfaults on large collections. Move 2,480 existing vision entries to Qdrant (local, free). Zero re-embedding cost if migration works.
+- **Continue embedding**: SIA norms (21 PDFs), Bloomsbury (13 chapters), Dicobat Visuel — blocked by DB migration
+- **YouTube tutorial embedding**: paused until DB stable. Plan + tool ready. Other session has videos downloaded.
+- **Flash vs Pro comparison**: test Gemini Flash quality on construction details (free quota resets daily)
+- **Exercise generation from book pages**: one Gemini call per page → exercise spec + assembly sequence + reference image
+
+### Blocked
+- ChromaDB instability — need DB migration before adding more content
+- Gemini generation models not accessible on Vertex AI ($300 credits) — need to resolve auth or use AI Studio with billing
