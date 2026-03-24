@@ -18,8 +18,17 @@ That document contains EVERYTHING: visual style, character design, house layout,
 all 9 video storyboards, color palette, execution strategy. Study it thoroughly
 before spawning any teammates.
 
+Also read the Blender playbook (animation doctrine — non-negotiable style and process rules):
+- /Users/andreacrespo/CLAUDE/city101/.claude/agents/knowledge/blender-playbook.md
+
+Every teammate prompt must instruct the agent to read this playbook before building.
+
 Also read:
 - /Users/andreacrespo/CLAUDE/city101/CLAUDE.md
+
+**Agent permissions:** Spawn ALL teammates with `mode: "bypassPermissions"` to avoid
+authorization prompts during the overnight build. All actions are local (Blender + filesystem)
+and write only to `output/`.
 
 ---
 
@@ -58,7 +67,8 @@ Before spawning any teammates, verify the MCP pipeline works:
              "output/kitchen_animation/renders/video_02",
              "output/kitchen_animation/renders/video_04",
              "output/kitchen_animation/renders/video_05",
-             "output/kitchen_animation/renders/video_06"]:
+             "output/kitchen_animation/renders/video_06",
+             "output/kitchen_animation/learnings"]:
        os.makedirs(d, exist_ok=True)
    ```
 
@@ -83,6 +93,25 @@ Before spawning any teammates, verify the MCP pipeline works:
 
 4. Clean up: delete the test cube.
 
+5. Test Freestyle rendering on one instance:
+   ```
+   blender_execute_code(target="main", code="""
+   import bpy
+   bpy.ops.mesh.primitive_cube_add(size=1, location=(0,0,0))
+   bpy.context.scene.render.engine = 'BLENDER_EEVEE'
+   bpy.context.scene.render.use_freestyle = True
+   bpy.context.scene.render.resolution_x = 960
+   bpy.context.scene.render.resolution_y = 540
+   bpy.context.scene.render.filepath = "/tmp/freestyle_test_"
+   bpy.context.scene.frame_set(1)
+   bpy.ops.render.render(write_still=True)
+   bpy.ops.object.delete()
+   print("Freestyle render test: SUCCESS")
+   """)
+   ```
+   If Freestyle fails: note in BUILD_LOG.md that all video teammates should
+   disable Freestyle and use Compositor edge-detect or skip outlines entirely.
+
 If ANY of these fail, log the error in BUILD_LOG.md and stop. Do not proceed
 with the overnight build if the MCP pipeline is broken.
 
@@ -101,6 +130,10 @@ Work in Blender instance "main" (target: "main" on every MCP call).
 Read the full spec:
 /Users/andreacrespo/CLAUDE/city101/prompts/[A04_ACTIVE]_kitchen_analogy_animations.md
 Focus on Part 1 (Visual Style) and Part 3 (The Complete House).
+
+Read the Blender playbook for style doctrine:
+/Users/andreacrespo/CLAUDE/city101/.claude/agents/knowledge/blender-playbook.md
+Follow ALL doctrine rules (flat shading, orthographic, Freestyle, palette, naming).
 
 IMPORTANT STYLE RULES:
 - Orthographic camera, 30 degrees, isometric view
@@ -195,6 +228,13 @@ IMPORTANT: If a Blender MCP call fails, try once more. If it fails again,
 log the error, skip that element, continue with the next. Do not get stuck
 on any single object. The house needs to be COMPLETE even if some details
 are missing.
+
+LEARNINGS CAPTURE: As you work, write discoveries, failures, workarounds,
+and techniques that worked to:
+output/kitchen_animation/learnings/house_builder_learnings.md
+Format: numbered entries, one per discovery. Include what you tried,
+what happened, and what worked. Write after each major milestone (room
+complete, collection organized). Don't wait until the end.
 </house-builder-prompt>
 
 ### Teammate B: "Character Builder" → target: second (port 9877)
@@ -206,6 +246,10 @@ Work in Blender instance "second" (target: "second" on every MCP call).
 Read the full spec:
 /Users/andreacrespo/CLAUDE/city101/prompts/[A04_ACTIVE]_kitchen_analogy_animations.md
 Focus on Part 2 (Characters — The Claude Blobs).
+
+Read the Blender playbook for style doctrine:
+/Users/andreacrespo/CLAUDE/city101/.claude/agents/knowledge/blender-playbook.md
+Follow ALL doctrine rules (flat shading, orthographic, Freestyle, palette, naming).
 
 BUILD IN THIS ORDER:
 
@@ -317,6 +361,13 @@ IMPORTANT: If shape keys or actions are tricky via MCP, prioritize having
 the characters LOOK right (correct shapes, colors, eyes) over having
 perfect animation rigs. Simple position keyframes can substitute for
 shape key animations if needed. Do not get stuck.
+
+LEARNINGS CAPTURE: As you work, write discoveries, failures, workarounds,
+and techniques that worked to:
+output/kitchen_animation/learnings/character_builder_learnings.md
+Format: numbered entries, one per discovery. Include what you tried,
+what happened, and what worked. Write after each major milestone (character
+complete, action created). Don't wait until the end.
 </character-builder-prompt>
 
 ### Teammate C (Phase 1): "Exterior & Camera Rigs" → target: third (port 9878)
@@ -328,6 +379,10 @@ Work in Blender instance "third" (target: "third" on every MCP call).
 Read the full spec:
 /Users/andreacrespo/CLAUDE/city101/prompts/[A04_ACTIVE]_kitchen_analogy_animations.md
 Focus on exterior elements and visual style.
+
+Read the Blender playbook for style doctrine:
+/Users/andreacrespo/CLAUDE/city101/.claude/agents/knowledge/blender-playbook.md
+Follow ALL doctrine rules (flat shading, orthographic, Freestyle, palette, naming).
 
 BUILD IN THIS ORDER:
 
@@ -368,6 +423,12 @@ bpy.ops.wm.save_as_mainfile(filepath="/Users/andreacrespo/CLAUDE/city101/output/
 ```
 
 When done, write summary to output/kitchen_animation/assets/exterior_manifest.txt.
+
+LEARNINGS CAPTURE: As you work, write discoveries, failures, workarounds,
+and techniques that worked to:
+output/kitchen_animation/learnings/exterior_builder_learnings.md
+Format: numbered entries, one per discovery. Include what you tried,
+what happened, and what worked. Write after each major milestone.
 </exterior-builder-prompt>
 
 ---
@@ -418,10 +479,15 @@ Spawn video teammates in priority order. Run up to 3 simultaneously
 
 ### Render Strategy (applies to ALL videos)
 
-- **Draft resolution: 960x540** — use this for the overnight run.
+- **Draft resolution: 960x540** — use this for the overnight run. The spec says 1920x1080
+  but overnight uses half-res to maximize videos completed. Full-resolution re-renders
+  happen in the morning review session using the saved .blend files.
 - If all videos complete and there's time, re-render priority videos at 1920x1080.
 - If EEVEE fails, try with Freestyle disabled first. If still failing, try Workbench renderer.
 - Render as PNG sequence (not video file) — this way partial renders are still usable.
+- **Save the animated .blend file AFTER rendering** — the PNG sequence is the deliverable,
+  but the .blend file with keyframes is irreplaceable for re-rendering at full resolution.
+  Save to: `output/kitchen_animation/renders/video_NN/video_NN_animated.blend`
 
 ### Priority Batch 1 (spawn all 3 together):
 
@@ -434,6 +500,8 @@ session starts.
 Read the full spec for visual style and storyboard:
 /Users/andreacrespo/CLAUDE/city101/prompts/[A04_ACTIVE]_kitchen_analogy_animations.md
 → See VIDEO 1 in Part 4.
+
+Read the Blender playbook: /Users/andreacrespo/CLAUDE/city101/.claude/agents/knowledge/blender-playbook.md
 
 Work in Blender instance "main" (target: "main" on every MCP call).
 
@@ -474,6 +542,8 @@ Render the full sequence.
 FALLBACK: If character linking fails, build a simple blob directly in
 this scene (sphere + eyes + spark, Cairn colors). Don't let linking
 issues stop the video.
+
+LEARNINGS: Write to output/kitchen_animation/learnings/video1_learnings.md
 </video1-prompt>
 
 **Teammate E: Video 4 "The Brigade"** → target: second
@@ -484,6 +554,8 @@ You are animating Video 4: "The Brigade de Cuisine" — how agent teams work.
 Read the full spec for visual style and storyboard:
 /Users/andreacrespo/CLAUDE/city101/prompts/[A04_ACTIVE]_kitchen_analogy_animations.md
 → See VIDEO 4 in Part 4.
+
+Read the Blender playbook: /Users/andreacrespo/CLAUDE/city101/.claude/agents/knowledge/blender-playbook.md
 
 Work in Blender instance "second" (target: "second" on every MCP call).
 
@@ -533,6 +605,8 @@ PNG sequence. EEVEE, Freestyle ON (2px lines). If Freestyle causes errors, disab
 
 FALLBACK: If you can't do 4 simultaneous character animations, reduce to
 2 teammates (Analyst + Modeler) and simplify. The concept still reads.
+
+LEARNINGS: Write to output/kitchen_animation/learnings/video4_learnings.md
 </video4-prompt>
 
 **Teammate F: Video 2 "Real vs TV Kitchen"** → target: third
@@ -544,6 +618,8 @@ between Claude Code (CLI) and Claude Desktop.
 Read the full spec:
 /Users/andreacrespo/CLAUDE/city101/prompts/[A04_ACTIVE]_kitchen_analogy_animations.md
 → See VIDEO 2 in Part 4.
+
+Read the Blender playbook: /Users/andreacrespo/CLAUDE/city101/.claude/agents/knowledge/blender-playbook.md
 
 Work in Blender instance "third" (target: "third" on every MCP call).
 
@@ -587,6 +663,8 @@ PNG sequence. EEVEE, Freestyle ON (2px lines). If Freestyle causes errors, disab
 FALLBACK: If the TV-within-scene is too complex, simplify: just show
 Cairn working in full kitchen, then cut to Lumen in a visibly smaller,
 simpler, boxed-in kitchen (like a diorama). The contrast still reads.
+
+LEARNINGS: Write to output/kitchen_animation/learnings/video2_learnings.md
 </video2-prompt>
 
 ---
@@ -601,6 +679,8 @@ You are animating Video 6: "The Pantry Tour" — how archibase works.
 Read the full spec:
 /Users/andreacrespo/CLAUDE/city101/prompts/[A04_ACTIVE]_kitchen_analogy_animations.md
 → See VIDEO 6 in Part 4.
+
+Read the Blender playbook: /Users/andreacrespo/CLAUDE/city101/.claude/agents/knowledge/blender-playbook.md
 
 Work in whichever Blender instance is assigned to you.
 
@@ -623,6 +703,8 @@ TEXT: "Pantry for quick lookups. Library for deep research."
 
 RENDER: Resolution 960x540 (draft). Output: output/kitchen_animation/renders/video_06/
 PNG sequence. EEVEE, Freestyle ON (2px lines). If Freestyle causes errors, disable it.
+
+LEARNINGS: Write to output/kitchen_animation/learnings/video6_learnings.md
 </video6-prompt>
 
 **Teammate H: Video 5 "Opening More Kitchens"** → second available instance
@@ -633,6 +715,8 @@ You are animating Video 5: "Opening More Kitchens" — cloud VM scaling.
 Read the full spec:
 /Users/andreacrespo/CLAUDE/city101/prompts/[A04_ACTIVE]_kitchen_analogy_animations.md
 → See VIDEO 5 in Part 4.
+
+Read the Blender playbook: /Users/andreacrespo/CLAUDE/city101/.claude/agents/knowledge/blender-playbook.md
 
 SETUP: Need the house EXTERIOR + street + 2-3 other buildings.
 Link Cairn, Meridian, Cadence characters.
@@ -656,17 +740,27 @@ TEXT: "Same recipes. Same pantry. Different kitchens. All at once."
 
 RENDER: Resolution 960x540 (draft). Output: output/kitchen_animation/renders/video_05/
 PNG sequence. EEVEE, Freestyle ON (2px lines). If Freestyle causes errors, disable it.
+
+LEARNINGS: Write to output/kitchen_animation/learnings/video5_learnings.md
 </video5-prompt>
 
 ---
 
 ### Priority Batch 3 (if time allows):
 
-Spawn teammates for Videos 3, 7, 8, 9 using the storyboards from the
-main spec file. Same pattern: link house + characters, animate, render.
+Spawn teammates for these videos using storyboards from the spec. Same pattern:
+read playbook, link house + characters, animate, render PNG sequence, save .blend,
+write learnings. Do V3 first (remaining core concept).
 
-These are lower priority. If Batch 1+2 complete and there's time, do V3
-(subagents) next as it's the remaining core concept.
+- **Video 3 "Calling for Backup" (Subagents):** Cairn cooking → spawns translucent
+  mini-Cairn → mini runs to library → info flows back on tether → despawn. ~20s.
+- **Video 7 "The Windows" (MCPs):** Three windows in kitchen wall → Cairn reaches
+  through each (Rhino workshop, Blender studio, Discord comms) → MCP as physical
+  pass-through. ~25s.
+- **Video 8 "The Recipe Collection" (Workflows/Tools):** Close-up on recipe book +
+  knife block + order tickets → workflow execution → git seal + chimney push. ~20s.
+- **Video 9 "From Freezer to Feast" (Data Flow):** Basement freezer → kitchen prep →
+  verify → pantry shelf → used in a dish. Full data pipeline. ~25s.
 
 ---
 
@@ -727,13 +821,47 @@ Format:
 
 ---
 
+## Phase 3: Knowledge Distillation (after all videos complete)
+
+After all video teammates have finished (or been skipped), collect and
+organize the learnings from the build:
+
+1. **Read all per-agent learnings files:**
+   ```
+   output/kitchen_animation/learnings/*.md
+   ```
+
+2. **Distill into topic files** (in .claude/agents/knowledge/):
+   - `learnings-blender-materials.md` — anything about materials, shading, colors
+   - `learnings-blender-animation.md` — keyframes, shape keys, actions, timing
+   - `learnings-blender-rendering.md` — EEVEE, Freestyle, PNG output, resolution
+   - `learnings-blender-mcp.md` — MCP router, code execution, transfer, connections
+
+   Format: numbered entries with bold title, then explanation. Each entry = one
+   concrete technique or discovery.
+
+3. **Update the playbook** (.claude/agents/knowledge/blender-playbook.md):
+   - If any doctrine rule proved wrong, fix it
+   - If a universal principle emerged, add it as a new rule
+   - Add technique notes to the "Review hygiene" area
+
+4. **Update LEARNINGS.md** with Blender-specific discoveries that apply project-wide.
+
+5. **Write distillation summary** to BUILD_LOG.md:
+   - How many raw learnings were captured
+   - How many made it into topic files
+   - Any new doctrine rules added
+
+---
+
 ## Completion
 
-When all priority videos are rendered (or all have been attempted), write
-a final summary to the BUILD_LOG. Include:
+When all priority videos are rendered (or all have been attempted), and
+Phase 3 distillation is done, write a final summary to the BUILD_LOG. Include:
 - What was completed
 - What needs manual touch-up
 - Total render frame count
+- Learnings distilled (count)
 - Any recommendations for morning review
 
 Then stop. Andrea will review in the morning.

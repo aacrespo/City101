@@ -190,6 +190,23 @@ The 7-site network covers: infrastructure (nodes 1, 4 — how goods move), staff
 - **Horizontal elevator** — Huang loves this concept. On-demand rail, autonomous module, repurposed tracks.
 - **Be very specific** (assistants) — not "night workers" but "one nurse, one shift, one 2am walk home"
 
+## Blender MCP / Animation
+
+### Never use render(animation=True) through MCP
+`bpy.ops.render.render(animation=True)` blocks the MCP connection and times out even for 10 frames. The working pattern: loop with `scene.frame_set(f)` + `render(write_still=True)` in batches of 25-40 frames per MCP call. This rendered 4,080+ frames across 6 videos. If a batch times out, Blender continues rendering in background -- check the output directory and continue from the next unrendered frame.
+
+### MCP execute_code calls are stateless
+Each `blender_execute_code` call runs in a fresh Python context. Variables, imports, and helper functions from previous calls do not exist. All helpers must be redefined at the top of every code block. Failed calls leave partial objects with `.001` suffixes in the scene -- always clean up after errors before retrying.
+
+### Asset append + root empty is the character workflow
+Append character collections from a shared .blend file via `bpy.ops.wm.append()`. Create a `CharName_Root` empty as parent for all objects. Animate the root -- everything follows. Parenting, materials, shape keys, and actions all survive the append. This pattern worked identically across 6 video builds.
+
+### Draft at 960x540, final via command line
+Half-resolution drafts render in 1-3 seconds per frame through MCP -- fast enough for iterative checking. For final 1080p renders with Freestyle, use command line (`blender -b scene.blend -a`) to avoid all MCP timeout constraints. Freestyle adds ~3x render time overhead.
+
+### Boolean hide keyframes need CONSTANT interpolation
+When bulk-smoothing all keyframes to BEZIER, explicitly skip `hide_render` and `hide_viewport` fcurves. These must stay CONSTANT or objects partially fade between visible/invisible instead of snapping. This caused subtle visual bugs in early builds.
+
 ## Rhino MCP / Agent Teams
 
 ### Mac single-process limitation
