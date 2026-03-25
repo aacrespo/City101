@@ -3,7 +3,7 @@
 Dicobat Embeddings Pipeline
 ============================
 Chunks extracted Dicobat markdown files and generates embeddings
-using a multilingual sentence-transformer model, stored in ChromaDB.
+using a multilingual sentence-transformer model, stored in Qdrant.
 
 Usage:
   # Build embeddings from all extracted terms
@@ -16,37 +16,35 @@ Usage:
   python tools/data/dicobat_embeddings.py stats
 
 Dependencies:
-  pip install sentence-transformers chromadb
+  pip install sentence-transformers qdrant-client
 """
 
 import argparse
 import json
-import os
 import re
 import sys
 import time
 from pathlib import Path
 
 try:
-    import chromadb
+    from qdrant_client import QdrantClient, models
     from sentence_transformers import SentenceTransformer
 except ImportError:
     print("Missing dependencies. Install with:")
-    print("  pip install sentence-transformers chromadb")
+    print("  pip install sentence-transformers qdrant-client")
     sys.exit(1)
 
 
 # --- Configuration ---
 
-# Knowledge lives in standalone archibase repo — override with ARCHIBASE_PATH env var
-KNOWLEDGE_ROOT = Path(os.environ.get("ARCHIBASE_PATH", Path.home() / "CLAUDE" / "archibase"))
-PROJECT_ROOT = KNOWLEDGE_ROOT if KNOWLEDGE_ROOT.exists() else Path(__file__).resolve().parents[2]
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
 SOURCE_DIR = PROJECT_ROOT / "source" / "dicobat"
-VECTORDB_DIR = PROJECT_ROOT / "vectordb"
+VECTORDB_DIR = PROJECT_ROOT / "vectordb" / "qdrant"
 COLLECTION_NAME = "dicobat"
 
 # Multilingual model — handles French well
 MODEL_NAME = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
+VECTOR_DIM = 384
 
 
 # --- Chunking ---
@@ -171,7 +169,7 @@ def chunk_term_markdown(filepath):
 
 
 def build_embeddings(theme_filter=None):
-    """Process all extracted terms and store embeddings in ChromaDB."""
+    """Process all extracted terms and store embeddings in Qdrant."""
     if not SOURCE_DIR.exists():
         print(f"ERROR: No extracted terms found at {SOURCE_DIR}")
         print("Run the scraper first: python tools/data/dicobat_scraper.py extract")
@@ -201,19 +199,20 @@ def build_embeddings(theme_filter=None):
     model = SentenceTransformer(MODEL_NAME)
     print("Model loaded.\n")
 
-    # Initialize ChromaDB
+    # Initialize Qdrant
     VECTORDB_DIR.mkdir(parents=True, exist_ok=True)
-    client = chromadb.PersistentClient(path=str(VECTORDB_DIR))
+    client = QdrantClient(path=str(VECTORDB_DIR))
 
-    # Delete existing collection if rebuilding
-    try:
+    # Recreate collection
+    if client.collection_exists(COLLECTION_NAME):
         client.delete_collection(COLLECTION_NAME)
-    except Exception:
-        pass
 
-    collection = client.create_collection(
-        name=COLLECTION_NAME,
-        metadata={"description": "Dicobat construction dictionary embeddings"},
+    client.create_collection(
+        collection_name=COLLECTION_NAME,
+        vectors_config=models.VectorParams(
+            size=VECTOR_DIM,
+            distance=models.Distance.COSINE,
+        ),
     )
 
     # Process files
@@ -242,15 +241,17 @@ def build_embeddings(theme_filter=None):
         texts = [c["text"] for c in batch]
         embeddings = model.encode(texts, show_progress_bar=False).tolist()
 
-        ids = [f"chunk_{batch_idx + j}" for j in range(len(batch))]
-        metadatas = [c["metadata"] for c in batch]
+        points = []
+        for j, chunk in enumerate(batch):
+            point_id = batch_idx + j
+            payload = {**chunk["metadata"], "document": chunk["text"]}
+            points.append(models.PointStruct(
+                id=point_id,
+                vector=embeddings[j],
+                payload=payload,
+            ))
 
-        collection.add(
-            ids=ids,
-            embeddings=embeddings,
-            documents=texts,
-            metadatas=metadatas,
-        )
+        client.upsert(collection_name=COLLECTION_NAME, points=points)
 
         batch_num = batch_idx // batch_size + 1
         if batch_num % 10 == 0 or batch_num == total_batches:
@@ -271,6 +272,7 @@ def build_embeddings(theme_filter=None):
         "files_processed": len(md_files),
         "chunks_embedded": len(all_chunks),
         "model": MODEL_NAME,
+        "vector_dim": VECTOR_DIM,
         "build_time_s": round(elapsed, 1),
         "build_date": time.strftime("%Y-%m-%d %H:%M:%S"),
         "chunk_types": {},
@@ -305,12 +307,13 @@ def show_stats():
         print("No embeddings built yet.")
         print("Run: python tools/data/dicobat_embeddings.py build")
 
-    # Also check ChromaDB if it exists
+    # Also check Qdrant if it exists
     if VECTORDB_DIR.exists():
         try:
-            client = chromadb.PersistentClient(path=str(VECTORDB_DIR))
-            collection = client.get_collection(COLLECTION_NAME)
-            print(f"\n  ChromaDB collection: {collection.count()} entries")
+            client = QdrantClient(path=str(VECTORDB_DIR))
+            if client.collection_exists(COLLECTION_NAME):
+                count = client.count(collection_name=COLLECTION_NAME).count
+                print(f"\n  Qdrant collection: {count} entries")
         except Exception:
             pass
 

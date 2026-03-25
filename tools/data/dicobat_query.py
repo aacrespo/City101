@@ -27,30 +27,28 @@ Usage (as module):
   # context is a formatted string ready to inject into a prompt
 
 Dependencies:
-  pip install sentence-transformers chromadb
+  pip install sentence-transformers qdrant-client
 """
 
 import argparse
-import os
 import sys
 from pathlib import Path
 
 try:
-    import chromadb
+    from qdrant_client import QdrantClient, models
     from sentence_transformers import SentenceTransformer
 except ImportError:
     print("Missing dependencies. Install with:")
-    print("  pip install sentence-transformers chromadb")
+    print("  pip install sentence-transformers qdrant-client")
     sys.exit(1)
 
 
-# Knowledge lives in standalone archibase repo — override with ARCHIBASE_PATH env var
-KNOWLEDGE_ROOT = Path(os.environ.get("ARCHIBASE_PATH", Path.home() / "CLAUDE" / "archibase"))
-PROJECT_ROOT = KNOWLEDGE_ROOT if KNOWLEDGE_ROOT.exists() else Path(__file__).resolve().parents[2]
-VECTORDB_DIR = PROJECT_ROOT / "vectordb"
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+VECTORDB_DIR = PROJECT_ROOT / "vectordb" / "qdrant"
 SOURCE_DIR = PROJECT_ROOT / "source" / "dicobat"
 COLLECTION_NAME = "dicobat"
 MODEL_NAME = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
+VECTOR_DIM = 384
 
 
 class DicobatRAG:
@@ -60,14 +58,13 @@ class DicobatRAG:
         self._vectordb_dir = vectordb_dir or VECTORDB_DIR
         self._model_name = model_name or MODEL_NAME
         self._model = None
-        self._collection = None
+        self._client = None
 
     def _ensure_loaded(self):
         if self._model is None:
             self._model = SentenceTransformer(self._model_name)
-        if self._collection is None:
-            client = chromadb.PersistentClient(path=str(self._vectordb_dir))
-            self._collection = client.get_collection(COLLECTION_NAME)
+        if self._client is None:
+            self._client = QdrantClient(path=str(self._vectordb_dir))
 
     def query(self, text, top_k=5, theme=None, chunk_type=None):
         """
@@ -84,33 +81,38 @@ class DicobatRAG:
         """
         self._ensure_loaded()
 
-        query_embedding = self._model.encode([text]).tolist()
+        query_embedding = self._model.encode([text]).tolist()[0]
 
-        where_filter = None
+        # Build Qdrant filter
         conditions = []
         if theme:
-            conditions.append({"theme": {"$eq": theme}})
+            conditions.append(
+                models.FieldCondition(key="theme", match=models.MatchValue(value=theme))
+            )
         if chunk_type:
-            conditions.append({"chunk_type": {"$eq": chunk_type}})
+            conditions.append(
+                models.FieldCondition(key="chunk_type", match=models.MatchValue(value=chunk_type))
+            )
 
-        if len(conditions) == 1:
-            where_filter = conditions[0]
-        elif len(conditions) > 1:
-            where_filter = {"$and": conditions}
+        query_filter = None
+        if conditions:
+            query_filter = models.Filter(must=conditions)
 
-        results = self._collection.query(
-            query_embeddings=query_embedding,
-            n_results=top_k,
-            where=where_filter,
-            include=["documents", "metadatas", "distances"],
+        results = self._client.query_points(
+            collection_name=COLLECTION_NAME,
+            query=query_embedding,
+            limit=top_k,
+            query_filter=query_filter,
+            with_payload=True,
         )
 
         output = []
-        for i in range(len(results["ids"][0])):
+        for point in results.points:
+            payload = point.payload or {}
             output.append({
-                "text": results["documents"][0][i],
-                "metadata": results["metadatas"][0][i],
-                "distance": results["distances"][0][i],
+                "text": payload.get("document", ""),
+                "metadata": {k: v for k, v in payload.items() if k != "document"},
+                "distance": point.score,
             })
 
         return output
@@ -171,19 +173,31 @@ class DicobatRAG:
     def list_themes(self):
         """List all themes in the database."""
         self._ensure_loaded()
-        # Get a sample to extract unique themes
-        results = self._collection.get(limit=10000, include=["metadatas"])
+        # Scroll through all points to get unique themes
         themes = set()
-        for meta in results["metadatas"]:
-            if "theme" in meta:
-                themes.add(meta["theme"])
+        offset = None
+        while True:
+            result = self._client.scroll(
+                collection_name=COLLECTION_NAME,
+                limit=1000,
+                offset=offset,
+                with_payload=["theme"],
+            )
+            points, next_offset = result
+            for p in points:
+                theme = (p.payload or {}).get("theme")
+                if theme:
+                    themes.add(theme)
+            if next_offset is None:
+                break
+            offset = next_offset
         return sorted(themes)
 
     @property
     def count(self):
         """Number of chunks in the database."""
         self._ensure_loaded()
-        return self._collection.count()
+        return self._client.count(collection_name=COLLECTION_NAME).count
 
 
 # --- CLI ---
@@ -237,7 +251,7 @@ def main():
         for i, r in enumerate(results):
             meta = r["metadata"]
             print(f"[{i+1}] {meta.get('term', '?')} — {meta.get('theme', '?')} ({meta.get('chunk_type', '?')})")
-            print(f"    Distance: {r['distance']:.4f}")
+            print(f"    Score: {r['distance']:.4f}")
             print(f"    File: {meta.get('file', '?')}")
             print(f"    ---")
             # Show first 200 chars of text
