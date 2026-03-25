@@ -1,0 +1,1097 @@
+▗ ▗   ▖ ▖  Claude Code v2.1.81
+           Opus 4.6 (1M context) · Claude Max
+  ▘▘ ▝▝    ~/CLAUDE/city101
+
+  /remote-control is active. Code in CLI or at
+  https://claude.ai/code/session_018oZu52DHB7GuUU231NHQvK
+
+❯ hi are u connected to the blender mcp?                                      
+
+⏺ Let me check.
+
+⏺ Yes, the Blender MCP tools are available. Let me verify the connection is
+  live by checking the scene.
+
+⏺ blender - get_scene_info (MCP)(user_prompt: "check if blender is connected")
+  ⎿  {
+       "result": "Error getting scene info: Could not connect to Blender.
+      Make sure the Blender addon is running."
+     }
+
+⏺ The MCP tools are loaded, but Blender isn't responding. You need to:
+
+  1. Open Blender
+  2. Enable the addon — in Blender, go to Edit → Preferences → Add-ons, search
+   for the MCP/BlenderMCP addon and enable it
+  3. Start the server from within Blender (usually a button in the sidebar
+  panel)
+
+  Once that's running, I'll be able to talk to Blender. Let me know when it's
+  up!
+
+❯ And how do you start the server from blende?                                
+
+⏺ I'm not 100% sure of the exact steps for this specific addon — it depends on
+   which BlenderMCP addon you installed. But typically:
+
+  1. Open Blender
+  2. Look in the sidebar (press N to toggle it) for a tab called "BlenderMCP"
+  or "MCP"
+  3. There should be a "Start Server" or "Connect" button in that panel
+
+  If you installed it via pip/uvx, there might also be a way to start it from
+  the command line.
+
+  Do you remember which BlenderMCP addon you installed? I can check if there's
+   anything in the repo about the setup.
+
+❯ ok try it                                                                   
+
+⏺ blender - get_scene_info (MCP)(user_prompt: "check blender connection")
+  ⎿  {
+       "result": "{\n  \"name\": \"Scene\",\n  \"object_count\": 3,\n  \"
+     objects\": [\n    {\n      \"name\": \"Cube\",\n      \"type\": \"ME
+     … +8 lines (ctrl+o to expand)
+
+⏺ Connected! I can see your Blender scene — the default setup with a Cube,
+  Light, and Camera. What do you want to build?
+
+❯ Do you think that we can have multiple sessions of Claude with multiple     
+instances of Blender. Working. Same thing as what we did with the Rhino MCP   
+and the router.?                                                              
+
+⏺ Great question. Short answer: yes, and it might actually work better than
+  Rhino because unlike Rhino on Mac, you can run multiple Blender processes
+  simultaneously.
+
+  The pattern would be the same:
+
+  1. Each Blender instance runs the MCP addon on a different port
+  2. A router MCP server (like tools/rhino/rhino_router_mcp.py) sits in front
+  and routes tool calls to the right instance via a target parameter
+  3. Agent teams each get assigned a target instance
+
+  The main things to figure out:
+
+  - Can the BlenderMCP addon be configured to listen on a custom port? (Need
+  to check the addon code — if it hardcodes a port, we'd need to patch it,
+  same as we did with rhinomcp)
+  - Port mapping in .mcp.json via an env var like BLENDER_INSTANCES
+
+  Want me to dig into the BlenderMCP addon to see if it supports custom ports?
+   If it does, building the router would be straightforward — we'd basically
+  adapt the Rhino router pattern.
+
+❯ yes pls                                                                     
+
+⏺ Explore(Explore BlenderMCP addon setup)
+  ⎿  Done (18 tool uses · 59.8k tokens · 7m 3s)
+  (ctrl+o to expand)
+
+⏺ Great news — the BlenderMCP addon already supports custom ports natively:
+
+  - Default port: 9876, configurable in the Blender sidebar panel (range
+  1024–65535)
+  - Communication: raw TCP sockets with JSON, same pattern as Rhino
+  - The port is set per-instance in the UI before starting the server
+
+  And here's the key difference from Rhino: macOS CAN run multiple Blender
+  processes. The one-process limitation was a Rhino-specific thing. So this is
+   actually a cleaner setup.
+
+  What we'd need to build:
+
+  1. Blender router MCP server — adapt tools/rhino/rhino_router_mcp.py for
+  Blender's protocol (TCP/JSON instead of whatever Rhino uses)
+  2. Port mapping in .mcp.json env vars, e.g. BLENDER_INSTANCES: {"main":
+  9876, "second": 9877}
+  3. Each Blender instance: open, set port in sidebar, start server
+
+  Since the addon already handles custom ports out of the box, we don't need
+  to patch anything (unlike Rhino where we had to modify the plugin). The
+  router is the only new piece.
+
+  Want me to build the router?
+
+✻ Worked for 48s
+
+❯ Do we have estimated time? And can you do it autonomously? And also I have  
+a prompt ready for the first modeling in blender. That's why I'm asking about 
+ the time. Because maybe I can schedule it. I'm not sure. But what is         
+possible? Is the same thing as rhino? Like, can have multiple sessions with   
+multiple instances, or can we have also multiple sessions within one blender? 
+ File. And do you think, like, with the team create tool, you can build agent 
+ teams that can communicate with other via mailbox, So can each one of them   
+Have one blender file? And I'm not talking about some agents. I'm actually    
+talking about teammates. That communicate with each other and with the main   
+agent.                                                                        
+
+⏺ Good questions. Let me break this down:
+
+  Building the router
+
+  It's straightforward — basically adapting the existing Rhino router to
+  Blender's TCP/JSON protocol. The hard part (custom ports) is already solved
+  by the addon. I can do it autonomously, yes.
+
+  Architecture options
+
+  Option 1: Router pattern (same as Rhino)
+  - One Claude session, multiple subagents via Agent tool
+  - Router MCP routes each subagent to a different Blender instance via target
+  - Works, proven pattern, but subagents are short-lived — they do a task and
+  return
+
+  Option 2: Agent Teams with TeamCreate (what you're asking about)
+  - Each teammate is a persistent session with full context and mailbox
+  communication
+  - Each teammate can have its own Blender instance on a different port
+  - They coordinate through the mailbox — "I finished the terrain, it's on
+  layer X" → "Got it, starting the building envelope"
+  - This is the more powerful option because teammates persist, reason, and
+  adapt
+
+  Option 3: Multiple agents, ONE Blender file
+  - Use layers to separate work (like the Rhino single-instance approach)
+  - Risky with simultaneous writes to the same scene, but possible if
+  coordinated
+
+  What I'd recommend
+
+  Build the router first (it's needed either way), then use Option 2 (Agent
+  Teams) for the actual modeling. Each teammate gets:
+  - Its own Blender instance on a unique port
+  - A role (terrain, structures, landscape, etc.)
+  - Mailbox access to coordinate
+
+  The router serves as the bridge — teammates send MCP calls with their
+  target, router forwards to the right Blender.
+
+  About scheduling
+
+  Yes, you could schedule the first modeling prompt while I build the router.
+  The router needs to be ready before agents can talk to Blender though, so
+  the modeling would run after.
+
+  Want me to start building the router now? And show me the modeling prompt
+  when you're ready — we can figure out the team split from there.
+
+❯ Okay. Yeah. Build the router. And do read me file with the step by step so  
+that Henna can have the same thing in her computer. Build it to other         
+completely, please. And yeah, just do it step by step. Yeah. Deploy.          
+
+  Read 2 files (ctrl+o to expand)
+
+⏺ Now let me check what commands the Blender addon supports, and the current
+  .mcp.json config.
+
+  Searched for 4 patterns, read 2 files (ctrl+o to expand)
+
+⏺ Now I have the full picture. The Blender addon uses the exact same wire
+  protocol as Rhino (TCP + JSON with {type, params} → {status, result}). The
+  commands are: get_scene_info, get_object_info, get_viewport_screenshot,
+  execute_code, plus optional PolyHaven/Hyper3D/Sketchfab/Hunyuan handlers.
+
+  Now let me also check what tools the blender-mcp uvx package exposes (the
+  MCP server side, not the addon).
+
+⏺ Bash(python3 -c "import importlib.util; spec =
+      importlib.util.find_spec('blender_mcp'); print(spec.origin if spec else
+      'not found')" 2>/dev/null || uvx --from blende…)
+  ⎿  not found
+
+  Searched for 1 pattern (ctrl+o to expand)
+
+⏺ Bash(find ~/Library/Caches -path "*blender*mcp*" -name "*.py" 2>/dev/null |
+      head -10; find /tmp -path "*blender*" -name "*.py" 2>/dev/null | head
+      -10; pip show blend…)
+  ⎿  Error: Exit code 1
+
+⏺ Bash(uvx --python 3.12 blender-mcp --help 2>&1 | head -5; echo "---"; find ~
+       -maxdepth 5 -path "*/blender_mcp/server*" 2>/dev/null | head -5)
+  ⎿  2026-03-23 23:53:33,958 - BlenderMCPServer - INFO - BlenderMCP serve
+     r starting up
+     2026-03-23 23:53:33,962 - BlenderMCPServer - INFO - Connected to Ble
+     … +8 lines (ctrl+o to expand)
+
+  Searched for 2 patterns (ctrl+o to expand)
+
+⏺ Bash(pip3 show blender-mcp 2>/dev/null || pip3.12 show blender-mcp
+      2>/dev/null; echo "---"; python3 -m pip show blender-mcp 2>/dev/null)
+  ⎿  Error: Exit code 1
+     ---
+
+⏺ I have enough info. The Blender addon uses the exact same wire protocol as
+  Rhino ({type, params} → {status, result} over TCP). Let me build the router
+  and README now.
+
+⏺ Write(tools/blender/blender_router_mcp.py)
+  ⎿  Wrote 911 lines to tools/blender/blender_router_mcp.py
+       1 # /// script
+       2 # requires-python = ">=3.10"
+       3 # dependencies = ["mcp[cli]>=1.0", "pydantic>=2.0"]
+       4 # ///
+       5 """
+       6 Blender Router MCP — Multi-instance TCP proxy for parallel Blend
+         er modeling.
+       7
+       8 Routes MCP tool calls to multiple Blender instances via raw TCP
+         sockets,
+       9 matching the BlenderMCP addon's wire protocol exactly:
+      10   Request:  {"type": "command_name", "params": {...}}
+     … +901 lines (ctrl+o to expand)
+
+⏺ Now the SETUP.md for Henna.
+
+⏺ Write(tools/blender/SETUP.md)
+  ⎿  Wrote 185 lines to tools/blender/SETUP.md
+       1 # Blender Router MCP — Setup Guide
+       2
+       3 Multi-instance Blender routing for agent teams. Each Claude agen
+         t/teammate gets its own Blender instance.
+       4
+       5 ## How it works
+       6
+       7 ```
+       8 Claude Code ──[MCP]──> Router ──[TCP:9876]──> Blender 1 (terrain
+         .blend)
+       9                               ──[TCP:9877]──> Blender 2 (buildin
+         gs.blend)
+      10                               ──[TCP:9878]──> Blender 3 (landsca
+         pe.blend)
+     … +175 lines (ctrl+o to expand)
+
+⏺ Now let me test the router runs without errors.
+
+⏺ Bash(timeout 5 uv run tools/blender/blender_router_mcp.py 2>&1 || true)
+  ⎿  /bin/bash: timeout: command not found
+
+⏺ Bash(python3 -c "
+      import subprocess, sys…)
+  ⎿  STDOUT:
+     STDERR: Installed 36 packages in 70ms
+     2026-03-23 23:57:32,732 [blender_router] WARNING BLENDER_INSTANCES n
+     … +4 lines (ctrl+o to expand)
+  ⎿  (timeout 30s)
+
+⏺ Router loads cleanly. Now let me update .mcp.json to use the router instead
+  of standard mode.
+
+  Read 1 file (ctrl+o to expand)
+
+⏺ Update(.mcp.json)
+  ⎿  Added 5 lines, removed 2 lines
+       8        }
+       9      },
+      10      "blender": {
+      11 -      "command": "uvx",                                      
+      12 -      "args": ["blender-mcp"]                                
+      11 +      "command": "uv",                                       
+      12 +      "args": ["run", "tools/blender/blender_router_mcp.py"],
+      13 +      "env": {                                               
+      14 +        "BLENDER_INSTANCES": "{\"main\": 9876}"              
+      15 +      }                                                      
+      16      }
+      17    }
+      18  }
+
+⏺ Now let me also update the Rhino MCP rules to mention Blender alongside it.
+
+  Read 1 file (ctrl+o to expand)
+
+⏺ I won't modify the Rhino rules (per tool-protocol: ask before changing rules
+   files). But the router and setup are complete. Let me verify everything is
+  in order.
+
+  Read 1 file (ctrl+o to expand)
+
+⏺ Done. Here's what's built:
+
+  Files created
+
+  - tools/blender/blender_router_mcp.py — the router (31 tools, same pattern
+  as Rhino)
+  - tools/blender/SETUP.md — step-by-step guide for you and Henna
+
+  What's configured
+
+  - .mcp.json updated to use the router with main instance on port 9876
+
+  To use it now
+
+  You need to restart Claude Code since MCP config loads on startup. After
+  restart:
+  1. Make sure Blender is open with the addon connected on port 9876
+  2. All tools will have a target parameter — use "main" for now
+  3. To add more instances: open more Blenders on different ports and either
+  edit BLENDER_INSTANCES in .mcp.json or use blender_register_instance at
+  runtime
+
+  For agent teams
+
+  Set up multiple Blender instances on ports 9876/9877/9878, update the env
+  var, and each teammate gets their own target. The blender_transfer_geometry
+  tool handles passing geometry between instances (via FBX/OBJ/GLB
+  export/import).
+
+  Want me to commit this before we restart?
+
+✻ Baked for 5m 27s
+
+⏺ Background command "System-wide search for blender_mcp server" completed
+(exit code 0)
+
+⏺ Let me commit this.
+
+⏺ Bash(git status)
+  ⎿  On branch main
+     Your branch is ahead of 'origin/main' by 8 commits.
+       (use "git push" to publish your local commits)
+     … +19 lines (ctrl+o to expand)
+
+⏺ Bash(git log --oneline -5)
+  ⎿  a6db03f [SYNC] Save session: funding cost sheet with infrastructure
+     audit
+     6422066 [SYNC] Save session: vision roadmap created, competition res
+     … +5 lines (ctrl+o to expand)
+
+⏺ Bash(git add tools/blender/blender_router_mcp.py tools/blender/SETUP.md
+      .mcp.json && git commit -m "$(cat <<'EOF'
+      [BUILD] Add Blender Router MCP for multi-instance a…)
+  ⎿  [main 9913380] [BUILD] Add Blender Router MCP for multi-instance age
+     nt teams
+      3 files changed, 1101 insertions(+), 2 deletions(-)
+     … +2 lines (ctrl+o to expand)
+
+⏺ Committed. Restart Claude Code whenever you're ready — after that the router
+   will be live and you can use target: "main" with your Blender on port 9876.
+
+
+  Show me the modeling prompt when you want to plan the team split.
+
+❯ Actually, I have, the same session reviewing the prompt so that it can go   
+on overnight. So there's, like, fallbacks and sequential things. And I think  
+we will already set up three instances of Blender. If that's okay             
+
+⏺ Sounds good — 3 instances is a solid setup. Share the prompt and I'll review
+   it for overnight robustness: fallback logic, sequential dependencies, error
+   recovery, and how to split the work across the three Blender targets.
+
+  What ports do you want for the three instances? Default would be 9876, 9877,
+   9878 — or pick your own.
+
+❯ But you said I had to restart the session. Right? So the prompt that's      
+being done now will go through you again. And then to another session.?       
+
+⏺ Right — you need to restart Claude Code for the new .mcp.json to load the
+  router. But the prompt review doesn't need the router yet. We can:
+
+  1. Review and refine the prompt now — no Blender connection needed for that
+  2. Restart Claude Code when we're done reviewing
+  3. Open 3 Blender instances, set ports, connect the addon
+  4. Launch the overnight run in the new session
+
+  So show me the prompt — we'll get it airtight here, then restart and go.
+
+❯ How can I keep my computer from turning off?                                
+
+⏺ On Mac, go to System Settings → Displays → Advanced and turn off the
+  sleep/screen off timer. Or quicker:
+
+  caffeinate -d -i -s
+
+  This keeps your Mac awake (display, idle sleep, and system sleep all
+  prevented). It runs until you Ctrl+C it.
+
+  If you want it to last a specific duration (e.g. 12 hours):
+
+  caffeinate -d -i -s -t 43200
+
+  Run it in a separate terminal window and leave it open overnight.
+
+❯ Here is the prompt, i'll open the new session already ⏺                     
+Write(prompts/[A04_ACTIVE]_kitchen_animation_PM.md)                           
+  ⎿  Wrote 591 lines to prompts/[A04_ACTIVE]_kitchen_animation_PM.md          
+       1 # Kitchen Animation — Project Manager (Overnight Build)              
+       2 # Status: [A04_ACTIVE]                                               
+       3 # Execution: Single PM session that spawns teammates via Agent Teams 
+       4 # Prerequisites: 3 Blender instances running with router MCP on      
+ports 9876, 9877, 9878                                                        
+       5                                                                      
+       6 ---                                                                  
+       7                                                                      
+       8 ## Your Role                                                         
+       9                                                                      
+      10 You are the Project Manager for an overnight autonomous build of     
+animated                                                                      
+     … +581 lines (ctrl+o to expand)                                          
+                                                                              
+⏺ Done. Saved to prompts/[A04_ACTIVE]_kitchen_animation_PM.md.                
+                                                                              
+  To launch the overnight build:                                              
+                                                                              
+                                                                              
+  1. Set up 3 Blender instances on ports 9876, 9877, 9878 with the addon      
+running                                                                       
+  2. Update .mcp.json with all 3 instances in the router config               
+                                                                              
+  3. Start a fresh Claude Code session                                        
+                                                                              
+  4. Paste the PM prompt (or point it to the file)                            
+                                                                              
+  5. Sleep                                                                    
+                                                                              
+                                                                              
+                                                                              
+  The PM will:                                                                
+                                                                              
+  - Phase 1: spawn 2 teammates in parallel (house + characters) → ~2-3 hrs    
+                                                                              
+  - Phase 2: spawn 3 video teammates in parallel (V1, V4, V2) → ~2-3 hrs      
+                                                                              
+  - Phase 2b: if time, spawn V6 + V5                                          
+                                                                              
+  - Log everything to output/kitchen_animation/BUILD_LOG.md                   
+                                                                              
+                                                                              
+                                                                              
+  Morning review: check the build log, see what rendered, fix anything        
+partial.                                                                      
+                                                                              
+                                                                              
+  One thing — this is our first time running Blender MCP at all, let alone    
+overnight with a router. There will be bumps. Might be worth doing a          
+  quick 5-minute test first: one session, one instance, create a cube with a  
+material. Confirm the MCP pipeline works before committing to the             
+  overnight run.                                                              
+
+⏺ Let me read the full prompt to review it before you launch.
+
+  Read 1 file (ctrl+o to expand)
+
+⏺ Good prompt — solid structure, clear phasing, fallbacks on each video. A few
+   things to tighten for overnight reliability:
+
+  Issues I'd fix
+
+  1. File save paths are undefined
+  The house builder and character builder say "save periodically" and "save to
+   a known location" but never specify WHERE. Add explicit paths:
+  Save to: output/kitchen_animation/assets/house_set.blend
+  Save to: output/kitchen_animation/assets/characters.blend
+  Without this, Phase 2 teammates won't know where to find the files for
+  linking/appending.
+
+  2. Cross-instance file sharing isn't explained
+  Phase 2 says "link/append the Cairn character from the character file" — but
+   characters are built in instance "second" (port 9877) and Video 1 runs in
+  instance "main" (port 9876). The teammates need to know to use either:
+  - blender_transfer_geometry (the router tool) to move geometry between
+  instances, OR
+  - bpy.ops.wm.append() via blender_execute_code pointing to the saved .blend
+  file path
+
+  I'd add a section between Phase 1 and Phase 2 explicitly telling the PM to
+  transfer assets.
+
+  3. Rendering frame counts are ambitious
+  480-720 frames per video, rendered one-at-a-time through MCP socket calls...
+   each frame goes: Claude → Router → TCP → Blender → render → TCP → Router →
+  Claude. Even at 5 seconds per frame, Video 4 (720 frames) = 1 hour just
+  rendering. With 5 videos that's 5+ hours of render time alone, plus all the
+  modeling.
+
+  Suggest adding: "Render at 960x540 first. If time allows, re-render at
+  1920x1080."
+
+  4. The PM doesn't know about router tool names
+  The prompt references execute_blender_code but the router exposes
+  blender_execute_code. Same for all tools — they're prefixed with blender_ in
+   the router. Add a note:
+
+  All router tools are prefixed: blender_get_scene_info, blender_execute_code,
+   etc.
+
+  5. Third instance sits idle during Phase 1
+  You have 3 Blender instances but only 2 are used in Phase 1. Could use the
+  third for a head start — e.g., setting up camera rigs, lighting templates,
+  or building the exterior (which is separate from the interior house set).
+
+  6. Missing: create output directories
+  Add to PM's first action:
+  mkdir -p output/kitchen_animation/assets
+  mkdir -p output/kitchen_animation/renders/video_01 video_02 video_04
+  video_05 video_06
+  mkdir -p output/kitchen_animation/
+
+  7. The 5-minute test advice at the bottom is buried and it came from a
+  different Claude
+  Move that UP to the top. Make it Phase 0. If the MCP pipeline doesn't work,
+  nothing else matters.
+
+  Quick suggested additions
+
+  Want me to edit the prompt file with these fixes? The main changes would be:
+  - Add Phase 0 (smoke test)
+  - Add explicit save paths
+  - Add asset transfer instructions between phases
+  - Add router tool naming note
+  - Lower default render resolution
+  - Use third instance during Phase 1
+
+✻ Crunched for 1m 19s
+
+❯ I think we have a problem. I'm not being able to open a new instance of     
+blender. And, yeah, make the edits.                                           
+
+⏺ On Mac you can force multiple instances from the terminal:
+
+  open -n /Applications/Blender.app
+
+  The -n flag opens a new instance even if one is already running. Do it 3
+  times, set each to a different port in the sidebar panel.
+
+  Let me make the edits to the prompt now.
+
+  Read 1 file (ctrl+o to expand)
+
+⏺ Now let me apply all the edits. I'll do the major sections:
+
+⏺ Update(prompts/[A04_ACTIVE]_kitchen_animation_PM.md)
+  ⎿  Added 51 lines, removed 1 line
+      32  |----------|------|-----------|
+      33  | main | 9876 | Phase 1: House Set → Phase 2: Video animation
+          s |
+      34  | second | 9877 | Phase 1: Characters → Phase 2: Video animat
+          ions |
+      35 -| third | 9878 | Phase 2: Video animations (overflow) |      
+      35 +| third | 9878 | Phase 1: Exterior + camera rigs → Phase 2: V
+         +ideo animations |                                            
+      36  
+      37  All teammates MUST specify `target` in every Blender MCP call
+          .
+      38  
+      39 +**Router tool names are prefixed with `blender_`:**          
+      40 +- `blender_get_scene_info(target="main")` — get scene info   
+      41 +- `blender_execute_code(target="main", code="...")` — run Pyt
+         +hon/bpy code                                                 
+      42 +- `blender_get_viewport_screenshot(target="main")` — capture 
+         +viewport                                                     
+      43 +- `blender_transfer_geometry(source="second", destination="ma
+         +in", ...)` — move geometry between instances                 
+      44 +- `blender_list_instances()` — check all instances and connec
+         +tion status                                                  
+      45 +- `blender_command(target, command_type, params)` — generic p
+         +assthrough                                                   
+      46 +                                                             
+      47  ---
+      48  
+      49 +## Phase 0: Smoke Test (before anything else)                
+      50 +                                                             
+      51 +Before spawning any teammates, verify the MCP pipeline works:
+      52 +                                                             
+      53 +1. Create output directories:                                
+      54 +   ```python                                                 
+      55 +   import os                                                 
+      56 +   for d in ["output/kitchen_animation/assets",              
+      57 +             "output/kitchen_animation/renders/video_01",    
+      58 +             "output/kitchen_animation/renders/video_02",    
+      59 +             "output/kitchen_animation/renders/video_04",    
+      60 +             "output/kitchen_animation/renders/video_05",    
+      61 +             "output/kitchen_animation/renders/video_06"]:   
+      62 +       os.makedirs(d, exist_ok=True)                         
+      63 +   ```                                                       
+      64 +                                                             
+      65 +2. Test each Blender instance:                               
+      66 +   ```                                                       
+      67 +   blender_get_scene_info(target="main")                     
+      68 +   blender_get_scene_info(target="second")                   
+      69 +   blender_get_scene_info(target="third")                    
+      70 +   ```                                                       
+      71 +                                                             
+      72 +3. Test code execution on one instance:                      
+      73 +   ```                                                       
+      74 +   blender_execute_code(target="main", code="""              
+      75 +   import bpy                                                
+      76 +   bpy.ops.mesh.primitive_cube_add(size=1, location=(0,0,0)) 
+      77 +   mat = bpy.data.materials.new("Test_Mat")                  
+      78 +   mat.diffuse_color = (0.77, 0.66, 0.51, 1.0)               
+      79 +   bpy.context.active_object.data.materials.append(mat)      
+      80 +   print(f"Created test cube: {bpy.context.active_object.name
+         +}")                                                          
+      81 +   """)                                                      
+      82 +   ```                                                       
+      83 +                                                             
+      84 +4. Clean up: delete the test cube.                           
+      85 +                                                             
+      86 +If ANY of these fail, log the error in BUILD_LOG.md and stop.
+         + Do not proceed                                              
+      87 +with the overnight build if the MCP pipeline is broken.      
+      88 +                                                             
+      89 +---                                                          
+      90 +                                                             
+      91  ## Phase 1: Assets (parallel, ~2-3 hours)
+      92  
+      93  Spawn TWO teammates simultaneously:
+
+⏺ Now add explicit save paths to the house builder:
+
+⏺ Update(prompts/[A04_ACTIVE]_kitchen_animation_PM.md)
+  ⎿  Added 8 lines, removed 3 lines
+      182      - Ambient fill (world background: very light warm gray)
+      183      - Enable Freestyle with 2px black lines
+      184  
+      185 -Save the file periodically. Final save to a known location. 
+      186 -When done, create a text file listing all collection/layer n
+          -ames so                                                     
+      187 -other teammates know what's available.                      
+      185 +SAVE periodically via:                                      
+      186 +```python                                                   
+      187 +bpy.ops.wm.save_as_mainfile(filepath="/Users/andreacrespo/CL
+          +AUDE/city101/output/kitchen_animation/assets/house_set.blend
+          +")                                                          
+      188 +```                                                         
+      189 +Final save to the same path when done.                      
+      190  
+      191 +When done, write a summary to output/kitchen_animation/asset
+          +s/house_manifest.txt                                        
+      192 +listing all collection names, object counts per collection, 
+          +and any missing elements.                                   
+      193 +                                                            
+      194  IMPORTANT: If a Blender MCP call fails, try once more. If it
+            fails again,
+      195  log the error, skip that element, continue with the next. Do
+            not get stuck
+      196  on any single object. The house needs to be COMPLETE even if
+            some details
+
+⏺ Now add explicit save paths to the character builder:
+
+⏺ Update(prompts/[A04_ACTIVE]_kitchen_animation_PM.md)
+  ⎿  Added 8 lines, removed 2 lines
+      304     - Actions named: "Action_Walk", "Action_Idle", "Action_Sp
+           awn", etc.
+      305     - All in one .blend file for easy linking
+      306  
+      307 -Save periodically. When done, create a summary text listing 
+          -all character                                               
+      308 -names, collection names, and available actions.             
+      307 +SAVE periodically via:                                      
+      308 +```python                                                   
+      309 +bpy.ops.wm.save_as_mainfile(filepath="/Users/andreacrespo/CL
+          +AUDE/city101/output/kitchen_animation/assets/characters.blen
+          +d")                                                         
+      310 +```                                                         
+      311 +Final save to the same path when done.                      
+      312  
+      313 +When done, write a summary to output/kitchen_animation/asset
+          +s/character_manifest.txt                                    
+      314 +listing all character names, collection names, and available
+          + actions.                                                   
+      315 +                                                            
+      316  IMPORTANT: If shape keys or actions are tricky via MCP, prio
+           ritize having
+      317  the characters LOOK right (correct shapes, colors, eyes) ove
+           r having
+      318  perfect animation rigs. Simple position keyframes can substi
+           tute for
+
+⏺ Now add Teammate C for Phase 1 (third instance) and rewrite the Phase 1→2
+  transition with asset transfer:
+
+⏺ Update(prompts/[A04_ACTIVE]_kitchen_animation_PM.md)
+  ⎿  Added 84 lines, removed 7 lines
+      319  shape key animations if needed. Do not get stuck.
+      320  </character-builder-prompt>
+      321  
+      322 +### Teammate C (Phase 1): "Exterior & Camera Rigs" → target:
+          + third (port 9878)                                          
+      323 +                                                            
+      324 +<exterior-builder-prompt>                                   
+      325 +You are building the exterior scene and reusable camera/ligh
+          +ting rigs.                                                  
+      326 +Work in Blender instance "third" (target: "third" on every M
+          +CP call).                                                   
+      327 +                                                            
+      328 +Read the full spec:                                         
+      329 +/Users/andreacrespo/CLAUDE/city101/prompts/[A04_ACTIVE]_kitc
+          +hen_analogy_animations.md                                   
+      330 +Focus on exterior elements and visual style.                
+      331 +                                                            
+      332 +BUILD IN THIS ORDER:                                        
+      333 +                                                            
+      334 +1. **Camera rig** (reusable template)                       
+      335 +   - Orthographic camera, 30° isometric angle               
+      336 +   - Ortho scale = 10 (wide enough to see full house)       
+      337 +   - Create a second camera "Cam_CloseUp" with ortho scale =
+          + 5                                                          
+      338 +   - Parent both cameras to empties for easy animation      
+      339 +                                                            
+      340 +2. **Lighting rig**                                         
+      341 +   - Sun lamp, warm (~4500K), direction from upper-left     
+      342 +   - World background: very light warm gray (#F5F0EB)       
+      343 +   - Enable EEVEE                                           
+      344 +   - Enable Freestyle: line thickness 2px, black            
+      345 +                                                            
+      346 +3. **Exterior set**                                         
+      347 +   - Ground plane (large, #D4C5A9 sandy beige)              
+      348 +   - Main house footprint placeholder (12x8 box, low height 
+          +— will be replaced with Phase 1 house)                      
+      349 +   - Street in front (darker strip, #888888)                
+      350 +   - 2-3 empty buildings across street (simple box shapes, d
+          +ark windows, for Video 5)                                   
+      351 +   - Garden area (green-tinted ground #8BC34A near house)   
+      352 +   - Mailbox (small box on stick)                           
+      353 +   - Pneumatic tube stubs (thin cylinders between buildings,
+          + for Video 5)                                               
+      354 +                                                            
+      355 +4. **Render settings template**                             
+      356 +   - Resolution: 960x540 (draft render — will upscale later 
+          +if time)                                                    
+      357 +   - Frame rate: 24fps                                      
+      358 +   - EEVEE with Freestyle                                   
+      359 +   - Color management: standard sRGB                        
+      360 +                                                            
+      361 +5. **Organization**                                         
+      362 +   - Collections: "Exterior_Ground", "Exterior_Buildings", "
+          +Exterior_Street", "Camera_Rigs", "Lighting"                 
+      363 +   - Name everything clearly                                
+      364 +                                                            
+      365 +SAVE periodically via:                                      
+      366 +```python                                                   
+      367 +bpy.ops.wm.save_as_mainfile(filepath="/Users/andreacrespo/CL
+          +AUDE/city101/output/kitchen_animation/assets/exterior_rigs.b
+          +lend")                                                      
+      368 +```                                                         
+      369 +                                                            
+      370 +When done, write summary to output/kitchen_animation/assets/
+          +exterior_manifest.txt.                                      
+      371 +</exterior-builder-prompt>                                  
+      372 +                                                            
+      373  ---
+      374  
+      375  ## Phase 1 → Phase 2 Transition
+      376  
+      326 -When BOTH teammates A and B report completion:              
+      377 +When ALL Phase 1 teammates report completion:               
+      378  
+      328 -1. Note the file paths of the house set and character files 
+      329 -2. Verify both files exist and have content (ask teammates t
+          -o report                                                    
+      330 -   object counts and collection names)                      
+      331 -3. If either teammate failed significantly, assess what's mi
+          -ssing and                                                   
+      332 -   decide whether to proceed or have another teammate fix it
+      333 -4. Proceed to Phase 2                                       
+      379 +1. **Verify assets exist** — check these files:             
+      380 +   - `output/kitchen_animation/assets/house_set.blend`      
+      381 +   - `output/kitchen_animation/assets/characters.blend`     
+      382 +   - `output/kitchen_animation/assets/exterior_rigs.blend`  
+      383 +   Read the manifest files to confirm what was built.       
+      384  
+      385 +2. **Transfer assets between instances for Phase 2:**       
+      386 +   The house set is in "main", characters in "second", exter
+          +ior in "third".                                             
+      387 +   Phase 2 videos need assets from multiple sources. Use fil
+          +e append:                                                   
+      388 +   ```                                                      
+      389 +   blender_execute_code(target="second", code="""           
+      390 +   import bpy                                               
+      391 +   # Append kitchen collections from house set              
+      392 +   filepath = "/Users/andreacrespo/CLAUDE/city101/output/kit
+          +chen_animation/assets/house_set.blend"                      
+      393 +   with bpy.data.libraries.load(filepath, link=False) as (da
+          +ta_from, data_to):                                          
+      394 +       data_to.collections = [c for c in data_from.collectio
+          +ns]                                                         
+      395 +   for col in data_to.collections:                          
+      396 +       if col is not None:                                  
+      397 +           bpy.context.scene.collection.children.link(col)  
+      398 +   print(f"Appended collections from house_set.blend")      
+      399 +   """)                                                     
+      400 +   ```                                                      
+      401 +   Repeat for each instance that needs assets from another. 
+      402 +   Alternatively, use `blender_transfer_geometry()` for targ
+          +eted transfers.                                             
+      403 +                                                            
+      404 +3. **Clear Phase 1 work scenes if needed** — each video shou
+          +ld start clean                                              
+      405 +   or build on the existing scene. The PM decides per-video.
+      406 +                                                            
+      407 +4. If any Phase 1 teammate failed significantly, assess what
+          +'s missing and                                              
+      408 +   decide whether to proceed or have another teammate rebuil
+          +d it.                                                       
+      409 +                                                            
+      410 +5. Update BUILD_LOG.md with Phase 1 results, then proceed to
+          + Phase 2.                                                   
+      411 +                                                            
+      412  ---
+      413  
+      414  ## Phase 2: Video Animation (parallel, ~2-3 hours)
+
+⏺ Now update the Phase 2 teammate references (C→D, D→E, E→F) and add render
+  resolution + render strategy:
+
+⏺ Update(prompts/[A04_ACTIVE]_kitchen_animation_PM.md)
+  ⎿  Added 8 lines, removed 1 line
+      416  Spawn video teammates in priority order. Run up to 3 simulta
+           neously
+      417  (one per Blender instance).
+      418  
+      419 +### Render Strategy (applies to ALL videos)                 
+      420 +                                                            
+      421 +- **Draft resolution: 960x540** — use this for the overnight
+          + run.                                                       
+      422 +- If all videos complete and there's time, re-render priorit
+          +y videos at 1920x1080.                                      
+      423 +- If EEVEE fails, try with Freestyle disabled first. If stil
+          +l failing, try Workbench renderer.                          
+      424 +- Render as PNG sequence (not video file) — this way partial
+          + renders are still usable.                                  
+      425 +                                                            
+      426  ### Priority Batch 1 (spawn all 3 together):
+      427  
+      421 -**Teammate C: Video 1 "Moving In"** → target: main          
+      428 +**Teammate D: Video 1 "Moving In"** → target: main          
+      429  
+      430  <video1-prompt>
+      431  You are animating Video 1: "Moving In" — what happens when a
+            Claude Code
+
+⏺ Update(prompts/[A04_ACTIVE]_kitchen_animation_PM.md)
+  ⎿  Added 1 line, removed 1 line
+      476  issues stop the video.
+      477  </video1-prompt>
+      478  
+      479 -**Teammate D: Video 4 "The Brigade"** → target: second      
+      479 +**Teammate E: Video 4 "The Brigade"** → target: second      
+      480  
+      481  <video4-prompt>
+      482  You are animating Video 4: "The Brigade de Cuisine" — how ag
+           ent teams work.
+
+⏺ Update(prompts/[A04_ACTIVE]_kitchen_animation_PM.md)
+  ⎿  Added 1 line, removed 1 line
+      535  2 teammates (Analyst + Modeler) and simplify. The concept st
+           ill reads.
+      536  </video4-prompt>
+      537  
+      538 -**Teammate E: Video 2 "Real vs TV Kitchen"** → target: third
+      538 +**Teammate F: Video 2 "Real vs TV Kitchen"** → target: third
+      539  
+      540  <video2-prompt>
+      541  You are animating Video 2: "Real Kitchen vs TV Kitchen" — th
+           e difference
+
+⏺ Update(prompts/[A04_ACTIVE]_kitchen_animation_PM.md)
+  ⎿  Added 1 line, removed 1 line
+      592  
+      593  ### Priority Batch 2 (spawn after Batch 1 completes, or as i
+           nstances free up):
+      594  
+      595 -**Teammate F: Video 6 "Pantry Tour"** → first available inst
+          -ance                                                        
+      595 +**Teammate G: Video 6 "Pantry Tour"** → first available inst
+          +ance                                                        
+      596  
+      597  <video6-prompt>
+      598  You are animating Video 6: "The Pantry Tour" — how archibase
+            works.
+
+⏺ Update(prompts/[A04_ACTIVE]_kitchen_animation_PM.md)
+  ⎿  Added 1 line, removed 1 line
+      623  RENDER: output/kitchen_animation/renders/video_06/
+      624  </video6-prompt>
+      625  
+      626 -**Teammate G: Video 5 "Opening More Kitchens"** → second ava
+          -ilable instance                                             
+      626 +**Teammate H: Video 5 "Opening More Kitchens"** → second ava
+          +ilable instance                                             
+      627  
+      628  <video5-prompt>
+      629  You are animating Video 5: "Opening More Kitchens" — cloud V
+           M scaling.
+
+⏺ Now add render resolution to the video prompts. Let me add it to the render
+  lines:
+
+⏺ Update(prompts/[A04_ACTIVE]_kitchen_animation_PM.md)
+  ⎿  Added 2 lines, removed 2 lines
+      467  TEXT OVERLAY: At frame 460+, add text object: "Every session
+            begins here."
+      468  Place at bottom center of frame.
+      469  
+      470 -RENDER: Set up output path to output/kitchen_animation/rende
+          -rs/video_01/                                                
+      471 -Render as PNG sequence. EEVEE, Freestyle ON, 2px lines.     
+      470 +RENDER: Resolution 960x540 (draft). Output: output/kitchen_a
+          +nimation/renders/video_01/                                  
+      471 +PNG sequence. EEVEE, Freestyle ON (2px lines). If Freestyle 
+          +causes errors, disable it.                                  
+      472  Render the full sequence.
+      473  
+      474  FALLBACK: If character linking fails, build a simple blob di
+           rectly in
+
+⏺ Update(prompts/[A04_ACTIVE]_kitchen_animation_PM.md)
+  ⎿  Added 2 lines, removed 2 lines
+      528  
+      529  TEXT OVERLAY: Frame 700+: "One kitchen. One order. Five chef
+           s. In parallel."
+      530  
+      531 -RENDER: output/kitchen_animation/renders/video_04/ as PNG se
+          -quence.                                                     
+      532 -EEVEE, Freestyle ON, 2px lines.                             
+      531 +RENDER: Resolution 960x540 (draft). Output: output/kitchen_a
+          +nimation/renders/video_04/                                  
+      532 +PNG sequence. EEVEE, Freestyle ON (2px lines). If Freestyle 
+          +causes errors, disable it.                                  
+      533  
+      534  FALLBACK: If you can't do 4 simultaneous character animation
+           s, reduce to
+      535  2 teammates (Analyst + Modeler) and simplify. The concept st
+           ill reads.
+
+⏺ Update(prompts/[A04_ACTIVE]_kitchen_animation_PM.md)
+  ⎿  Added 2 lines, removed 1 line
+      581  - Frame 192: "On your screen" (near TV/Lumen)
+      582  - Frame 560: "Same chef. Different kitchen."
+      583  
+      584 -RENDER: output/kitchen_animation/renders/video_02/ as PNG se
+          -quence.                                                     
+      584 +RENDER: Resolution 960x540 (draft). Output: output/kitchen_a
+          +nimation/renders/video_02/                                  
+      585 +PNG sequence. EEVEE, Freestyle ON (2px lines). If Freestyle 
+          +causes errors, disable it.                                  
+      586  
+      587  FALLBACK: If the TV-within-scene is too complex, simplify: j
+           ust show
+      588  Cairn working in full kitchen, then cut to Lumen in a visibl
+           y smaller,
+
+⏺ Update(prompts/[A04_ACTIVE]_kitchen_animation_PM.md)
+  ⎿  Added 2 lines, removed 1 line
+      621  
+      622  TEXT: "Pantry for quick lookups. Library for deep research."
+      623  
+      624 -RENDER: output/kitchen_animation/renders/video_06/          
+      624 +RENDER: Resolution 960x540 (draft). Output: output/kitchen_a
+          +nimation/renders/video_06/                                  
+      625 +PNG sequence. EEVEE, Freestyle ON (2px lines). If Freestyle 
+          +causes errors, disable it.                                  
+      626  </video6-prompt>
+      627  
+      628  **Teammate H: Video 5 "Opening More Kitchens"** → second ava
+           ilable instance
+
+⏺ Update(prompts/[A04_ACTIVE]_kitchen_animation_PM.md)
+  ⎿  Added 2 lines, removed 1 line
+      654  
+      655  TEXT: "Same recipes. Same pantry. Different kitchens. All at
+            once."
+      656  
+      657 -RENDER: output/kitchen_animation/renders/video_05/          
+      657 +RENDER: Resolution 960x540 (draft). Output: output/kitchen_a
+          +nimation/renders/video_05/                                  
+      658 +PNG sequence. EEVEE, Freestyle ON (2px lines). If Freestyle 
+          +causes errors, disable it.                                  
+      659  </video5-prompt>
+      660  
+      661  ---
+
+⏺ Now let me also update the .mcp.json to have all 3 instances:
+
+⏺ Update(.mcp.json)
+  ⎿  Added 1 line, removed 1 line
+      11        "command": "uv",
+      12        "args": ["run", "tools/blender/blender_router_mcp.py"],
+      13        "env": {
+      14 -        "BLENDER_INSTANCES": "{\"main\": 9876}"              
+      14 +        "BLENDER_INSTANCES": "{\"main\": 9876, \"second\": 98
+         +77, \"third\": 9878}"                                        
+      15        }
+      16      }
+      17    }
+
+⏺ All edits done. Here's the summary of changes:
+
+  What changed in the prompt
+
+  1. Phase 0 added — smoke test: checks all 3 instances, creates a test cube,
+  creates output directories. Stops if MCP is broken.
+  2. Router tool names documented — explicit list of blender_* prefixed tools
+  so the PM and teammates know the exact names.
+  3. Third instance used in Phase 1 — new Teammate C builds exterior + camera
+  rigs + lighting templates (was idle before).
+  4. Explicit save paths — house →
+  output/kitchen_animation/assets/house_set.blend, characters →
+  characters.blend, exterior → exterior_rigs.blend. Each writes a manifest
+  file.
+  5. Asset transfer instructions — Phase 1→2 transition now has concrete
+  bpy.data.libraries.load() code for appending across instances.
+  6. Draft resolution: 960x540 — all videos render at half-res first. Full res
+   only if time allows.
+  7. Freestyle fallback — every render instruction says "if Freestyle causes
+  errors, disable it."
+  8. Teammate letters re-sequenced — A/B/C for Phase 1, D/E/F/G/H for Phase 2.
+
+  .mcp.json updated
+
+  Now has all 3 instances: main (9876), second (9877), third (9878).
+
+  To launch tonight
+
+  1. Run caffeinate -d -i -s in a separate terminal
+  2. Open 3 Blender instances: open -n /Applications/Blender.app (×3)
+  3. In each: sidebar → BlenderMCP → set port (9876, 9877, 9878) → Connect
+  4. Restart Claude Code
+  5. Point it at the prompt file or paste it
+
+✻ Worked for 2m 25s
+
+❯ By the way, this is the right. Blender version. Or app that I have in my    
+computer. So how would that command be for the, like, three                   
+instances?'/Applications/Blender 3.app'                                       
+
+⏺ open -n '/Applications/Blender 3.app'
+  open -n '/Applications/Blender 3.app'
+  open -n '/Applications/Blender 3.app'
+
+  Run each one, wait for it to open, set the port in the sidebar, then run the
+   next. Or all three at once if you prefer — just set the ports after they're
+   all open.
+
+❯ OK DONE. i'll give the prompt to another session then, should i put in plan 
+ mode first?                                                                  
+
+⏺ Yes — plan mode is smart for the first run. The PM can lay out its execution
+   plan, you can sanity-check it (especially the smoke test results), and then
+   approve to let it run overnight.
+
+  One thing before you go: commit the prompt edits so the new session has
+  them.
+
+⏺ Bash(git add "prompts/[A04_ACTIVE]_kitchen_animation_PM.md" .mcp.json && git
+       commit -m "$(cat <<'EOF'
+      [BUILD] Refine kitchen animation PM prompt for overnight robust…)
+  ⎿  [main 9be2cfc] [BUILD] Refine kitchen animation PM prompt for overni
+     ght robustness
+      2 files changed, 740 insertions(+), 1 deletion(-)
+      create mode 100644 prompts/[A04_ACTIVE]_kitchen_animation_PM.md
+
+⏺ Committed. Go launch the new session in plan mode — approve after the smoke
+  test passes. Good luck overnight!
+
+❯ just 1 session right?                                                       
+
+⏺ Yes, one session. The PM prompt is designed so that single session spawns
+  teammates via Agent Teams — it coordinates everything from one place.
+
+──────────────────────────────────────────────────────────────────────────────
+❯  
+──────────────────────────────────────────────────────────────────────────────
+  ⏵⏵ accept edits on (shift+tab to cycle) · hold Space to speak
+Abort trap: 6                                                                 
+You have new mail in /var/mail/andreacrespo
+MacBookPro:city101 andreacrespo$ 
