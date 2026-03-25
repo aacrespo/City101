@@ -1,5 +1,5 @@
 # Lockboard
-**Updated**: 2026-03-24
+**Updated**: 2026-03-25
 
 **Friday March 27 (screen test with Alex) / Monday March 30 (midterm presentation)**
 
@@ -7,9 +7,9 @@
 
 ## Andrea — Tasks
 
-### Emails — TODAY (March 24)
-- [ ] Email EPFL VM services with specs — start the clock on access
-- [ ] Email ENAC re: Rhino licenses
+### Emails — DONE
+- [x] Email EPFL RCP re: VM services — sent
+- [x] Email ENAC re: Rhino licenses — sent. **APPROVED** (Sébastien). Need VM computer name to activate via LAN Zoo → mcneellic.epfl.ch
 
 ### Presentation (Slides)
 - [ ] **Slide 5 — Workflow**: Kitchen analogy animation (repo = kitchen, scripts = recipes, DB = ingredients). Pixel agents. Parallel axonometry showing VM vs MCP vs teams. Explains: what happens when you start a session in this repo. v1 animated overnight, needs iteration.
@@ -22,7 +22,7 @@
 - [ ] Generate "before" scripts for Crissier-Busigny + Nyon-Genolier nodes — basic Rhino scripts WITHOUT the knowledge base/playbook, to show before/after comparison in presentation
 
 ### Infrastructure
-- [ ] ChromaDB → Qdrant migration (archibase segfault blocking embeddings)
+- [ ] ChromaDB → Qdrant migration — **ON HOLD**. ChromaDB actually working (35K+ chunks, 118MB). Segfault was intermittent. Verify stability before migrating.
 - [ ] Continue embedding: YouTube videos + remaining docs with Gemini API
 - [ ] Workflow hygiene — token optimization (hitting Claude Max daily limit)
 - [ ] Install `auto dream` command (memory consolidation)
@@ -68,15 +68,14 @@
 
 - [ ] "Before" Rhino scripts for Crissier-Busigny + Nyon-Genolier
 - [ ] Blender character emotes v2 rendering (once designs confirmed)
-- [ ] Qdrant migration + embedding pipeline
+- [ ] Embedding pipeline (ChromaDB stable — Qdrant migration on hold)
 - [ ] Kitchen analogy animation iteration (Blender)
 
 ---
 
 ## Open Blockers
 
-1. **EPFL VM access** — email today, may take days to provision
+1. **EPFL VM access** — emails sent, waiting on RCP response. Need VM computer name for Rhino license activation (LAN Zoo → mcneellic.epfl.ch)
 2. **Andrea's Sister's pixel agent designs** — fallback: VS Code demo + explain vision
-3. **ChromaDB segfault** → Qdrant migration needed before more embedding
-4. **Henna needs modified Rhino plugin** (feature/configurable-port fork) — setup not done yet
-5. **Ramp grades** — Lock 03 Morges scripts still too steep for SIA 500. Needs fix.
+3. **Henna needs Blender MCP + router setup** — Rhino multi-instance working, Blender not yet configured
+4. **Ramp grades** — Lock 03 Morges scripts still too steep for SIA 500. Needs fix.
