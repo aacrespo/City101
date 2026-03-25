@@ -16,10 +16,10 @@
 
 | Date | From | Content | Action needed |
 |---|---|---|---|
-| 2026-03-25 13:21 | Andrea | Initial request: BA6 architecture students in Prof. Huang's studio, setting up remote Windows VMs, need floating Rhino licenses | — |
+| 2026-03-25 ~13:21 | Andrea & Henna | "We are BA6 architecture students in Professor Huang's studio. We are setting up remote Windows machines to run multiple Rhino instances in parallel for a modeling project. Do you have Rhino licenses that could work on VMs connected through EPFL VPN? We'd need about 4 concurrent seats. We are presenting this work March 30, so knowing what is available before then would be really helpful for us." | — |
 | 2026-03-25 13:42 | Sébastien | "It should be OK, for how long do you need these licenses?" | Reply with duration |
-| 2026-03-25 13:53 | Andrea | "Until end of semester (end of June). Would that work?" | — |
-| 2026-03-25 13:58 | Sébastien | **YES.** Needs: (1) the name of the computer, (2) use "LAN Zoo License Manager" and point to `mcneellic.epfl.ch` | **⚠️ Need computer name — depends on RCP VM response** |
+| 2026-03-25 13:53 | Andrea | "Thank you for the quick response. We would need them until the end of the semester (end of June). Would that work?" | — |
+| 2026-03-25 13:58 | Sébastien | "Yes. I will need the name of the computer you will use. When the software asks you how you want to activate the license, use the 'LAN Zoo License Manager' and give it this address: mcneellic.epfl.ch" | **⚠️ Need computer name — depends on RCP VM response** |
 
 ### Status: ✅ APPROVED — waiting on computer name from RCP
 
@@ -45,21 +45,16 @@
 
 | Date | From | Content | Action needed |
 |---|---|---|---|
-| 2026-03-25 ~11:00 | Andrea | Sent request for VM services — described project, need Windows VMs with Rhino for headless MCP workflows | Wait for response |
+| 2026-03-25 ~11:00 | Andrea & Henna | Ticket **INC0789496** opened. "We are BA6 architecture students in Professor Huang's studio. We use AI agents to build 3D models in Rhino (a CAD application). Right now everything runs on our laptops, but we need to move to remote machines. Windows is required because Rhino only supports multiple concurrent instances on Windows. Three or four machines with 16-32 GB RAM each, SSH accessible. What is the best way to get Windows VMs through EPFL for this kind of setup? We would also like to try AIaaS, specifically for document embeddings (we were looking into Gemini Embedding 2 for about 35k chunks of construction references). How do we get access? We are presenting this work March 30, so knowing what is available before then would be really helpful for us." | Wait for response |
 
-### Status: 🟡 SENT — being analyzed
+### Status: 🟡 SENT — ticket INC0789496 being analyzed
 
 ### What we asked for
-- Windows VMs (3-4 instances ideally)
-- Rhino 8 installed on each
-- For AI-assisted architectural modeling (MCP protocol)
-- Part of Prof. Huang's studio course
+1. **Windows VMs**: 3-4 machines, 16-32 GB RAM each, SSH accessible, for running Rhino
+2. **AIaaS access**: document embeddings, specifically Gemini Embedding 2 for 35K chunks of construction references
 
 ### Notes
 - RCP is **on-premise** (not cloud) — EPFL's own data center
-- The request as written requires them to understand the project context → could be slow
-- Better approach: be super precise, tell them exactly what specs/config you need, even provide scripts they'd run
-- If different departments (IT vs licenses), request the two things separately
 - **For the presentation (Monday March 30): don't need everything working. Just need to present the concept.**
 - Wait for their response before pushing further
 

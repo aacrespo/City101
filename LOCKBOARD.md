@@ -22,7 +22,7 @@
 - [ ] Generate "before" scripts for Crissier-Busigny + Nyon-Genolier nodes — basic Rhino scripts WITHOUT the knowledge base/playbook, to show before/after comparison in presentation
 
 ### Infrastructure
-- [ ] ChromaDB → Qdrant migration — **ON HOLD**. ChromaDB actually working (35K+ chunks, 118MB). Segfault was intermittent. Verify stability before migrating.
+- [ ] ChromaDB → Qdrant migration — **ACTIVE**. Prompt ready: `prompts/[A04_ACTIVE]_chromadb_to_qdrant_migration.md`. Run from city101 session. Unblocks embedding pipeline.
 - [ ] Continue embedding: YouTube videos + remaining docs with Gemini API
 - [ ] Workflow hygiene — token optimization (hitting Claude Max daily limit)
 - [ ] Install `auto dream` command (memory consolidation)
