@@ -1,65 +1,82 @@
 # Lockboard
-**Updated**: 2026-03-20
+**Updated**: 2026-03-24
 
-## Both — Review app architecture docs
-
-**Read and discuss together before next Claude Code session:**
-- `output/app_architecture/` — 7 files (v1: 6 engine docs + v2: tool/presentation strategy)
-- Key docs: `architecture_overview.md` (system diagram), `open_questions.md` (decisions needed), `v2_tool_and_presentation.md` (two-tab structure + midterm show)
-- Come back with comments, disagreements, decisions on the open questions (especially Q1.1 chamber schema, Q1.2 transport vs place, Q3.3 story vs tool)
+**Midterm: Friday March 28 (screen test) / March 30 (presentation)**
 
 ---
 
-## Andrea — A04 midterm
+## Andrea — Tasks
 
-### Active now
-- **Agent team prototypology**: Router + workflow proven (7 agents, 709 objects on Lock 05). Ready to scale to remaining nodes.
-- **App architecture**: v1 engine docs + v2 tool/presentation strategy complete. Waiting on joint review before implementation.
-- **Finalize project concept**: lock down the narrative so Henna can prompt slides from it.
+### Emails — TODAY (March 24)
+- [ ] Email EPFL VM services with specs — start the clock on access
+- [ ] Email ENAC re: Rhino licenses
 
-### Next
-- **Scale to all 9 nodes** using `workflows/agent-team-modeling.md`
-- **PR plugin port fix upstream** to `jingcheng-chen/rhinomcp`
-- **Set up Henna** with modified plugin (docs in `experiments/rhino mcp server/SETUP.md`)
-- **Implement scoring engine** once arch docs are reviewed and decisions made.
+### Presentation (Slides)
+- [ ] **Slide 5 — Workflow**: Kitchen analogy animation (repo = kitchen, scripts = recipes, DB = ingredients). Pixel agents. Parallel axonometry showing VM vs MCP vs teams. Explains: what happens when you start a session in this repo. v1 animated overnight, needs iteration.
+- [ ] **Slide 5 — Pixel agents concept**: Commander board for architects/construction. Show agents modeling, building. Sister designing character angles (blocker — fallback: show VS Code pixel agents feature + explain vision).
+- [ ] Claude character emotes v2 — Blender modeling + render PNGs for gifs/animations. v1 done.
+- [ ] Healthcare diagram — animated merry-go-round with time
 
-Branch: andrea/prototypology-v2
-Since: 18 March 2026
+### Modeling
+- [ ] **Rennaz node (Lock 07)** — model with site (Andrea's 1 of 3 site models). Scripts exist (v1–v3).
+- [ ] Generate "before" scripts for Crissier-Busigny + Nyon-Genolier nodes — basic Rhino scripts WITHOUT the knowledge base/playbook, to show before/after comparison in presentation
 
----
-
-## Henna — A04 midterm
-
-### Active now
-- **3D corridor modeling**: finish the full corridor with point cloud pipeline. Research already done lives in `observations/research/` and `output/city101_hub/`.
-- **MCP investigation**: Blender + Rhino MCPs for the app visualization layer.
-- **Architectural references**: Koolhaas, Jane Jacobs, other references from v2 paper (`deliverables/A04/city101_vertical_transport_research_v2.md`). Deepen concept grounding.
-- **Rework PowerPoint**: redesign how we explain the AI workflow to architecture students who don't know what repos, git, .claude, CLAUDE.md, backend/frontend are. Make it legible to non-technical audience.
-- **Brand identity**: find the balance between tmux terminal aesthetic and elegant architecture presentation. The aesthetic shifts per slide depending on the nature of the concept. Showcase how terminal displays, markdown files, VS Code visuals can be art in themselves.
-
-Branch: main
-Since: 18 March 2026
+### Infrastructure
+- [ ] ChromaDB → Qdrant migration (archibase segfault blocking embeddings)
+- [ ] Continue embedding: YouTube videos + remaining docs with Gemini API
+- [ ] Workflow hygiene — token optimization (hitting Claude Max daily limit)
+- [ ] Install `auto dream` command (memory consolidation)
+- [ ] Set up `/loop` command
+- [ ] Check DeepSeek integration
+- [ ] Integrate ruflow
+- [ ] Lock the lock files in repo so modeling uses consistent knowledge/workflow
 
 ---
 
-## Claude — Archibase knowledge pipeline
+## Henna — Tasks
 
-### Done (2026-03-22)
-- Deplazes + Vittone PDFs extracted → 14 curated markdown files (layer buildups, dimensions)
-- EPFL coursework scanned → INDEX written (50+ files identified)
-- SQLite expanded → 99 rows (sizing rules, insulation, glazing, soil bearing)
-- Vision embedder built → Gemini Embedding 2 via Vertex AI
-- Deplazes (470p) + Vittone (1016p) embedded in ChromaDB (2,480 entries)
-- Training Session 2 complete → 7 exercises, 105 objects, 13 learnings
-- YouTube embedding plan written
+### Modeling
+- [ ] **Finish corridor model** — verify geometry works in QGIS → Rhino pipeline (ask Claude to verify)
+- [ ] **Model 9 écluse types** (without site)
+- [ ] **Model Crissier-Busigny node** (with site) — Henna's 1 of 2
+- [ ] **Model Nyon-Genolier node** (with site) — Henna's 2 of 2
 
-### Next session
-- **Migrate ChromaDB → Qdrant**: ChromaDB segfaults on large collections. Move 2,480 existing vision entries to Qdrant (local, free). Zero re-embedding cost if migration works.
-- **Continue embedding**: SIA norms (21 PDFs), Bloomsbury (13 chapters), Dicobat Visuel — blocked by DB migration
-- **YouTube tutorial embedding**: paused until DB stable. Plan + tool ready. Other session has videos downloaded.
-- **Flash vs Pro comparison**: test Gemini Flash quality on construction details (free quota resets daily)
-- **Exercise generation from book pages**: one Gemini call per page → exercise spec + assembly sequence + reference image
+### Presentation
+- [ ] Redo presentation format — aesthetics, transitions, PowerPoint
+- [ ] **Slides 2-3 — Chambre-Lock concept**: All content — diagrams + write speech (2 slides)
+- [ ] **Slide 4 — Software architecture**: One big diagram of app info flow + architecture. Gif with highlighted steps if possible.
+- [ ] **Slide 5 (partial) — Before/after workflow**: Compare how we worked before vs now. Explain agent interactions, Claude-Rhino MCP, Blender MCP, router architecture. Visual diagrams.
+- [ ] **Slide 6 — Archibase**: Explain the knowledge base architecture
 
-### Blocked
-- ChromaDB instability — need DB migration before adding more content
-- Gemini generation models not accessible on Vertex AI ($300 credits) — need to resolve auth or use AI Studio with billing
+---
+
+## Presentation Structure
+
+| Slide | Content | Owner |
+|---|---|---|
+| 1 | Header / title | Shared |
+| 2-3 | Écluse concept — diagrams + speech | Henna |
+| 4 | Software architecture — app info flow diagram (gif) | Henna |
+| 5 | Workflow — kitchen analogy animation, pixel agents, parallel axo, before/after | Andy (animation) + Henna (before/after diagrams) |
+| 6 | Archibase — knowledge base explanation | Henna |
+| 7-10 | 3D models (4 slides, order TBD) | Shared |
+| 11 | Vision — what's next, scaling, roadmap | Shared |
+
+---
+
+## Agent / Autonomous Tasks (can run without Andrea)
+
+- [ ] "Before" Rhino scripts for Crissier-Busigny + Nyon-Genolier
+- [ ] Blender character emotes v2 rendering (once designs confirmed)
+- [ ] Qdrant migration + embedding pipeline
+- [ ] Kitchen analogy animation iteration (Blender)
+
+---
+
+## Open Blockers
+
+1. **EPFL VM access** — email today, may take days to provision
+2. **Andrea's Sister's pixel agent designs** — fallback: VS Code demo + explain vision
+3. **ChromaDB segfault** → Qdrant migration needed before more embedding
+4. **Henna needs modified Rhino plugin** (feature/configurable-port fork) — setup not done yet
+5. **Ramp grades** — Lock 03 Morges scripts still too steep for SIA 500. Needs fix.

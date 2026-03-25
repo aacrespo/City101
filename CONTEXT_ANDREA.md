@@ -1,18 +1,17 @@
 # Andrea — Working Context
 
 **Owner**: Andrea (Cairn, Cairn Code, Lumen)
-**Last updated:** 2026-03-18 (repo restructuring session)
+**Last updated:** 2026-03-25
 
 ---
 
 ## Current priorities
 
-### A04 — midterm (due March 30)
-1. **Rhino modeling**: LOG 400 upgrades for lock scripts. 3 scripts verified (Morges, CHUV, Rennaz) at LOG 200-300. 9 nodes defined in v2 paper — need to decide which to model at what LOD for midterm.
-2. **App/interface architecture**: Design the typology generator system — Mermaid diagram, module definitions, data flow. Prompt written for systems architect session.
-3. **Midterm PPTX** — 6-screen template (see `briefs/Templates/`)
-4. **Finalize project concept** — lock down narrative so Henna can prompt slides from it
-5. **Check other repo** for useful commands/automations to import
+### A04 — midterm (screen test Fri March 28 / presentation March 30)
+1. **Emails TODAY**: EPFL VM services (specs for access) + ENAC (Rhino licenses)
+2. **Presentation slides**: Kitchen analogy animation (slide 5), pixel agents concept (slide 5), character emotes v2, healthcare merry-go-round diagram
+3. **Modeling**: Rennaz node (Lock 07) with site. "Before" scripts for Crissier-Busigny + Nyon-Genolier (no knowledge base — for before/after comparison)
+4. **Infrastructure**: ChromaDB → Qdrant migration, continue embedding, token optimization, auto dream, /loop, DeepSeek, ruflow, lock files consistency
 
 ### Completed
 - ✅ A03 deliverables submitted
@@ -80,3 +79,6 @@
 | 18-03 | Cairn Code | Brain dump session: captured evolved concept (9 nodes, "holds the gap", anti-urban), app interface vision, modeling status assessment. Updated CONTEXT.md + CONTEXT_ANDREA.md. Wrote systems architect prompt. Committed all pending files. |
 | 18-03 | Cairn Code | Repo restructuring: promoted outputs, archived superseded, renamed copies, prefixed prompts. Hooks (time/breaks/compaction) + new commands (save-session, resume-session, unlock). Task split documented. Equal team framing. 4 commits, 51+ files. |
 | 19-03 | Cairn Code | Rhino multi-instance: built router MCP server (31 tools, TCP), forked rhinomcp plugin for custom ports, discovered Mac single-process limit. Tested 7-agent team on Lock 05 CHUV (709 objects). Created agent-team-modeling workflow. |
+| 20-22 | Cairn Code | Weekend sprint: archibase built (4-layer knowledge system, 35K+ chunks), Gemini vision embedder, ChromaDB populated (2,480 entries), training sessions. App concept parked as thesis-scale. |
+| 23-03 | Cairn Code | Kitchen analogy animation v1 in Blender (6 videos, character design, house set). Claude character (Cairn) designed + rigged. Emote renders v1. |
+| 24-03 | Cairn Code | Cost sheet v2 finalized (1200 CHF budget). Email to Alex sent. Meeting notes: rehearsal Friday March 28, presentation guidance. Pushed 14 commits, resolved merge conflict with Henna's changes. Organized untracked files. Full LOCKBOARD rewrite with midterm task split + presentation structure (11 slides). |
