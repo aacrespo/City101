@@ -253,7 +253,11 @@
       "Bash(mv cairn_redesign_v*.png cairn_v2_*.png cairn_v3_*.png cairn_v4_*.png cairn_v5_*.png cairn_v6.png cairn_v7.png cairn_v8_*.png cairn_clean.png cairn_arms_*.png cairn_subtle_legs.png cairn_reach_*.png character_tests/iterations/)",
       "Bash(mv walk_long_*.png walk_compact_*.png character_tests/walk_tests/)",
       "Bash(for dir:*)",
-      "Read(//Users/andreacrespo/CLAUDE/city101/output/kitchen_animation/assets/emote_renders/$dir/**)"
+      "Read(//Users/andreacrespo/CLAUDE/city101/output/kitchen_animation/assets/emote_renders/$dir/**)",
+      "WebFetch(domain:support.epfl.ch)",
+      "WebFetch(domain:wiki.rcp.epfl.ch)",
+      "WebFetch(domain:search.epfl.ch)",
+      "WebFetch(domain:wiki.epfl.ch)"
     ]
   },
   "enableAllProjectMcpServers": true,

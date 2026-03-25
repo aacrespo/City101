@@ -7,7 +7,7 @@
 
 ## Current priorities
 
-### A04 — midterm (screen test Fri March 28 / presentation March 30)
+### A04 — midterm (screen test Fri March 27 / presentation Mon March 30)
 1. **Emails TODAY**: EPFL VM services (specs for access) + ENAC (Rhino licenses)
 2. **Presentation slides**: Kitchen analogy animation (slide 5), pixel agents concept (slide 5), character emotes v2, healthcare merry-go-round diagram
 3. **Modeling**: Rennaz node (Lock 07) with site. "Before" scripts for Crissier-Busigny + Nyon-Genolier (no knowledge base — for before/after comparison)
@@ -23,33 +23,34 @@
 
 ## Handoff
 
-**What was done (March 19-20 — Rhino multi-instance + agent team session):**
-- Built Rhino router MCP server (1209 lines, 31 tools, TCP transport)
-- Forked rhinomcp C# plugin for configurable ports (`mcpstart 9001`)
-- Discovered Mac limitation: one Rhino process only — router is the path
-- Tested with 7-agent team on Lock 05 CHUV: 709 objects, 4 build rounds
-- Created `workflows/agent-team-modeling.md` from the test results
-- Full session log at `experiments/rhino mcp server/SESSION_LOG.md`
+**What was done (March 25, 02:00–03:15):**
+- RCP deep dive: found AIaaS (70+ models, embedding endpoints, OpenAI-compatible API at inference.rcp.epfl.ch). Could replace Gemini for embeddings.
+- Discovered DSI runs a VM service (VSI) separate from RCP's HaaS. HaaS is bare metal overkill — VSI is probably what we need. Not publicly documented though.
+- Both emails rewritten and humanized: RCP (ask which service fits, mention AIaaS) + ENAC (do you have floating Rhino licenses for VMs)
+- Humanizer skill installed (~/.claude/skills/humanizer) — needs Claude Code restart to register as /humanizer
+- README.md created and pushed (previous session)
+- Brain dump captured: kitchen analogy refinements, disclaimer slide idea, Alex Friday agenda, before-scripts strategy, humanizer/Deerflow/when-Claude-is-down ideas
 
 **What's next:**
-1. **Prototypology at scale** — use agent team workflow for remaining nodes
-2. **PR upstream** — plugin port fix is clean, good candidate for `jingcheng-chen/rhinomcp`
-3. **Henna setup** — documented in `experiments/rhino mcp server/SETUP.md`
-4. **Midterm prep** — modeling + slides (due March 30)
-5. **Merge branch to main** when ready
+1. **Send emails** — review drafts fresh, schedule for morning send
+2. **Qdrant migration prompt** — write overnight autonomous migration (ChromaDB → Qdrant). Hold on re-embedding until RCP responds about AIaaS.
+3. **Infrastructure master list** — collect all planned repo/workflow changes into one doc
+4. **Before scripts** — Crissier-Busigny + Nyon-Genolier, naive (no archibase)
+5. **Presentation prep** — slides, animations, models
 
 **Watch out for:**
-- `.mcp.json` is back to standard `uvx rhinomcp` (port 1999). To use router: copy `experiments/rhino mcp server/mcp_router.json` to `.mcp.json` and restart Claude Code
-- Modified plugin is installed — `mcpstart` now prompts for port. Just press Enter for default 1999
-- Henna doesn't have the modified plugin yet
-- Ramp grades in existing scripts too steep for SIA 500 (35% and 26.7% vs 6% limit)
+- Email drafts at `output/research/email_draft_rcp_vm.md` and `email_draft_enac_rhino.md` — review before sending
+- RCP deep dive (`output/research/rcp_services_deep_dive.md`) has some unverified assumptions about HaaS specs (were in images, couldn't extract). Don't cite specs without checking.
+- Dates: Friday March 27 = screen test with Alex. Monday March 30 = midterm. LOCKBOARD corrected.
+- Humanizer won't show as /humanizer until restart — but patterns can be applied manually
 
 **Key files:**
-- `experiments/rhino mcp server/` — router, setup docs, session log
-- `workflows/agent-team-modeling.md` — agent team modeling workflow (from 7-agent test)
-- `output/city101_hub/rhino_scripts/lock_05_chuv_gradient_v5_agent_team.py` — CHUV script (709 objects)
-- `~/repos/rhinomcp` — forked plugin (branch `feature/configurable-port`)
-- `LOCKBOARD.md` — task split for midterm
+- `output/research/rcp_services_deep_dive.md` — full RCP service inventory
+- `output/research/email_draft_rcp_vm.md` — RCP email (ready to review)
+- `output/research/email_draft_enac_rhino.md` — ENAC email (ready to review)
+- `claudes-corner/2026-03-25_brain-dump.md` — brain dump from this session
+- `claudes-corner/2026-03-25_ai-architecture-landscape.md` — tool/people research
+- `LOCKBOARD.md` — task split for midterm (dates corrected)
 
 ## Data verification gaps
 - **Night worker counts unsourced** — 4,600 / 1,680 / 1,500 / 400 / 300 / 730 are load-bearing claims with no CSV source. Need: OFS employment data, hospital annual reports, or field visit interviews.
@@ -81,4 +82,5 @@
 | 19-03 | Cairn Code | Rhino multi-instance: built router MCP server (31 tools, TCP), forked rhinomcp plugin for custom ports, discovered Mac single-process limit. Tested 7-agent team on Lock 05 CHUV (709 objects). Created agent-team-modeling workflow. |
 | 20-22 | Cairn Code | Weekend sprint: archibase built (4-layer knowledge system, 35K+ chunks), Gemini vision embedder, ChromaDB populated (2,480 entries), training sessions. App concept parked as thesis-scale. |
 | 23-03 | Cairn Code | Kitchen analogy animation v1 in Blender (6 videos, character design, house set). Claude character (Cairn) designed + rigged. Emote renders v1. |
-| 24-03 | Cairn Code | Cost sheet v2 finalized (1200 CHF budget). Email to Alex sent. Meeting notes: rehearsal Friday March 28, presentation guidance. Pushed 14 commits, resolved merge conflict with Henna's changes. Organized untracked files. Full LOCKBOARD rewrite with midterm task split + presentation structure (11 slides). |
+| 24-03 | Cairn Code | Cost sheet v2 finalized (1200 CHF budget). Email to Alex sent. Meeting notes: rehearsal Friday March 27, presentation guidance. Pushed 14 commits, resolved merge conflict with Henna's changes. Organized untracked files. Full LOCKBOARD rewrite with midterm task split + presentation structure (11 slides). |
+| 25-03 | Cairn Code | Late night session (02:00–03:15). RCP deep dive: found AIaaS (70+ models, embeddings), discovered DSI's VSI for VMs vs HaaS bare metal. Both emails rewritten + humanized. Humanizer skill installed. README pushed. Brain dump + AI landscape scan in Claude's Corner. Dates corrected (Fri 27 screen test, Mon 30 midterm). |

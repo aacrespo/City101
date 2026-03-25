@@ -1,7 +1,7 @@
 # Lockboard
 **Updated**: 2026-03-24
 
-**Midterm: Friday March 28 (screen test) / March 30 (presentation)**
+**Friday March 27 (screen test with Alex) / Monday March 30 (midterm presentation)**
 
 ---
 
