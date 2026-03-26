@@ -65,6 +65,10 @@
 
 ---
 
+## Nice-to-Have (post-midterm, or if budget allows)
+
+- [ ] **rhinobase + iboisbase** — PM project `rhinobase-iboisbase`. Plan at `state/pm/rhinobase-iboisbase/`. 4 phases, 8 agents, ~4 hrs. Even compas_wood + RhinoCommon API alone would strengthen slide 6.
+
 ## Agent / Autonomous Tasks (can run without Andrea)
 
 - [ ] "Before" Rhino scripts for Crissier-Busigny + Nyon-Genolier

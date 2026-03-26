@@ -43,6 +43,9 @@
 4. **Run v0 scripts in Rhino** — quick 5-second runs for before/after screenshots
 5. **Production sprint** — models (Rennaz Lock 07, before/after comparison), presentation slides, animation iteration
 
+**Post-midterm direction (locked March 26, don't change for presentation):**
+The 4-layer knowledge architecture (L1 SQLite / L2 Markdown / L3 Code / L4 Vector DB) generalizes beyond construction. Each "base" applies the same pattern to a different domain: archibase (construction), rhinobase (Rhino modeling), blenderbase (Blender), iboisbase (timber craft from IBOIS tools). L3 scripts bridge domains — they read constraints from archibase and execute via rhinobase. Full plan + prompts at `state/pm/rhinobase-iboisbase/`.
+
 **Watch out for:**
 - `agent-team-modeling-v2.md` is superseded by v3 — modeler command and feedback memory already updated
 - `/pm` is new and untested — first real use will be the midterm production sprint
