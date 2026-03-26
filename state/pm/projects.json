@@ -22,6 +22,17 @@
       "framework": "observations/research/strategy/knowledge_feedback_framework.md"
     },
     {
+      "id": "open-source-study",
+      "name": "Open Source AEC Study",
+      "owner": "andrea",
+      "status": "planned",
+      "priority": "post-midterm, learning project",
+      "created": "2026-03-26",
+      "feeds_into": ["rhinobase-iboisbase", "knowledge-infrastructure", "fabrication-bridge"],
+      "summary": "Study COMPAS, Ladybug, HdM Calc/Rhyton, openLCA — extract patterns for our knowledge system. License-aware: MIT usable, unlicensed = patterns only.",
+      "prompts_dir": "state/pm/open-source-study/prompts/"
+    },
+    {
       "id": "fabrication-bridge",
       "name": "Fabrication Bridge — Supply Chain + Ecological Impact",
       "owner": "andrea",

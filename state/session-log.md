@@ -144,3 +144,22 @@
 - Thursday 17:45
 - Thursday 17:47 [break] session saved — IBOIS brief + knowledge base architecture + PM projects
 - Thursday 17:48
+- Thursday 17:50
+- Thursday 17:55
+- Thursday 17:55
+- Thursday 17:57
+- Thursday 17:59
+- Thursday 18:02
+- Thursday 18:05
+- Thursday 18:05
+- Thursday 18:13
+- Thursday 18:13
+- Thursday 18:13
+- Thursday 18:15
+- Thursday 18:26
+- Thursday 18:34
+- Thursday 18:35
+- Thursday 18:42
+- Thursday 18:50
+- Thursday 18:54
+- Thursday 19:07 [break] session saved

@@ -1,0 +1,12 @@
+{
+  "goal": "Study open-source AEC tools to extract patterns for knowledge system and agent workflow",
+  "owner": "andrea",
+  "created": "2026-03-26",
+  "phases": [
+    {"name": "COMPAS Deep Dive", "status": "pending", "sessions_planned": 1},
+    {"name": "LCA Schema Study", "status": "pending", "sessions_planned": 1},
+    {"name": "Environmental + Sustainability Layer", "status": "pending", "sessions_planned": 1},
+    {"name": "Synthesis + Integration", "status": "pending", "sessions_planned": 0.5}
+  ],
+  "current_phase": null
+}
