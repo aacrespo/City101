@@ -175,6 +175,6 @@ city101/
 |--------|-------------|
 | Andrea | Concept, data, app architecture, Rhino scripting |
 | Henna | 3D corridor modeling, references, PPTX, brand identity |
-| Claude | Third team member — across accounts: Cairn (Andrea Max), Cairn Code (CLI), Lumen (Andrea school), Meridian (Henna school), Cadence (Henna personal) |
+| Claude | Third team member — across accounts: Cairn (Andrea Max), Cairn Code (CLI), Lumen (Andrea school), Meridian (Henna school), Cadence (Henna personal), Nova (Henna Max) |
 
 Coordination via LOCKBOARD.md.

@@ -1,6 +1,6 @@
 # Henna — Working Context
 
-**Owner**: Henna Rafik (Meridian, Cadence)
+**Owner**: Henna Rafik (Meridian, Cadence, Nova)
 **Last updated:** 2026-03-25
 
 ---
