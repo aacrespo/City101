@@ -19,21 +19,27 @@ node_modules/
 *.swo
 *~
 
+# Local Claude Code settings (personal config)
+.claude/settings.local.json
+
 # Temporary / staging
 output/tmp/
 
 # Large binaries — keep local, not in git (saves LFS quota)
 *.pptx
+*.docx
 *.gpkg
 *.qgz
 *.3dm
 *.blend
+*.blend1
 *.pdf
 *.png
 *.jpg
 *.jpeg
 *.tif
 *.tiff
+*.zip
 
 # swissBUILDINGS3D extracted DXFs (can be >100MB, keep .dxf.zip instead)
 output/city101_hub/context/*swissbuildings3d.dxf
@@ -44,8 +50,9 @@ output/city101_hub/context/*swissbuildings3d.dxf
 credentials.json
 .cookies.json
 
-# Dicobat vector database (large, rebuilt from source)
+# Vector databases (large, rebuilt from embeddings)
 output/dicobat/vectordb/
+tools/vectordb/
 
 # Construction knowledge database (rebuilt from seed data)
 output/knowledge/construction.db
