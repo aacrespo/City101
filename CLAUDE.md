@@ -22,7 +22,7 @@ You're reading this now. Three more files load automatically from `.claude/rules
 |---------|-------|-----------|
 | `/analyst` | datasets/INVENTORY.md, LEARNINGS.md | data-collection, data-verification |
 | `/cartographer` | design_system/SPEC.md, datasets/INVENTORY.md | map-generation, map-export |
-| `/modeler` | 00_Workflow_v04.md (Sec 3.2), design_system/SPEC.md | rhino-modeling |
+| `/modeler` | rhino-playbook.md, design_system/SPEC.md (00_Workflow on demand) | rhino-modeling |
 | `/visualizer` | design_system/SPEC.md, visualizations/site/ | chart-generation, site-update |
 | `/builder` | design_system/SPEC.md, deliverables/ | site-deploy, narrative-assembly |
 
@@ -38,8 +38,8 @@ You're reading this now. Three more files load automatically from `.claude/rules
 | Command | Reads | Workflows |
 |---------|-------|-----------|
 | `/team` | all role commands, prompt-craft.md | dynamic team assembly |
-| `/build-with-agent-team` | role commands, design_system/SPEC.md | agent-team-modeling |
-| `/research-with-agent-team` | role commands, observations/ | agent-team-research |
+| `/build-with-agent-team` | role commands, design_system/SPEC.md | agent-team-modeling-v3 |
+| `/research-with-agent-team` | role commands, observations/ | — (self-contained command) |
 
 **Skills**
 | Command | Reads | Workflows |
@@ -48,8 +48,13 @@ You're reading this now. Three more files load automatically from `.claude/rules
 | `/import-terrain` | output/city101_hub/ | terrain import to Rhino |
 | `/site-context` | output/city101_hub/, datasets/ | site context assembly |
 | `/rhino-review` | Rhino document state | — |
-| `/pdf` | (target file) | PDF export |
+| `/pdf` | (target file) | tools/export/md_to_html.py |
 | `/unlock` | (target PDF) | — |
+
+**Planning**
+| Command | Reads | Workflows |
+|---------|-------|-----------|
+| `/pm` | CONTEXT.md, LOCKBOARD.md, state/pm/ | phase planning, topology design |
 
 **Utilities**
 | Command | Reads | Workflows |
@@ -140,9 +145,10 @@ city101/
 ├── handoffs/                  ← all session handoffs + brain dumps
 ├── prompts/                   ← Claude/LLM execution prompts
 ├── briefs/                    ← assignment specs (A01–A04) + PPTX template
-├── state/                     ← session logs, saved sessions (auto-managed by hooks)
+├── state/                     ← session logs, saved sessions, PM plans (auto-managed)
+│   └── pm/                    ← master plans, phase status, topology history
 ├── scripts/                   ← ad-hoc processing (animation pipeline, hooks)
-├── tools/                     ← reusable scripts (data/, maps/, git/, util/)
+├── tools/                     ← reusable scripts (data/, maps/, git/, util/, export/)
 ├── workflows/                 ← step-by-step SOPs
 ├── design_system/             ← SPEC.md — visual identity
 ├── archive/                   ← superseded files, old outputs, terminal saves

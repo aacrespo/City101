@@ -14,7 +14,7 @@ When creating any new map for the project.
 ## Steps — Leaflet (web)
 1. **Read `design_system/SPEC.md`** for visual identity
 2. **Load base layers** using `tools/maps/load_base_layers.py` (lake, train lines, communes)
-3. **Apply design system**: CartoDB Dark Matter tiles, gold accent, DM Sans font
+3. **Apply design system** via `tools/maps/apply_design_system.py`: CartoDB Dark Matter tiles, gold accent, DM Sans font
 4. **Add data layer**: load GeoJSON from `datasets/` or generate via `tools/util/csv_to_geojson.py`
 5. **Configure popups and legend** — use CSS variables from SPEC.md
 6. **Add to `city101_geodata.js`** if the map will be in the scrollytelling site (for file:// compatibility)

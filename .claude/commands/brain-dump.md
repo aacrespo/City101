@@ -63,6 +63,16 @@ Produce both — a brainstorm section for the open questions, and a brief sectio
    - Anything important that was left out (gaps in the dump)
    - Suggested next step
 
+8. **Evaluate if this needs phasing.** If the structured output reveals:
+   - Multiple sessions or days of work
+   - Dependencies between steps (A must finish before B starts)
+   - Different team topologies per phase (some parts need agent teams, others are solo)
+   - A goal that naturally decomposes into 3+ phases
+
+   Then suggest running `/pm` on the result: "This looks like a multi-phase effort — want me to run `/pm` to break it into phases with prompt files and topology recommendations?"
+
+   If the user agrees, feed the structured brain-dump output directly into `/pm` as its input goal. The brain-dump becomes the PM's brief.
+
 ## Rules
 - Never add information the user didn't provide or imply. Structure, don't invent.
 - Keep prompts concise — context efficiency matters. Don't pad.
