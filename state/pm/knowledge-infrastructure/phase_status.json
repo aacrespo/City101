@@ -1,0 +1,33 @@
+{
+  "goal": "Add feedback loop to knowledge bases — case notes from reviews, medical guidelines model",
+  "owner": "shared",
+  "created": "2026-03-26",
+  "phases": [
+    {
+      "name": "Schema + Review Wiring",
+      "status": "pending",
+      "sessions_planned": 1,
+      "agents": 1,
+      "estimated_hours": 1,
+      "notes": "Add case_notes table, wire /rhino-review to write there"
+    },
+    {
+      "name": "First Test",
+      "status": "pending",
+      "sessions_planned": 0,
+      "agents": 0,
+      "estimated_hours": 0,
+      "notes": "Piggybacks on first lock modeling session. No extra time."
+    },
+    {
+      "name": "First Review Board",
+      "status": "pending",
+      "sessions_planned": 1,
+      "agents": 0,
+      "estimated_hours": 0.5,
+      "depends_on": "3+ modeling sessions with case notes",
+      "notes": "Human session. Review accumulated case notes."
+    }
+  ],
+  "current_phase": null
+}

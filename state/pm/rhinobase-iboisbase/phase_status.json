@@ -1,0 +1,54 @@
+{
+  "goal": "Build rhinobase (Rhino modeling) + iboisbase (IBOIS timber craft) — two new knowledge bases alongside archibase",
+  "created": "2026-03-26",
+  "priority": "nice-to-have for midterm, core work post-midterm",
+  "scalability_rule": "Promote to a base only when LEARNINGS.md for that domain gets too long. Don't create bases speculatively.",
+  "phases": [
+    {
+      "name": "rhinobase — RhinoCommon Knowledge",
+      "status": "pending",
+      "sessions_planned": 1,
+      "agents": 3,
+      "topology": "flat parallel",
+      "estimated_hours": 2,
+      "runs_parallel_with": "iboisbase — IBOIS Extraction",
+      "prompt": "state/pm/rhinobase-iboisbase/prompts/phase0_rhinocommon.md",
+      "output": "output/rhinobase/",
+      "notes": "API docs (L1) + developer guides (L2) + forum idioms (L4). Can drop forum agent if budget tight."
+    },
+    {
+      "name": "iboisbase — IBOIS Extraction",
+      "status": "pending",
+      "sessions_planned": 1,
+      "agents": 5,
+      "topology": "flat parallel",
+      "estimated_hours": 3,
+      "runs_parallel_with": "rhinobase — RhinoCommon Knowledge",
+      "prompt": "state/pm/rhinobase-iboisbase/prompts/phase1_ibois_extraction.md",
+      "output": "output/iboisbase/",
+      "notes": "4 repos + README-only docs. compas_wood is bottleneck."
+    },
+    {
+      "name": "Integration",
+      "status": "pending",
+      "sessions_planned": 1,
+      "agents": 3,
+      "topology": "sequential then parallel",
+      "estimated_hours": 2,
+      "depends_on": ["rhinobase", "iboisbase"],
+      "notes": "L3 scripts grounded in both bases. New MCP tools. Cross-tool guide. CSVs."
+    },
+    {
+      "name": "Roundwood Loop",
+      "status": "pending",
+      "sessions_planned": 1,
+      "agents": 1,
+      "topology": "exploratory",
+      "estimated_hours": 1,
+      "depends_on": ["Integration", "IBOIS meeting 2026-03-27"],
+      "notes": "Incorporate Damien's feedback. Build end-to-end design loop."
+    }
+  ],
+  "current_phase": null,
+  "minimum_viable_run": "RhinoCommon API (Agent F) + compas_wood (Agent A) + 2-3 L3 scripts = 3 agents, ~3 hrs"
+}

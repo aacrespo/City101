@@ -1,0 +1,36 @@
+{
+  "projects": [
+    {
+      "id": "rhinobase-iboisbase",
+      "name": "Knowledge Base Expansion (rhinobase + iboisbase)",
+      "owner": "andrea",
+      "status": "planned",
+      "priority": "post-midterm",
+      "created": "2026-03-26",
+      "summary": "Build rhinobase (RhinoCommon fluency) + iboisbase (IBOIS timber craft). 4 phases, 8 agents max, ~4 hrs.",
+      "prompts_dir": "state/pm/rhinobase-iboisbase/prompts/"
+    },
+    {
+      "id": "knowledge-infrastructure",
+      "name": "Knowledge Feedback Loop (medical guidelines model)",
+      "owner": "shared",
+      "status": "planned",
+      "priority": "post-midterm, test during lock modeling",
+      "created": "2026-03-26",
+      "depends_on": "rhinobase-iboisbase",
+      "summary": "Add case_notes tables to bases, wire /rhino-review to write there. ~1.5 hrs + piggyback on modeling sessions.",
+      "framework": "observations/research/strategy/knowledge_feedback_framework.md"
+    },
+    {
+      "id": "fabrication-bridge",
+      "name": "Fabrication Bridge — Supply Chain + Ecological Impact",
+      "owner": "andrea",
+      "status": "future",
+      "priority": "thesis-scale, after midterm + modeling",
+      "created": "2026-03-26",
+      "depends_on": ["rhinobase-iboisbase", "knowledge-infrastructure", "Raccoon license from IBOIS"],
+      "summary": "Connect design → sourcing → transport → fabrication → assembly → verification as a traceable, ecologically quantified chain. Roundwood as material passport. Per-lock supply chain comparison.",
+      "framework": "observations/research/strategy/fabrication_bridge_framework.md"
+    }
+  ]
+}
