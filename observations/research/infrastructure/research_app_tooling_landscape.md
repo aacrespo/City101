@@ -228,6 +228,15 @@ If AI-generated components matter to you (using v0, Bolt.new), then **React/Next
 - **Limitation:** Designed for earth-scale to city-scale, not building-scale. Heavy library. The lock configurator needs building-detail 3D, not globe rendering. Cesium ion (tile hosting) is paid for serious use
 - **Cost:** Library free (Apache 2.0). Cesium ion: free tier limited, paid for production
 
+### Rhino.Inside
+- **What:** McNeel's embeddable Rhino compute kernel — runs RhinoCommon + Grasshopper headless inside any .NET host (web server, Unity, Revit, custom app). No Rhino GUI needed. The geometry engine becomes a library call
+- **Fit: YES — Phase 2/3, server-side geometry generation**
+- **Advantage:** Instead of generating `.py` Rhino scripts the user downloads and runs locally, the app could call Rhino.Inside on a server and return actual geometry (glTF, mesh, NURBS). Users wouldn't need a Rhino license. Full RhinoCommon API available: booleans, NURBS, meshing, Grasshopper definitions. Could power a "click site → get 3D lock model in browser" flow. Pairs naturally with Three.js viewer on the frontend
+- **Limitation:** Requires a **Rhino.Inside license** (~$995 one-time per deployment, or included with Rhino 8+ commercial license). Server needs .NET runtime. Compute-heavy — needs a real server, not serverless functions. McNeel's compute.rhino3d (their hosted version) exists but is meant for Grasshopper definitions, not arbitrary RhinoCommon code. Setup is non-trivial
+- **Licensing:** Rhino.Inside is free for development/testing. Production deployment requires a Rhino license per server instance. EPFL may already have institutional licenses that cover this — worth checking with Sébastien (who approved the LAN Zoo licenses)
+- **Architecture:** Client (Svelte + Three.js) → API call with site parameters → Server (Rhino.Inside + lock generation logic) → returns glTF → Three.js renders in browser. The parametric scripts you already have (`output/city101_hub/rhino_scripts/`) could run server-side with minimal adaptation
+- **Cost:** Free for dev. ~$995/deployment for production (or covered by institutional license). Server hosting: Railway or a small VM ($5-20/mo)
+
 ### Recommendation
 
 **Phase 1 (midterm):** Keep Leaflet. It works. Don't touch the map library 12 days before a deadline.
@@ -329,5 +338,6 @@ Google AI Studio is not relevant as an app builder. It's relevant only for proto
 | Railway | Deploy | If need DB server | Free tier | Full backend |
 | Three.js | 3D | Phase 2 lock preview | Free | Best for building-scale 3D |
 | MapLibre GL JS | Maps | Phase 2 map upgrade | Free | 3D terrain + vector tiles |
+| Rhino.Inside | Server-side 3D | Phase 2/3 | Free dev / ~$995 prod | Headless Rhino kernel as a service |
 | deck.gl | Geospatial | Overkill | Free | Big data viz |
 | CesiumJS | 3D globe | No | Free/paid | Wrong scale |
