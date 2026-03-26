@@ -70,7 +70,13 @@ Keep it short enough to scan in 30 seconds. Overwrite the previous handoff each 
 ### 8. Update LOCKBOARD.md
 Reflect current state: what each person is working on, any blockers.
 
-### 9. Final sync commit and push
+### 9. Verify nothing is left behind
+Run `git status`. If there are still untracked or unstaged files:
+- **For each file**: ask the user — commit, gitignore, or leave for next session?
+- **Never push with uncommitted work unless the user explicitly says to leave it.**
+- This is the last check — anything not committed here could be lost if Henna pushes and you pull next session.
+
+### 10. Final sync commit and push
 ```
 git add CONTEXT.md CONTEXT_ANDREA.md CONTEXT_HENNA.md LOCKBOARD.md [any new placeholder .md files]
 git commit -m "[SYNC] Session end — [brief description]"
@@ -83,3 +89,5 @@ git push
 - Never commit to main directly if on a feature branch
 - Pull before push to avoid conflicts
 - Ask before committing files the user hasn't mentioned
+- **Conflict protocol**: If `git pull --rebase` hits a conflict, STOP. Show the user which files conflict and what the remote changes are. Never auto-resolve conflicts in shared files (CONTEXT.md, LOCKBOARD.md, CONTEXT_HENNA.md). Let the user decide.
+- **Long sessions**: If a session has been running 2+ hours without committing, do a mid-session `git pull` before the next commit to catch remote changes early. Smaller, more frequent commits reduce conflict surface.

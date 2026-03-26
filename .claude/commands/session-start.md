@@ -13,6 +13,7 @@ Then summarize:
 - **Active work**: what Andrea and Henna are each doing
 - **Blocked items**: anything stuck
 - **Recommended next steps**: what to work on this session
+- **Recent remote activity**: Run `git log --oneline -5 origin/main` after pull. If there are commits since your last session that you didn't make, flag them: "Henna pushed X commits since your last session: [summary]." This prevents surprise conflicts.
 
 5. Check `claudes-corner/` in the project root. If anything was added since last session, share a brief highlight. Feel free to add new thoughts — no permission needed.
 

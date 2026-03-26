@@ -45,6 +45,14 @@
 - Use branches for: WIP code, big changes needing review, anything you want the other person to look at before merging.
 - Push directly to main for: doc updates, lockboard, context, small verified changes.
 
+### Nothing left behind
+Before any push to remote, `git status` must be clean. Every untracked or modified file is either:
+- **Committed** — staged and in a commit
+- **Gitignored** — binary, local config, etc.
+- **Explicitly deferred** — user said "leave it for next session"
+
+Never push with uncommitted session work. With two people active on the repo, anything not committed can be overwritten by the next pull.
+
 ### Visual work (gitignored files)
 PNG, PDF, PPTX, QGZ, and other large binaries live on Google Drive, not in git.
 For each visual deliverable, create a placeholder markdown in the same directory:
