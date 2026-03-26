@@ -45,8 +45,9 @@ You're reading this now. Three more files load automatically from `.claude/rules
 | Command | Reads | Workflows |
 |---------|-------|-----------|
 | `/parametric` | knowledge bridge, archibase repo | parametric script generation |
-| `/import-terrain` | output/city101_hub/ | terrain import to Rhino |
-| `/site-context` | output/city101_hub/, datasets/ | site context assembly |
+| `/import-terrain` | geodata/sites/, output/city101_hub/ | terrain + buildings + infrastructure import to Rhino |
+| `/site-context` | geodata/sites/, datasets/ | site extraction (terrain, buildings, rails, roads, water) |
+| `/site-select` | corridor_analysis/, geodata/config.json | site selection + extraction for a region |
 | `/rhino-review` | Rhino document state | — |
 | `/pdf` | (target file) | PDF export |
 | `/unlock` | (target PDF) | — |
@@ -96,6 +97,12 @@ city101/
 ├── LEARNINGS.md               ← accumulated pitfalls
 ├── LOCKBOARD.md               ← who's doing what + task split
 ├── 00_Workflow_v04.md         ← scale conventions, Rhino rules
+│
+├── geodata/                   ← swisstopo extraction pipeline
+│   ├── config.json            ← dataset metadata + reference points
+│   ├── README.md              ← pipeline docs, output formats, error handling
+│   ├── scripts/               ← extract_site.py, build_site_rhino.py, find_drive.py
+│   └── sites/                 ← extracted site data (terrain, buildings, infrastructure, imagery)
 │
 ├── app/                       ← Relay-Lock Configurator (demo + tool layer)
 │

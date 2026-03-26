@@ -1,43 +1,67 @@
 # Skill: Site Context
 
-Extract site context (buildings, rail, roads, terrain) for a lock node.
+Extract site context (terrain, buildings, railways, roads, water) for a lock node or any location along the Arc Lemanique.
 
 ## Input
-Argument: node ID (1–7). If not provided, ask.
+Argument: node ID (1-7), a place name (e.g., "Morges"), or LV95 coordinates. If not provided, ask.
 
 ## Process
 
-1. **Read coordinates** from `output/city101_hub/prototypology_content.json` for the given node.
+### Preferred path: Swisstopo extraction pipeline
 
-2. **Check for existing GIS data** in:
-   - `source/00-datasets 2/lhiamrossier/GPKG/190226_TLM3D_City101_v3_EN.gpkg`
-   - `source/WORK copy/`
-   - `source/Documents copy/`
-   - `output/city101_hub/terrain/` (already processed)
+For any site with raw swisstopo data on the shared drive:
 
-3. **Extract 500m radius** around the node's LV95 coordinates:
-   - Buildings (with heights if available)
-   - Rail lines
-   - Roads
-   - Terrain (from swissALTI3D if available)
+1. **Run extraction**:
+```bash
+# By node ID
+python geodata/scripts/extract_site.py --name "node_03" --node 3 --radius 750
 
-4. **Convert to DXF** for Rhino import, with layers:
-   - `Buildings` — extruded footprints (heights from attribute or default 10m)
-   - `Rail` — polylines
-   - `Roads` — polylines (edges)
-   - `Terrain` — mesh or contours
+# By place name
+python geodata/scripts/extract_site.py --name "morges" --radius 750
 
-5. **Write metadata JSON** with:
-   - Source files used
-   - CRS (must be LV95 / EPSG:2056)
-   - Layer list and feature counts
-   - Any data gaps or quality notes
+# By coordinates
+python geodata/scripts/extract_site.py --name "custom_site" --center 2527500 1151500 --radius 750
+```
+
+2. **Check output** in `geodata/sites/{name}/`:
+   - `terrain.json` — elevation grid (2m resolution)
+   - `buildings.json` — LOD2 3D building meshes (vertices + faces)
+   - `infrastructure.json` — railways, roads, water features
+   - `context.jpg` — aerial photo
+   - `config.json` — site metadata
+
+3. **Import to Rhino** via `/import-terrain` or use `build_site_rhino.py` as reference.
+
+### Skip flags
+
+Skip any step if data is unavailable or not needed:
+```bash
+--skip-terrain --skip-buildings --skip-imagery --skip-infrastructure
+```
+
+### Fallback path: Legacy GIS data
+
+If the shared drive isn't available, check for existing GIS data in:
+- `source/00-datasets 2/lhiamrossier/GPKG/190226_TLM3D_City101_v3_EN.gpkg`
+- `source/WORK copy/`
+- `source/Documents copy/`
+- `output/city101_hub/terrain/` (already processed)
 
 ## Output
-- `output/city101_hub/terrain/node_XX_context.dxf`
-- `output/city101_hub/context/node_XX_metadata.json`
-- Print summary: what was found, what's missing, quality assessment
+- Extracted site data in `geodata/sites/{name}/`
+- Print summary: what was found, feature counts, any errors or missing data
+
+## Troubleshooting
+
+| Problem | Solution |
+|---------|----------|
+| "Drive not found" | Mount Google Shared Drive "City 101", or set `SWISSTOPO_PATH` env var |
+| "VRT not found" | Script falls back to individual tiles automatically |
+| "GDB/GPKG not found" | Copy the file to the `Swisstopo/` folder on the shared drive |
+| Buildings appear as triangles | Use the mesh import path (vertices + faces), not the extrusion path |
+| Slow extraction | GeoPackage reads from network drive take 30-60s — be patient |
+| Coordinates look wrong | Verify you're using EPSG:2056 (LV95), not WGS84 |
 
 ## Dependencies
-- Python with geopandas, fiona, ezdxf (or equivalent)
-- Coordinate converter: `tools/data/convert_coordinates.py`
+- Python with rasterio, geopandas, fiona, shapely, Pillow, numpy
+- Install: `pip install -r geodata/scripts/requirements.txt`

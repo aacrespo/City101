@@ -1,0 +1,54 @@
+{
+  "coordinate_system": "EPSG:2056",
+  "datasets": {
+    "terrain": {
+      "name": "swissALTI3D",
+      "type": "DTM",
+      "vrt": "ch.swisstopo.swissalti3d-combined_2026-03-25_011944.vrt",
+      "tile_prefix": "swissalti3d_",
+      "resolution_m": 2,
+      "elevation_unit": "meters_asl"
+    },
+    "imagery": {
+      "name": "SWISSIMAGE",
+      "vrt": "ch.swisstopo.swissimage-dop10-combined_2026-03-25_214306.vrt",
+      "tile_prefix": "swissimage-dop10_",
+      "resolution_m": 0.5
+    },
+    "buildings": {
+      "name": "swissBUILDINGS3D",
+      "file": "swissbuildings3d_2_2024-05_2056_5728.gdb.zip",
+      "format": "FileGDB",
+      "note": "LOD2 with roof geometry. Use 2024-05 version (latest)."
+    },
+    "infrastructure": {
+      "name": "swissTLM3D",
+      "file": "swisstlm3d_2026-02-24_2056_5728.gpkg.zip",
+      "format": "GeoPackage",
+      "layers": {
+        "railways": "tlm_oev_eisenbahn",
+        "roads": "tlm_strassen_strasse",
+        "water_flowing": "tlm_gewaesser_fliessgewaesser",
+        "water_standing": "tlm_gewaesser_stehendes_gewaesser"
+      },
+      "note": "Complete topographic vector data. 3D LineStrings for linear features."
+    }
+  },
+  "reference_points_lv95": {
+    "Geneva": [2500200, 1118400],
+    "Nyon": [2508600, 1137700],
+    "Morges": [2526800, 1151700],
+    "Lausanne_Ouchy": [2534400, 1151600],
+    "Lutry": [2539500, 1150200],
+    "Vevey": [2553500, 1145500],
+    "Montreux": [2558000, 1142800],
+    "Villeneuve": [2561500, 1137500]
+  },
+  "arc_lemanique_bounds_lv95": {
+    "west": 2497000,
+    "east": 2562000,
+    "south": 1110000,
+    "north": 1155000
+  },
+  "lake_geneva_elevation_m": 372
+}
