@@ -13,6 +13,7 @@
 
 ### Presentation (Slides)
 - [ ] **Slide 5 — Workflow**: Kitchen analogy animation (repo = kitchen, scripts = recipes, DB = ingredients). Pixel agents. Parallel axonometry showing VM vs MCP vs teams. Explains: what happens when you start a session in this repo. v1 animated overnight, needs iteration.
+- [ ] **Review canonical kitchen story** — `observations/research/strategy/kitchen_analogy_canonical.md` — review brigade mapping + three pillars before animating further
 - [ ] **Slide 5 — Pixel agents concept**: Commander board for architects/construction. Show agents modeling, building. Sister designing character angles (blocker — fallback: show VS Code pixel agents feature + explain vision).
 - [ ] Claude character emotes v2 — Blender modeling + render PNGs for gifs/animations. v1 done.
 - [ ] Healthcare diagram — animated merry-go-round with time
