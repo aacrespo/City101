@@ -11,7 +11,7 @@
 1. **Emails TODAY**: EPFL VM services (specs for access) + ENAC (Rhino licenses)
 2. **Presentation slides**: Kitchen analogy animation (slide 5), pixel agents concept (slide 5), character emotes v2, healthcare merry-go-round diagram
 3. **Modeling**: Rennaz node (Lock 07) with site. "Before" scripts for Crissier-Busigny + Nyon-Genolier (no knowledge base — for before/after comparison)
-4. **Infrastructure**: ChromaDB → Qdrant migration, continue embedding, token optimization, auto dream, /loop, DeepSeek, ruflow, lock files consistency
+4. **Infrastructure**: ~~ChromaDB → Qdrant~~ DONE, continue embedding (overnight), ~~token optimization~~ DONE, ~~ruflow~~ DONE (v3 workflow), ~~DeepSeek~~ parked for app phase, lock files consistency (parked for after midterm)
 
 ### Completed
 - ✅ A03 deliverables submitted
@@ -23,34 +23,38 @@
 
 ## Handoff
 
-**What was done (March 25, 02:00–03:15):**
-- RCP deep dive: found AIaaS (70+ models, embedding endpoints, OpenAI-compatible API at inference.rcp.epfl.ch). Could replace Gemini for embeddings.
-- Discovered DSI runs a VM service (VSI) separate from RCP's HaaS. HaaS is bare metal overkill — VSI is probably what we need. Not publicly documented though.
-- Both emails rewritten and humanized: RCP (ask which service fits, mention AIaaS) + ENAC (do you have floating Rhino licenses for VMs)
-- Humanizer skill installed (~/.claude/skills/humanizer) — needs Claude Code restart to register as /humanizer
-- README.md created and pushed (previous session)
-- Brain dump captured: kitchen analogy refinements, disclaimer slide idea, Alex Friday agenda, before-scripts strategy, humanizer/Deerflow/when-Claude-is-down ideas
+**What was done (March 26, audit + infrastructure session):**
+- Full repo audit: 20 commands, 11 agents, 16 workflows, 11 tools, 14 knowledge docs — all cross-referenced
+- Token optimization: `/modeler` no longer loads 1,336-line workflow (~1,200 tokens saved), `/pdf` refactored to tool (370→20 lines), MEMORY.md trimmed
+- Workflow v3 created: Ruflo patterns (health-check pings, coordination log, weighted authority, team cap, lead-never-builds)
+- `/pm` command created for phase planning + topology design, integrated with `/brain-dump`
+- IBOIS meeting brief prepared for March 27
+- Rhino.Inside added to app tooling landscape
+- v0 "before" scripts generated: Crissier-Bussigny (visibility lock) + Nyon-Genolier (vertical connector)
+- DeepSeek researched → parked for app phase (not useful for current modeling/session work)
+- Auto-dream evaluated → skipped (curated memory system is better)
+- Orphan audit: fixed CLAUDE.md phantom ref, added apply_design_system.py to map workflow, point-cloud-protocol referenced from modeler
+- new-dataset-integration workflow: parked (not archived)
 
 **What's next:**
-1. **Send emails** — review drafts fresh, schedule for morning send
-2. **Qdrant migration prompt** — write overnight autonomous migration (ChromaDB → Qdrant). Hold on re-embedding until RCP responds about AIaaS.
-3. **Infrastructure master list** — collect all planned repo/workflow changes into one doc
-4. **Before scripts** — Crissier-Busigny + Nyon-Genolier, naive (no archibase)
-5. **Presentation prep** — slides, animations, models
+1. **IBOIS meeting** (March 27) — brief at `output/ibois_meeting_brief_2026-03-27.md`
+2. **Screen test with Alex** (March 27) — rehearsal
+3. **Embedding pipeline overnight** — 2,204 lost entries + YouTube tutorials with Gemini
+4. **Run v0 scripts in Rhino** — quick 5-second runs for before/after screenshots
+5. **Production sprint** — models (Rennaz Lock 07, before/after comparison), presentation slides, animation iteration
 
 **Watch out for:**
-- Email drafts at `output/research/email_draft_rcp_vm.md` and `email_draft_enac_rhino.md` — review before sending
-- RCP deep dive (`output/research/rcp_services_deep_dive.md`) has some unverified assumptions about HaaS specs (were in images, couldn't extract). Don't cite specs without checking.
-- Dates: Friday March 27 = screen test with Alex. Monday March 30 = midterm. LOCKBOARD corrected.
-- Humanizer won't show as /humanizer until restart — but patterns can be applied manually
+- `agent-team-modeling-v2.md` is superseded by v3 — modeler command and feedback memory already updated
+- `/pm` is new and untested — first real use will be the midterm production sprint
+- v0 scripts have approximate SITE_ORIGIN (no terrain survey for Lock 04/05) — fine for presentation, not for real modeling
 
-**Key files:**
-- `output/research/rcp_services_deep_dive.md` — full RCP service inventory
-- `output/research/email_draft_rcp_vm.md` — RCP email (ready to review)
-- `output/research/email_draft_enac_rhino.md` — ENAC email (ready to review)
-- `claudes-corner/2026-03-25_brain-dump.md` — brain dump from this session
-- `claudes-corner/2026-03-25_ai-architecture-landscape.md` — tool/people research
-- `LOCKBOARD.md` — task split for midterm (dates corrected)
+**Key files this session:**
+- `workflows/agent-team-modeling-v3.md` — current team modeling workflow
+- `.claude/commands/pm.md` — project manager command
+- `tools/export/md_to_html.py` — PDF export tool
+- `output/ibois_meeting_brief_2026-03-27.md` — IBOIS talking points
+- `output/city101_hub/rhino_scripts/lock_04_nyon_genolier_vertical_v0.py`
+- `output/city101_hub/rhino_scripts/lock_05_crissier_bussigny_visibility_v0.py`
 
 ## Data verification gaps
 - **Night worker counts unsourced** — 4,600 / 1,680 / 1,500 / 400 / 300 / 730 are load-bearing claims with no CSV source. Need: OFS employment data, hospital annual reports, or field visit interviews.
@@ -84,3 +88,4 @@
 | 23-03 | Cairn Code | Kitchen analogy animation v1 in Blender (6 videos, character design, house set). Claude character (Cairn) designed + rigged. Emote renders v1. |
 | 24-03 | Cairn Code | Cost sheet v2 finalized (1200 CHF budget). Email to Alex sent. Meeting notes: rehearsal Friday March 27, presentation guidance. Pushed 14 commits, resolved merge conflict with Henna's changes. Organized untracked files. Full LOCKBOARD rewrite with midterm task split + presentation structure (11 slides). |
 | 25-03 | Cairn Code | Late night session (02:00–03:15). RCP deep dive: found AIaaS (70+ models, embeddings), discovered DSI's VSI for VMs vs HaaS bare metal. Both emails rewritten + humanized. Humanizer skill installed. README pushed. Brain dump + AI landscape scan in Claude's Corner. Dates corrected (Fri 27 screen test, Mon 30 midterm). |
+| 26-03 | Cairn Code | Full repo audit + infrastructure session. Token optimization (modeler -1200 tokens, pdf refactored, memory trimmed). Workflow v3 (Ruflo patterns). /pm command. IBOIS brief. v0 before-scripts. Cross-reference audit. DeepSeek researched → parked. Auto-dream → skipped. Rhino.Inside added to tooling landscape. |

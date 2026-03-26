@@ -20,17 +20,17 @@
 
 ### Modeling
 - [ ] **Rennaz node (Lock 07)** — model with site (Andrea's 1 of 3 site models). Scripts exist (v1–v3).
-- [ ] Generate "before" scripts for Crissier-Busigny + Nyon-Genolier nodes — basic Rhino scripts WITHOUT the knowledge base/playbook, to show before/after comparison in presentation
+- [x] Generate "before" scripts for Crissier-Busigny + Nyon-Genolier — **DONE** (v0 scripts, LOG 200, no archibase)
 
 ### Infrastructure
-- [x] ChromaDB → Qdrant migration — **DONE** (2026-03-25). 35,520 of 37,724 entries migrated. 2,204 lost to ChromaDB corruption (recoverable by re-embedding). Embedding pipeline unblocked.
-- [ ] Continue embedding: YouTube videos + remaining docs with Gemini API
-- [ ] Workflow hygiene — token optimization (hitting Claude Max daily limit)
-- [ ] Install `auto dream` command (memory consolidation)
+- [x] ChromaDB → Qdrant migration — **DONE** (2026-03-25)
+- [ ] Continue embedding: YouTube videos + remaining docs with Gemini API — **running overnight March 26**
+- [x] Workflow hygiene — token optimization **DONE** (modeler -1200 tokens, pdf refactored, memory trimmed)
+- [x] Auto dream — **SKIPPED** (curated memory system better)
 - [ ] Set up `/loop` command
-- [ ] Check DeepSeek integration
-- [ ] Integrate ruflow
-- [ ] Lock the lock files in repo so modeling uses consistent knowledge/workflow
+- [x] DeepSeek — **PARKED** for app phase
+- [x] Integrate Ruflo — **DONE** (agent-team-modeling-v3.md)
+- [ ] Lock the lock files — **PARKED** for after midterm
 
 ---
 
