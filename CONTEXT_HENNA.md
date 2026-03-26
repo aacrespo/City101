@@ -26,6 +26,8 @@
 - [ ] Blender MCP + router setup (Rhino multi-instance already working)
 
 ### Completed
+- ✅ Geodata pipeline operational — extract terrain, buildings, infrastructure for any site via `extract_site.py`
+- ✅ Rhino MCP site import working — terrain meshes, LOD2 buildings, railways, roads, water all import correctly
 - ✅ Modified Rhino plugin installed — multi-instance confirmed
 - ✅ Onboarded to git repo
 - ✅ All 7 field sites visited (March 10)
@@ -38,3 +40,4 @@
 |------|---------|---------------|
 | 02-03 | Cadence | Karim's diary v4 — narrative anchor for A02 crit. |
 | 08-03 | Meridian | Built 24 candidate sites for horizontal elevator. Interactive React artifact. |
+| 26-03 | Cadence | Built full geodata pipeline: swisstopo extraction (terrain, LOD2 buildings, infrastructure from swissTLM3D), site-selector agent, Rhino MCP import. Fixed building triangles (TIN mesh export). Tested Morges + Vevey end-to-end. |

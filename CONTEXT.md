@@ -266,6 +266,22 @@ See CLAUDE.md for the full repo tree (kept in sync there as the single source of
 4. Assignment briefs in `briefs/`
 5. Latest handoffs — `handoffs/HANDOFF_09-03_S2.md` (latest)
 
+### Geodata pipeline (operational as of 2026-03-26)
+
+Automated extraction of swisstopo data for any site along the corridor. Raw data on Google Shared Drive "City 101" -> `Swisstopo/` folder.
+
+**Datasets on drive**: swissALTI3D (2m terrain), SWISSIMAGE (0.5m aerial), swissBUILDINGS3D (LOD2 3D meshes), swissTLM3D (roads, rails, water).
+
+**Usage**: `python geodata/scripts/extract_site.py --name "morges" --node 3 --radius 750`
+
+**Output** per site (`geodata/sites/{name}/`): terrain.json, buildings.json (full 3D TIN meshes), infrastructure.json (railways, roads, water), context.jpg, config.json.
+
+**Rhino import**: `/import-terrain` or `/site-context` brings terrain mesh + building meshes + infrastructure curves into Rhino on proper layers.
+
+**Site selection**: `/site-select` analyzes corridor data (WCI, break points, TWCI, modal diversity) to choose the optimal location in a region, then runs extraction automatically.
+
+See `geodata/README.md` for full docs, output formats, error handling.
+
 ### Coordinate system
 Always LV95 / EPSG:2056. Web maps use WGS84. Source data often WGS84 — convert before QGIS.
 

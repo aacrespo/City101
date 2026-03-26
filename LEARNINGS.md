@@ -207,6 +207,20 @@ Half-resolution drafts render in 1-3 seconds per frame through MCP -- fast enoug
 ### Boolean hide keyframes need CONSTANT interpolation
 When bulk-smoothing all keyframes to BEZIER, explicitly skip `hide_render` and `hide_viewport` fcurves. These must stay CONSTANT or objects partially fade between visible/invisible instead of snapping. This caused subtle visual bugs in early builds.
 
+## Geodata pipeline
+
+### swissBUILDINGS3D stores TIN meshes, not footprints
+Each GDB record is a 3D MultiPolygon containing 30-70 triangle faces forming a TIN mesh (walls + roof). NOT simple footprint polygons. If you treat each polygon as a separate building or pick the "largest polygon," you get individual triangles, not buildings. The correct approach: export all triangle faces per record as mesh data (vertices + face indices), import as Rhino meshes. The `extract_site.py` `extract_buildings()` function handles this correctly.
+
+### GeoPackage reads from shared drive are slow
+Reading swissTLM3D (.gpkg.zip, 2.5GB) from Google Shared Drive takes 30-60 seconds per layer query. Don't assume it failed — just wait. If too slow, use `--skip-infrastructure` and extract infrastructure separately.
+
+### VRT fallback to individual tiles
+If the VRT mosaic file is missing or incomplete (some tiles not synced to shared drive), `extract_site.py` automatically falls back to finding individual GeoTIFF tiles by km-grid naming pattern. This works because swissALTI3D tiles are named `swissalti3d_{year}_{easting_km}-{northing_km}_*.tif`.
+
+### Terrain and buildings must share the same coordinate space
+When importing to Rhino, both terrain and buildings must use real LV95 coordinates (no offset). If terrain was extracted with one bbox and buildings with another, they won't align. Re-extract both with the same bbox. The `extract_site.py` script handles this when run once with all steps.
+
 ## Rhino MCP / Agent Teams
 
 ### Mac single-process limitation

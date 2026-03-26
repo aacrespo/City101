@@ -63,3 +63,6 @@ output/knowledge/construction.db
 
 # Terminal saved output (not for git)
 CLAUDE DOWN SAVE/
+
+# Extracted geodata site files (re-extract per machine)
+geodata/sites/
