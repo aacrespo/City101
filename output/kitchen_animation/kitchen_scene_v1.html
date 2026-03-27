@@ -1,0 +1,1535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>The Kitchen — Still On The Line</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;600;700&display=swap');
+
+  :root {
+    --bg: #0c0c14;
+    --bg-room: #1a1a2e;
+    --floor: #2a2520;
+    --floor-light: #352f28;
+    --wall-top: #1e1e30;
+    --gold: #c9a84c;
+    --gold-dim: rgba(201,168,76,0.25);
+    --text: #e8e6e1;
+    --text-muted: #9a9690;
+    --copper: #b87a56;
+    --teal: #5b8fa8;
+    --error: #c45d4a;
+    --green: #5a9e6f;
+    --surface: rgba(255,255,255,0.06);
+    --pixel: 4px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    background: #000;
+    width: 100%; height: 100vh;
+    overflow: hidden;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text);
+  }
+
+  body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* ── MAIN CONTAINER ── */
+  .scene-container {
+    width: 1920px; height: 1080px;
+    background: var(--bg);
+    position: absolute;
+    top: 0; left: 0;
+    overflow: hidden;
+    transform-origin: top left;
+    image-rendering: pixelated;
+  }
+
+  /* ── PIXEL GRID OVERLAY ── */
+  .scene-container::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+    background-size: 4px 4px;
+    pointer-events: none;
+    z-index: 100;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 64px;
+    background: rgba(12,12,20,0.95);
+    border-bottom: 2px solid var(--gold-dim);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 40px;
+    z-index: 50;
+  }
+  .header-title {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 14px;
+    color: var(--gold);
+    letter-spacing: 2px;
+  }
+  .header-scene {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  /* ── WORLD CANVAS ── */
+  .world {
+    position: absolute;
+    top: 64px; left: 0; right: 0; bottom: 120px;
+    overflow: hidden;
+  }
+
+  .world-inner {
+    position: absolute;
+    /* Total world: multiple rooms side by side */
+    width: 7680px; /* 4 screens wide */
+    height: 896px;
+    transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* ── ROOM BASE ── */
+  .room {
+    position: absolute;
+    top: 0;
+    width: 1920px;
+    height: 896px;
+    overflow: hidden;
+  }
+
+  /* Floor tiles */
+  .floor {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 560px;
+    background:
+      repeating-conic-gradient(var(--floor) 0% 25%, var(--floor-light) 0% 50%)
+      0 0 / 32px 32px;
+  }
+
+  /* Wall */
+  .wall {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 336px;
+    background: var(--wall-top);
+    border-bottom: 4px solid rgba(201,168,76,0.15);
+  }
+
+  /* ── ROOM 1: THE PROBLEM ── */
+  .room-1 { left: 0; }
+  .room-1 .wall { background: linear-gradient(180deg, #141425 0%, #1a1a30 100%); }
+
+  /* ── ROOM 2: GIT / LOGBOOK ── */
+  .room-2 { left: 1920px; }
+  .room-2 .wall { background: linear-gradient(180deg, #14201a 0%, #1a2e25 100%); }
+
+  /* ── ROOM 3: BRIGADE ── */
+  .room-3 { left: 3840px; }
+  .room-3 .wall { background: linear-gradient(180deg, #201418 0%, #2e1a22 100%); }
+
+  /* ── ROOM 4: THREE PILLARS ── */
+  .room-4 { left: 5760px; }
+  .room-4 .wall { background: linear-gradient(180deg, #1a1814 0%, #2e2a1a 100%); }
+
+  /* ── FURNITURE (pixel art via CSS) ── */
+  .furniture {
+    position: absolute;
+    image-rendering: pixelated;
+  }
+
+  /* Desk */
+  .desk {
+    width: 128px; height: 80px;
+    background: #5c4a3a;
+    border: 4px solid #4a3a2c;
+    border-radius: 4px;
+    box-shadow: 0 8px 0 #3a2c20;
+  }
+  .desk::after {
+    content: '';
+    position: absolute;
+    top: 8px; left: 8px;
+    width: 48px; height: 32px;
+    background: #2a2a3e;
+    border: 2px solid #3a3a50;
+    border-radius: 2px;
+    box-shadow: inset 0 0 8px rgba(91,143,168,0.3);
+  }
+
+  /* Bookshelf */
+  .bookshelf {
+    width: 64px; height: 128px;
+    background: #4a3a2c;
+    border: 4px solid #3a2c20;
+  }
+  .bookshelf::before {
+    content: '';
+    position: absolute;
+    top: 12px; left: 8px;
+    width: 44px; height: 16px;
+    background: repeating-linear-gradient(90deg,
+      var(--copper) 0px, var(--copper) 6px,
+      var(--teal) 6px, var(--teal) 12px,
+      var(--gold) 12px, var(--gold) 16px,
+      var(--error) 16px, var(--error) 22px
+    );
+  }
+  .bookshelf::after {
+    content: '';
+    position: absolute;
+    top: 40px; left: 8px;
+    width: 44px; height: 16px;
+    background: repeating-linear-gradient(90deg,
+      var(--teal) 0px, var(--teal) 8px,
+      var(--gold) 8px, var(--gold) 14px,
+      var(--copper) 14px, var(--copper) 20px
+    );
+  }
+
+  /* Fridge / Walk-in */
+  .fridge {
+    width: 64px; height: 112px;
+    background: linear-gradient(180deg, #6a6a7a, #5a5a6a);
+    border: 4px solid #4a4a5a;
+    border-radius: 4px 4px 0 0;
+  }
+  .fridge::after {
+    content: '';
+    position: absolute;
+    top: 48px; left: 0; right: 0;
+    height: 4px;
+    background: #4a4a5a;
+  }
+
+  /* Ticket rail (LOCKBOARD) */
+  .ticket-rail {
+    width: 200px; height: 12px;
+    background: #6a5a4a;
+    border: 2px solid #5a4a3a;
+    box-shadow: 0 4px 0 #3a2c20;
+  }
+  .ticket-rail::before {
+    content: '';
+    position: absolute;
+    top: -20px; left: 10px;
+    width: 24px; height: 20px;
+    background: var(--gold);
+    clip-path: polygon(0 100%, 50% 0, 100% 100%);
+  }
+  .ticket-rail::after {
+    content: '';
+    position: absolute;
+    top: -20px; left: 50px;
+    width: 24px; height: 20px;
+    background: var(--copper);
+    clip-path: polygon(0 100%, 50% 0, 100% 100%);
+  }
+
+  /* Server / GitHub cloud */
+  .server {
+    width: 80px; height: 96px;
+    background: linear-gradient(180deg, #2a2a3e, #1e1e30);
+    border: 4px solid #3a3a50;
+    border-radius: 4px;
+  }
+  .server::before {
+    content: '';
+    position: absolute;
+    top: 12px; left: 12px;
+    width: 12px; height: 12px;
+    background: var(--green);
+    border-radius: 50%;
+    animation: blink 2s ease-in-out infinite;
+  }
+  .server::after {
+    content: '';
+    position: absolute;
+    top: 36px; left: 12px;
+    width: 52px; height: 4px;
+    background: repeating-linear-gradient(90deg,
+      var(--teal) 0px, var(--teal) 4px,
+      transparent 4px, transparent 8px
+    );
+  }
+
+  /* MCP Cable */
+  .cable {
+    height: 4px;
+    background: var(--gold);
+    position: absolute;
+    box-shadow: 0 0 8px var(--gold-dim);
+  }
+  .cable::before, .cable::after {
+    content: '';
+    position: absolute;
+    width: 12px; height: 12px;
+    background: var(--gold);
+    border-radius: 2px;
+    top: -4px;
+  }
+  .cable::before { left: -6px; }
+  .cable::after { right: -6px; }
+
+  /* ── PIXEL CHARACTERS ── */
+  .character {
+    position: absolute;
+    image-rendering: pixelated;
+    transition: all 0.8s ease;
+    z-index: 20;
+  }
+
+  /* Character body (placeholder — replace with Blender sprites) */
+  .char-body {
+    position: relative;
+    width: 32px; height: 48px;
+  }
+
+  /* Head */
+  .char-body::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 4px;
+    width: 24px; height: 24px;
+    border-radius: 4px;
+    background: var(--skin, #e8c8a0);
+  }
+
+  /* Body */
+  .char-body::after {
+    content: '';
+    position: absolute;
+    top: 24px; left: 2px;
+    width: 28px; height: 24px;
+    border-radius: 2px;
+    background: var(--shirt, #4a6a8a);
+  }
+
+  /* Hair overlay */
+  .char-hair {
+    position: absolute;
+    top: -2px; left: 2px;
+    width: 28px; height: 14px;
+    border-radius: 4px 4px 0 0;
+  }
+
+  /* Name tag */
+  .char-name {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    text-align: center;
+    margin-top: 4px;
+    white-space: nowrap;
+  }
+
+  /* Andrea */
+  .andrea .char-body::after { background: #4a4a6a; }
+  .andrea .char-hair { background: #2a1a0a; }
+  .andrea .char-name { color: var(--gold); }
+
+  /* Henna */
+  .henna .char-body::after { background: #6a4a5a; }
+  .henna .char-hair { background: #1a0a0a; }
+  .henna .char-name { color: var(--copper); }
+
+  /* Claude (sous chef) */
+  .claude .char-body::before { background: #d4a574; }
+  .claude .char-body::after { background: var(--teal); }
+  .claude .char-hair { background: none; }
+  .claude .char-name { color: var(--teal); }
+
+  /* Subagent (commis) */
+  .commis .char-body { width: 24px; height: 36px; }
+  .commis .char-body::before { width: 20px; height: 20px; left: 2px; background: #b8d4e8; }
+  .commis .char-body::after { width: 24px; height: 16px; top: 20px; left: 0; background: #5a7a8a; }
+  .commis .char-name { font-size: 6px; color: var(--text-muted); }
+
+  /* Agent team (chef de partie) */
+  .partie .char-body::before { background: #e8d0a8; }
+  .partie .char-body::after { background: #8a6a4a; }
+  .partie .char-name { color: var(--copper); }
+
+  /* ── BACKPACK ── */
+  .backpack {
+    position: absolute;
+    right: -16px; top: 12px;
+    width: 20px;
+    min-height: 16px;
+    background: #5a4a3a;
+    border: 2px solid #4a3a2c;
+    border-radius: 2px;
+    transition: height 0.6s ease;
+    overflow: hidden;
+  }
+  .backpack.small { height: 16px; }
+  .backpack.medium { height: 28px; }
+  .backpack.full { height: 44px; background: #6a4a3a; }
+  .backpack.overflow {
+    height: 52px;
+    background: var(--error);
+    animation: shake 0.5s ease-in-out;
+  }
+
+  /* Scroll items in backpack */
+  .scroll-item {
+    width: 14px; height: 4px;
+    margin: 2px auto;
+    border-radius: 1px;
+  }
+
+  /* ── SPEECH BUBBLES ── */
+  .bubble {
+    position: absolute;
+    background: rgba(255,255,255,0.95);
+    color: #1a1a2e;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    line-height: 1.6;
+    padding: 12px 16px;
+    border-radius: 4px;
+    max-width: 240px;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    z-index: 30;
+  }
+  .bubble::after {
+    content: '';
+    position: absolute;
+    bottom: -8px; left: 20px;
+    width: 0; height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 8px solid rgba(255,255,255,0.95);
+  }
+  .bubble.visible { opacity: 1; }
+  .bubble.right::after { left: auto; right: 20px; }
+
+  /* ── FLOATING LABELS (for objects) ── */
+  .label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--text-muted);
+    position: absolute;
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+  .label.visible { opacity: 1; }
+  .label .tag {
+    color: var(--gold);
+    font-size: 9px;
+  }
+
+  /* ── DOCUMENT PASSING ANIMATION ── */
+  .document {
+    position: absolute;
+    width: 20px; height: 28px;
+    background: #f5f3ee;
+    border: 2px solid #d4d0c8;
+    border-radius: 2px;
+    z-index: 25;
+  }
+  .document::before {
+    content: '';
+    position: absolute;
+    top: 4px; left: 3px;
+    width: 10px; height: 2px;
+    background: #aaa;
+    box-shadow: 0 4px 0 #aaa, 0 8px 0 #aaa;
+  }
+
+  /* ── ROOM DIVIDER ── */
+  .room-divider {
+    position: absolute;
+    top: 0; bottom: 0;
+    width: 8px;
+    background: rgba(201,168,76,0.1);
+    z-index: 5;
+  }
+
+  /* Door frame between rooms */
+  .doorframe {
+    position: absolute;
+    width: 80px; height: 120px;
+    bottom: 200px;
+    right: -40px;
+    background: var(--bg);
+    border: 4px solid #5a4a3a;
+    border-radius: 4px 4px 0 0;
+    z-index: 10;
+  }
+  .doorframe::after {
+    content: '→';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 24px;
+    color: var(--gold-dim);
+  }
+
+  /* ── BOTTOM BAR / DIALOGUE ── */
+  .dialogue-bar {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 120px;
+    background: rgba(12,12,20,0.97);
+    border-top: 2px solid var(--gold-dim);
+    display: flex;
+    align-items: center;
+    padding: 0 60px;
+    z-index: 50;
+  }
+
+  .dialogue-portrait {
+    width: 80px; height: 80px;
+    background: var(--surface);
+    border: 2px solid var(--gold-dim);
+    border-radius: 4px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    margin-right: 24px;
+  }
+  .dialogue-portrait .mini-char {
+    transform: scale(1.5);
+    image-rendering: pixelated;
+  }
+
+  .dialogue-text {
+    flex: 1;
+    font-family: 'DM Mono', monospace;
+    font-size: 14px;
+    color: var(--text);
+    line-height: 1.7;
+  }
+  .dialogue-text .speaker {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px;
+    color: var(--gold);
+    margin-bottom: 8px;
+    display: block;
+  }
+  .dialogue-text .typing {
+    border-right: 2px solid var(--gold);
+    animation: blink-cursor 0.8s step-end infinite;
+  }
+
+  .dialogue-nav {
+    display: flex;
+    gap: 12px;
+    margin-left: 40px;
+  }
+  .nav-btn {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px;
+    background: var(--surface);
+    border: 2px solid var(--gold-dim);
+    color: var(--text-muted);
+    padding: 12px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .nav-btn:hover {
+    background: var(--gold-dim);
+    color: var(--gold);
+    border-color: var(--gold);
+  }
+  .nav-btn.primary {
+    border-color: var(--gold);
+    color: var(--gold);
+  }
+
+  /* ── SCENE INDICATOR ── */
+  .scene-dots {
+    position: absolute;
+    top: 80px; right: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    z-index: 50;
+  }
+  .scene-dot {
+    width: 12px; height: 12px;
+    border: 2px solid var(--gold-dim);
+    border-radius: 2px;
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+  .scene-dot.active {
+    background: var(--gold);
+    border-color: var(--gold);
+    box-shadow: 0 0 8px var(--gold-dim);
+  }
+  .scene-dot:hover { border-color: var(--gold); }
+
+  /* ── OBJECTS ── */
+  .obj-window {
+    position: absolute;
+    width: 96px; height: 72px;
+    background: linear-gradient(180deg, #4a5a7a, #3a4a6a);
+    border: 4px solid #5a4a3a;
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .obj-window::before {
+    content: '';
+    position: absolute;
+    inset: 8px;
+    background: linear-gradient(180deg, #6a8aaa22, #4a6a8a22);
+    border: 2px solid #5a5a6a;
+  }
+  /* Cross bar */
+  .obj-window::after {
+    content: '';
+    position: absolute;
+    top: 50%; left: 8px; right: 8px;
+    height: 2px;
+    background: #5a4a3a;
+    box-shadow: 0 0 0 0, -39px -28px 0 0 #5a4a3a;
+  }
+
+  .obj-clock {
+    position: absolute;
+    width: 48px; height: 48px;
+    background: #3a3a3a;
+    border: 4px solid #5a4a3a;
+    border-radius: 50%;
+  }
+  .obj-clock::before {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 2px; height: 14px;
+    background: var(--gold);
+    transform-origin: bottom center;
+    transform: translate(-50%, -100%) rotate(30deg);
+  }
+  .obj-clock::after {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 2px; height: 10px;
+    background: var(--text);
+    transform-origin: bottom center;
+    transform: translate(-50%, -100%) rotate(150deg);
+  }
+
+  /* Oven / stove */
+  .obj-stove {
+    width: 96px; height: 80px;
+    background: linear-gradient(180deg, #5a5a6a, #4a4a5a);
+    border: 4px solid #3a3a4a;
+    border-radius: 2px;
+  }
+  .obj-stove::before {
+    content: '';
+    position: absolute;
+    top: 8px; left: 12px;
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    border: 3px solid #6a6a7a;
+    box-shadow: 44px 0 0 0 #6a6a7a;
+  }
+
+  /* Pantry door */
+  .obj-pantry-door {
+    width: 80px; height: 140px;
+    background: #4a3a2c;
+    border: 4px solid #5a4a3a;
+    border-radius: 4px 4px 0 0;
+  }
+  .obj-pantry-door::before {
+    content: 'PANTRY';
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    color: var(--gold-dim);
+    position: absolute;
+    top: 8px; left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+  }
+  .obj-pantry-door::after {
+    content: '';
+    position: absolute;
+    top: 60px; right: 10px;
+    width: 8px; height: 8px;
+    background: var(--gold);
+    border-radius: 50%;
+  }
+
+  /* Plant */
+  .obj-plant {
+    width: 32px; height: 48px;
+  }
+  .obj-plant::before {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 6px;
+    width: 20px; height: 20px;
+    background: #6a4a3a;
+    border-radius: 2px;
+  }
+  .obj-plant::after {
+    content: '';
+    position: absolute;
+    bottom: 16px; left: 4px;
+    width: 24px; height: 28px;
+    background: #4a8a5a;
+    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+  }
+
+  /* Logbook */
+  .obj-logbook {
+    width: 40px; height: 28px;
+    background: #5a4a3a;
+    border: 2px solid #4a3a2c;
+    border-radius: 2px 4px 4px 2px;
+  }
+  .obj-logbook::before {
+    content: '';
+    position: absolute;
+    top: 4px; left: 6px;
+    width: 24px; height: 2px;
+    background: var(--gold);
+    box-shadow: 0 5px 0 var(--text-muted), 0 10px 0 var(--text-muted);
+  }
+
+  /* Whiteboard */
+  .obj-whiteboard {
+    width: 160px; height: 100px;
+    background: #f5f3ee;
+    border: 6px solid #5a4a3a;
+    border-radius: 2px;
+  }
+  .obj-whiteboard::before {
+    content: 'CLAUDE.md';
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    color: var(--teal);
+    position: absolute;
+    top: 8px; left: 10px;
+  }
+  .obj-whiteboard::after {
+    content: '';
+    position: absolute;
+    top: 28px; left: 10px;
+    width: 100px; height: 2px;
+    background: #ccc;
+    box-shadow: 0 8px 0 #ddd, 0 16px 0 #ddd, 0 24px 0 #eee;
+  }
+
+  /* Boxes (datasets) */
+  .obj-box {
+    width: 40px; height: 32px;
+    background: #6a5a4a;
+    border: 3px solid #5a4a3a;
+    border-radius: 2px;
+  }
+  .obj-box::before {
+    content: '';
+    position: absolute;
+    top: -6px; left: 4px; right: 4px;
+    height: 6px;
+    background: #7a6a5a;
+    border-radius: 2px 2px 0 0;
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  @keyframes blink-cursor {
+    50% { border-color: transparent; }
+  }
+
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-4px); }
+    75% { transform: translateX(4px); }
+  }
+
+  @keyframes float-doc {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+    100% { transform: translateY(0); }
+  }
+
+  @keyframes walk {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-4px); }
+  }
+
+  @keyframes idle {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-2px); }
+  }
+
+  .anim-idle { animation: idle 2s ease-in-out infinite; }
+  .anim-walk { animation: walk 0.4s ease-in-out infinite; }
+  .anim-float { animation: float-doc 2s ease-in-out infinite; }
+
+  /* ── SCENE-SPECIFIC ── */
+
+  /* Passing window between Andrea and Henna */
+  .passing-window {
+    position: absolute;
+    width: 8px; height: 120px;
+    background: #5a4a3a;
+    border: 2px solid #4a3a2c;
+  }
+  .passing-window .slot {
+    position: absolute;
+    top: 40px; left: -8px;
+    width: 24px; height: 32px;
+    background: var(--bg);
+    border: 2px solid #4a3a2c;
+  }
+
+  /* Git branch visualization */
+  .git-branch {
+    position: absolute;
+    height: 4px;
+    background: var(--gold);
+    border-radius: 2px;
+  }
+  .git-branch.alt {
+    background: var(--teal);
+  }
+  .git-commit {
+    position: absolute;
+    width: 16px; height: 16px;
+    background: var(--gold);
+    border: 3px solid var(--bg);
+    border-radius: 50%;
+    z-index: 5;
+  }
+  .git-commit.alt { background: var(--teal); }
+  .git-commit.merge {
+    background: var(--green);
+    width: 20px; height: 20px;
+  }
+
+  /* Scaling handled by JS — no CSS media query needed */
+
+  /* ── ROOM CONTENT WRAPPERS ── */
+  .room-content {
+    position: absolute;
+    inset: 0;
+    z-index: 10;
+  }
+
+  /* ── PARTICLE EFFECTS ── */
+  .particle {
+    position: absolute;
+    width: 4px; height: 4px;
+    border-radius: 1px;
+    pointer-events: none;
+    z-index: 15;
+  }
+
+  /* ── CONNECTION LINES ── */
+  .connection {
+    position: absolute;
+    border: 2px dashed var(--gold-dim);
+    pointer-events: none;
+  }
+
+  /* ── HIGHLIGHT GLOW ── */
+  .glow {
+    box-shadow: 0 0 16px var(--gold-dim), 0 0 32px rgba(201,168,76,0.08);
+  }
+</style>
+</head>
+<body>
+
+<div class="scene-container" id="scene">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-title">THE KITCHEN</div>
+    <div class="header-scene" id="sceneLabel">1 / 6 — It Started With Forgetting</div>
+  </div>
+
+  <!-- Scene dots -->
+  <div class="scene-dots" id="sceneDots">
+    <div class="scene-dot active" data-scene="0"></div>
+    <div class="scene-dot" data-scene="1"></div>
+    <div class="scene-dot" data-scene="2"></div>
+    <div class="scene-dot" data-scene="3"></div>
+    <div class="scene-dot" data-scene="4"></div>
+    <div class="scene-dot" data-scene="5"></div>
+  </div>
+
+  <!-- World -->
+  <div class="world">
+    <div class="world-inner" id="worldInner">
+
+      <!-- ═══════════ ROOM 1: IT STARTED WITH FORGETTING ═══════════ -->
+      <div class="room room-1" id="room1">
+        <div class="wall"></div>
+        <div class="floor"></div>
+        <div class="room-content">
+
+          <!-- Wall decorations -->
+          <div class="obj-window furniture" style="top: 60px; left: 300px;"></div>
+          <div class="obj-clock furniture" style="top: 50px; left: 180px;"></div>
+          <div class="obj-window furniture" style="top: 60px; left: 1400px;"></div>
+
+          <!-- The passing window (divider) -->
+          <div class="passing-window furniture" style="top: 350px; left: 940px;">
+            <div class="slot"></div>
+          </div>
+
+          <!-- Andrea's side (left) -->
+          <div class="desk furniture" style="top: 500px; left: 400px;"></div>
+          <div class="bookshelf furniture" style="top: 380px; left: 200px;"></div>
+          <div class="obj-plant furniture" style="top: 500px; left: 650px;"></div>
+          <div class="obj-box furniture" style="top: 620px; left: 340px;"></div>
+          <div class="obj-box furniture" style="top: 620px; left: 400px;"></div>
+
+          <!-- Henna's side (right) -->
+          <div class="desk furniture" style="top: 500px; left: 1300px;"></div>
+          <div class="bookshelf furniture" style="top: 380px; left: 1600px;"></div>
+          <div class="obj-plant furniture" style="top: 500px; left: 1100px;"></div>
+
+          <!-- Andrea character -->
+          <div class="character andrea anim-idle" id="andrea1" style="top: 460px; left: 480px;">
+            <div class="char-body">
+              <div class="char-hair"></div>
+              <div class="backpack small" id="backpack-a1">
+                <div class="scroll-item" style="background: var(--gold);"></div>
+              </div>
+            </div>
+            <div class="char-name">ANDREA</div>
+          </div>
+
+          <!-- Henna character -->
+          <div class="character henna anim-idle" id="henna1" style="top: 460px; left: 1220px;">
+            <div class="char-body">
+              <div class="char-hair"></div>
+              <div class="backpack small" id="backpack-h1">
+                <div class="scroll-item" style="background: var(--copper);"></div>
+              </div>
+            </div>
+            <div class="char-name">HENNA</div>
+          </div>
+
+          <!-- Floating documents being passed -->
+          <div class="document anim-float" id="doc1" style="top: 420px; left: 880px; opacity: 0;"></div>
+          <div class="document anim-float" id="doc2" style="top: 440px; left: 1000px; opacity: 0; animation-delay: 0.5s;"></div>
+
+          <!-- Labels -->
+          <div class="label" style="top: 340px; left: 160px;">
+            <span class="tag">BOOKSHELF</span><br>past sessions
+          </div>
+          <div class="label" style="top: 340px; left: 900px;">
+            <span class="tag">THE WINDOW</span><br>copy-paste handoffs
+          </div>
+
+          <!-- Speech bubble -->
+          <div class="bubble" id="bubble1" style="top: 380px; left: 400px;">
+            here's what we did,<br>here's what broke...
+          </div>
+
+          <!-- Door to next room -->
+          <div class="doorframe" style="right: -40px;"></div>
+        </div>
+      </div>
+
+      <!-- ═══════════ ROOM 2: THE LOGBOOK (GIT) ═══════════ -->
+      <div class="room room-2" id="room2">
+        <div class="wall"></div>
+        <div class="floor"></div>
+        <div class="room-content">
+
+          <div class="obj-window furniture" style="top: 60px; left: 800px;"></div>
+
+          <!-- Big logbook on central table -->
+          <div class="desk furniture glow" style="top: 420px; left: 860px; width: 200px;"></div>
+          <div class="obj-logbook furniture" style="top: 410px; left: 920px; transform: scale(2);"></div>
+
+          <!-- Git branch visualization on the wall -->
+          <div class="furniture" style="top: 120px; left: 300px;">
+            <!-- Main branch -->
+            <div class="git-branch" style="top: 40px; left: 0; width: 600px;"></div>
+            <div class="git-commit" style="top: 34px; left: 0;"></div>
+            <div class="git-commit" style="top: 34px; left: 120px;"></div>
+            <div class="git-commit" style="top: 34px; left: 280px;"></div>
+            <div class="git-commit" style="top: 34px; left: 440px;"></div>
+            <div class="git-commit merge" style="top: 32px; left: 580px;"></div>
+            <!-- Feature branch -->
+            <div class="git-branch alt" style="top: 80px; left: 120px; width: 320px; transform: rotate(-5deg);"></div>
+            <div class="git-commit alt" style="top: 72px; left: 200px;"></div>
+            <div class="git-commit alt" style="top: 76px; left: 340px;"></div>
+          </div>
+
+          <!-- Label for git viz -->
+          <div class="label visible" style="top: 100px; left: 300px;">
+            <span class="tag">GIT</span> — the logbook
+          </div>
+          <div class="label" style="top: 210px; left: 300px;">
+            <span class="tag" style="color: var(--teal);">branch</span> — design alternative
+          </div>
+          <div class="label" style="top: 210px; left: 580px;">
+            <span class="tag" style="color: var(--green);">merge</span> — decision made
+          </div>
+
+          <!-- Server (GitHub) -->
+          <div class="server furniture" style="top: 400px; left: 1500px;"></div>
+          <div class="label" style="top: 380px; left: 1500px;">
+            <span class="tag">GITHUB</span><br>shared kitchen
+          </div>
+
+          <!-- Cable from desk to server -->
+          <div class="cable furniture" style="top: 460px; left: 1060px; width: 440px;"></div>
+
+          <!-- Characters -->
+          <div class="character andrea anim-idle" style="top: 500px; left: 700px;">
+            <div class="char-body"><div class="char-hair"></div></div>
+            <div class="char-name">ANDREA</div>
+          </div>
+          <div class="character henna anim-idle" style="top: 500px; left: 1060px;">
+            <div class="char-body"><div class="char-hair"></div></div>
+            <div class="char-name">HENNA</div>
+          </div>
+
+          <div class="doorframe" style="right: -40px;"></div>
+        </div>
+      </div>
+
+      <!-- ═══════════ ROOM 3: THE BRIGADE ═══════════ -->
+      <div class="room room-3" id="room3">
+        <div class="wall"></div>
+        <div class="floor"></div>
+        <div class="room-content">
+
+          <!-- Section title on wall -->
+          <div class="obj-whiteboard furniture" style="top: 80px; left: 860px;">
+          </div>
+
+          <!-- Level 1: Basic — small counter -->
+          <div class="furniture" style="top: 380px; left: 200px;">
+            <div class="desk" style="width: 96px;"></div>
+            <div class="label visible" style="top: -30px; left: 0;">
+              <span class="tag">LEVEL 1</span> — one station
+            </div>
+          </div>
+          <div class="character commis anim-idle" style="top: 360px; left: 310px;">
+            <div class="char-body"></div>
+            <div class="char-name">COMMIS</div>
+          </div>
+
+          <!-- Level 2: Intermediate — two tiers -->
+          <div class="furniture" style="top: 380px; left: 650px;">
+            <div class="desk" style="width: 128px;"></div>
+            <div class="label visible" style="top: -30px; left: 0;">
+              <span class="tag">LEVEL 2</span> — sous chef + commis
+            </div>
+          </div>
+          <div class="character claude anim-idle" style="top: 340px; left: 700px;">
+            <div class="char-body"><div class="char-hair"></div></div>
+            <div class="char-name">CLAUDE</div>
+          </div>
+          <div class="character commis anim-idle" style="top: 420px; left: 800px;">
+            <div class="char-body"></div>
+            <div class="char-name">COMMIS</div>
+          </div>
+          <div class="character commis anim-idle" style="top: 420px; left: 850px;">
+            <div class="char-body"></div>
+          </div>
+
+          <!-- Level 3: Advanced — full brigade -->
+          <div class="furniture" style="top: 320px; left: 1100px;">
+            <div class="label visible" style="top: -30px; left: 0;">
+              <span class="tag">LEVEL 3</span> — full brigade
+            </div>
+            <div class="desk" style="width: 160px;"></div>
+            <!-- Multiple stations -->
+            <div class="desk" style="position: absolute; top: 120px; left: -80px; width: 96px;"></div>
+            <div class="desk" style="position: absolute; top: 120px; left: 160px; width: 96px;"></div>
+            <div class="desk" style="position: absolute; top: 120px; left: 320px; width: 96px;"></div>
+          </div>
+
+          <!-- Chef de cuisine (user) -->
+          <div class="character andrea anim-idle" style="top: 280px; left: 1150px;">
+            <div class="char-body"><div class="char-hair"></div></div>
+            <div class="char-name">CHEF</div>
+          </div>
+
+          <!-- Sous chef (Claude) -->
+          <div class="character claude anim-idle" style="top: 380px; left: 1200px;">
+            <div class="char-body">
+              <div class="char-hair"></div>
+              <div class="backpack medium"></div>
+            </div>
+            <div class="char-name">SOUS CHEF</div>
+          </div>
+
+          <!-- Chefs de partie -->
+          <div class="character partie anim-idle" style="top: 500px; left: 1040px;">
+            <div class="char-body"><div class="char-hair" style="background:#4a3a2a;"></div></div>
+            <div class="char-name">ANALYST</div>
+          </div>
+          <div class="character partie anim-idle" style="top: 500px; left: 1280px;">
+            <div class="char-body"><div class="char-hair" style="background:#3a2a1a;"></div></div>
+            <div class="char-name">MODELER</div>
+          </div>
+          <div class="character partie anim-idle" style="top: 500px; left: 1440px;">
+            <div class="char-body"><div class="char-hair" style="background:#5a4a3a;"></div></div>
+            <div class="char-name">BUILDER</div>
+          </div>
+
+          <!-- Commis under stations -->
+          <div class="character commis anim-idle" style="top: 580px; left: 1100px;">
+            <div class="char-body"></div>
+          </div>
+          <div class="character commis anim-idle" style="top: 580px; left: 1340px;">
+            <div class="char-body"></div>
+          </div>
+
+          <div class="doorframe" style="right: -40px;"></div>
+        </div>
+      </div>
+
+      <!-- ═══════════ ROOM 4: THE THREE PILLARS + PANTRY ═══════════ -->
+      <div class="room room-4" id="room4">
+        <div class="wall"></div>
+        <div class="floor"></div>
+        <div class="room-content">
+
+          <!-- Pillar 1: Infrastructure -->
+          <div class="furniture" style="top: 350px; left: 150px;">
+            <div class="label visible" style="top: -40px;">
+              <span class="tag">PILLAR 1</span><br>Infrastructure
+            </div>
+            <div class="ticket-rail" style="top: 0;"></div>
+            <div class="obj-logbook" style="top: 30px; left: 0;"></div>
+            <div class="obj-logbook" style="top: 30px; left: 60px;"></div>
+          </div>
+
+          <!-- Pillar 2: Context Management -->
+          <div class="furniture" style="top: 350px; left: 600px;">
+            <div class="label visible" style="top: -40px;">
+              <span class="tag">PILLAR 2</span><br>Context (the backpack)
+            </div>
+            <div class="obj-whiteboard" style="top: 0; width: 120px; height: 80px;"></div>
+          </div>
+
+          <!-- Claude with growing backpack -->
+          <div class="character claude anim-idle" style="top: 480px; left: 660px;">
+            <div class="char-body">
+              <div class="char-hair"></div>
+              <div class="backpack full" id="backpack-context">
+                <div class="scroll-item" style="background: var(--gold);"></div>
+                <div class="scroll-item" style="background: var(--teal);"></div>
+                <div class="scroll-item" style="background: var(--copper);"></div>
+                <div class="scroll-item" style="background: var(--text-muted);"></div>
+                <div class="scroll-item" style="background: var(--gold);"></div>
+              </div>
+            </div>
+            <div class="char-name">CLAUDE</div>
+          </div>
+
+          <!-- Pillar 3: Productivity / MCP -->
+          <div class="furniture" style="top: 350px; left: 1050px;">
+            <div class="label visible" style="top: -40px;">
+              <span class="tag">PILLAR 3</span><br>Productivity (MCP)
+            </div>
+            <div class="cable" style="top: 40px; left: 0; width: 200px;"></div>
+            <div class="server" style="top: 60px; left: 220px;"></div>
+          </div>
+
+          <!-- The Pantry (right side, separate room feel) -->
+          <div class="furniture" style="top: 300px; left: 1500px;">
+            <div class="obj-pantry-door"></div>
+            <div class="label visible" style="top: -30px; left: -10px;">
+              <span class="tag">THE PANTRY</span><br>Archibase
+            </div>
+            <!-- Shelves inside pantry -->
+            <div class="bookshelf" style="top: 160px; left: -40px;"></div>
+            <div class="bookshelf" style="top: 160px; left: 40px;"></div>
+            <div class="bookshelf" style="top: 160px; left: 120px;"></div>
+            <!-- Labels for layers -->
+            <div class="label" style="top: 300px; left: -40px; font-size: 8px;">
+              <span class="tag">L1</span> SQLite<br>
+              <span class="tag">L2</span> Guides<br>
+              <span class="tag">L3</span> Scripts<br>
+              <span class="tag">L4</span> RAG 35K+
+            </div>
+          </div>
+
+          <!-- Fridge (datasets) -->
+          <div class="fridge furniture" style="top: 350px; left: 50px;"></div>
+          <div class="label" style="top: 340px; left: 40px;">
+            <span class="tag">FRIDGE</span><br>datasets/
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Dialogue bar -->
+  <div class="dialogue-bar" id="dialogueBar">
+    <div class="dialogue-portrait" id="portrait">
+      <div class="mini-char">
+        <div class="char-body" style="--shirt: #4a4a6a;">
+          <div class="char-hair" style="background: #2a1a0a;"></div>
+        </div>
+      </div>
+    </div>
+    <div class="dialogue-text" id="dialogueText">
+      <span class="speaker" id="speaker">NARRATOR</span>
+      <span id="textContent">It started with forgetting...</span>
+    </div>
+    <div class="dialogue-nav">
+      <button class="nav-btn" id="prevBtn" onclick="prevScene()">← PREV</button>
+      <button class="nav-btn primary" id="nextBtn" onclick="nextScene()">NEXT →</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ── SCENE DATA ──
+const scenes = [
+  {
+    room: 0,
+    label: "1 / 6 — It Started With Forgetting",
+    speaker: "NARRATOR",
+    portrait: "narrator",
+    steps: [
+      {
+        text: "Every time a new conversation began, Claude walked in with an empty backpack. No memory of yesterday's work.",
+        action: () => {
+          showLabels(0, false);
+          showBubble('bubble1', false);
+          setDocs(false);
+        }
+      },
+      {
+        text: "So they started writing handoffs. After every session: here's what we did, what broke, what to do next. Manually. Every time.",
+        action: () => {
+          showBubble('bubble1', true);
+          showLabels(0, true);
+        }
+      },
+      {
+        text: "Andrea copying into Henna's account, Henna copying back. Two people passing recipes through a window.",
+        action: () => {
+          setDocs(true);
+        }
+      },
+      {
+        text: "The cost wasn't the writing — it was the re-reading. Every new session burned backpack space just catching up.",
+        action: () => {
+          // Grow backpacks
+          document.getElementById('backpack-a1').className = 'backpack full';
+          document.getElementById('backpack-h1').className = 'backpack full';
+        }
+      },
+      {
+        text: "They were spending more time explaining the kitchen than using it. Every tool was introduced because something hurt.",
+        action: () => {
+          document.getElementById('backpack-a1').className = 'backpack overflow';
+          document.getElementById('backpack-h1').className = 'backpack overflow';
+        }
+      }
+    ]
+  },
+  {
+    room: 1,
+    label: "2 / 6 — The Logbook: Git",
+    speaker: "NARRATOR",
+    portrait: "narrator",
+    steps: [
+      {
+        text: "They needed a persistent record of every decision, every change, every version. Something you could flip back through.",
+        action: () => {
+          showLabelsInRoom(1, false);
+        }
+      },
+      {
+        text: "That's Git. Not just memory — the logbook. Every commit is a dated entry. Every branch is a design alternative. Every merge is a decision made.",
+        action: () => {
+          showLabelsInRoom(1, true);
+        }
+      },
+      {
+        text: "Andrea created an empty repository — an empty kitchen. Furnished it with the project brief, file structure, conventions.",
+        action: () => {}
+      },
+      {
+        text: "Then Henna cloned it. Instantly: a full copy of everything — not just the current state, but the entire history of decisions.",
+        action: () => {}
+      },
+      {
+        text: "From that point: pull requests. \"I developed this dish at my station, please pull it into the menu when you're ready.\" Same recipe book, never the same counter.",
+        action: () => {}
+      }
+    ]
+  },
+  {
+    room: 2,
+    label: "3 / 6 — The Brigade",
+    speaker: "NARRATOR",
+    portrait: "narrator",
+    steps: [
+      {
+        text: "Every kitchen has a hierarchy. Theirs maps to three levels of operation — and three levels of how you use AI.",
+        action: () => {}
+      },
+      {
+        text: "Level 1: Basic. You give direct orders, Claude is a commis. One station, one tool. \"Make me a box.\"",
+        action: () => {
+          // Highlight level 1
+        }
+      },
+      {
+        text: "Level 2: Intermediate. You manage Claude + subagents. Two tiers. Context starts mattering — what goes in the backpack.",
+        action: () => {}
+      },
+      {
+        text: "Level 3: Advanced. You orchestrate through a main Claude (sous chef) who manages agent teams (chefs de partie) and subagents (commis). The whole restaurant is running.",
+        action: () => {}
+      },
+      {
+        text: "They started at level 1. The work demanded more.",
+        action: () => {}
+      }
+    ]
+  },
+  {
+    room: 3,
+    label: "4 / 6 — Three Pillars + The Pantry",
+    speaker: "NARRATOR",
+    portrait: "narrator",
+    steps: [
+      {
+        text: "The kitchen is organized around three things: infrastructure, context, and teamwork.",
+        action: () => {}
+      },
+      {
+        text: "Pillar 1 — Infrastructure. The workflows, commands, automations. How the fridge is organized, how closing procedures work. Built once, saves time every service.",
+        action: () => {}
+      },
+      {
+        text: "Pillar 2 — Context management. The backpack is finite. Every scroll that goes in costs space. Context engineering IS the skill.",
+        action: () => {
+          // Show backpack growing
+        }
+      },
+      {
+        text: "Pillar 3 — MCP. The cable connecting kitchen to dining room. Without it, everything stays in the back. Router = multiprise. Multiple agents, one tool.",
+        action: () => {}
+      },
+      {
+        text: "And the Pantry — Archibase. Claude can reason and plan, but it doesn't know how to build. No joints, no assemblies. The pantry teaches it to construct.",
+        action: () => {}
+      },
+      {
+        text: "Four layers: SQLite (labeled jars), Guides (technique books), Scripts (tested recipes), RAG with 35,000+ chunks (the full reference library).",
+        action: () => {}
+      }
+    ]
+  },
+  {
+    room: 3, // Same room, different focus
+    label: "5 / 6 — RAG vs CAG",
+    speaker: "NARRATOR",
+    portrait: "narrator",
+    steps: [
+      {
+        text: "RAG = going to the pantry mid-service. A ticket comes in, you walk to the shelves, grab what looks right, walk back, cook.",
+        action: () => {}
+      },
+      {
+        text: "CAG = mise en place. Before service, pull everything you'll need, prep it, line it up at your station. When the ticket comes, everything is at arm's reach.",
+        action: () => {}
+      },
+      {
+        text: "The system uses both. Mise en place for known tasks. Pantry open for surprises.",
+        action: () => {}
+      }
+    ]
+  },
+  {
+    room: 0, // Back to room 1, transformed
+    label: "6 / 6 — The Booklet",
+    speaker: "NARRATOR",
+    portrait: "narrator",
+    steps: [
+      {
+        text: "Git means the process documents itself. Every commit is a dated entry. Every dead end is filed, not forgotten.",
+        action: () => {
+          // Reset backpacks to normal
+          document.getElementById('backpack-a1').className = 'backpack small';
+          document.getElementById('backpack-h1').className = 'backpack small';
+          setDocs(false);
+          showBubble('bubble1', false);
+        }
+      },
+      {
+        text: "At the end, they open the logbook and the story of how they built everything is already there. The kitchen keeps its own records.",
+        action: () => {}
+      },
+      {
+        text: "Not just a project — a documented process. Not just architecture — the story of how the architecture was made. The building and the residue.",
+        action: () => {}
+      }
+    ]
+  }
+];
+
+// ── STATE ──
+let currentScene = 0;
+let currentStep = 0;
+
+// ── HELPERS ──
+function showBubble(id, show) {
+  const el = document.getElementById(id);
+  if (el) el.classList.toggle('visible', show);
+}
+
+function setDocs(show) {
+  const d1 = document.getElementById('doc1');
+  const d2 = document.getElementById('doc2');
+  if (d1) d1.style.opacity = show ? 1 : 0;
+  if (d2) d2.style.opacity = show ? 1 : 0;
+}
+
+function showLabels(roomIdx, show) {
+  const room = document.querySelectorAll('.room')[roomIdx];
+  if (!room) return;
+  room.querySelectorAll('.label').forEach(l => l.classList.toggle('visible', show));
+}
+
+function showLabelsInRoom(roomIdx, show) {
+  showLabels(roomIdx, show);
+}
+
+function moveCamera(roomIndex) {
+  const inner = document.getElementById('worldInner');
+  // Rooms are at 0, 1920, 3840, 5760
+  inner.style.transform = `translateX(-${roomIndex * 1920}px)`;
+}
+
+function updateDots() {
+  document.querySelectorAll('.scene-dot').forEach((dot, i) => {
+    dot.classList.toggle('active', i === currentScene);
+  });
+}
+
+function updateDialogue() {
+  const scene = scenes[currentScene];
+  const step = scene.steps[currentStep];
+
+  document.getElementById('sceneLabel').textContent = scene.label;
+  document.getElementById('speaker').textContent = scene.speaker;
+
+  // Typewriter effect
+  const textEl = document.getElementById('textContent');
+  textEl.innerHTML = '';
+  let i = 0;
+  const txt = step.text;
+  function typeChar() {
+    if (i < txt.length) {
+      textEl.textContent = txt.substring(0, i + 1);
+      i++;
+      setTimeout(typeChar, 12);
+    }
+  }
+  typeChar();
+
+  // Run step action
+  if (step.action) step.action();
+
+  // Move camera
+  moveCamera(scene.room);
+  updateDots();
+}
+
+function nextScene() {
+  const scene = scenes[currentScene];
+  if (currentStep < scene.steps.length - 1) {
+    currentStep++;
+  } else if (currentScene < scenes.length - 1) {
+    currentScene++;
+    currentStep = 0;
+  }
+  updateDialogue();
+}
+
+function prevScene() {
+  if (currentStep > 0) {
+    currentStep--;
+  } else if (currentScene > 0) {
+    currentScene--;
+    currentStep = scenes[currentScene].steps.length - 1;
+  }
+  updateDialogue();
+}
+
+// Scene dot clicks
+document.querySelectorAll('.scene-dot').forEach(dot => {
+  dot.addEventListener('click', () => {
+    currentScene = parseInt(dot.dataset.scene);
+    currentStep = 0;
+    updateDialogue();
+  });
+});
+
+// Keyboard nav
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); nextScene(); }
+  if (e.key === 'ArrowLeft') { e.preventDefault(); prevScene(); }
+});
+
+// ── RESPONSIVE SCALING ──
+function scaleScene() {
+  const container = document.getElementById('scene');
+  const vw = window.innerWidth;
+  const vh = window.innerHeight;
+  const scaleX = vw / 1920;
+  const scaleY = vh / 1080;
+  const scale = Math.min(scaleX, scaleY);
+  const offsetX = (vw - 1920 * scale) / 2;
+  const offsetY = (vh - 1080 * scale) / 2;
+  container.style.transform = `scale(${scale})`;
+  container.style.transformOrigin = 'top left';
+  container.style.left = offsetX + 'px';
+  container.style.top = offsetY + 'px';
+}
+window.addEventListener('resize', scaleScene);
+window.addEventListener('load', scaleScene);
+scaleScene();
+
+// ── INIT ──
+updateDialogue();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,14 @@
+{
+  "goal": "Kitchen analogy animation for midterm — 6 scenes, Blender sprites + HTML environments",
+  "owner": "andrea",
+  "created": "2026-03-27",
+  "deadline": "2026-03-30",
+  "phases": [
+    {"name": "Phase 0: Character Sign-off", "status": "pending", "sessions_planned": 1, "who": "andrea"},
+    {"name": "Phase 1: Sprite Rendering", "status": "pending", "sessions_planned": 2, "who": "claude-blender"},
+    {"name": "Phase 2: Hero Illustrations", "status": "pending", "sessions_planned": 1, "who": "claude"},
+    {"name": "Phase 3: HTML Scene Assembly", "status": "pending", "sessions_planned": 3, "who": "claude"},
+    {"name": "Phase 4: Polish + Screen Test", "status": "pending", "sessions_planned": 1, "who": "andrea+claude"}
+  ],
+  "current_phase": "Phase 0: Character Sign-off"
+}
