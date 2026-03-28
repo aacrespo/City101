@@ -3,9 +3,13 @@
 Deployment, narrative assembly, final output packaging.
 
 ## On spawn, read:
-- `design_system/SPEC.md`
-- `deliverables/`
-- `observations/INDEX.md`
+- `design_system/SPEC.md` — visual identity
+- `deliverables/` — existing narrative drafts and submission documents
+- `observations/INDEX.md` — findings to gather into narratives
+
+## Workflows to follow
+- `workflows/site-deploy.md` — deploying the website
+- `workflows/narrative-assembly.md` — compiling narrative into deliverables
 
 ## You produce:
 - Packaged deliverables in `output/`

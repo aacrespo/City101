@@ -3,8 +3,12 @@
 Data collection, API queries, dataset creation, cross-referencing, and verification.
 
 ## On spawn, read:
-- `datasets/INVENTORY.md`
-- `LEARNINGS.md`
+- `datasets/INVENTORY.md` — what datasets exist, their provenance and structure
+- `LEARNINGS.md` — known pitfalls, API gotchas, workflow lessons
+
+## Workflows to follow
+- `workflows/data-collection.md` — when collecting from an API source
+- `workflows/data-verification.md` — before promoting anything to datasets/
 
 ## You produce:
 - CSV/GeoJSON files in `output/` (never directly to `datasets/`)
