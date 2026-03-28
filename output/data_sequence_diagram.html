@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Data Sequence — Still On The Line</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;700&family=Instrument+Serif&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #0c0c14;
+    --bg-surface: rgba(255,255,255,0.04);
+    --text: #e8e6e1;
+    --text-muted: #9a9690;
+    --accent: #c9a84c;
+    --copper: #b87a56;
+    --teal: #5b8fa8;
+    --success: #5a9e6f;
+    --error: #c45d4a;
+    --border: rgba(201,168,76,0.12);
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    overflow-x: auto;
+    overflow-y: hidden;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  header {
+    display: flex;
+    align-items: baseline;
+    gap: 24px;
+    padding: 20px 40px 12px;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+  header h1 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 1.6rem;
+    font-weight: 400;
+    color: var(--accent);
+  }
+  header p {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+  }
+
+  .controls {
+    display: flex;
+    gap: 8px;
+    padding: 12px 40px;
+    flex-shrink: 0;
+    align-items: center;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+  }
+  .controls button {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    padding: 5px 14px;
+    border: 1px solid var(--border);
+    background: var(--bg-surface);
+    color: var(--text-muted);
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .controls button:hover, .controls button.active {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(201,168,76,0.08);
+  }
+  .legend {
+    display: flex;
+    gap: 16px;
+    margin-left: auto;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .legend-dot { width: 8px; height: 8px; border-radius: 2px; }
+
+  .canvas-wrap {
+    flex: 1;
+    overflow: auto;
+    padding: 20px 40px 30px;
+    display: flex;
+    align-items: center;
+  }
+  svg.diagram {
+    min-width: 1600px;
+    height: 620px;
+    display: block;
+  }
+
+  .node-group { cursor: pointer; }
+  .node-group:hover .node-bg { filter: brightness(1.25); }
+  .node-bg { transition: filter 0.3s; }
+  .node-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    fill: var(--text);
+    text-anchor: middle;
+    pointer-events: none;
+  }
+  .node-sublabel {
+    font-family: 'DM Mono', monospace;
+    font-size: 9.5px;
+    fill: var(--text-muted);
+    text-anchor: middle;
+    pointer-events: none;
+  }
+  .step-badge-text {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    fill: var(--bg);
+    text-anchor: middle;
+    dominant-baseline: central;
+    pointer-events: none;
+  }
+
+  .flow-line {
+    fill: none;
+    stroke: rgba(201,168,76,0.2);
+    stroke-width: 1.5;
+    transition: stroke 0.4s, stroke-width 0.4s;
+  }
+  .flow-line.active {
+    stroke: rgba(201,168,76,0.5);
+    stroke-width: 2;
+  }
+
+  .particle { r: 3; fill: var(--accent); opacity: 0; }
+  .particle.active { opacity: 1; }
+
+  .detail-panel {
+    position: fixed;
+    bottom: -380px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(680px, 90vw);
+    max-height: 360px;
+    background: #0e0e18;
+    border: 1px solid var(--border);
+    border-bottom: none;
+    border-radius: 12px 12px 0 0;
+    padding: 28px 32px;
+    transition: bottom 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    overflow-y: auto;
+    z-index: 100;
+    box-shadow: 0 -8px 40px rgba(0,0,0,0.5);
+  }
+  .detail-panel.open { bottom: 0; }
+  .detail-panel .close-btn {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    font-size: 1.2rem;
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-family: 'DM Mono', monospace;
+  }
+  .detail-panel h2 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 1.3rem;
+    font-weight: 400;
+    color: var(--accent);
+    margin-bottom: 4px;
+  }
+  .detail-panel .step-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--bg);
+    background: var(--accent);
+    padding: 2px 8px;
+    border-radius: 3px;
+    display: inline-block;
+    margin-bottom: 12px;
+  }
+  .detail-panel p {
+    font-size: 0.85rem;
+    line-height: 1.6;
+    color: var(--text);
+    margin-bottom: 12px;
+  }
+  .detail-panel .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10px 0;
+  }
+  .detail-panel .data-table th {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+    text-align: left;
+    padding: 4px 6px;
+    border-bottom: 1px solid var(--border);
+  }
+  .detail-panel .data-table td {
+    font-size: 0.8rem;
+    padding: 6px;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+    color: var(--text);
+  }
+  .detail-panel .data-table td.mono {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.74rem;
+    color: var(--accent);
+  }
+  .tag {
+    display: inline-block;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    padding: 2px 7px;
+    border-radius: 3px;
+    margin: 2px 3px 2px 0;
+  }
+  .tag-teal { background: rgba(91,143,168,0.2); color: var(--teal); border: 1px solid rgba(91,143,168,0.3); }
+  .tag-copper { background: rgba(184,122,86,0.2); color: var(--copper); border: 1px solid rgba(184,122,86,0.3); }
+  .tag-green { background: rgba(90,158,111,0.2); color: var(--success); border: 1px solid rgba(90,158,111,0.3); }
+  .tag-gold { background: rgba(201,168,76,0.15); color: var(--accent); border: 1px solid rgba(201,168,76,0.25); }
+
+  @keyframes pulse-glow {
+    0%, 100% { filter: drop-shadow(0 0 4px rgba(201,168,76,0.15)); }
+    50% { filter: drop-shadow(0 0 10px rgba(201,168,76,0.45)); }
+  }
+  .node-group.highlight { animation: pulse-glow 2s ease-in-out infinite; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Data Sequence</h1>
+  <p>relay-lock configurator  ·  from architect's question to rhino geometry</p>
+</header>
+
+<div class="controls">
+  <button class="active" onclick="showAll()">Full Pipeline</button>
+  <button onclick="animateStep(0)">Architect</button>
+  <button onclick="animateStep(1)">1 — Ingest</button>
+  <button onclick="animateStep(2)">2 — Score</button>
+  <button onclick="animateStep(3)">3 — Design</button>
+  <button onclick="animateStep(4)">4 — Output</button>
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:var(--text)"></div>Architect</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--teal)"></div>Data</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--accent)"></div>AI</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--copper)"></div>Scoring</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--success)"></div>Design</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--error)"></div>Output</div>
+  </div>
+</div>
+
+<div class="canvas-wrap">
+<svg class="diagram" viewBox="0 0 1600 600" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="arr" markerWidth="7" markerHeight="5" refX="7" refY="2.5" orient="auto">
+      <polygon points="0 0, 7 2.5, 0 5" fill="rgba(201,168,76,0.35)" />
+    </marker>
+    <linearGradient id="g-teal" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="rgba(91,143,168,0.22)"/>
+      <stop offset="100%" stop-color="rgba(91,143,168,0.06)"/>
+    </linearGradient>
+    <linearGradient id="g-gold" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="rgba(201,168,76,0.18)"/>
+      <stop offset="100%" stop-color="rgba(201,168,76,0.05)"/>
+    </linearGradient>
+    <linearGradient id="g-copper" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="rgba(184,122,86,0.22)"/>
+      <stop offset="100%" stop-color="rgba(184,122,86,0.06)"/>
+    </linearGradient>
+    <linearGradient id="g-green" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="rgba(90,158,111,0.22)"/>
+      <stop offset="100%" stop-color="rgba(90,158,111,0.06)"/>
+    </linearGradient>
+    <linearGradient id="g-red" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="rgba(196,93,74,0.22)"/>
+      <stop offset="100%" stop-color="rgba(196,93,74,0.06)"/>
+    </linearGradient>
+  </defs>
+
+  <!-- ═══ ARCHITECT (person figure) ═══ -->
+  <g class="node-group" data-step="0" data-node="architect" onclick="showDetail('architect')">
+    <circle cx="70" cy="215" r="22" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+    <!-- head -->
+    <circle cx="70" cy="200" r="8" fill="none" stroke="var(--text)" stroke-width="1.5"/>
+    <!-- body -->
+    <line x1="70" y1="208" x2="70" y2="230" stroke="var(--text)" stroke-width="1.5"/>
+    <!-- arms -->
+    <line x1="56" y1="218" x2="84" y2="218" stroke="var(--text)" stroke-width="1.5"/>
+    <!-- legs -->
+    <line x1="70" y1="230" x2="58" y2="246" stroke="var(--text)" stroke-width="1.5"/>
+    <line x1="70" y1="230" x2="82" y2="246" stroke="var(--text)" stroke-width="1.5"/>
+    <text class="node-label" x="70" y="270" font-size="11">Architect</text>
+    <text class="node-sublabel" x="70" y="284">the starting point</text>
+  </g>
+
+  <!-- Speech bubble -->
+  <g class="node-group" data-step="0" data-node="query" onclick="showDetail('query')">
+    <rect class="node-bg" x="112" y="145" width="165" height="82" rx="8" fill="var(--bg-surface)" stroke="rgba(255,255,255,0.12)" stroke-width="1.5"/>
+    <!-- tail -->
+    <polygon points="120,227 110,242 132,227" fill="var(--bg-surface)" stroke="rgba(255,255,255,0.12)" stroke-width="1.5" stroke-linejoin="round"/>
+    <line x1="121" y1="226" x2="131" y2="226" stroke="#0c0c14" stroke-width="3"/>
+    <text font-family="'Instrument Serif',serif" font-size="12.5" fill="var(--text)" x="195" y="170" text-anchor="middle">"Healthcare workers</text>
+    <text font-family="'Instrument Serif',serif" font-size="12.5" fill="var(--text)" x="195" y="188" text-anchor="middle">in the Morges region</text>
+    <text font-family="'Instrument Serif',serif" font-size="12.5" fill="var(--accent)" x="195" y="206" text-anchor="middle">need shelter at night"</text>
+  </g>
+
+  <!-- ═══ FLOW: Architect → Sources ═══ -->
+  <path class="flow-line" d="M 277 186 L 320 186" marker-end="url(#arr)" data-step="0"/>
+  <path class="flow-line" d="M 277 170 C 300 170, 310 120, 320 120" marker-end="url(#arr)" data-step="0"/>
+  <path class="flow-line" d="M 277 200 C 300 200, 310 260, 320 260" marker-end="url(#arr)" data-step="0"/>
+
+  <!-- ═══ STEP 1: DATA SOURCES ═══ -->
+  <circle cx="335" cy="80" r="11" fill="var(--accent)"/>
+  <text class="step-badge-text" x="335" y="80">1</text>
+
+  <g class="node-group" data-step="1" data-node="corridor" onclick="showDetail('corridor')">
+    <rect class="node-bg" x="320" y="92" width="175" height="50" rx="6" fill="url(#g-teal)" stroke="rgba(91,143,168,0.4)" stroke-width="1.2"/>
+    <text class="node-label" x="407" y="114" font-size="11">Corridor Datasets</text>
+    <text class="node-sublabel" x="407" y="130">49 stations · ~3,200 records</text>
+  </g>
+
+  <g class="node-group" data-step="1" data-node="healthcare" onclick="showDetail('healthcare')">
+    <rect class="node-bg" x="320" y="155" width="175" height="50" rx="6" fill="url(#g-teal)" stroke="rgba(91,143,168,0.4)" stroke-width="1.2"/>
+    <text class="node-label" x="407" y="177" font-size="11">Healthcare Chain</text>
+    <text class="node-sublabel" x="407" y="193">8 flows · 24 sites · 4 circ.</text>
+  </g>
+
+  <g class="node-group" data-step="1" data-node="apis" onclick="showDetail('apis')">
+    <rect class="node-bg" x="320" y="218" width="175" height="50" rx="6" fill="url(#g-teal)" stroke="rgba(91,143,168,0.4)" stroke-width="1.2"/>
+    <text class="node-label" x="407" y="240" font-size="11">External APIs</text>
+    <text class="node-sublabel" x="407" y="256">transport · Google · OSM</text>
+  </g>
+
+  <!-- ═══ FLOW: Sources → AI ═══ -->
+  <path class="flow-line" d="M 495 117 C 530 117, 545 185, 560 185" marker-end="url(#arr)" data-step="1"/>
+  <path class="flow-line" d="M 495 180 L 560 180" marker-end="url(#arr)" data-step="1"/>
+  <path class="flow-line" d="M 495 243 C 530 243, 545 190, 560 190" marker-end="url(#arr)" data-step="1"/>
+
+  <!-- ═══ AI PROCESSING ═══ -->
+  <g class="node-group" data-step="1" data-node="ai" onclick="showDetail('ai')">
+    <rect class="node-bg" x="560" y="152" width="155" height="62" rx="6" fill="url(#g-gold)" stroke="rgba(201,168,76,0.4)" stroke-width="1.2"/>
+    <polygon points="578,164 598,164 593,180 583,180" fill="none" stroke="var(--accent)" stroke-width="1.3"/>
+    <line x1="588" y1="180" x2="588" y2="189" stroke="var(--accent)" stroke-width="1.3"/>
+    <text class="node-label" x="655" y="179" font-size="11">AI Processing</text>
+    <text class="node-sublabel" x="655" y="196">community research engine</text>
+  </g>
+
+  <!-- ═══ FLOW: AI → Scoring ═══ -->
+  <path class="flow-line" d="M 715 183 L 775 183" marker-end="url(#arr)" data-step="2"/>
+
+  <!-- ═══ STEP 2: SCORING ═══ -->
+  <circle cx="790" cy="140" r="11" fill="var(--accent)"/>
+  <text class="step-badge-text" x="790" y="140">2</text>
+
+  <g class="node-group" data-step="2" data-node="scoring" onclick="showDetail('scoring')">
+    <rect class="node-bg" x="775" y="150" width="150" height="70" rx="6" fill="url(#g-copper)" stroke="rgba(184,122,86,0.4)" stroke-width="1.2"/>
+    <text class="node-label" x="850" y="173" font-size="11">Scoring Engine</text>
+    <text class="node-sublabel" x="850" y="190">5 criteria · 0–1</text>
+    <text class="node-sublabel" x="850" y="204">deterministic · &lt;10ms</text>
+  </g>
+
+  <!-- Weights -->
+  <g class="node-group" data-step="2" data-node="weights" onclick="showDetail('weights')">
+    <rect class="node-bg" x="790" y="258" width="115" height="42" rx="5" fill="var(--bg-surface)" stroke="rgba(255,255,255,0.08)" stroke-width="1" stroke-dasharray="5 3"/>
+    <text class="node-label" x="847" y="277" font-size="10">Weights</text>
+    <text class="node-sublabel" x="847" y="291">adjustable × 5</text>
+  </g>
+  <path class="flow-line" d="M 847 258 L 847 220" marker-end="url(#arr)" data-step="2" stroke-dasharray="5 3"/>
+
+  <!-- ═══ FLOW: Scoring → Ranked ═══ -->
+  <path class="flow-line" d="M 925 185 L 965 185" marker-end="url(#arr)" data-step="2"/>
+
+  <!-- ═══ RANKED STATIONS ═══ -->
+  <g class="node-group" data-step="2" data-node="ranking" onclick="showDetail('ranking')">
+    <rect class="node-bg" x="965" y="140" width="145" height="90" rx="6" fill="url(#g-copper)" stroke="rgba(184,122,86,0.4)" stroke-width="1.2"/>
+    <rect x="980" y="155" width="48" height="6" rx="2" fill="var(--accent)" opacity="0.9"/>
+    <rect x="980" y="165" width="40" height="6" rx="2" fill="var(--accent)" opacity="0.7"/>
+    <rect x="980" y="175" width="32" height="6" rx="2" fill="var(--accent)" opacity="0.5"/>
+    <rect x="980" y="185" width="24" height="6" rx="2" fill="var(--accent)" opacity="0.35"/>
+    <rect x="980" y="195" width="16" height="6" rx="2" fill="var(--text-muted)" opacity="0.25"/>
+    <rect x="980" y="205" width="10" height="6" rx="2" fill="var(--error)" opacity="0.3"/>
+    <text class="node-label" x="1070" y="172" font-size="11">Ranked</text>
+    <text class="node-label" x="1070" y="186" font-size="11">Stations</text>
+    <text class="node-sublabel" x="1070" y="202" fill="var(--accent)">sentience score</text>
+    <text class="node-sublabel" x="1070" y="216" fill="var(--error)">unclassified → fallback</text>
+  </g>
+
+  <!-- Fallback loop -->
+  <path class="flow-line" d="M 995 230 C 985 280, 920 300, 905 280" marker-end="url(#arr)" data-step="2" stroke-dasharray="4 3"/>
+  <text font-family="'DM Mono',monospace" font-size="8" fill="var(--error)" x="945" y="268">re-weight</text>
+
+  <!-- ═══ FLOW: Ranked → Proposition ═══ -->
+  <path class="flow-line" d="M 1110 185 L 1155 185" marker-end="url(#arr)" data-step="3"/>
+
+  <!-- ═══ STEP 3: PROPOSITION ═══ -->
+  <circle cx="1168" cy="103" r="11" fill="var(--accent)"/>
+  <text class="step-badge-text" x="1168" y="103">3</text>
+
+  <g class="node-group" data-step="3" data-node="proposition" onclick="showDetail('proposition')">
+    <rect class="node-bg" x="1155" y="112" width="155" height="55" rx="6" fill="url(#g-green)" stroke="rgba(90,158,111,0.4)" stroke-width="1.2"/>
+    <text class="node-label" x="1232" y="135" font-size="11">Proposition Gen.</text>
+    <text class="node-sublabel" x="1232" y="152">lock type → config → sequence</text>
+  </g>
+
+  <!-- 9 Lock Types -->
+  <g class="node-group" data-step="3" data-node="locktypes" onclick="showDetail('locktypes')">
+    <rect class="node-bg" x="1160" y="42" width="145" height="42" rx="5" fill="var(--bg-surface)" stroke="rgba(90,158,111,0.3)" stroke-width="1"/>
+    <text class="node-label" x="1232" y="60" font-size="10">9 Lock Types</text>
+    <text class="node-sublabel" x="1232" y="74">threshold typology</text>
+  </g>
+  <path class="flow-line" d="M 1232 84 L 1232 112" marker-end="url(#arr)" data-step="3"/>
+
+  <!-- FLOW: Proposition → Chamber -->
+  <path class="flow-line" d="M 1232 167 L 1232 205" marker-end="url(#arr)" data-step="3"/>
+
+  <!-- Chamber Config -->
+  <g class="node-group" data-step="3" data-node="chamber" onclick="showDetail('chamber')">
+    <rect class="node-bg" x="1155" y="205" width="155" height="68" rx="6" fill="url(#g-green)" stroke="rgba(90,158,111,0.4)" stroke-width="1.2"/>
+    <rect x="1170" y="220" width="7" height="36" rx="2" fill="var(--success)" opacity="0.9"/>
+    <rect x="1181" y="226" width="7" height="30" rx="2" fill="var(--success)" opacity="0.7"/>
+    <rect x="1192" y="231" width="7" height="25" rx="2" fill="var(--success)" opacity="0.5"/>
+    <rect x="1203" y="235" width="7" height="21" rx="2" fill="var(--success)" opacity="0.35"/>
+    <text class="node-label" x="1270" y="234" font-size="11">Chamber Config</text>
+    <text class="node-sublabel" x="1270" y="250">program · circulations</text>
+    <text class="node-sublabel" x="1270" y="264" fill="var(--success)">new properties</text>
+  </g>
+
+  <!-- ═══ FLOW: Chamber → Outputs ═══ -->
+  <path class="flow-line" d="M 1310 239 C 1345 239, 1375 178, 1405 178" marker-end="url(#arr)" data-step="4"/>
+  <path class="flow-line" d="M 1310 239 L 1405 239" marker-end="url(#arr)" data-step="4"/>
+  <path class="flow-line" d="M 1310 239 C 1345 239, 1375 300, 1405 300" marker-end="url(#arr)" data-step="4"/>
+
+  <!-- ═══ STEP 4: OUTPUTS ═══ -->
+  <circle cx="1418" cy="143" r="11" fill="var(--accent)"/>
+  <text class="step-badge-text" x="1418" y="143">4</text>
+
+  <g class="node-group" data-step="4" data-node="spec" onclick="showDetail('spec')">
+    <rect class="node-bg" x="1405" y="155" width="160" height="46" rx="6" fill="url(#g-red)" stroke="rgba(196,93,74,0.4)" stroke-width="1.2"/>
+    <text class="node-label" x="1485" y="175" font-size="11">Spec Sheet</text>
+    <text class="node-sublabel" x="1485" y="191">PDF / HTML · data</text>
+  </g>
+
+  <g class="node-group" data-step="4" data-node="preview" onclick="showDetail('preview')">
+    <rect class="node-bg" x="1405" y="216" width="160" height="46" rx="6" fill="url(#g-red)" stroke="rgba(196,93,74,0.4)" stroke-width="1.2"/>
+    <text class="node-label" x="1485" y="236" font-size="11">3D Preview</text>
+    <text class="node-sublabel" x="1485" y="252">Three.js · WebGL</text>
+  </g>
+
+  <g class="node-group" data-step="4" data-node="rhino" onclick="showDetail('rhino')">
+    <rect class="node-bg" x="1405" y="277" width="160" height="46" rx="6" fill="url(#g-red)" stroke="rgba(196,93,74,0.4)" stroke-width="1.2"/>
+    <text class="node-label" x="1485" y="297" font-size="11">Rhino Script</text>
+    <text class="node-sublabel" x="1485" y="313">.py · RhinoCommon</text>
+  </g>
+
+  <!-- Tool chain -->
+  <path class="flow-line" d="M 1485 323 L 1485 350" marker-end="url(#arr)" data-step="4"/>
+  <g class="node-group" data-step="4" data-node="tools" onclick="showDetail('tools')">
+    <rect x="1400" y="356" width="55" height="20" rx="3" fill="rgba(196,93,74,0.1)" stroke="rgba(196,93,74,0.3)" stroke-width="1"/>
+    <text font-family="'DM Mono',monospace" font-size="8" fill="var(--error)" text-anchor="middle" x="1427" y="370">Rhino3D</text>
+    <line x1="1455" y1="366" x2="1462" y2="366" stroke="var(--text-muted)" stroke-width="1" stroke-dasharray="2 1"/>
+    <rect x="1462" y="356" width="36" height="20" rx="3" fill="rgba(201,168,76,0.1)" stroke="rgba(201,168,76,0.3)" stroke-width="1"/>
+    <text font-family="'DM Mono',monospace" font-size="8" fill="var(--accent)" text-anchor="middle" x="1480" y="370">MCP</text>
+    <line x1="1498" y1="366" x2="1505" y2="366" stroke="var(--text-muted)" stroke-width="1" stroke-dasharray="2 1"/>
+    <rect x="1505" y="356" width="48" height="20" rx="3" fill="rgba(196,93,74,0.1)" stroke="rgba(196,93,74,0.3)" stroke-width="1"/>
+    <text font-family="'DM Mono',monospace" font-size="8" fill="var(--error)" text-anchor="middle" x="1529" y="370">Blender</text>
+  </g>
+
+  <!-- ═══ BOTTOM SPINE ═══ -->
+  <line x1="50" y1="420" x2="1570" y2="420" stroke="rgba(201,168,76,0.05)" stroke-width="1"/>
+  <text font-family="'DM Mono',monospace" font-size="9" fill="rgba(201,168,76,0.25)" x="70" y="435" text-anchor="middle">PROBLEM</text>
+  <text font-family="'DM Mono',monospace" font-size="9" fill="rgba(201,168,76,0.25)" x="407" y="435" text-anchor="middle">INGEST</text>
+  <text font-family="'DM Mono',monospace" font-size="9" fill="rgba(201,168,76,0.25)" x="632" y="435" text-anchor="middle">PROCESS</text>
+  <text font-family="'DM Mono',monospace" font-size="9" fill="rgba(201,168,76,0.25)" x="1037" y="435" text-anchor="middle">RANK</text>
+  <text font-family="'DM Mono',monospace" font-size="9" fill="rgba(201,168,76,0.25)" x="1232" y="435" text-anchor="middle">DESIGN</text>
+  <text font-family="'DM Mono',monospace" font-size="9" fill="rgba(201,168,76,0.25)" x="1485" y="435" text-anchor="middle">OUTPUT</text>
+
+  <!-- ═══ PARTICLES ═══ -->
+  <circle class="particle" id="p0"><animateMotion dur="1.2s" repeatCount="indefinite" path="M 277 186 L 320 186"/></circle>
+  <circle class="particle" id="p1a"><animateMotion dur="1.5s" repeatCount="indefinite" begin="0s" path="M 495 117 C 530 117, 545 185, 560 185"/></circle>
+  <circle class="particle" id="p1b"><animateMotion dur="1.5s" repeatCount="indefinite" begin="0.5s" path="M 495 180 L 560 180"/></circle>
+  <circle class="particle" id="p1c"><animateMotion dur="1.5s" repeatCount="indefinite" begin="1s" path="M 495 243 C 530 243, 545 190, 560 190"/></circle>
+  <circle class="particle" id="p2a"><animateMotion dur="1.2s" repeatCount="indefinite" path="M 715 183 L 775 183"/></circle>
+  <circle class="particle" id="p2b"><animateMotion dur="1.2s" repeatCount="indefinite" begin="0.4s" path="M 925 185 L 965 185"/></circle>
+  <circle class="particle" id="p3a"><animateMotion dur="1.2s" repeatCount="indefinite" path="M 1110 185 L 1155 185"/></circle>
+  <circle class="particle" id="p3b"><animateMotion dur="1.2s" repeatCount="indefinite" begin="0.3s" path="M 1232 167 L 1232 205"/></circle>
+  <circle class="particle" id="p4a"><animateMotion dur="1.5s" repeatCount="indefinite" begin="0s" path="M 1310 239 C 1345 239, 1375 178, 1405 178"/></circle>
+  <circle class="particle" id="p4b"><animateMotion dur="1.5s" repeatCount="indefinite" begin="0.3s" path="M 1310 239 L 1405 239"/></circle>
+  <circle class="particle" id="p4c"><animateMotion dur="1.5s" repeatCount="indefinite" begin="0.6s" path="M 1310 239 C 1345 239, 1375 300, 1405 300"/></circle>
+</svg>
+</div>
+
+<div class="detail-panel" id="detailPanel">
+  <button class="close-btn" onclick="closeDetail()">&times;</button>
+  <div id="detailContent"></div>
+</div>
+
+<script>
+const details = {
+  architect: {
+    title: 'The Architect',
+    step: 'Starting Point',
+    desc: 'The entire pipeline begins with a person — an architect who identifies a problem and a region. They ask: which community needs support along this corridor, and where? The system transforms that question into a buildable architectural proposition.',
+    table: [
+      ['Input', 'Example', 'Type'],
+      ['Problem / community', '"Healthcare workers stranded at night"', 'Free text → structured'],
+      ['Region of interest', '"Morges to Lausanne segment"', 'Station filter list'],
+      ['Priority intent', '"Focus on the worst nighttime gaps"', 'Becomes weight adjustments'],
+    ],
+    tags: [['Human-driven', 'gold'], ['Problem-first', 'gold'], ['Site-specific', 'teal']]
+  },
+  query: {
+    title: 'The Question',
+    step: 'Starting Point',
+    desc: 'The architect\'s question gets structured into a JSON query: a community identifier, a region (subset of the 49 stations), and scoring weights that express priorities.',
+    table: [
+      ['Field', 'Value', 'Format'],
+      ['community', '"healthcare"', 'string'],
+      ['region', '["Morges", "Lausanne", "Renens", ...]', 'station[]'],
+      ['weights', '[0.25, 0.20, 0.25, 0.15, 0.15]', 'float[5], sum = 1.0'],
+    ],
+    tags: [['JSON query', 'teal'], ['Structured intent', 'gold']]
+  },
+  corridor: {
+    title: 'Corridor Datasets',
+    step: 'Step 1 — Data Sources',
+    desc: 'Pre-computed, verified datasets covering the 101 km Geneva–Villeneuve corridor. Months of collection — the project\'s biggest asset.',
+    table: [
+      ['Dataset', 'Records', 'Key'],
+      ['corridor_segments_WCI', '49 stations', 'WCI: 0.0003–0.6431'],
+      ['break_points', '49 × 25 cols', '5 break dimensions'],
+      ['journey_workability', '618 journeys', '15% PRIME'],
+      ['temporal_frequency', '49 × 28 cols', '7 time slots'],
+      ['modal_diversity', '49 × 17 cols', 'Shannon index'],
+      ['ridership_sbb', '174 records', 'daily pax'],
+      ['shared_mobility', '2,062 records', '8 providers'],
+    ],
+    tags: [['Pre-computed', 'teal'], ['Static', 'teal'], ['~3,200 records', 'gold']]
+  },
+  healthcare: {
+    title: 'Healthcare Chain',
+    step: 'Step 1 — Community Data',
+    desc: 'Weeks of manual research: 8 supply chain flows, 24 candidate sites, 4 circulation types. High-confidence reference.',
+    table: [
+      ['Component', 'Detail'],
+      ['Supply chain', '8 flows: medication, food, staff, patients, postal, lab, waste, emergency'],
+      ['Sites', '24 scored → top 9 selected'],
+      ['Circulations', 'staff, patient, cargo, home care'],
+      ['Dead window', '01:30–03:30 (field-validated)'],
+    ],
+    tags: [['High confidence', 'green'], ['Field-validated', 'green']]
+  },
+  apis: {
+    title: 'External APIs',
+    step: 'Step 1 — Runtime Sources',
+    desc: 'For new communities, the system fetches live data. This is the latency bottleneck of the pipeline.',
+    table: [
+      ['API', 'Latency', 'Data'],
+      ['transport.opendata.ch', '0.5–2s', 'Schedules, connections'],
+      ['Google Places', '0.3–1s', 'POIs, reviews, hours'],
+      ['OSM Overpass', '1–5s', 'Amenities, land use'],
+    ],
+    tags: [['Runtime', 'copper'], ['Rate-limited', 'copper']]
+  },
+  ai: {
+    title: 'AI Processing',
+    step: 'Step 1 → 2',
+    desc: 'Maps supply chains, identifies sites, defines circulations, extracts temporal profiles. Pre-done for healthcare; runs at query time for new communities (5–30s).',
+    tags: [['LLM inference', 'gold'], ['5–30s', 'copper']]
+  },
+  scoring: {
+    title: 'Scoring Engine',
+    step: 'Step 2 — The Funnel',
+    desc: 'Everything reduces to 5 normalized floats per site. Deterministic, no AI, under 10ms.',
+    table: [
+      ['Criterion', 'Weight'],
+      ['Affected Population', '25%'],
+      ['Chain Criticality', '25%'],
+      ['Modal Collapse', '20%'],
+      ['Gap Distance', '15%'],
+      ['Infrastructure Readiness', '15%'],
+    ],
+    tags: [['Deterministic', 'green'], ['< 10ms', 'green'], ['5 floats', 'gold']]
+  },
+  weights: {
+    title: 'Weight Adjustment',
+    step: 'Step 2 — Feedback Loop',
+    desc: '5 sliders the architect uses to express priorities. Changes recompute scores and re-rank all stations instantly.',
+    tags: [['Interactive', 'gold'], ['Real-time', 'gold']]
+  },
+  ranking: {
+    title: 'Ranked Stations',
+    step: 'Step 2 — Sentience Score',
+    desc: 'Stations ranked by weighted total. Top sites get lock types. Below-threshold → fallback to re-weighting.',
+    table: [
+      ['Rank', 'Station', 'Score', 'Lock Type'],
+      ['1', 'Morges (km 48)', '0.775', 'Temporal Lock'],
+      ['2', 'CHUV (km 65)', '0.720', 'Gradient Dispatcher'],
+      ['3', 'Rennaz (km 89)', '0.685', 'Bridge Lock'],
+      ['—', 'Below threshold', '< 0.40', 'Unclassified'],
+    ],
+    tags: [['Sentience score', 'gold'], ['Fallback loop', 'copper']]
+  },
+  proposition: {
+    title: 'Proposition Generator',
+    step: 'Step 3 — Design Logic',
+    desc: 'Lock type → chamber config → threshold sequence. Deterministic decision tree, under 50ms.',
+    tags: [['Deterministic', 'green'], ['< 50ms', 'green']]
+  },
+  locktypes: {
+    title: '9 Lock Types',
+    step: 'Step 3 — Typology',
+    desc: 'Each lock type is a threshold condition that determines chamber program, form, and behavior.',
+    table: [
+      ['Lock', 'Threshold', 'Site'],
+      ['Border', 'Border ↔ Corridor', 'Lancy-Pont-Rouge'],
+      ['Cargo', 'Cargo ↔ City', 'Geneva North'],
+      ['Altitude', 'Valley ↔ Hilltop', 'Nyon-Genolier'],
+      ['Temporal', 'Last ↔ First train', 'Morges'],
+      ['Visibility', 'Invisible ↔ Visible', 'Crissier-Bussigny'],
+      ['Gradient', 'Uphill ↔ Downhill', 'CHUV'],
+      ['Gap Relay', 'Gap ↔ Gap', 'Vevey'],
+      ['Bridge', 'Rail ↔ Off-rail', 'Rennaz'],
+      ['Logistics', 'Machine ↔ Civic', 'Crissier'],
+    ],
+    tags: [['9 types', 'green']]
+  },
+  chamber: {
+    title: 'Chamber Config',
+    step: 'Step 3 — New Properties',
+    desc: 'Dimensions, program zones, circulations. Where "new properties" emerge from data.',
+    table: [
+      ['Property', 'Morges example'],
+      ['Footprint', '34m × 10m = 340m²'],
+      ['Height', '2 levels, 3m floor-to-floor'],
+      ['Rest', '25%'],
+      ['Dispatch', '15%'],
+      ['Pharmaceutical', '10%'],
+      ['Materiality', 'Concrete + steel, 35% transparent'],
+    ],
+    tags: [['Parametric', 'green'], ['~9 elements', 'copper']]
+  },
+  spec: { title: 'Spec Sheet', step: 'Step 4 — Output 1', desc: 'Complete technical document. HTML/PDF for humans, JSON for machines.', tags: [['PDF/HTML', 'teal'], ['< 1s', 'green']] },
+  preview: { title: '3D Preview', step: 'Step 4 — Output 2', desc: 'WebGL massing model with terrain and buildings. Orbit, zoom, layer toggles.', tags: [['Three.js', 'teal'], ['WebGL', 'teal']] },
+  rhino: { title: 'Rhino Script', step: 'Step 4 — Output 3', desc: 'Downloadable .py generating LOG 200–300 geometry in Rhino.', tags: [['RhinoCommon', 'copper'], ['Parametric', 'green']] },
+  tools: { title: 'Modeling Pipeline', step: 'Step 4 — Downstream', desc: 'MCP bridges Claude to Rhino and Blender for automated iteration.', tags: [['Agent-driven', 'gold'], ['MCP', 'gold']] }
+};
+
+function showDetail(id) {
+  const d = details[id]; if (!d) return;
+  let h = `<span class="step-tag">${d.step}</span><h2>${d.title}</h2><p>${d.desc}</p>`;
+  if (d.table && d.table.length > 1) {
+    h += '<table class="data-table"><thead><tr>';
+    d.table[0].forEach(x => h += `<th>${x}</th>`);
+    h += '</tr></thead><tbody>';
+    for (let i = 1; i < d.table.length; i++) { h += '<tr>'; d.table[i].forEach((c,j) => h += j===0 ? `<td><strong>${c}</strong></td>` : `<td class="mono">${c}</td>`); h += '</tr>'; }
+    h += '</tbody></table>';
+  }
+  if (d.tags) { h += '<div style="margin-top:10px">'; d.tags.forEach(([l,c]) => h += `<span class="tag tag-${c}">${l}</span>`); h += '</div>'; }
+  document.getElementById('detailContent').innerHTML = h;
+  document.getElementById('detailPanel').classList.add('open');
+}
+function closeDetail() { document.getElementById('detailPanel').classList.remove('open'); }
+
+function clearHighlights() {
+  document.querySelectorAll('.node-group').forEach(n => { n.classList.remove('highlight'); n.style.opacity = ''; });
+  document.querySelectorAll('.flow-line').forEach(l => { l.classList.remove('active'); l.style.opacity = ''; });
+  document.querySelectorAll('.particle').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.controls button').forEach(b => b.classList.remove('active'));
+}
+function showAll() {
+  clearHighlights();
+  document.querySelectorAll('.controls button')[0].classList.add('active');
+  document.querySelectorAll('.flow-line').forEach(l => l.classList.add('active'));
+  document.querySelectorAll('.particle').forEach(p => p.classList.add('active'));
+}
+function animateStep(step) {
+  clearHighlights();
+  document.querySelectorAll('.controls button')[step+1]?.classList.add('active');
+  document.querySelectorAll('.node-group').forEach(n => n.style.opacity = '0.15');
+  document.querySelectorAll('.flow-line').forEach(l => l.style.opacity = '0.08');
+  document.querySelectorAll(`.node-group[data-step="${step}"]`).forEach(n => { n.style.opacity = '1'; n.classList.add('highlight'); });
+  document.querySelectorAll(`.flow-line[data-step="${step}"]`).forEach(l => { l.style.opacity = '1'; l.classList.add('active'); });
+  if (step > 0) document.querySelectorAll(`.node-group[data-step="${step-1}"]`).forEach(n => n.style.opacity = '0.4');
+  const pm = {0:['p0'],1:['p1a','p1b','p1c'],2:['p2a','p2b'],3:['p3a','p3b'],4:['p4a','p4b','p4c']};
+  (pm[step]||[]).forEach(id => document.getElementById(id)?.classList.add('active'));
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key==='Escape') closeDetail();
+  if (e.key>='0' && e.key<='4') animateStep(parseInt(e.key));
+  if (e.key===' ') { e.preventDefault(); showAll(); }
+});
+showAll();
+</script>
+</body>
+</html>

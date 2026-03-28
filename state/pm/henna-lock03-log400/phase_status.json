@@ -1,0 +1,31 @@
+{
+  "goal": "Build Lock Type 03 (Altitude North) from scratch at LOG400 in Rhino instance 'interior' (port 9003), including the missing roof system.",
+  "owner": "henna",
+  "created": "2026-03-27",
+  "deadline": "2026-03-30",
+  "rhino_instance": "interior",
+  "rhino_port": 9003,
+  "phases": [
+    {
+      "id": "phase0",
+      "name": "Spec Roundtable",
+      "status": "skipped",
+      "sessions_planned": 1,
+      "sessions_used": 0,
+      "note": "Skipped — user asked to build directly. Spec was derived inline from lock_01 pattern + 00_Workflow_v04.md LOG400 definitions."
+    },
+    {
+      "id": "phase1",
+      "name": "Full Build",
+      "status": "complete",
+      "sessions_planned": 2,
+      "sessions_used": 1,
+      "completed": "2026-03-27",
+      "output": "139 objects in Rhino 'interior' (port 9003) + 4 viewport captures",
+      "report": "output/city101_hub/lock_03_LOG400_build_report.md"
+    }
+  ],
+  "current_phase": "complete",
+  "blocker": null,
+  "notes": "Built in one session. Inclined track modeled as proper sloped prism (extrusion along slope vector). Sloped roof slab built as tilted Brep. Roof added to both stations — the missing piece from the original spec."
+}

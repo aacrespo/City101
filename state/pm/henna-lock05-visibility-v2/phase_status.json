@@ -1,0 +1,11 @@
+{
+  "goal": "Rebuild Lock 05 Visibility Lock from scratch at LOG 400 with proper agent team coordination",
+  "owner": "henna",
+  "created": "2026-03-27",
+  "phases": [
+    {"name": "phase0_interface_negotiation", "status": "pending", "sessions_planned": 1, "description": "4 agents discuss all interfaces before any building"},
+    {"name": "phase1_build", "status": "pending", "sessions_planned": 1, "description": "2 modelers execute agreed spec, lead coordinates"},
+    {"name": "phase2_verify", "status": "pending", "sessions_planned": 1, "description": "Section test, code compliance, viewport captures"}
+  ],
+  "current_phase": "phase0_interface_negotiation"
+}
