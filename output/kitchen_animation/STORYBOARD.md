@@ -140,10 +140,9 @@ The repo = the apartment. The kitchen = the workspace. Animation picks up from t
 - Another example: the Modeler scroll shows a specific tool cabinet with specialized equipment.
 - The specialist scroll goes into the backpack. **Backpack grows a tiny bit** — just enough for the role context. Not too much. Just what they need to do their job efficiently.
 
-**4c — Scaling: counter → kitchen → brigade**
-- **Small counter** (Level 1): One Claude, one task. Basic.
-- **Medium kitchen** (Level 2): Claude + subagents (commis). Two tiers. Context matters now.
-- **Full Michelin brigade** (Level 3): Chef de cuisine (user) at the pass. Sous chef (Claude) orchestrating. Chefs de partie at specialized stations (Analyst, Modeler, Builder — each wearing their role's scroll). Commis underneath.
+**4c — The full brigade**
+- Quick montage: multiple Claudes enter different doors simultaneously — MODELER, BUILDER, CARTOGRAPHER. Each picks up their scroll. The kitchen fills with specialists.
+- **Pull back to reveal the full Michelin brigade**: Chef de cuisine (user) at the pass. Sous chef (Claude) orchestrating. Chefs de partie at specialized stations (Analyst, Modeler, Builder — each wearing their role's scroll). Commis underneath.
 - Communication: sous chef calls out, stations respond, dishes converge at the pass.
 
 ---
@@ -234,8 +233,8 @@ The repo = the apartment. The kitchen = the workspace. Animation picks up from t
 | Gold scroll (CLAUDE.md) | Warm, compass icon |
 | Teal scroll (.claude/) | Cool, gear icon |
 | Big book (archibase) | Heavy, thrown across pass |
-| Recipe index box (CAG) | Small organized box with cards |
-| Encyclopedic books x5 (RAG) | Stacked thick books |
+| Encyclopedic books x5 (CAG) | Stacked thick books, pre-loaded knowledge |
+| Recipe index box (RAG) | Small organized box with index cards |
 | Specialist scroll variants | Focused maps per role |
 | Backpack states | empty, small, medium, full, overflow |
 
