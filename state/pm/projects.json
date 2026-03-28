@@ -2,6 +2,7 @@
   "projects": [
     {
       "id": "henna-lock03-log400",
+      "phase": "midterm",
       "name": "Lock Type 03 — Altitude North (LOG400 Full Build)",
       "owner": "henna",
       "status": "in_progress",
@@ -15,6 +16,7 @@
     },
     {
       "id": "henna-lock02-cargo-log400",
+      "phase": "midterm",
       "name": "Lock Type 02 — Cargo Lock LOG400",
       "owner": "henna",
       "status": "in_progress",
@@ -28,6 +30,7 @@
     },
     {
       "id": "rhinobase-iboisbase",
+      "phase": "post-midterm",
       "name": "Knowledge Base Expansion (rhinobase + iboisbase)",
       "owner": "andrea",
       "status": "planned",
@@ -38,6 +41,7 @@
     },
     {
       "id": "knowledge-infrastructure",
+      "phase": "post-midterm",
       "name": "Knowledge Feedback Loop (medical guidelines model)",
       "owner": "shared",
       "status": "planned",
@@ -49,6 +53,7 @@
     },
     {
       "id": "open-source-study",
+      "phase": "post-midterm",
       "name": "Open Source AEC Study",
       "owner": "andrea",
       "status": "planned",
@@ -60,6 +65,7 @@
     },
     {
       "id": "henna-lock05-visibility-v2",
+      "phase": "midterm",
       "name": "Lock 05 Visibility Lock — v2 Full Rebuild",
       "owner": "henna",
       "status": "in_progress",
@@ -74,6 +80,7 @@
     },
     {
       "id": "henna-lock08-altitude-south-log400",
+      "phase": "midterm",
       "name": "Lock Type 08 — Altitude South (LOG400 Full Build)",
       "owner": "henna",
       "status": "complete",
@@ -90,7 +97,41 @@
       "element_count": 419
     },
     {
+      "id": "multi-model-infrastructure",
+      "phase": "post-midterm",
+      "name": "Multi-Model Infrastructure Strategy",
+      "owner": "andrea",
+      "status": "planned",
+      "priority": "post-midterm, infrastructure",
+      "created": "2026-03-28",
+      "summary": "LiteLLM gateway, EPFL-hosted model fallback, task routing by complexity, failover protocol. Phase 1 blocker: confirm what EPFL actually hosts.",
+      "reference": "multi-model-strategy.md"
+    },
+    {
+      "id": "sia-norms-expansion",
+      "phase": "post-midterm",
+      "name": "SIA Norms Expansion — Abris PC + Regulatory Layer",
+      "owner": "andrea",
+      "status": "planned",
+      "priority": "post-midterm, knowledge system",
+      "created": "2026-03-28",
+      "depends_on": ["rhinobase-iboisbase"],
+      "summary": "Add SIA 520 (abris de protection civile) to archibase — mandatory for building permits, painful to integrate manually. Explore broader regulatory layer (fire, egress, OPCA) focusing on compliance-checkable rules, not design judgment. Friend's internship confirms this is a real pain point."
+    },
+    {
+      "id": "mcp-context-optimization",
+      "phase": "post-midterm",
+      "name": "MCP Tools as Libraries — Context Optimization",
+      "owner": "andrea",
+      "status": "planned",
+      "priority": "post-midterm, infrastructure",
+      "created": "2026-03-28",
+      "summary": "Reduce MCP tool context from ~25K to ~2.5K tokens per session. Tier tools (always/role/demand), audit actual usage, test execute_python_code as universal replacement for individual Rhino tools. See multi-model-strategy.md Section 9.",
+      "reference": "multi-model-strategy.md"
+    },
+    {
       "id": "fabrication-bridge",
+      "phase": "post-midterm",
       "name": "Fabrication Bridge — Supply Chain + Ecological Impact",
       "owner": "andrea",
       "status": "future",
@@ -103,6 +144,7 @@
     ,
     {
       "id": "rennaz-lock07",
+      "phase": "midterm",
       "name": "Rennaz Lock 07 — Construction-Ready Bridge Lock",
       "owner": "andrea",
       "status": "in_progress",
@@ -113,6 +155,7 @@
     },
     {
       "id": "kitchen-animation",
+      "phase": "midterm",
       "name": "Kitchen Analogy Animation (midterm presentation)",
       "owner": "andrea",
       "status": "in_progress",
