@@ -3,8 +3,8 @@
   "configurations": [
     {
       "name": "site-server",
-      "runtimeExecutable": "python3",
-      "runtimeArgs": ["-m", "http.server", "8080", "--directory", "/Users/andreacrespo/CLAUDE/city101/visualizations/site"],
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-m", "http.server", "8080", "--directory", "C:/Users/Henna Rafik/Desktop/Huang - Sentient/Claude code MAX/City101/.claude/worktrees/thirsty-cray"],
       "port": 8080
     },
     {
