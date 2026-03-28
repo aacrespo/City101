@@ -48,6 +48,17 @@
       "framework": "observations/research/strategy/knowledge_feedback_framework.md"
     },
     {
+      "id": "open-source-study",
+      "name": "Open Source AEC Study",
+      "owner": "andrea",
+      "status": "planned",
+      "priority": "post-midterm, learning project",
+      "created": "2026-03-26",
+      "feeds_into": ["rhinobase-iboisbase", "knowledge-infrastructure", "fabrication-bridge"],
+      "summary": "Study COMPAS, Ladybug, HdM Calc/Rhyton, openLCA — extract patterns for our knowledge system. License-aware: MIT usable, unlicensed = patterns only.",
+      "prompts_dir": "state/pm/open-source-study/prompts/"
+    },
+    {
       "id": "henna-lock05-visibility-v2",
       "name": "Lock 05 Visibility Lock — v2 Full Rebuild",
       "owner": "henna",
@@ -88,6 +99,27 @@
       "depends_on": ["rhinobase-iboisbase", "knowledge-infrastructure", "Raccoon license from IBOIS"],
       "summary": "Connect design → sourcing → transport → fabrication → assembly → verification as a traceable, ecologically quantified chain. Roundwood as material passport. Per-lock supply chain comparison.",
       "framework": "observations/research/strategy/fabrication_bridge_framework.md"
+    }
+    ,
+    {
+      "id": "rennaz-lock07",
+      "name": "Rennaz Lock 07 — Construction-Ready Bridge Lock",
+      "owner": "andrea",
+      "status": "in_progress",
+      "priority": "midterm — overnight build March 27-28",
+      "created": "2026-03-27",
+      "summary": "First lock with full archibase knowledge. LOG 400 / LOD 400 timber bridge lock. 4 modelers + lead, ~450 objects. Phase 0 (spec) complete, Phase 1-4 runs overnight autonomously.",
+      "prompts_dir": "state/pm/rennaz-lock07/prompts/"
+    },
+    {
+      "id": "kitchen-animation",
+      "name": "Kitchen Analogy Animation (midterm presentation)",
+      "owner": "andrea",
+      "status": "in_progress",
+      "priority": "midterm — due March 30, screen test March 27",
+      "created": "2026-03-27",
+      "summary": "6-scene pixel art RPG animation. Blender character sprites + HTML environments. Storyboard locked. Phase 0: Andrea finishes character models.",
+      "prompts_dir": "state/pm/kitchen-animation/prompts/"
     }
   ]
 }

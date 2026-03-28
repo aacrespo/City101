@@ -1,0 +1,21 @@
+{
+  "goal": "Construction-ready Bridge Lock at Rennaz — LOG 400, full archibase knowledge, timber structure",
+  "owner": "andrea",
+  "created": "2026-03-27",
+  "phases": [
+    {
+      "name": "Phase 0: Spec Preparation",
+      "status": "complete",
+      "sessions_planned": 1,
+      "sessions_actual": 1,
+      "notes": "All design decisions locked. Assembly data from archibase embedded in overnight prompt. SIA 500 ramp violation fixed (switchback)."
+    },
+    {
+      "name": "Phase 1-4: Overnight Build",
+      "status": "pending",
+      "sessions_planned": 1,
+      "notes": "Autonomous overnight run. 4 modelers + lead. Internal phase gates with health checks. Target: 450 objects, LOG 400."
+    }
+  ],
+  "current_phase": "Phase 1-4: Overnight Build"
+}

@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1920, height=1080">
+<title>CLAUDE.md — The Map</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=DM+Sans:wght@400;500;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    width: 1920px; height: 1080px;
+    overflow: hidden;
+    background: #2a1f14;
+  }
+
+  .map {
+    width: 1920px; height: 1080px;
+    position: relative;
+    background:
+      radial-gradient(ellipse at 40% 35%, rgba(201,168,76,0.15) 0%, transparent 60%),
+      radial-gradient(ellipse at 75% 70%, rgba(184,122,86,0.1) 0%, transparent 50%),
+      linear-gradient(135deg, #e8d5a8 0%, #d4be8a 25%, #c9a84c33 50%, #d4be8a 75%, #e0cfa0 100%);
+    overflow: hidden;
+  }
+
+  /* Parchment texture overlay */
+  .map::before {
+    content: '';
+    position: absolute; inset: 0;
+    background:
+      repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(139,109,63,0.03) 3px, rgba(139,109,63,0.03) 4px),
+      repeating-linear-gradient(90deg, transparent, transparent 5px, rgba(139,109,63,0.02) 5px, rgba(139,109,63,0.02) 6px);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* Aged edges */
+  .map::after {
+    content: '';
+    position: absolute; inset: 0;
+    box-shadow:
+      inset 0 0 120px rgba(90,60,20,0.5),
+      inset 0 0 300px rgba(60,35,10,0.3);
+    border: 3px solid rgba(139,109,63,0.4);
+    pointer-events: none;
+    z-index: 50;
+  }
+
+  /* Burn marks / stains */
+  .stain {
+    position: absolute;
+    border-radius: 50%;
+    background: radial-gradient(ellipse, rgba(139,100,50,0.15) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  /* ── TITLE CARTOUCHE ── */
+  .cartouche {
+    position: absolute;
+    top: 40px; left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    z-index: 10;
+    padding: 20px 60px;
+    background: rgba(212,190,138,0.6);
+    border: 2px solid rgba(139,109,63,0.5);
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(90,60,20,0.2);
+  }
+  .cartouche h1 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 42px;
+    color: #3a2510;
+    letter-spacing: 3px;
+    text-shadow: 1px 1px 2px rgba(139,109,63,0.3);
+  }
+  .cartouche .subtitle {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    color: #6b5530;
+    margin-top: 6px;
+    letter-spacing: 1px;
+  }
+
+  /* ── COMPASS ROSE ── */
+  .compass {
+    position: absolute;
+    bottom: 80px; right: 100px;
+    width: 140px; height: 140px;
+    z-index: 10;
+    animation: compassSpin 120s linear infinite;
+  }
+  @keyframes compassSpin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+  .compass svg { width: 100%; height: 100%; }
+
+  /* ── LOCATION NODES ── */
+  .location {
+    position: absolute;
+    z-index: 10;
+    cursor: default;
+    transition: transform 0.3s ease;
+  }
+  .location:hover { transform: scale(1.05); }
+
+  .location .icon {
+    width: 64px; height: 64px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    box-shadow: 0 4px 16px rgba(90,60,20,0.3);
+    border: 3px solid rgba(139,109,63,0.6);
+    position: relative;
+  }
+
+  .location .label {
+    font-family: 'Instrument Serif', serif;
+    font-size: 20px;
+    color: #3a2510;
+    text-align: center;
+    margin-top: 8px;
+    text-shadow: 0 1px 3px rgba(212,190,138,0.8);
+    white-space: nowrap;
+  }
+
+  .location .desc {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    color: #6b5530;
+    text-align: center;
+    max-width: 140px;
+    margin-top: 2px;
+    line-height: 1.3;
+  }
+
+  /* Location-specific colors */
+  .loc-datasets .icon { background: linear-gradient(135deg, #c9a84c, #b87a56); color: #fff; }
+  .loc-tools .icon { background: linear-gradient(135deg, #8b6d3f, #6b5530); color: #e8d5a8; }
+  .loc-observations .icon { background: linear-gradient(135deg, #5b8fa8, #4a7a92); color: #fff; }
+  .loc-deliverables .icon { background: linear-gradient(135deg, #c45d4a, #a84840); color: #fff; }
+  .loc-claude-dir .icon { background: linear-gradient(135deg, #5b8fa8, #3a6a80); color: #fff; }
+  .loc-lockboard .icon { background: linear-gradient(135deg, #c9a84c, #a88a30); color: #fff; }
+  .loc-context .icon { background: linear-gradient(135deg, #5a9e6f, #4a8a5f); color: #fff; }
+  .loc-source .icon { background: linear-gradient(135deg, #9a9690, #7a7670); color: #fff; }
+  .loc-output .icon { background: linear-gradient(135deg, #b87a56, #a06a46); color: #fff; }
+  .loc-design .icon { background: linear-gradient(135deg, #c9a84c, #d4b85c); color: #3a2510; }
+
+  /* ── PATHS (hand-drawn style) ── */
+  .paths {
+    position: absolute; inset: 0;
+    z-index: 5;
+    pointer-events: none;
+  }
+  .paths svg {
+    width: 100%; height: 100%;
+  }
+  .paths path {
+    fill: none;
+    stroke: #8b6d3f;
+    stroke-width: 2;
+    stroke-dasharray: 8 4;
+    opacity: 0.6;
+  }
+  .paths .path-main {
+    stroke: #c9a84c;
+    stroke-width: 3;
+    stroke-dasharray: 12 6;
+    opacity: 0.8;
+  }
+
+  /* ── ANNOTATIONS ── */
+  .annotation {
+    position: absolute;
+    z-index: 8;
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: 14px;
+    color: #8b6d3f;
+    transform: rotate(var(--rot, 0deg));
+    pointer-events: none;
+    opacity: 0.7;
+  }
+
+  /* ── DECORATIVE ELEMENTS ── */
+  .sea-pattern {
+    position: absolute;
+    z-index: 3;
+    pointer-events: none;
+  }
+  .sea-pattern svg {
+    opacity: 0.15;
+  }
+
+  /* Arrow pointers */
+  .arrow {
+    position: absolute;
+    z-index: 9;
+    pointer-events: none;
+  }
+  .arrow svg {
+    width: 60px; height: 60px;
+  }
+  .arrow path {
+    fill: none;
+    stroke: #c9a84c;
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  /* Floating animation for ambient feel */
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-4px); }
+  }
+  .float { animation: float 4s ease-in-out infinite; }
+  .float-delay { animation: float 4s ease-in-out 2s infinite; }
+
+  /* Legend box */
+  .legend {
+    position: absolute;
+    bottom: 60px; left: 80px;
+    background: rgba(212,190,138,0.7);
+    border: 2px solid rgba(139,109,63,0.5);
+    border-radius: 6px;
+    padding: 16px 20px;
+    z-index: 10;
+  }
+  .legend h3 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 16px;
+    color: #3a2510;
+    margin-bottom: 8px;
+    border-bottom: 1px solid rgba(139,109,63,0.3);
+    padding-bottom: 4px;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 4px 0;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    color: #6b5530;
+  }
+  .legend-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* Scale bar */
+  .scale-bar {
+    position: absolute;
+    bottom: 40px; left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: #8b6d3f;
+  }
+  .scale-line {
+    width: 100px; height: 2px;
+    background: #8b6d3f;
+    position: relative;
+  }
+  .scale-line::before, .scale-line::after {
+    content: '';
+    position: absolute;
+    width: 2px; height: 8px;
+    background: #8b6d3f;
+    top: -3px;
+  }
+  .scale-line::before { left: 0; }
+  .scale-line::after { right: 0; }
+
+  /* Fold lines */
+  .fold {
+    position: absolute;
+    z-index: 4;
+    pointer-events: none;
+  }
+  .fold-h {
+    width: 100%; height: 1px;
+    background: linear-gradient(90deg, transparent 5%, rgba(139,109,63,0.15) 20%, rgba(139,109,63,0.2) 50%, rgba(139,109,63,0.15) 80%, transparent 95%);
+  }
+  .fold-v {
+    width: 1px; height: 100%;
+    background: linear-gradient(180deg, transparent 5%, rgba(139,109,63,0.15) 20%, rgba(139,109,63,0.2) 50%, rgba(139,109,63,0.15) 80%, transparent 95%);
+  }
+
+  /* Pulse on key locations */
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(201,168,76,0.4); }
+    50% { box-shadow: 0 0 0 12px rgba(201,168,76,0); }
+  }
+  .pulse .icon { animation: pulse 3s ease-in-out infinite; }
+</style>
+</head>
+<body>
+<div class="map">
+
+  <!-- Stains for aged look -->
+  <div class="stain" style="top:150px;left:200px;width:200px;height:180px;"></div>
+  <div class="stain" style="top:600px;left:1400px;width:250px;height:200px;"></div>
+  <div class="stain" style="top:800px;left:600px;width:180px;height:160px;"></div>
+
+  <!-- Fold lines -->
+  <div class="fold fold-h" style="top:540px;"></div>
+  <div class="fold fold-v" style="left:960px;"></div>
+  <div class="fold fold-h" style="top:360px;"></div>
+  <div class="fold fold-v" style="left:640px;"></div>
+
+  <!-- Title cartouche -->
+  <div class="cartouche">
+    <h1>CLAUDE.md</h1>
+    <div class="subtitle">A MAP OF THE SHARED KITCHEN &mdash; city101 repository</div>
+  </div>
+
+  <!-- ── PATHS SVG ── -->
+  <div class="paths">
+    <svg viewBox="0 0 1920 1080">
+      <!-- Main golden path from entry to center -->
+      <path class="path-main" d="M 160,540 Q 300,500 480,460 T 760,400 Q 900,380 960,420 T 1200,480 Q 1350,500 1500,460"/>
+      <!-- Secondary paths -->
+      <path d="M 480,460 Q 420,320 350,240"/>
+      <path d="M 760,400 Q 780,280 820,200"/>
+      <path d="M 960,420 Q 1000,560 1020,680"/>
+      <path d="M 960,420 Q 880,520 800,620"/>
+      <path d="M 1200,480 Q 1280,380 1360,280"/>
+      <path d="M 1200,480 Q 1240,600 1260,720"/>
+      <path d="M 1500,460 Q 1560,380 1620,300"/>
+      <path d="M 1500,460 Q 1540,560 1560,660"/>
+      <!-- Entry door path -->
+      <path class="path-main" d="M 60,540 Q 100,540 160,540"/>
+    </svg>
+  </div>
+
+  <!-- ── LOCATION: ENTRY (CLAUDE.md itself) ── -->
+  <div class="location pulse" style="left:80px;top:500px;">
+    <div class="icon" style="background:linear-gradient(135deg,#c9a84c,#d4b85c);color:#3a2510;width:80px;height:80px;font-size:36px;">
+      🚪
+    </div>
+    <div class="label">The Door</div>
+    <div class="desc">You are here.<br>CLAUDE.md loads first.</div>
+  </div>
+
+  <!-- ── LOCATION: .claude/ (blueprint room) ── -->
+  <div class="location loc-claude-dir float" style="left:280px;top:180px;">
+    <div class="icon">⚙️</div>
+    <div class="label">.claude/</div>
+    <div class="desc">The Blueprint Room<br>Rules, commands, agents</div>
+  </div>
+
+  <!-- ── LOCATION: datasets/ (the pantry) ── -->
+  <div class="location loc-datasets float-delay" style="left:700px;top:140px;">
+    <div class="icon">🏪</div>
+    <div class="label">datasets/</div>
+    <div class="desc">The Pantry<br>Verified production data</div>
+  </div>
+
+  <!-- ── LOCATION: tools/ (equipment) ── -->
+  <div class="location loc-tools float" style="left:440px;top:380px;">
+    <div class="icon">🔧</div>
+    <div class="label">tools/</div>
+    <div class="desc">The Equipment<br>Reusable scripts &amp; utilities</div>
+  </div>
+
+  <!-- ── LOCATION: observations/ (logbook) ── -->
+  <div class="location loc-observations float-delay" style="left:740px;top:560px;">
+    <div class="icon">📖</div>
+    <div class="label">observations/</div>
+    <div class="desc">The Logbook<br>Findings, dead ends, theory</div>
+  </div>
+
+  <!-- ── LOCATION: deliverables/ (the pass) ── -->
+  <div class="location loc-deliverables pulse" style="left:1140px;top:220px;">
+    <div class="icon">🍽️</div>
+    <div class="label">deliverables/</div>
+    <div class="desc">The Pass<br>Submission-ready outputs</div>
+  </div>
+
+  <!-- ── LOCATION: output/ (staging) ── -->
+  <div class="location loc-output float" style="left:960px;top:630px;">
+    <div class="icon">📦</div>
+    <div class="label">output/</div>
+    <div class="desc">The Prep Counter<br>Agent work lands here first</div>
+  </div>
+
+  <!-- ── LOCATION: source/ (frozen inputs) ── -->
+  <div class="location loc-source" style="left:1180px;top:660px;">
+    <div class="icon">🧊</div>
+    <div class="label">source/</div>
+    <div class="desc">The Freezer<br>FROZEN — never modify</div>
+  </div>
+
+  <!-- ── LOCATION: LOCKBOARD.md (ticket rail) ── -->
+  <div class="location loc-lockboard float" style="left:1300px;top:400px;">
+    <div class="icon">🎫</div>
+    <div class="label">LOCKBOARD</div>
+    <div class="desc">The Ticket Rail<br>Who's doing what now</div>
+  </div>
+
+  <!-- ── LOCATION: CONTEXT.md ── -->
+  <div class="location loc-context float-delay" style="left:1520px;top:240px;">
+    <div class="icon">🧭</div>
+    <div class="label">CONTEXT.md</div>
+    <div class="desc">Living project state<br>Updated every session</div>
+  </div>
+
+  <!-- ── LOCATION: design_system/ ── -->
+  <div class="location loc-design float" style="left:1560px;top:580px;">
+    <div class="icon">🎨</div>
+    <div class="label">design_system/</div>
+    <div class="desc">The Style Guide<br>Palette, type, identity</div>
+  </div>
+
+  <!-- ── LOCATION: workflows/ ── -->
+  <div class="location loc-tools float-delay" style="left:360px;top:600px;">
+    <div class="icon">📋</div>
+    <div class="label">workflows/</div>
+    <div class="desc">Recipe Cards<br>Step-by-step SOPs</div>
+  </div>
+
+  <!-- ── ANNOTATIONS ── -->
+  <div class="annotation" style="left:540px;top:300px;--rot:-8deg;">"Verify before promoting"</div>
+  <div class="annotation" style="left:1050px;top:540px;--rot:5deg;">output/ → verify → datasets/</div>
+  <div class="annotation" style="left:180px;top:440px;--rot:-3deg;">Check tools/ before building</div>
+  <div class="annotation" style="left:1400px;top:340px;--rot:4deg;">Coordination hub</div>
+  <div class="annotation" style="left:900px;top:200px;--rot:-5deg;">Nothing goes here unverified</div>
+  <div class="annotation" style="left:1650px;top:440px;--rot:7deg;">Updated every session-end</div>
+
+  <!-- ── COMPASS ROSE ── -->
+  <div class="compass">
+    <svg viewBox="0 0 140 140">
+      <g transform="translate(70,70)">
+        <!-- Outer ring -->
+        <circle r="60" fill="none" stroke="#8b6d3f" stroke-width="1.5" opacity="0.5"/>
+        <circle r="55" fill="none" stroke="#8b6d3f" stroke-width="0.5" opacity="0.3"/>
+        <!-- Cardinal points -->
+        <polygon points="0,-55 6,-20 -6,-20" fill="#c9a84c" opacity="0.9"/>
+        <polygon points="0,55 6,20 -6,20" fill="#8b6d3f" opacity="0.6"/>
+        <polygon points="-55,0 -20,6 -20,-6" fill="#8b6d3f" opacity="0.6"/>
+        <polygon points="55,0 20,6 20,-6" fill="#8b6d3f" opacity="0.6"/>
+        <!-- Intercardinals -->
+        <polygon points="0,-55 3,-25 -3,-25" fill="#c9a84c" opacity="0.4" transform="rotate(45)"/>
+        <polygon points="0,-55 3,-25 -3,-25" fill="#c9a84c" opacity="0.4" transform="rotate(135)"/>
+        <polygon points="0,-55 3,-25 -3,-25" fill="#c9a84c" opacity="0.4" transform="rotate(225)"/>
+        <polygon points="0,-55 3,-25 -3,-25" fill="#c9a84c" opacity="0.4" transform="rotate(315)"/>
+        <!-- Center -->
+        <circle r="4" fill="#c9a84c"/>
+        <!-- Labels -->
+        <text y="-62" text-anchor="middle" font-family="Instrument Serif" font-size="12" fill="#3a2510">N</text>
+        <text y="72" text-anchor="middle" font-family="Instrument Serif" font-size="10" fill="#6b5530">S</text>
+        <text x="-66" y="4" text-anchor="middle" font-family="Instrument Serif" font-size="10" fill="#6b5530">W</text>
+        <text x="66" y="4" text-anchor="middle" font-family="Instrument Serif" font-size="10" fill="#6b5530">E</text>
+      </g>
+    </svg>
+  </div>
+
+  <!-- ── LEGEND ── -->
+  <div class="legend">
+    <h3>Legend</h3>
+    <div class="legend-item"><div class="legend-dot" style="background:#c9a84c;"></div>Production data (verified)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#b87a56;"></div>Staging / work-in-progress</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#5b8fa8;"></div>Knowledge &amp; findings</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#c45d4a;"></div>Deliverables (the pass)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#5a9e6f;"></div>Living state documents</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#9a9690;"></div>Frozen / archival</div>
+  </div>
+
+  <!-- ── SCALE BAR ── -->
+  <div class="scale-bar">
+    <span>0</span>
+    <div class="scale-line"></div>
+    <span>~50 directories</span>
+  </div>
+
+  <!-- Sea pattern (decorative waves at edges) -->
+  <div class="sea-pattern" style="bottom:0;left:0;right:0;height:40px;">
+    <svg width="1920" height="40" viewBox="0 0 1920 40">
+      <path d="M0,30 Q40,10 80,30 T160,30 T240,30 T320,30 T400,30 T480,30 T560,30 T640,30 T720,30 T800,30 T880,30 T960,30 T1040,30 T1120,30 T1200,30 T1280,30 T1360,30 T1440,30 T1520,30 T1600,30 T1680,30 T1760,30 T1840,30 T1920,30" fill="none" stroke="#8b6d3f" stroke-width="1.5"/>
+      <path d="M0,35 Q40,15 80,35 T160,35 T240,35 T320,35 T400,35 T480,35 T560,35 T640,35 T720,35 T800,35 T880,35 T960,35 T1040,35 T1120,35 T1200,35 T1280,35 T1360,35 T1440,35 T1520,35 T1600,35 T1680,35 T1760,35 T1840,35 T1920,35" fill="none" stroke="#8b6d3f" stroke-width="1"/>
+    </svg>
+  </div>
+
+  <!-- "Here be dragons" style text -->
+  <div class="annotation" style="right:120px;top:800px;--rot:12deg;font-size:12px;opacity:0.4;">
+    Here be dead ends [DEAD]
+  </div>
+
+  <!-- Cartographer credit -->
+  <div style="position:absolute;bottom:15px;right:20px;font-family:'DM Mono',monospace;font-size:9px;color:#8b6d3f;opacity:0.5;z-index:10;">
+    Cartographed by Claude &middot; city101 &middot; Still On The Line
+  </div>
+
+</div>
+</body>
+</html>

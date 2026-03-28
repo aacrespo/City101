@@ -15,8 +15,8 @@
     },
     {
       "name": "presentation",
-      "runtimeExecutable": "python",
-      "runtimeArgs": ["-m", "http.server", "8082", "--directory", "C:/Users/Henna Rafik/Desktop/Huang - Sentient/Claude Code/City101"],
+      "runtimeExecutable": "python3",
+      "runtimeArgs": ["-m", "http.server", "8082", "--directory", "/Users/andreacrespo/CLAUDE/city101/deliverables/A04"],
       "port": 8082
     }
   ]

@@ -26,7 +26,10 @@ Switzerland's pharma supply chain: **Manufacturer → Pre-wholesaler (Alloga) �
 - Ships **100,000 packs/day**
 - CHF 34M modernization completed 2022
 - Hours: Mon-Fri 07:00–19:00, Sat 09:00–17:00
+- **Night team: 13–16 workers** in pharma sector; volume has increased significantly over past 5+ years
+- Fed by trucks from **Galexis Niederbipp** (~180 km, Bern region) — sorted on arrival at Ecublens by night crew
 [SOURCE: galenica.com/en/news/entries/2022-09-07_avance_news.php]
+[SOURCE: Primary source interview — Galexis Ecublens night worker, 5.5 years experience, March 2026]
 
 **Alloga AG** (Burgdorf, off-corridor, feeds into system):
 - Pre-wholesaler; nearly **every second medication pack** in Switzerland passes through Alloga
@@ -55,6 +58,13 @@ Switzerland's pharma supply chain: **Manufacturer → Pre-wholesaler (Alloga) �
 [SOURCE: post.ch/en/sending-parcels/express-and-courier/swiss-express-innight-medica]
 - **SwissConnect**: Network of **700+ couriers** and **80+ courier companies**. Late evening pickup, overnight delivery, personal handover against signature.
 [SOURCE: swissconnect.ch/en/our-services/delivery-methods/overnight-shipping]
+
+**Galexis Ecublens night operations** (primary source):
+- Night crew sorts orders for their own routes + colleagues' routes. Some orders assembled locally in Ecublens warehouse; others arrive by truck from Niederbipp and need manual sorting.
+- **Departure: 23:00** if normal volume; later if heavy. Finish **~4:15am**, variable — workers leave as soon as their route is done.
+- **Two deliveries/day cycle**: night/early morning round + afternoon round. Hospitals and pharmacies maintain buffer stock. Order placed by 10:00 → delivered same afternoon. Order placed afternoon → delivered next morning.
+- **Morning handoff**: Separate morning shifts depart ~05:00 with dedicated handlers, but night crew assists — "all one team."
+[SOURCE: Primary source interview — Galexis Ecublens night worker, 5.5 years experience, March 2026]
 
 ### 1.4 Medication shortages
 
@@ -96,7 +106,14 @@ Switzerland's pharma supply chain: **Manufacturer → Pre-wholesaler (Alloga) �
 
 ### 2.4 Night staff feeding
 
-[NOT FOUND — needs verification: how night shift workers at hospitals are fed during 22:00–06:00. CHUV has cafeterias but overnight hours unconfirmed.]
+**Night worker feeding (primary source — pharma logistics):**
+- Workers eat before their shift starts (~22:30–23:00) and bring their own food for a break between **01:00–02:00**
+- New cafeteria built ~2024 at Galexis Ecublens — serves as a **break space**, not a meal service
+- Workers carry food during their delivery routes
+- No employer-provided meals; entirely self-provisioned
+[SOURCE: Primary source interview — Galexis Ecublens night worker, March 2026]
+
+[PARTIAL — hospital night staff feeding (CHUV, HUG) still unconfirmed. The above covers logistics workers, not clinical staff.]
 
 ---
 
@@ -165,6 +182,20 @@ Night shift change: **22:45–23:00** (start), **07:00–07:15** (end). Full-tim
 [SOURCE: tpg.ch, noctambus.ch, postauto.ch, taxis-nyon.com]
 
 **No hospital shuttle services found at any corridor hospital.** [NOT FOUND — needs verification]
+
+**Firsthand confirmation (primary source — pharma logistics):**
+- Car is described as **"necessary, even obligatory"** — no public transport runs at shift end (~4:15am)
+- Almost all night workers drive (car or motorcycle). A few use electric scooters; some walk if they live nearby.
+- The obligation to own a vehicle is compounded by variable schedules — sector assignment changes shift times unpredictably.
+[SOURCE: Primary source interview — Galexis Ecublens night worker, March 2026]
+
+### 3.6 Psychological dimension of night work
+
+- Night logistics described as "oppressive, empty, without soul or life" — but also "very calm and quiet"
+- Workers must quickly adapt to being alone every working night; failure to do so has mental health consequences
+- Personal health and social life impacts reported as significant but not detailed in this interview
+[SOURCE: Primary source interview — Galexis Ecublens night worker, March 2026]
+[FOLLOW-UP: Source offered to elaborate on personal health/life impacts — worth pursuing]
 
 ---
 
@@ -402,6 +433,10 @@ The healthcare supply chain reveals an architecture invisible to passengers on t
 
 4. **The gaps define the corridor**: Nyon–Morges (23 km, no ER), Lavaux (20 km, no ambulance base), Rennaz (2 km off-rail, 2.75× slower by transit). These are where the chain breaks.
 
+5. **The supply chain extends beyond the corridor**: Galexis Ecublens receives nightly trucks from **Niederbipp** (~180 km, Bern region) — the pharma supply chain links German-speaking and French-speaking Switzerland through overnight road logistics. The corridor is not self-contained; it is a node in a national system.
+
+6. **The dead window has a human face** (primary source): A pharma night worker describes the obligation to own a car, the solitude of nightly rounds, and an environment that is "oppressive, empty, without soul" — but also calm. The 4,600–6,300 night healthcare workers are not an abstraction; they are people who must quickly learn to be comfortable alone, or suffer psychologically. The corridor's nighttime emptiness is not just logistical — it is experiential.
+
 ### 9.2 Key numbers
 
 | Metric | Value | Status |
@@ -437,7 +472,7 @@ The healthcare supply chain reveals an architecture invisible to passengers on t
 | Flow | Day intensity | Night intensity | Dead window | What breaks |
 |------|-------------|----------------|-------------|-------------|
 | Medication/pharma | Full | Innight trucks loading | Road-only delivery | Cold chain depends on road network |
-| Food/catering | 3 meal services | Night shift meals unclear | [NOT FOUND] | Night workers may go unfed |
+| Food/catering | 3 meal services | Self-provisioned (primary source) | Break space only | Night workers bring own food, eat 01:00–02:00 |
 | Staff circulation | Full transit | Last trains ~00:30 | Car or stranded | 4,600–6,300 workers depend on cars |
 | Patient flows | Full access | ER-only | 5 ERs for 101 km | Walk-in clinics closed |
 | Postal/logistics | Full | Daillens until 03:00 | Eclépens 24h | Night sorters car-dependent |
@@ -463,7 +498,8 @@ The healthcare supply chain reveals an architecture invisible to passengers on t
 | CHUV CPA 6,800+ meals/day | 6,800+ | CHUV | CONFIRMED |
 | HRC 3,000 meals/day | ~3,000 | MKN reference | CONFIRMED |
 | EHC Morges kitchen details | Unknown | Not found | NOT FOUND |
-| Hospital night staff feeding | Unknown | Not found | NOT FOUND |
+| Logistics night staff feeding | Self-provisioned | Primary source interview | CONFIRMED |
+| Hospital clinical night staff feeding | Unknown | Not found | NOT FOUND |
 | La Poste Eclépens 400+ staff | 400+ | Torpille.ch | CONFIRMED |
 | La Poste Daillens 165k parcels | 165,000 | Le Temps/Jam | CONFIRMED |
 | Swiss Post Innight 220+ hospitals | 220+ | Swiss Post | CONFIRMED |
@@ -500,7 +536,49 @@ The healthcare supply chain reveals an architecture invisible to passengers on t
 | HUG CTS 14,500 bags/year | 14,500 | HUG blood donation | CONFIRMED |
 | TIR 700+ mobile drives/year | 700+ | TIR website | CONFIRMED |
 | Emergency blood night protocol | Unknown | Not found | NOT FOUND |
-| Night feeding protocol | Unknown | Not found | NOT FOUND |
+| Night feeding protocol (logistics) | Self-provisioned, break 01:00–02:00 | Primary source interview | CONFIRMED |
+| Night feeding protocol (clinical) | Unknown | Not found | NOT FOUND |
+| Galexis night team size | 13–16 workers | Primary source interview | CONFIRMED |
+| Galexis night departure | 23:00 (variable) | Primary source interview | CONFIRMED |
+| Galexis night shift end | ~4:15am (variable) | Primary source interview | CONFIRMED |
+| Car obligatory for night workers | Yes | Primary source interview | CONFIRMED |
+| Niederbipp → Ecublens truck supply | Yes, nightly | Primary source interview | CONFIRMED |
+| Two deliveries/day cycle | Night + afternoon | Primary source interview | CONFIRMED |
+| Galexis cafeteria | New, built ~2024 | Primary source interview | CONFIRMED |
+| Night work psychological impact | Reported significant | Primary source interview | CONFIRMED |
+
+---
+
+## 11. PRIMARY SOURCE: GALEXIS ECUBLENS NIGHT OPERATIONS
+
+**Source**: Anonymous Galexis Ecublens night worker, 5.5 years experience. Interviewed March 2026 via personal contact.
+
+### 11.1 Transport
+- Car/motorcycle is described as **necessary, even obligatory** — no public transport at shift end
+- Schedule variability compounds the problem: sector assignments change shift times
+- Almost all colleagues drive. A few use electric scooters; some walk if they live nearby.
+
+### 11.2 On site
+- Night team: **13–16 workers** in pharma sector (has grown with volume over 5+ years)
+- New **cafeteria** built ~2024 — used for breaks, not meal service
+- Workers eat before shift + bring food for a break between **01:00–02:00**
+- Described as "oppressive, empty, without soul or life" — but also "very calm and quiet"
+- Must adapt quickly to solitude; failure has psychological consequences
+
+### 11.3 Operations
+- On arrival: sort orders for own route + colleagues' routes
+- Orders come from two sources: **Ecublens warehouse** (assembled locally) and **Niederbipp trucks** (sorted on arrival)
+- **Departure: 23:00** if normal volume; later if heavy
+- **Finish: ~4:15am** (variable — leave as soon as route is done)
+- **Morning handoff ~05:00**: separate handlers prepare morning routes, but night crew helps — "all one team"
+- Hospitals and pharmacies maintain buffer stock
+- **Two deliveries/day**: night round + afternoon round
+- Order by 10:00 → same afternoon delivery. Order in afternoon → next morning delivery.
+- If a particular item is urgently needed, it arrives on the next available round.
+
+### 11.4 Follow-up opportunities
+- Source offered to elaborate on **personal health and social life impacts** of night work — not yet detailed
+- Could provide more specifics on route geography, delivery destinations along the corridor
 
 ---
 

@@ -1,0 +1,1458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>City101 — Where the Healthcare Chain Breaks</title>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gif.js@0.2.0/dist/gif.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;600;700&display=swap');
+
+  :root {
+    --bg: #0c0c14;
+    --bg-elevated: #12121c;
+    --surface: rgba(255,255,255,0.04);
+    --gold: #c9a84c;
+    --gold-dim: rgba(201,168,76,0.12);
+    --text: #e8e6e1;
+    --text-muted: #9a9690;
+    --copper: #b87a56;
+    --teal: #5b8fa8;
+    --error: #c45d4a;
+    --font-display: 'Instrument Serif', serif;
+    --font-body: 'DM Sans', sans-serif;
+    --font-mono: 'DM Mono', monospace;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html {
+    background: #000;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--bg);
+    color: var(--text);
+    width: 1920px;
+    height: 1080px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transform-origin: top left;
+  }
+
+  /* ── ANIMATIONS (from SPEC.md + custom) ── */
+  @keyframes breathe {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 1; }
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; }
+  }
+  @keyframes dotFlow {
+    0% { offset-distance: 0%; opacity: 0; }
+    5% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { offset-distance: 100%; opacity: 0; }
+  }
+  @keyframes gapPulse {
+    0%, 100% { opacity: 0.08; }
+    50% { opacity: 0.22; }
+  }
+  @keyframes hospitalPulse {
+    0%, 100% { r: 5; opacity: 0.8; }
+    50% { r: 7; opacity: 1; }
+  }
+
+  /* ── TIMELINE BAR ── */
+  .timeline {
+    height: 52px;
+    flex-shrink: 0;
+    background: var(--bg-elevated);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    display: flex;
+    align-items: center;
+    padding: 0 32px;
+    gap: 16px;
+  }
+  .timeline-title {
+    font-family: var(--font-display);
+    font-size: 22px;
+    color: var(--text);
+    white-space: nowrap;
+    letter-spacing: -0.3px;
+  }
+  .timeline-bar {
+    flex: 1;
+    height: 6px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 3px;
+    position: relative;
+    cursor: pointer;
+  }
+  .timeline-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 1.5s ease, background 1.5s ease;
+    background: var(--gold);
+  }
+  .timeline-marker {
+    position: absolute;
+    top: -3px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--gold);
+    border: 2px solid var(--bg);
+    transform: translateX(-50%);
+    transition: left 1.5s ease, background 1.5s ease;
+    z-index: 2;
+  }
+  .timeline-hours {
+    position: absolute;
+    top: 12px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    pointer-events: none;
+  }
+  .timeline-hour {
+    font-family: var(--font-mono);
+    font-size: 8px;
+    color: var(--text-muted);
+    opacity: 0.4;
+    transform: translateX(-50%);
+  }
+  .timeline-clock {
+    font-family: var(--font-mono);
+    font-size: 18px;
+    font-weight: 500;
+    min-width: 60px;
+    text-align: right;
+    transition: color 1.5s ease;
+  }
+  .timeline-controls {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .timeline-btn {
+    background: var(--surface);
+    border: 1px solid var(--gold-dim);
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: color 0.3s, border-color 0.3s;
+  }
+  .timeline-btn:hover { color: var(--gold); border-color: var(--gold); }
+  .timeline-btn.active { color: var(--gold); border-color: var(--gold); }
+
+  /* ── ROWS CONTAINER ── */
+  .rows {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-height: 0;
+    transition: background 1.5s ease;
+  }
+
+  .row {
+    flex: 1;
+    display: flex;
+    min-height: 0;
+    background: var(--bg);
+    transition: background 1.5s ease;
+  }
+
+  .row-label {
+    width: 170px;
+    min-width: 170px;
+    padding: 8px 14px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-right: 1px solid rgba(255,255,255,0.06);
+    background: var(--bg-elevated);
+    transition: background 1.5s ease;
+  }
+  .row-label .row-num {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: var(--text-muted);
+    margin-bottom: 2px;
+    letter-spacing: 1px;
+  }
+  .row-label .row-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.2;
+    margin-bottom: 4px;
+  }
+  .row-label .row-question {
+    font-size: 10px;
+    font-style: italic;
+    color: var(--text-muted);
+    line-height: 1.3;
+  }
+  .row-label .row-stat {
+    font-family: var(--font-mono);
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1;
+    margin-top: 6px;
+    transition: color 1.5s ease, opacity 1.5s ease;
+  }
+  .row-label .row-stat-label {
+    font-size: 9px;
+    color: var(--text-muted);
+    margin-top: 2px;
+    transition: opacity 1.5s ease;
+  }
+
+  .row-svg {
+    flex: 1;
+    min-width: 0;
+    position: relative;
+  }
+
+  /* ── STATEMENT STRIP ── */
+  .statement-strip {
+    height: 80px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 60px;
+    background: var(--bg-elevated);
+    border-top: 1px solid rgba(255,255,255,0.06);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .statement-text {
+    font-family: var(--font-display);
+    font-size: 30px;
+    font-style: italic;
+    color: var(--text);
+    text-align: center;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+    max-width: 1400px;
+    line-height: 1.3;
+  }
+  .statement-text.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── FOOTER ── */
+  .footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px 32px;
+    background: var(--bg-elevated);
+    height: 36px;
+    flex-shrink: 0;
+  }
+  .legend-row {
+    display: flex;
+    gap: 12px;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 9px;
+    color: var(--text-muted);
+  }
+  .legend-swatch {
+    width: 8px;
+    height: 8px;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+  .footer-brand {
+    font-size: 10px;
+    color: var(--text-muted);
+    opacity: 0.5;
+  }
+  .footer-brand em {
+    font-family: var(--font-display);
+    font-style: italic;
+    color: var(--gold);
+    opacity: 0.7;
+  }
+  .footer-source {
+    font-size: 7px;
+    color: rgba(255,255,255,0.2);
+    text-align: right;
+    max-width: 500px;
+  }
+
+  /* ── EXPORT BUTTON ── */
+  .export-btn {
+    position: fixed;
+    bottom: 44px;
+    right: 32px;
+    background: var(--surface);
+    border: 1px solid var(--gold-dim);
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    padding: 5px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    z-index: 100;
+    transition: color 0.3s, border-color 0.3s;
+  }
+  .export-btn:hover { color: var(--gold); border-color: var(--gold); }
+  .export-btn.exporting { color: var(--gold); pointer-events: none; }
+
+  /* ── CALLOUT CARDS ── */
+  .callout-overlay {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    pointer-events: none;
+    z-index: 10;
+  }
+
+  svg text { user-select: none; }
+</style>
+</head>
+<body>
+
+<!-- TIMELINE -->
+<div class="timeline">
+  <div class="timeline-title">Where the Healthcare Chain Breaks</div>
+  <div class="timeline-bar" id="timelineBar">
+    <div class="timeline-fill" id="timelineFill"></div>
+    <div class="timeline-marker" id="timelineMarker"></div>
+    <div class="timeline-hours" id="timelineHours"></div>
+  </div>
+  <div class="timeline-clock" id="timelineClock">12:00</div>
+  <div class="timeline-controls">
+    <button class="timeline-btn" id="btnPrev" title="Previous (←)">◂</button>
+    <button class="timeline-btn active" id="btnPlay" title="Play/Pause (Space)">▸</button>
+    <button class="timeline-btn" id="btnNext" title="Next (→)">▹</button>
+  </div>
+</div>
+
+<!-- 4 ROWS -->
+<div class="rows" id="rowsContainer">
+  <!-- ROW 1: Emergency -->
+  <div class="row" id="row-emergency">
+    <div class="row-label">
+      <div class="row-num">LAYER 01</div>
+      <div class="row-title">Emergency<br>Response</div>
+      <div class="row-question">Who responds at 3 AM?</div>
+      <div class="row-stat" id="stat-emergency" style="color:var(--error)">5 ERs</div>
+      <div class="row-stat-label" id="stat-emergency-label">full coverage</div>
+    </div>
+    <div class="row-svg"><svg id="svg-emergency"></svg></div>
+  </div>
+
+  <!-- ROW 2: Staff -->
+  <div class="row" id="row-staff">
+    <div class="row-label">
+      <div class="row-num">LAYER 02</div>
+      <div class="row-title">Staff<br>Access</div>
+      <div class="row-question">Who can get to work?</div>
+      <div class="row-stat" id="stat-staff" style="color:var(--teal)">33k</div>
+      <div class="row-stat-label" id="stat-staff-label">hospital workers</div>
+    </div>
+    <div class="row-svg"><svg id="svg-staff"></svg></div>
+  </div>
+
+  <!-- ROW 3: Supply -->
+  <div class="row" id="row-supply">
+    <div class="row-label">
+      <div class="row-num">LAYER 03</div>
+      <div class="row-title">Supply<br>Chain</div>
+      <div class="row-question">What still moves?</div>
+      <div class="row-stat" id="stat-supply" style="color:var(--gold)">FULL</div>
+      <div class="row-stat-label" id="stat-supply-label">rail + road + air</div>
+    </div>
+    <div class="row-svg"><svg id="svg-supply"></svg></div>
+  </div>
+
+  <!-- ROW 4: Access -->
+  <div class="row" id="row-access">
+    <div class="row-label">
+      <div class="row-num">LAYER 04</div>
+      <div class="row-title">Facility<br>Access</div>
+      <div class="row-question">What's open?</div>
+      <div class="row-stat" id="stat-access" style="color:var(--copper)">65</div>
+      <div class="row-stat-label" id="stat-access-label">pharmacies + 5 ERs</div>
+    </div>
+    <div class="row-svg"><svg id="svg-access"></svg></div>
+  </div>
+</div>
+
+<!-- STATEMENT STRIP -->
+<div class="statement-strip">
+  <div class="statement-text" id="statementText"></div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <div class="legend-row">
+    <div class="legend-item"><div class="legend-swatch" style="background:var(--gold)"></div>Active</div>
+    <div class="legend-item"><div class="legend-swatch" style="background:var(--error)"></div>Gap / failure</div>
+    <div class="legend-item"><div class="legend-swatch" style="background:var(--text-muted)"></div>Reduced</div>
+    <div class="legend-item" style="margin-left:6px"><div class="legend-swatch" style="background:#c45d4a"></div>Emergency</div>
+    <div class="legend-item"><div class="legend-swatch" style="background:#5b8fa8"></div>Staff</div>
+    <div class="legend-item"><div class="legend-swatch" style="background:#8b6cc1"></div>Pharma</div>
+    <div class="legend-item"><div class="legend-swatch" style="background:#c9a84c"></div>Logistics</div>
+    <div class="legend-item"><div class="legend-swatch" style="background:#b87a56"></div>Food</div>
+    <div class="legend-item"><div class="legend-swatch" style="background:#c45d6a"></div>Blood</div>
+  </div>
+  <div class="footer-brand"><em>Still</em> On The Line</div>
+  <div class="footer-source">
+    HUG/CHUV/GHOL/EHC/HRC 2024 · Galenica · Swiss Post · REGA · SBB · Primary source interview · City101 EPFL AR-302k — Crespo &amp; Rafik 2026
+  </div>
+</div>
+
+<button class="export-btn" id="exportBtn">↓ Export GIF</button>
+
+<script>
+// ============================================================
+// DATA
+// ============================================================
+
+const MAJOR_STATIONS = [
+  { name: 'Genève', km: 0 },
+  { name: 'Nyon', km: 25 },
+  { name: 'Morges', km: 48 },
+  { name: 'Lausanne', km: 63 },
+  { name: 'Vevey', km: 80 },
+  { name: 'Montreux', km: 85 },
+  { name: 'Rennaz', km: 97 }
+];
+
+const MINOR_STATIONS = [
+  { km: 5 }, { km: 14 }, { km: 18 }, { km: 33 }, { km: 38 },
+  { km: 44 }, { km: 52 }, { km: 56 }, { km: 59 }, { km: 66 },
+  { km: 73 }, { km: 82 }, { km: 95 }
+];
+
+const HOSPITALS = [
+  { name: 'HUG', km: 2, workers: '13k', nightW: '~2.2k', erVisits: '146k' },
+  { name: 'GHOL', km: 25, workers: '1k', nightW: '~175', erVisits: '30k' },
+  { name: 'EHC', km: 48, workers: '2k', nightW: '~350', erVisits: '' },
+  { name: 'CHUV', km: 65, workers: '12.8k', nightW: '~2.2k', erVisits: '93k' },
+  { name: 'HRC', km: 89, workers: '2.5k', nightW: '~440', erVisits: '' }
+];
+
+const AMBULANCE_ARCS = [[1,15],[24,38],[47,60],[65,73],[82,89]];
+const SUPPLY_FLOWS = [
+  { from: 58, to: 2, color: '#8b6cc1', w: 3 },
+  { from: 58, to: 25, color: '#8b6cc1', w: 2 },
+  { from: 58, to: 48, color: '#8b6cc1', w: 2 },
+  { from: 58, to: 65, color: '#8b6cc1', w: 2.5 },
+  { from: 58, to: 89, color: '#8b6cc1', w: 2 },
+  { from: 56, to: 65, color: '#b87a56', w: 2 },
+  { from: 57, to: 2, color: '#c9a84c', w: 2 },
+  { from: 57, to: 65, color: '#c9a84c', w: 2 },
+  { from: 70, to: 48, color: '#c45d6a', w: 1.5 },
+  { from: 70, to: 89, color: '#c45d6a', w: 1.5 }
+];
+
+const PHARMACIES = [
+  { km: 0.5, type: '24h' },
+  { km: 1.5, type: 'ext' }, { km: 2.5, type: 'reg' }, { km: 3.5, type: 'reg' },
+  { km: 14, type: 'reg' }, { km: 18, type: 'reg' },
+  { km: 24.5, type: 'reg' }, { km: 25.5, type: 'reg' }, { km: 26, type: 'reg' },
+  { km: 33, type: 'reg' }, { km: 34, type: 'reg' },
+  { km: 38, type: 'reg' }, { km: 39, type: 'reg' },
+  { km: 42, type: 'reg' }, { km: 45, type: 'reg' },
+  { km: 47.5, type: 'ext' }, { km: 48.5, type: 'reg' }, { km: 49.5, type: 'reg' },
+  { km: 53, type: 'reg' }, { km: 56, type: 'reg' }, { km: 57, type: 'reg' },
+  { km: 59, type: 'reg' }, { km: 59.5, type: 'reg' },
+  { km: 62.5, type: 'ext' }, { km: 63.5, type: 'ext' }, { km: 64.5, type: 'reg' },
+  { km: 66, type: 'reg' }, { km: 69.5, type: 'reg' }, { km: 73, type: 'reg' },
+  { km: 80, type: 'ext' }, { km: 82, type: 'reg' }, { km: 82.5, type: 'reg' },
+  { km: 85, type: 'reg' }, { km: 85.5, type: 'reg' },
+  { km: 95, type: 'reg' }, { km: 97, type: 'ext' }
+];
+
+// ============================================================
+// CAROUSEL STOPS
+// ============================================================
+
+const STOPS = [
+  {
+    id: 'day',
+    time: '12:00',
+    timeMinutes: 720,
+    statement: 'The corridor is one healthcare system.',
+    stats: {
+      emergency: { value: '5 ERs', label: 'full coverage', color: 'var(--error)' },
+      staff: { value: '33k', label: 'hospital workers', color: 'var(--teal)' },
+      supply: { value: 'FULL', label: 'rail + road + air', color: 'var(--gold)' },
+      access: { value: '65', label: 'pharmacies + 5 ERs', color: 'var(--copper)' }
+    },
+    // Opacity multipliers for each layer
+    opacity: {
+      backbone: 1, stations: 1, hospitals: 1,
+      ambulanceArcs: 1, railArc: 1, supplyFlows: 1,
+      nexus: 1, pharmacies: 1, walkIns: 1,
+      gaps: 0, gapLabels: 0, crewReduction: 0,
+      zeroTransit: 0, callouts: 0, nightCallouts: 0,
+      crossRowCallouts: 0, primarySource: 0,
+      galexisRoutes: 0, galexisReturn: 0
+    },
+    bgDarken: 0
+  },
+  {
+    id: 'evening',
+    time: '22:00',
+    timeMinutes: 1320,
+    statement: 'The first things to stop are the things people choose.',
+    stats: {
+      emergency: { value: '5 ERs', label: 'walk-ins closing', color: 'var(--error)' },
+      staff: { value: '~6.3k', label: 'night shift starting', color: 'var(--teal)' },
+      supply: { value: 'SHIFT', label: 'Galexis crew sorting', color: 'var(--gold)' },
+      access: { value: '~20', label: 'extended-hours only', color: 'var(--copper)' }
+    },
+    opacity: {
+      backbone: 0.7, stations: 0.6, hospitals: 1,
+      ambulanceArcs: 0.8, railArc: 0.5, supplyFlows: 0.6,
+      nexus: 0.9, pharmacies: 0.4, walkIns: 0.1,
+      gaps: 0.2, gapLabels: 0, crewReduction: 0,
+      zeroTransit: 0, callouts: 0, nightCallouts: 0,
+      crossRowCallouts: 0, primarySource: 0,
+      galexisRoutes: 0.3, galexisReturn: 0
+    },
+    bgDarken: 0.15
+  },
+  {
+    id: 'lastTrain',
+    time: '00:30',
+    timeMinutes: 30,
+    statement: 'The last train leaves. The corridor splits into islands.',
+    stats: {
+      emergency: { value: '5 ERs', label: 'ER-only', color: 'var(--error)' },
+      staff: { value: 'ZERO', label: 'night transit', color: 'var(--error)' },
+      supply: { value: 'ROAD', label: 'only — all rail stops', color: 'var(--copper)' },
+      access: { value: '1', label: 'pharmacy on 101 km', color: 'var(--error)' }
+    },
+    opacity: {
+      backbone: 0.3, stations: 0.25, hospitals: 0.6,
+      ambulanceArcs: 0.5, railArc: 0, supplyFlows: 0.3,
+      nexus: 0.7, pharmacies: 0.05, walkIns: 0,
+      gaps: 0.5, gapLabels: 0.4, crewReduction: 0.3,
+      zeroTransit: 0.5, callouts: 0.4, nightCallouts: 0,
+      crossRowCallouts: 0, primarySource: 0,
+      galexisRoutes: 0.8, galexisReturn: 0
+    },
+    bgDarken: 0.4
+  },
+  {
+    id: 'deadWindow',
+    time: '03:00',
+    timeMinutes: 180,
+    statement: '4.5 hours. Zero transit. 6,300 workers drive or are stranded.',
+    stats: {
+      emergency: { value: '2 gaps', label: '20-25 min response', color: 'var(--error)' },
+      staff: { value: 'ZERO', label: 'car or stranded', color: 'var(--error)' },
+      supply: { value: 'ROAD', label: 'Innight Medica only', color: 'var(--copper)' },
+      access: { value: '1', label: 'Pharma24 — only 24h', color: 'var(--error)' }
+    },
+    opacity: {
+      backbone: 0.15, stations: 0.12, hospitals: 0.35,
+      ambulanceArcs: 0.25, railArc: 0, supplyFlows: 0.08,
+      nexus: 0.5, pharmacies: 0.03, walkIns: 0,
+      gaps: 1, gapLabels: 1, crewReduction: 0.7,
+      zeroTransit: 1, callouts: 0.8, nightCallouts: 0.6,
+      crossRowCallouts: 0, primarySource: 0.5,
+      galexisRoutes: 0.4, galexisReturn: 0.5
+    },
+    bgDarken: 0.6
+  },
+  {
+    id: 'convergence',
+    time: '03:00',
+    timeMinutes: 180,
+    statement: 'The same 23 kilometers. No ER. No transit. No pharmacy. No ambulance.',
+    stats: {
+      emergency: { value: '23 km', label: 'no ER — Nyon to Morges', color: 'var(--error)' },
+      staff: { value: 'ZERO', label: 'transit in gap zone', color: 'var(--error)' },
+      supply: { value: '—', label: 'road-only through gap', color: 'var(--error)' },
+      access: { value: '0', label: 'facilities in gap', color: 'var(--error)' }
+    },
+    opacity: {
+      backbone: 0.15, stations: 0.12, hospitals: 0.35,
+      ambulanceArcs: 0.25, railArc: 0, supplyFlows: 0.08,
+      nexus: 0.5, pharmacies: 0.03, walkIns: 0,
+      gaps: 1, gapLabels: 1, crewReduction: 0.7,
+      zeroTransit: 1, callouts: 0.8, nightCallouts: 0.6,
+      crossRowCallouts: 1, primarySource: 0.7,
+      galexisRoutes: 0.4, galexisReturn: 0.5
+    },
+    bgDarken: 0.6
+  },
+  {
+    id: 'restart',
+    time: '05:00',
+    timeMinutes: 300,
+    statement: 'The system restarts. The gaps remain.',
+    stats: {
+      emergency: { value: '5 ERs', label: 'restoring coverage', color: 'var(--error)' },
+      staff: { value: '→ 33k', label: 'first trains return', color: 'var(--teal)' },
+      supply: { value: '05:00', label: 'morning shift departs', color: 'var(--gold)' },
+      access: { value: '→ 65', label: 'pharmacies reopening', color: 'var(--copper)' }
+    },
+    opacity: {
+      backbone: 0.5, stations: 0.4, hospitals: 0.7,
+      ambulanceArcs: 0.6, railArc: 0.3, supplyFlows: 0.4,
+      nexus: 0.8, pharmacies: 0.2, walkIns: 0,
+      gaps: 0.3, gapLabels: 0.2, crewReduction: 0,
+      zeroTransit: 0, callouts: 0, nightCallouts: 0,
+      crossRowCallouts: 0, primarySource: 0,
+      galexisRoutes: 0.2, galexisReturn: 0.7
+    },
+    bgDarken: 0.25
+  }
+];
+
+// ============================================================
+// DRAWING ENGINE
+// ============================================================
+
+let svgContexts = {};
+
+function setupRow(svgId) {
+  const container = document.getElementById(svgId).parentElement;
+  const W = container.clientWidth;
+  const H = container.clientHeight;
+  const svg = d3.select(`#${svgId}`).attr('width', W).attr('height', H);
+  const margin = { left: 20, right: 20 };
+  const midY = H / 2;
+  const x = d3.scaleLinear().domain([0, 101]).range([margin.left, W - margin.right]);
+
+  svg.append('rect').attr('width', W).attr('height', H).attr('fill', 'var(--bg)').attr('class', 'row-bg');
+
+  return { svg, W, H, midY, x };
+}
+
+function drawBackbone(svg, x, midY, cls, rowKey) {
+  const g = svg.append('g').attr('class', cls || 'backbone');
+
+  // Main line — slightly brighter, thicker
+  g.append('line')
+    .attr('x1', x(0)).attr('y1', midY)
+    .attr('x2', x(101)).attr('y2', midY)
+    .attr('stroke', 'rgba(255,255,255,0.2)')
+    .attr('stroke-width', 2.5)
+    .attr('class', 'backbone-line');
+
+  // Subtle glow line underneath
+  g.append('line')
+    .attr('x1', x(0)).attr('y1', midY)
+    .attr('x2', x(101)).attr('y2', midY)
+    .attr('stroke', 'var(--gold)')
+    .attr('stroke-width', 6)
+    .attr('stroke-opacity', 0.04)
+    .attr('class', 'backbone-glow');
+
+  // Major station ticks + labels — BIGGER, brighter
+  MAJOR_STATIONS.forEach(s => {
+    // Tick line — taller
+    g.append('line')
+      .attr('x1', x(s.km)).attr('y1', midY - 7)
+      .attr('x2', x(s.km)).attr('y2', midY + 7)
+      .attr('stroke', 'var(--text)')
+      .attr('stroke-width', 1.5)
+      .attr('stroke-opacity', 0.5)
+      .attr('class', 'station-tick');
+    // Station name — larger, brighter
+    g.append('text')
+      .attr('x', x(s.km)).attr('y', midY + 19)
+      .attr('text-anchor', 'middle')
+      .attr('font-size', 11).attr('font-family', 'var(--font-body)')
+      .attr('font-weight', 700)
+      .attr('fill', 'var(--text)')
+      .attr('opacity', 0.7)
+      .attr('class', 'station-label')
+      .text(s.name);
+    // Small km number below name (first row only to avoid clutter)
+    if (rowKey === 'emergency') {
+      g.append('text')
+        .attr('x', x(s.km)).attr('y', midY + 29)
+        .attr('text-anchor', 'middle')
+        .attr('font-size', 7).attr('font-family', 'var(--font-mono)')
+        .attr('fill', 'var(--text-muted)')
+        .attr('opacity', 0.3)
+        .text(`km ${s.km}`);
+    }
+  });
+
+  // Minor station ticks — slightly more visible
+  MINOR_STATIONS.forEach(s => {
+    g.append('line')
+      .attr('x1', x(s.km)).attr('y1', midY - 3)
+      .attr('x2', x(s.km)).attr('y2', midY + 3)
+      .attr('stroke', 'rgba(255,255,255,0.1)')
+      .attr('stroke-width', 1)
+      .attr('class', 'minor-tick');
+  });
+
+  // Animated flowing dots along the backbone (train-like movement)
+  const flowGroup = svg.append('g').attr('class', 'g-flow-dots');
+  const pathId = `path-${rowKey}-${Math.random().toString(36).slice(2,6)}`;
+  // Invisible path for motion
+  g.append('path')
+    .attr('id', pathId)
+    .attr('d', `M ${x(0)} ${midY} L ${x(101)} ${midY}`)
+    .attr('fill', 'none')
+    .attr('stroke', 'none');
+
+  // Create multiple flowing dots with staggered timing
+  for (let i = 0; i < 4; i++) {
+    const dot = flowGroup.append('circle')
+      .attr('r', 2)
+      .attr('fill', 'var(--gold)')
+      .attr('opacity', 0);
+
+    // Animate using D3 timer
+    animateFlowDot(dot, x, midY, i * 3500, 14000);
+  }
+
+  return g;
+}
+
+// Animate a single dot flowing along the corridor
+function animateFlowDot(dot, x, midY, delay, duration) {
+  function run() {
+    dot
+      .attr('cx', x(0)).attr('cy', midY).attr('opacity', 0)
+      .transition().delay(delay).duration(300).attr('opacity', 0.6)
+      .transition().duration(duration).ease(d3.easeLinear)
+        .attr('cx', x(101))
+      .transition().duration(300).attr('opacity', 0)
+      .on('end', run);
+  }
+  run();
+}
+
+function drawArc(g, x, midY, from, to, color, opts = {}) {
+  const x1 = x(Math.min(from, to));
+  const x2 = x(Math.max(from, to));
+  const dist = Math.abs(to - from);
+  // Much taller arcs — dramatic parabolas like Transport Pulse
+  const arcH = opts.arcH || (20 + dist * 0.6);
+  const side = opts.below ? 1 : -1;
+  const mX = (x1 + x2) / 2;
+  const mY = midY + side * arcH;
+
+  // Glow underlay for wider arcs
+  if ((opts.width || 2) >= 2) {
+    g.append('path')
+      .attr('d', `M ${x1} ${midY} Q ${mX} ${mY} ${x2} ${midY}`)
+      .attr('fill', 'none')
+      .attr('stroke', color)
+      .attr('stroke-width', (opts.width || 2) + 4)
+      .attr('stroke-opacity', (opts.opacity || 0.4) * 0.15)
+      .attr('stroke-dasharray', opts.dashed ? '6 4' : 'none');
+  }
+
+  return g.append('path')
+    .attr('d', `M ${x1} ${midY} Q ${mX} ${mY} ${x2} ${midY}`)
+    .attr('fill', 'none')
+    .attr('stroke', color)
+    .attr('stroke-width', opts.width || 2)
+    .attr('stroke-opacity', opts.opacity || 0.4)
+    .attr('stroke-dasharray', opts.dashed ? '6 4' : 'none');
+}
+
+function drawGap(g, x, midY, from, to, label, height) {
+  const h = height || 44;
+  const x1 = x(from), x2 = x(to);
+
+  // Pulsing background rect
+  g.append('rect')
+    .attr('x', x1).attr('y', midY - h/2)
+    .attr('width', x2 - x1).attr('height', h)
+    .attr('fill', 'rgba(196,93,74,0.12)')
+    .attr('rx', 3)
+    .attr('class', 'gap-rect')
+    .style('animation', 'gapPulse 3s ease-in-out infinite');
+
+  // Dashed line
+  g.append('line')
+    .attr('x1', x1).attr('y1', midY)
+    .attr('x2', x2).attr('y2', midY)
+    .attr('stroke', 'var(--error)')
+    .attr('stroke-width', 2)
+    .attr('stroke-dasharray', '6 4')
+    .attr('class', 'gap-line');
+
+  // Edge markers — small red lines at gap boundaries
+  [x1, x2].forEach(px => {
+    g.append('line')
+      .attr('x1', px).attr('y1', midY - h/2 + 2)
+      .attr('x2', px).attr('y2', midY + h/2 - 2)
+      .attr('stroke', 'var(--error)')
+      .attr('stroke-width', 1.5)
+      .attr('stroke-opacity', 0.5);
+  });
+
+  if (label) {
+    // Label background for readability
+    const textW = label.length * 6.5 + 12;
+    g.append('rect')
+      .attr('x', (x1 + x2) / 2 - textW/2).attr('y', midY - h/2 - 16)
+      .attr('width', textW).attr('height', 14)
+      .attr('fill', 'rgba(12,12,20,0.85)')
+      .attr('rx', 3);
+    g.append('text')
+      .attr('x', (x1 + x2) / 2).attr('y', midY - h/2 - 6)
+      .attr('text-anchor', 'middle')
+      .attr('font-size', 10)
+      .attr('font-family', 'var(--font-mono)')
+      .attr('font-weight', 700)
+      .attr('fill', 'var(--error)')
+      .attr('class', 'gap-label')
+      .text(label);
+  }
+}
+
+function drawCallout(g, x, km, y, text, sub, color, opts = {}) {
+  const cx = x(km);
+  const w = opts.w || 56;
+  const subLines = sub.split('\n');
+  const h = 16 + subLines.length * 10 + 2;
+
+  g.append('rect')
+    .attr('x', cx - w/2).attr('y', y - 12)
+    .attr('width', w).attr('height', h)
+    .attr('rx', 4)
+    .attr('fill', 'rgba(12,12,20,0.92)')
+    .attr('stroke', color)
+    .attr('stroke-width', 0.6)
+    .attr('stroke-opacity', 0.5);
+
+  g.append('text')
+    .attr('x', cx).attr('y', y + 1)
+    .attr('text-anchor', 'middle')
+    .attr('font-size', 14).attr('font-family', 'var(--font-mono)')
+    .attr('font-weight', 700).attr('fill', color)
+    .text(text);
+
+  subLines.forEach((line, i) => {
+    g.append('text')
+      .attr('x', cx).attr('y', y + 12 + i * 10)
+      .attr('text-anchor', 'middle')
+      .attr('font-size', 8).attr('font-family', 'var(--font-body)')
+      .attr('fill', 'var(--text-muted)')
+      .text(line);
+  });
+}
+
+// ============================================================
+// BUILD ALL ROWS
+// ============================================================
+
+function buildEmergency() {
+  const ctx = setupRow('svg-emergency');
+  const { svg, x, midY } = ctx;
+
+  // Groups for opacity control
+  const gBackbone = svg.append('g').attr('class', 'g-backbone');
+  const gHospitals = svg.append('g').attr('class', 'g-hospitals');
+  const gArcs = svg.append('g').attr('class', 'g-ambulance-arcs');
+  const gGaps = svg.append('g').attr('class', 'g-gaps');
+  const gCrew = svg.append('g').attr('class', 'g-crew-reduction');
+  const gCallouts = svg.append('g').attr('class', 'g-callouts');
+  const gCrossRow = svg.append('g').attr('class', 'g-cross-row');
+
+  drawBackbone(gBackbone, x, midY, undefined, 'emergency');
+
+  // ER dots — with pulse ring and larger labels
+  HOSPITALS.forEach(h => {
+    // Outer pulse ring
+    gHospitals.append('circle').attr('cx', x(h.km)).attr('cy', midY - 18).attr('r', 10)
+      .attr('fill', 'none').attr('stroke', 'var(--error)')
+      .attr('stroke-width', 1).attr('stroke-opacity', 0.2)
+      .style('animation', `breathe ${3 + Math.random()}s ease-in-out infinite`);
+    // Core dot
+    gHospitals.append('circle').attr('cx', x(h.km)).attr('cy', midY - 18).attr('r', 5)
+      .attr('fill', 'var(--error)').attr('opacity', 0.9);
+    // Label — bigger
+    const label = h.erVisits ? `${h.name} ${h.erVisits}` : h.name;
+    gHospitals.append('text').attr('x', x(h.km)).attr('y', midY - 31)
+      .attr('text-anchor', 'middle').attr('font-size', 10)
+      .attr('font-family', 'var(--font-body)').attr('font-weight', 700)
+      .attr('fill', 'var(--error)').text(label);
+  });
+
+  // Ambulance coverage arcs — more visible
+  AMBULANCE_ARCS.forEach(([a,b]) => {
+    drawArc(gArcs, x, midY, a, b, 'var(--error)', { below: true, opacity: 0.4, width: 2.5 });
+  });
+
+  // Gap zones
+  drawGap(gGaps, x, midY, 25, 48, '23 km NO ER');
+  drawGap(gGaps, x, midY, 63, 82, '~20 km NO AMBULANCE');
+
+  // Crew reduction labels
+  [{ km: 8, text: 'SIS 3→1' }, { km: 55, text: 'SPSL ⅓ absent' }, { km: 92, text: 'Riviera 4→2' }].forEach(c => {
+    gCrew.append('text').attr('x', x(c.km)).attr('y', midY + 32)
+      .attr('text-anchor', 'middle').attr('font-size', 8)
+      .attr('font-family', 'var(--font-mono)').attr('font-weight', 600)
+      .attr('fill', 'var(--error)').text(c.text);
+  });
+
+  // Cross-row callout for convergence stop
+  gCrossRow.append('rect')
+    .attr('x', x(25) - 2).attr('y', 4)
+    .attr('width', x(48) - x(25) + 4).attr('height', ctx.H - 8)
+    .attr('fill', 'none')
+    .attr('stroke', 'var(--error)').attr('stroke-width', 2)
+    .attr('stroke-dasharray', '8 4').attr('rx', 6);
+
+  svgContexts.emergency = { ...ctx, groups: { gBackbone, gHospitals, gArcs, gGaps, gCrew, gCallouts, gCrossRow } };
+}
+
+function buildStaff() {
+  const ctx = setupRow('svg-staff');
+  const { svg, x, midY } = ctx;
+
+  const gBackbone = svg.append('g').attr('class', 'g-backbone');
+  const gHospitals = svg.append('g').attr('class', 'g-hospitals');
+  const gRailArc = svg.append('g').attr('class', 'g-rail-arc');
+  const gZeroTransit = svg.append('g').attr('class', 'g-zero-transit');
+  const gCallouts = svg.append('g').attr('class', 'g-callouts');
+  const gCrossRow = svg.append('g').attr('class', 'g-cross-row');
+
+  drawBackbone(gBackbone, x, midY, undefined, 'staff');
+
+  // Hospital dots — with pulse ring and bigger labels
+  HOSPITALS.forEach(h => {
+    gHospitals.append('circle').attr('cx', x(h.km)).attr('cy', midY - 16).attr('r', 10)
+      .attr('fill', 'none').attr('stroke', 'var(--teal)')
+      .attr('stroke-width', 1).attr('stroke-opacity', 0.15)
+      .style('animation', `breathe ${3.5 + Math.random()}s ease-in-out infinite`);
+    gHospitals.append('circle').attr('cx', x(h.km)).attr('cy', midY - 16).attr('r', 5)
+      .attr('fill', 'var(--teal)').attr('opacity', 0.9);
+    gHospitals.append('text').attr('x', x(h.km)).attr('y', midY - 29)
+      .attr('text-anchor', 'middle').attr('font-size', 10)
+      .attr('font-family', 'var(--font-body)').attr('font-weight', 700)
+      .attr('fill', 'var(--teal)').attr('class', 'hospital-label')
+      .text(`${h.name} ${h.workers}`);
+  });
+
+  // Full rail arc — tall, visible
+  drawArc(gRailArc, x, midY, 0, 97, 'var(--teal)', { below: true, opacity: 0.3, width: 3, arcH: 45 });
+  gRailArc.append('text').attr('x', x(50)).attr('y', midY + 32)
+    .attr('text-anchor', 'middle').attr('font-size', 8)
+    .attr('font-family', 'var(--font-mono)')
+    .attr('fill', 'var(--teal)').attr('opacity', 0.35)
+    .text('RAIL — FULL SERVICE');
+
+  // 60% frontalier callout
+  drawCallout(gCallouts, x, 8, midY - 42, '60%', 'HUG nurses\nfrom France', 'var(--teal)', { w: 56 });
+
+  // ZERO transit banner (hidden initially via opacity)
+  gZeroTransit.append('rect').attr('x', x(0)).attr('y', midY + 24)
+    .attr('width', x(101) - x(0)).attr('height', 18)
+    .attr('fill', 'rgba(196,93,74,0.1)').attr('rx', 3);
+  gZeroTransit.append('text').attr('x', x(50)).attr('y', midY + 36)
+    .attr('text-anchor', 'middle').attr('font-size', 10)
+    .attr('font-family', 'var(--font-mono)').attr('font-weight', 700)
+    .attr('fill', 'var(--error)').text('ZERO PUBLIC TRANSPORT — 101 KM — CAR OR STRANDED');
+
+  // Night callouts
+  drawCallout(gCallouts, x, 18, midY - 48, '21:29', 'last train\nGenolier', 'var(--error)', { w: 52 });
+  drawCallout(gCallouts, x, 40, midY - 48, 'CHF 55', 'taxi Morges\nto Nyon', 'var(--error)', { w: 56 });
+  drawCallout(gCallouts, x, 75, midY - 48, 'CHF 80', 'taxi Lsne\nto Vevey', 'var(--error)', { w: 56 });
+  drawCallout(gCallouts, x, 96, midY - 48, '2.75×', 'slower to\nRennaz', 'var(--error)', { w: 52 });
+
+  // Cross-row
+  gCrossRow.append('rect')
+    .attr('x', x(25) - 2).attr('y', 4)
+    .attr('width', x(48) - x(25) + 4).attr('height', ctx.H - 8)
+    .attr('fill', 'none')
+    .attr('stroke', 'var(--error)').attr('stroke-width', 2)
+    .attr('stroke-dasharray', '8 4').attr('rx', 6);
+
+  svgContexts.staff = { ...ctx, groups: { gBackbone, gHospitals, gRailArc, gZeroTransit, gCallouts, gCrossRow } };
+}
+
+function buildSupply() {
+  const ctx = setupRow('svg-supply');
+  const { svg, x, midY } = ctx;
+
+  const gBackbone = svg.append('g').attr('class', 'g-backbone');
+  const gNexus = svg.append('g').attr('class', 'g-nexus');
+  const gFlows = svg.append('g').attr('class', 'g-supply-flows');
+  const gGalexis = svg.append('g').attr('class', 'g-galexis-routes');
+  const gGalexisReturn = svg.append('g').attr('class', 'g-galexis-return');
+  const gPrimarySource = svg.append('g').attr('class', 'g-primary-source');
+  const gCrossRow = svg.append('g').attr('class', 'g-cross-row');
+
+  drawBackbone(gBackbone, x, midY, undefined, 'supply');
+
+  // Hospital destination dots
+  HOSPITALS.forEach(h => {
+    gBackbone.append('circle').attr('cx', x(h.km)).attr('cy', midY).attr('r', 3.5).attr('fill', '#444');
+  });
+
+  // Bussigny-Crissier Nexus
+  const nx1 = x(53), nx2 = x(63);
+  const nxMid = (nx1 + nx2) / 2;
+  gNexus.append('rect').attr('x', nx1).attr('y', midY - 36)
+    .attr('width', nx2 - nx1).attr('height', 32)
+    .attr('fill', 'rgba(201,168,76,0.04)')
+    .attr('stroke', 'var(--gold)').attr('stroke-width', 1)
+    .attr('stroke-dasharray', '4 3').attr('stroke-opacity', 0.3).attr('rx', 4);
+
+  [{ km: 55, color: '#b87a56' }, { km: 57.5, color: '#c9a84c' }, { km: 60, color: '#8b6cc1' }, { km: 62, color: '#8b6cc1' }].forEach(n => {
+    gNexus.append('circle').attr('cx', x(n.km)).attr('cy', midY - 20).attr('r', 4).attr('fill', n.color);
+  });
+  gNexus.append('text').attr('x', nxMid).attr('y', midY - 42)
+    .attr('text-anchor', 'middle').attr('font-size', 8)
+    .attr('font-family', 'var(--font-mono)').attr('font-weight', 600)
+    .attr('fill', 'var(--gold)')
+    .text('BUSSIGNY NEXUS — 100k packs · 3,500 orders · 6.8k meals/day');
+
+  // Airport + Blood dots
+  gBackbone.append('circle').attr('cx', x(5)).attr('cy', midY - 18).attr('r', 4).attr('fill', '#8b6cc1');
+  gBackbone.append('text').attr('x', x(5)).attr('y', midY - 26)
+    .attr('text-anchor', 'middle').attr('font-size', 8)
+    .attr('font-family', 'var(--font-body)').attr('font-weight', 600)
+    .attr('fill', 'var(--text-muted)').text('Airport Cargo');
+  gBackbone.append('circle').attr('cx', x(70)).attr('cy', midY - 18).attr('r', 4).attr('fill', '#c45d6a');
+  gBackbone.append('text').attr('x', x(70)).attr('y', midY - 26)
+    .attr('text-anchor', 'middle').attr('font-size', 8)
+    .attr('font-family', 'var(--font-body)').attr('font-weight', 600)
+    .attr('fill', 'var(--text-muted)').text('TIR Blood');
+
+  // Supply flow arcs with animated flow dots — higher opacity
+  SUPPLY_FLOWS.forEach((f, i) => {
+    drawArc(gFlows, x, midY, f.from, f.to, f.color, { below: true, opacity: 0.5, width: f.w });
+    // Animate a dot along each arc — matching the taller arc formula
+    const from = Math.min(f.from, f.to), to = Math.max(f.from, f.to);
+    const dist = to - from;
+    const arcH = 20 + dist * 0.6; // same as drawArc
+    animateArcDot(gFlows, x, midY, from, to, arcH, f.color, i * 1200, 4000 + dist * 50);
+  });
+
+  function animateArcDot(g, x, midY, from, to, arcH, color, delay, duration) {
+    const dot = g.append('circle').attr('r', 2.5).attr('fill', color).attr('opacity', 0);
+    function run() {
+      dot.attr('opacity', 0);
+      dot.transition().delay(delay).duration(200).attr('opacity', 0.7)
+        .transition().duration(duration).ease(d3.easeLinear)
+          .tween('arcMove', function() {
+            return function(t) {
+              // Quadratic bezier interpolation
+              const x1 = x(from), x2 = x(to);
+              const mx = (x1 + x2) / 2, my = midY + arcH;
+              const px = (1-t)*(1-t)*x1 + 2*(1-t)*t*mx + t*t*x2;
+              const py = (1-t)*(1-t)*midY + 2*(1-t)*t*my + t*t*midY;
+              d3.select(this).attr('cx', px).attr('cy', py);
+            };
+          })
+        .transition().duration(200).attr('opacity', 0)
+        .on('end', run);
+    }
+    run();
+  }
+
+  // Galexis night routes (dashed, from Ecublens outward)
+  [[60, 2], [60, 25], [60, 48], [60, 65], [60, 89]].forEach(([a,b]) => {
+    drawArc(gGalexis, x, midY, a, b, 'var(--gold)', { below: true, opacity: 0.4, width: 1.5, dashed: true });
+  });
+  gGalexis.append('text').attr('x', x(50)).attr('y', midY + 36)
+    .attr('text-anchor', 'middle').attr('font-size', 8)
+    .attr('font-family', 'var(--font-mono)')
+    .attr('fill', 'var(--gold)').attr('opacity', 0.6)
+    .text('GALEXIS NIGHT — departs 23:00 · finishes ~4:15');
+
+  // Return + morning shift
+  gGalexisReturn.append('text').attr('x', x(60)).attr('y', midY + 36)
+    .attr('text-anchor', 'middle').attr('font-size', 9)
+    .attr('font-family', 'var(--font-mono)').attr('font-weight', 600)
+    .attr('fill', 'var(--gold)')
+    .text('05:00 — morning crew departs');
+
+  // Primary source quote
+  gPrimarySource.append('rect')
+    .attr('x', x(53)).attr('y', midY - 62)
+    .attr('width', 200).attr('height', 18)
+    .attr('fill', 'rgba(12,12,20,0.9)')
+    .attr('stroke', 'var(--text-muted)').attr('stroke-width', 0.5).attr('rx', 3);
+  gPrimarySource.append('text')
+    .attr('x', x(53) + 100).attr('y', midY - 50)
+    .attr('text-anchor', 'middle').attr('font-size', 8)
+    .attr('font-family', 'var(--font-display)').attr('font-style', 'italic')
+    .attr('fill', 'var(--text-muted)')
+    .text('"oppressive, empty, without soul"');
+
+  // Cross-row
+  gCrossRow.append('rect')
+    .attr('x', x(25) - 2).attr('y', 4)
+    .attr('width', x(48) - x(25) + 4).attr('height', ctx.H - 8)
+    .attr('fill', 'none')
+    .attr('stroke', 'var(--error)').attr('stroke-width', 2)
+    .attr('stroke-dasharray', '8 4').attr('rx', 6);
+
+  svgContexts.supply = { ...ctx, groups: { gBackbone, gNexus, gFlows, gGalexis, gGalexisReturn, gPrimarySource, gCrossRow } };
+}
+
+function buildAccess() {
+  const ctx = setupRow('svg-access');
+  const { svg, x, midY } = ctx;
+
+  const gBackbone = svg.append('g').attr('class', 'g-backbone');
+  const gPharmacies = svg.append('g').attr('class', 'g-pharmacies');
+  const gERs = svg.append('g').attr('class', 'g-ers');
+  const gWalkIns = svg.append('g').attr('class', 'g-walk-ins');
+  const gPharma24 = svg.append('g').attr('class', 'g-pharma24');
+  const gCrossRow = svg.append('g').attr('class', 'g-cross-row');
+
+  drawBackbone(gBackbone, x, midY, undefined, 'access');
+
+  // Pharmacy dots
+  PHARMACIES.forEach(p => {
+    const r = p.type === '24h' ? 3.5 : (p.type === 'ext' ? 2 : 1.5);
+    const op = p.type === '24h' ? 0.9 : (p.type === 'ext' ? 0.45 : 0.25);
+    gPharmacies.append('circle').attr('cx', x(p.km)).attr('cy', midY - 12).attr('r', r)
+      .attr('fill', '#8b6cc1').attr('opacity', op)
+      .attr('class', `pharmacy-${p.type}`);
+  });
+  gPharmacies.append('text').attr('x', x(50)).attr('y', midY - 22)
+    .attr('text-anchor', 'middle').attr('font-size', 7)
+    .attr('font-family', 'var(--font-mono)')
+    .attr('fill', '#8b6cc1').attr('opacity', 0.35)
+    .text('~65 PHARMACIES');
+
+  // ER dots
+  HOSPITALS.forEach(h => {
+    gERs.append('circle').attr('cx', x(h.km)).attr('cy', midY + 18).attr('r', 5)
+      .attr('fill', 'var(--error)').attr('opacity', 0.7);
+    gERs.append('text').attr('x', x(h.km)).attr('y', midY + 32)
+      .attr('text-anchor', 'middle').attr('font-size', 9)
+      .attr('font-family', 'var(--font-body)').attr('font-weight', 700)
+      .attr('fill', 'var(--error)').text(h.name);
+  });
+
+  // Walk-in clinics
+  [8, 25, 48, 63, 82, 89].forEach(km => {
+    gWalkIns.append('circle').attr('cx', x(km)).attr('cy', midY + 40).attr('r', 1.5)
+      .attr('fill', 'var(--gold)').attr('opacity', 0.3);
+  });
+
+  // Pharma24 highlight (only visible at night)
+  gPharma24.append('circle').attr('cx', x(0.5)).attr('cy', midY - 12).attr('r', 7)
+    .attr('fill', 'none').attr('stroke', '#8b6cc1').attr('stroke-width', 1.5);
+  gPharma24.append('text').attr('x', x(8)).attr('y', midY - 16)
+    .attr('text-anchor', 'start').attr('font-size', 9)
+    .attr('font-family', 'var(--font-mono)').attr('font-weight', 700)
+    .attr('fill', '#8b6cc1')
+    .text('PHARMA24 — only 24h on 101 km');
+
+  // Cross-row
+  gCrossRow.append('rect')
+    .attr('x', x(25) - 2).attr('y', 4)
+    .attr('width', x(48) - x(25) + 4).attr('height', ctx.H - 8)
+    .attr('fill', 'none')
+    .attr('stroke', 'var(--error)').attr('stroke-width', 2)
+    .attr('stroke-dasharray', '8 4').attr('rx', 6);
+
+  svgContexts.access = { ...ctx, groups: { gBackbone, gPharmacies, gERs, gWalkIns, gPharma24, gCrossRow } };
+}
+
+// ============================================================
+// CAROUSEL ENGINE
+// ============================================================
+
+let currentStop = 0;
+let isPlaying = true;
+let autoTimer = null;
+
+function applyStop(index, animate = true) {
+  const stop = STOPS[index];
+  const dur = animate ? '1.5s' : '0s';
+
+  // Timeline
+  const pct = stop.timeMinutes / 1440 * 100;
+  const isDead = stop.timeMinutes < 330 && stop.timeMinutes >= 0; // 00:00-05:30
+  const isDeadWindow = stop.id === 'deadWindow' || stop.id === 'convergence';
+
+  document.getElementById('timelineFill').style.width = `${pct}%`;
+  document.getElementById('timelineFill').style.background = isDeadWindow ? 'var(--error)' : 'var(--gold)';
+  document.getElementById('timelineMarker').style.left = `${pct}%`;
+  document.getElementById('timelineMarker').style.background = isDeadWindow ? 'var(--error)' : 'var(--gold)';
+  const clock = document.getElementById('timelineClock');
+  clock.textContent = stop.time;
+  clock.style.color = isDeadWindow ? 'var(--error)' : 'var(--gold)';
+
+  // Background darkening
+  const bg = stop.bgDarken;
+  const r = Math.round(12 * (1 - bg));
+  const g2 = Math.round(12 * (1 - bg));
+  const b = Math.round(20 * (1 - bg));
+  document.getElementById('rowsContainer').style.background = `rgb(${r},${g2},${b})`;
+
+  // Stats
+  Object.keys(stop.stats).forEach(key => {
+    const s = stop.stats[key];
+    const el = document.getElementById(`stat-${key}`);
+    const label = document.getElementById(`stat-${key}-label`);
+    if (el) { el.textContent = s.value; el.style.color = s.color; }
+    if (label) label.textContent = s.label;
+  });
+
+  // Statement
+  const stEl = document.getElementById('statementText');
+  stEl.classList.remove('visible');
+  setTimeout(() => {
+    stEl.textContent = stop.statement;
+    stEl.classList.add('visible');
+  }, animate ? 400 : 0);
+
+  // Apply opacity to SVG groups
+  applyOpacity('emergency', stop, dur);
+  applyOpacity('staff', stop, dur);
+  applyOpacity('supply', stop, dur);
+  applyOpacity('access', stop, dur);
+
+  // Update button states
+  document.getElementById('btnPlay').textContent = isPlaying ? '⏸' : '▸';
+}
+
+function applyOpacity(rowKey, stop, dur) {
+  const ctx = svgContexts[rowKey];
+  if (!ctx) return;
+
+  const op = stop.opacity;
+  const set = (g, val) => {
+    if (g) g.transition().duration(parseInt(dur) || 1500).style('opacity', val);
+  };
+
+  // Map group names to opacity keys
+  const map = {
+    emergency: {
+      'g-backbone': op.backbone,
+      'g-hospitals': op.hospitals,
+      'g-ambulance-arcs': op.ambulanceArcs,
+      'g-gaps': op.gaps,
+      'g-crew-reduction': op.crewReduction,
+      'g-callouts': op.callouts,
+      'g-cross-row': op.crossRowCallouts,
+      'g-flow-dots': op.railArc // flow dots dim with rail
+    },
+    staff: {
+      'g-backbone': op.backbone,
+      'g-hospitals': op.hospitals,
+      'g-rail-arc': op.railArc,
+      'g-zero-transit': op.zeroTransit,
+      'g-callouts': op.nightCallouts,
+      'g-cross-row': op.crossRowCallouts,
+      'g-flow-dots': op.railArc
+    },
+    supply: {
+      'g-backbone': op.backbone,
+      'g-nexus': op.nexus,
+      'g-supply-flows': op.supplyFlows,
+      'g-galexis-routes': op.galexisRoutes,
+      'g-galexis-return': op.galexisReturn,
+      'g-primary-source': op.primarySource,
+      'g-cross-row': op.crossRowCallouts,
+      'g-flow-dots': op.supplyFlows
+    },
+    access: {
+      'g-backbone': op.backbone,
+      'g-pharmacies': op.pharmacies,
+      'g-ers': op.hospitals,
+      'g-walk-ins': op.walkIns,
+      'g-pharma24': op.nightCallouts,
+      'g-cross-row': op.crossRowCallouts,
+      'g-flow-dots': op.pharmacies
+    }
+  };
+
+  const mapping = map[rowKey] || {};
+  Object.keys(mapping).forEach(cls => {
+    ctx.svg.selectAll(`.${cls}`).transition().duration(1500).style('opacity', mapping[cls]);
+  });
+}
+
+function nextStop() {
+  currentStop = (currentStop + 1) % STOPS.length;
+  applyStop(currentStop);
+}
+
+function prevStop() {
+  currentStop = (currentStop - 1 + STOPS.length) % STOPS.length;
+  applyStop(currentStop);
+}
+
+function startAutoPlay() {
+  isPlaying = true;
+  document.getElementById('btnPlay').textContent = '⏸';
+  autoTimer = setInterval(nextStop, 5000);
+}
+
+function stopAutoPlay() {
+  isPlaying = false;
+  document.getElementById('btnPlay').textContent = '▸';
+  if (autoTimer) clearInterval(autoTimer);
+  autoTimer = null;
+}
+
+function togglePlay() {
+  if (isPlaying) stopAutoPlay();
+  else startAutoPlay();
+}
+
+// ============================================================
+// GIF EXPORT
+// ============================================================
+
+async function exportGif() {
+  const btn = document.getElementById('exportBtn');
+  btn.textContent = '⏳ Capturing...';
+  btn.classList.add('exporting');
+
+  stopAutoPlay();
+
+  const gif = new GIF({
+    workers: 2,
+    quality: 10,
+    width: 1280,
+    height: 720,
+    workerScript: 'https://cdn.jsdelivr.net/npm/gif.js@0.2.0/dist/gif.worker.js'
+  });
+
+  for (let i = 0; i < STOPS.length; i++) {
+    currentStop = i;
+    applyStop(i, false);
+
+    // Wait for DOM to settle
+    await new Promise(r => setTimeout(r, 200));
+
+    try {
+      const canvas = await html2canvas(document.body, {
+        width: 1920,
+        height: 1080,
+        scale: 1280 / 1920,
+        backgroundColor: '#0c0c14',
+        useCORS: true,
+        logging: false
+      });
+
+      // Hold frame for 3 seconds (3000ms)
+      gif.addFrame(canvas, { delay: 3000 });
+
+      btn.textContent = `⏳ ${i + 1}/${STOPS.length}`;
+    } catch (e) {
+      console.error('Frame capture failed:', e);
+    }
+  }
+
+  gif.on('finished', (blob) => {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'city101_healthcare_chain_24h.gif';
+    a.click();
+    URL.revokeObjectURL(url);
+
+    btn.textContent = '↓ Export GIF';
+    btn.classList.remove('exporting');
+
+    // Return to first stop and restart
+    currentStop = 0;
+    applyStop(0);
+    startAutoPlay();
+  });
+
+  gif.on('progress', (p) => {
+    btn.textContent = `⏳ Encoding ${Math.round(p * 100)}%`;
+  });
+
+  gif.render();
+}
+
+// ============================================================
+// TIMELINE HOURS
+// ============================================================
+
+function buildTimelineHours() {
+  const container = document.getElementById('timelineHours');
+  for (let h = 0; h <= 24; h += 3) {
+    const span = document.createElement('span');
+    span.className = 'timeline-hour';
+    span.style.position = 'absolute';
+    span.style.left = `${(h / 24) * 100}%`;
+    span.textContent = `${String(h).padStart(2, '0')}h`;
+    container.appendChild(span);
+  }
+}
+
+// ============================================================
+// AUTO-SCALE
+// ============================================================
+
+function autoScale() {
+  const scaleX = window.innerWidth / 1920;
+  const scaleY = window.innerHeight / 1080;
+  const scale = Math.min(scaleX, scaleY);
+  document.body.style.transform = `scale(${scale})`;
+}
+
+// ============================================================
+// INIT
+// ============================================================
+
+window.addEventListener('load', () => {
+  autoScale();
+  window.addEventListener('resize', autoScale);
+
+  buildTimelineHours();
+  buildEmergency();
+  buildStaff();
+  buildSupply();
+  buildAccess();
+
+  // Start at stop 0
+  applyStop(0, false);
+
+  // Start auto-play after 2s
+  setTimeout(startAutoPlay, 2000);
+
+  // Controls
+  document.getElementById('btnPlay').addEventListener('click', togglePlay);
+  document.getElementById('btnNext').addEventListener('click', () => { stopAutoPlay(); nextStop(); });
+  document.getElementById('btnPrev').addEventListener('click', () => { stopAutoPlay(); prevStop(); });
+  document.getElementById('exportBtn').addEventListener('click', exportGif);
+
+  // Keyboard
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); stopAutoPlay(); nextStop(); }
+    if (e.key === 'ArrowLeft') { e.preventDefault(); stopAutoPlay(); prevStop(); }
+    if (e.key === 'p') { togglePlay(); }
+  });
+});
+</script>
+</body>
+</html>

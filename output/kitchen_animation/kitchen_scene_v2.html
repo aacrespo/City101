@@ -1,0 +1,1559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>The Kitchen — Still On The Line</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;600;700&family=Instrument+Serif&display=swap');
+
+  :root {
+    --bg: #0c0c14;
+    --bg-room: #1a1a2e;
+    --floor: #2a2520;
+    --floor-light: #352f28;
+    --wall-top: #1e1e30;
+    --gold: #c9a84c;
+    --gold-dim: rgba(201,168,76,0.25);
+    --gold-bright: #e0c060;
+    --text: #e8e6e1;
+    --text-muted: #9a9690;
+    --copper: #b87a56;
+    --teal: #5b8fa8;
+    --error: #c45d4a;
+    --green: #5a9e6f;
+    --purple: #8a6aaa;
+    --pink: #FF7F7F;
+    --surface: rgba(255,255,255,0.06);
+    --pixel: 4px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    background: #000;
+    width: 100%; height: 100vh;
+    overflow: hidden;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text);
+  }
+
+  /* ── MAIN CONTAINER ── */
+  .scene-container {
+    width: 1920px; height: 1080px;
+    background: var(--bg);
+    position: absolute;
+    top: 0; left: 0;
+    overflow: hidden;
+    transform-origin: top left;
+  }
+
+  /* Pixel grid overlay */
+  .scene-container::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.012) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.012) 1px, transparent 1px);
+    background-size: 4px 4px;
+    pointer-events: none;
+    z-index: 100;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 64px;
+    background: rgba(12,12,20,0.95);
+    border-bottom: 2px solid var(--gold-dim);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 40px;
+    z-index: 50;
+  }
+  .header-title {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 14px;
+    color: var(--gold);
+    letter-spacing: 2px;
+  }
+  .header-scene {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  /* Progress bar */
+  .progress-bar {
+    position: absolute;
+    bottom: 0; left: 0;
+    height: 2px;
+    background: var(--gold);
+    transition: width 0.6s ease;
+    z-index: 51;
+  }
+
+  /* ── SCENE DOTS ── */
+  .scene-dots {
+    position: absolute;
+    top: 80px; right: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    z-index: 50;
+  }
+  .scene-dot-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-direction: row-reverse;
+    cursor: pointer;
+  }
+  .scene-dot {
+    width: 12px; height: 12px;
+    border: 2px solid var(--gold-dim);
+    border-radius: 2px;
+    background: transparent;
+    transition: all 0.3s;
+    flex-shrink: 0;
+  }
+  .scene-dot.active {
+    background: var(--gold);
+    border-color: var(--gold);
+    box-shadow: 0 0 8px var(--gold-dim);
+  }
+  .scene-dot-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    color: var(--text-muted);
+    opacity: 0;
+    transition: opacity 0.3s;
+    white-space: nowrap;
+  }
+  .scene-dot-wrap:hover .scene-dot-label { opacity: 1; }
+  .scene-dot-wrap:hover .scene-dot { border-color: var(--gold); }
+
+  /* ── WORLD CANVAS ── */
+  .world {
+    position: absolute;
+    top: 64px; left: 0; right: 0; bottom: 120px;
+    overflow: hidden;
+  }
+
+  /* ── SCENES (layered, fade transitions) ── */
+  .scene {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.8s ease;
+  }
+  .scene.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* Room base */
+  .floor {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 560px;
+    background:
+      repeating-conic-gradient(var(--floor) 0% 25%, var(--floor-light) 0% 50%)
+      0 0 / 32px 32px;
+  }
+  .wall {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 336px;
+    border-bottom: 4px solid rgba(201,168,76,0.15);
+  }
+
+  /* ── PIXEL CHARACTERS ── */
+  /* PLACEHOLDER SYSTEM: Each .character can be converted to <img> sprite
+     by replacing .char-body with an <img src="sprites/{account}/{anim}.png"> */
+  .character {
+    position: absolute;
+    image-rendering: pixelated;
+    transition: all 0.8s ease;
+    z-index: 20;
+  }
+  .char-body {
+    position: relative;
+    width: 32px; height: 48px;
+  }
+  .char-body::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 4px;
+    width: 24px; height: 24px;
+    border-radius: 4px;
+  }
+  .char-body::after {
+    content: '';
+    position: absolute;
+    top: 24px; left: 2px;
+    width: 28px; height: 24px;
+    border-radius: 2px;
+  }
+  .char-name {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    text-align: center;
+    margin-top: 4px;
+    white-space: nowrap;
+  }
+
+  /* ── CHARACTER VARIANTS ── */
+  /* Cairn (gold) — SPRITE: sprites/cairn/ */
+  .character.cairn .char-body::before { background: #d4a574; }
+  .character.cairn .char-body::after { background: var(--gold); }
+  .character.cairn .char-name { color: var(--gold); }
+
+  /* Cairn grey (no context) — SPRITE: sprites/cairn_grey/ */
+  .character.cairn-grey .char-body::before { background: #a0a0a0; }
+  .character.cairn-grey .char-body::after { background: #707070; }
+  .character.cairn-grey .char-name { color: #888; }
+
+  /* Lumen (yellow) — SPRITE: sprites/lumen/ */
+  .character.lumen .char-body::before { background: #e8d080; }
+  .character.lumen .char-body::after { background: #e8c840; }
+  .character.lumen .char-name { color: #e8c840; }
+
+  /* Meridian (teal) — SPRITE: sprites/meridian/ */
+  .character.meridian .char-body::before { background: #a0c8d8; }
+  .character.meridian .char-body::after { background: var(--teal); }
+  .character.meridian .char-name { color: var(--teal); }
+
+  /* Cadence (purple) — SPRITE: sprites/cadence/ */
+  .character.cadence .char-body::before { background: #c0a0d8; }
+  .character.cadence .char-body::after { background: var(--purple); }
+  .character.cadence .char-name { color: var(--purple); }
+
+  /* Nova (pink) — SPRITE: sprites/nova/ */
+  .character.nova .char-body::before { background: #ffb0b0; }
+  .character.nova .char-body::after { background: var(--pink); }
+  .character.nova .char-name { color: var(--pink); }
+
+  /* User (human) */
+  .character.user .char-body::before { background: #e8c8a0; }
+  .character.user .char-body::after { background: #4a4a6a; }
+  .character.user .char-name { color: var(--text-muted); }
+  .user .char-hair {
+    position: absolute;
+    top: -2px; left: 2px;
+    width: 28px; height: 14px;
+    border-radius: 4px 4px 0 0;
+    background: #2a1a0a;
+  }
+
+  /* Commis (75% size) — SPRITE: sprites/commis/ */
+  .character.commis .char-body { width: 24px; height: 36px; }
+  .character.commis .char-body::before { width: 20px; height: 20px; left: 2px; background: #b8d4e8; }
+  .character.commis .char-body::after { width: 24px; height: 16px; top: 20px; left: 0; background: #5a7a8a; }
+  .character.commis .char-name { font-size: 6px; color: var(--text-muted); }
+
+  /* Partie (specialist) */
+  .character.partie .char-body::before { background: #e8d0a8; }
+  .character.partie .char-body::after { background: #8a6a4a; }
+  .partie .role-badge {
+    position: absolute;
+    top: -14px; left: 50%;
+    transform: translateX(-50%);
+    font-family: 'DM Mono', monospace;
+    font-size: 7px;
+    color: var(--gold);
+    background: rgba(201,168,76,0.15);
+    padding: 1px 4px;
+    border-radius: 2px;
+    white-space: nowrap;
+  }
+
+  /* ── ANIMATION STATES ── */
+  @keyframes idle { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-2px); } }
+  @keyframes walk { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+  @keyframes celebrate { 0% { transform: scale(1); } 50% { transform: scale(1.1) translateY(-6px); } 100% { transform: scale(1); } }
+  @keyframes typing { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-1px); } 75% { transform: translateX(1px); } }
+
+  .anim-idle { animation: idle 2s ease-in-out infinite; }
+  .anim-walk { animation: walk 0.4s ease-in-out infinite; }
+  .anim-celebrate { animation: celebrate 0.8s ease-in-out infinite; }
+  .anim-type { animation: typing 0.3s ease-in-out infinite; }
+
+  /* ── BACKPACK ── */
+  .backpack {
+    position: absolute;
+    right: -16px; top: 12px;
+    width: 20px;
+    background: #5a4a3a;
+    border: 2px solid #4a3a2c;
+    border-radius: 2px;
+    transition: all 0.6s ease;
+    overflow: hidden;
+  }
+  .backpack.empty { height: 8px; }
+  .backpack.small { height: 16px; }
+  .backpack.medium { height: 28px; }
+  .backpack.full { height: 44px; background: #6a4a3a; }
+  .backpack.overflow { height: 52px; background: var(--error); animation: shake 0.5s ease-in-out; }
+
+  .scroll-item {
+    width: 14px; height: 4px;
+    margin: 2px auto;
+    border-radius: 1px;
+  }
+
+  /* ── FURNITURE ── */
+  .furniture { position: absolute; image-rendering: pixelated; }
+
+  .desk {
+    width: 128px; height: 80px;
+    background: #5c4a3a;
+    border: 4px solid #4a3a2c;
+    border-radius: 4px;
+    box-shadow: 0 8px 0 #3a2c20;
+  }
+  .bookshelf {
+    width: 64px; height: 128px;
+    background: #4a3a2c;
+    border: 4px solid #3a2c20;
+  }
+  .fridge {
+    width: 64px; height: 112px;
+    background: linear-gradient(180deg, #6a6a7a, #5a5a6a);
+    border: 4px solid #4a4a5a;
+    border-radius: 4px 4px 0 0;
+  }
+  .ticket-rail {
+    width: 200px; height: 12px;
+    background: #6a5a4a;
+    border: 2px solid #5a4a3a;
+    box-shadow: 0 4px 0 #3a2c20;
+  }
+  .obj-stove {
+    width: 96px; height: 80px;
+    background: linear-gradient(180deg, #5a5a6a, #4a4a5a);
+    border: 4px solid #3a3a4a;
+    border-radius: 2px;
+  }
+  .obj-stove::before {
+    content: '';
+    position: absolute;
+    top: 8px; left: 12px;
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    border: 3px solid #6a6a7a;
+    box-shadow: 44px 0 0 0 #6a6a7a;
+  }
+  .obj-window {
+    width: 96px; height: 72px;
+    background: linear-gradient(180deg, #4a5a7a, #3a4a6a);
+    border: 4px solid #5a4a3a;
+    border-radius: 2px;
+  }
+  .obj-clock {
+    width: 48px; height: 48px;
+    background: #3a3a3a;
+    border: 4px solid #5a4a3a;
+    border-radius: 50%;
+  }
+  .obj-logbook {
+    width: 40px; height: 28px;
+    background: #5a4a3a;
+    border: 2px solid #4a3a2c;
+    border-radius: 2px 4px 4px 2px;
+  }
+  .obj-logbook::before {
+    content: '';
+    position: absolute;
+    top: 4px; left: 6px;
+    width: 24px; height: 2px;
+    background: var(--gold);
+    box-shadow: 0 5px 0 var(--text-muted), 0 10px 0 var(--text-muted);
+  }
+  .server {
+    width: 80px; height: 96px;
+    background: linear-gradient(180deg, #2a2a3e, #1e1e30);
+    border: 4px solid #3a3a50;
+    border-radius: 4px;
+  }
+  .server::before {
+    content: '';
+    position: absolute;
+    top: 12px; left: 12px;
+    width: 12px; height: 12px;
+    background: var(--green);
+    border-radius: 50%;
+    animation: blink-light 2s ease-in-out infinite;
+  }
+  .cable {
+    height: 4px;
+    background: var(--gold);
+    position: absolute;
+    box-shadow: 0 0 8px var(--gold-dim);
+  }
+  .obj-pantry-door {
+    width: 80px; height: 140px;
+    background: #4a3a2c;
+    border: 4px solid #5a4a3a;
+    border-radius: 4px 4px 0 0;
+  }
+  .obj-pantry-door::before {
+    content: 'PANTRY';
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    color: var(--gold-dim);
+    position: absolute;
+    top: 8px; left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+  }
+  .obj-pantry-door::after {
+    content: '';
+    position: absolute;
+    top: 60px; right: 10px;
+    width: 8px; height: 8px;
+    background: var(--gold);
+    border-radius: 50%;
+  }
+
+  /* Scroll props */
+  .scroll-prop {
+    width: 32px; height: 40px;
+    border-radius: 4px;
+    border: 2px solid;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    position: absolute;
+    z-index: 22;
+  }
+  .scroll-gold { background: rgba(201,168,76,0.3); border-color: var(--gold); }
+  .scroll-teal { background: rgba(91,143,168,0.3); border-color: var(--teal); }
+
+  /* Big book (archibase) */
+  .big-book {
+    width: 48px; height: 56px;
+    background: linear-gradient(135deg, #6a4a3a, #5a3a2a);
+    border: 3px solid #8a6a4a;
+    border-radius: 2px 6px 6px 2px;
+    position: absolute;
+    z-index: 22;
+    box-shadow: 3px 3px 0 #3a2c20;
+  }
+  .big-book::before {
+    content: 'K';
+    font-family: 'Instrument Serif', serif;
+    font-size: 24px;
+    color: var(--gold);
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  /* Cloakroom door */
+  .cloakroom-door {
+    width: 72px; height: 120px;
+    background: #3a3040;
+    border: 3px solid #5a4a5a;
+    border-radius: 4px 4px 0 0;
+    position: absolute;
+    z-index: 10;
+    text-align: center;
+    overflow: hidden;
+  }
+  .cloakroom-door .door-label {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    color: var(--gold);
+    margin-top: 8px;
+    letter-spacing: 1px;
+  }
+  .cloakroom-door .door-icon {
+    font-size: 24px;
+    margin-top: 12px;
+  }
+  .cloakroom-door::after {
+    content: '';
+    position: absolute;
+    top: 55px; right: 8px;
+    width: 6px; height: 6px;
+    background: var(--gold-dim);
+    border-radius: 50%;
+  }
+
+  /* Pillar zone */
+  .pillar-zone {
+    position: absolute;
+    border: 2px solid;
+    border-radius: 8px;
+    padding: 20px;
+    transition: all 0.5s ease;
+  }
+  .pillar-zone .pillar-title {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+  }
+  .pillar-zone .pillar-desc {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    line-height: 1.6;
+    color: var(--text-muted);
+  }
+  .pillar-zone.highlight {
+    background: rgba(255,255,255,0.04);
+    box-shadow: 0 0 20px rgba(201,168,76,0.1);
+  }
+
+  /* Git branch SVG */
+  .git-viz {
+    position: absolute;
+    z-index: 10;
+  }
+  .git-viz svg { overflow: visible; }
+
+  /* Map expand (for scroll opening) */
+  .map-expand {
+    position: absolute;
+    inset: 20px;
+    border-radius: 8px;
+    z-index: 30;
+    opacity: 0;
+    transform: scale(0.3);
+    transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .map-expand.visible {
+    opacity: 1;
+    transform: scale(1);
+    pointer-events: auto;
+  }
+  .map-expand iframe {
+    width: 100%; height: 100%;
+    border: none;
+    border-radius: 8px;
+  }
+
+  /* ── LABELS ── */
+  .label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--text-muted);
+    position: absolute;
+    white-space: nowrap;
+    z-index: 25;
+  }
+  .label .tag { color: var(--gold); font-size: 9px; }
+
+  /* ── SPEECH BUBBLE ── */
+  .bubble {
+    position: absolute;
+    background: rgba(255,255,255,0.95);
+    color: #1a1a2e;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    line-height: 1.5;
+    padding: 10px 14px;
+    border-radius: 6px;
+    max-width: 220px;
+    z-index: 30;
+    opacity: 0;
+    transition: opacity 0.4s;
+  }
+  .bubble.visible { opacity: 1; }
+  .bubble::after {
+    content: '';
+    position: absolute;
+    bottom: -8px; left: 20px;
+    border: 8px solid transparent;
+    border-top-color: rgba(255,255,255,0.95);
+    border-bottom: 0;
+  }
+
+  /* ── DIALOGUE BAR ── */
+  .dialogue-bar {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 120px;
+    background: rgba(12,12,20,0.97);
+    border-top: 2px solid var(--gold-dim);
+    display: flex;
+    align-items: center;
+    padding: 0 60px;
+    z-index: 50;
+  }
+  .dialogue-portrait {
+    width: 80px; height: 80px;
+    background: var(--surface);
+    border: 2px solid var(--gold-dim);
+    border-radius: 4px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 24px;
+    overflow: hidden;
+  }
+  .dialogue-portrait .mini-char {
+    transform: scale(1.5);
+    image-rendering: pixelated;
+  }
+  .dialogue-text {
+    flex: 1;
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.7;
+  }
+  .dialogue-text .speaker {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px;
+    color: var(--gold);
+    margin-bottom: 6px;
+    display: block;
+  }
+  .dialogue-text em { color: var(--gold); font-style: normal; }
+  .dialogue-nav {
+    display: flex;
+    gap: 12px;
+    margin-left: 40px;
+  }
+  .nav-btn {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px;
+    background: var(--surface);
+    border: 2px solid var(--gold-dim);
+    color: var(--text-muted);
+    padding: 12px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .nav-btn:hover { background: var(--gold-dim); color: var(--gold); border-color: var(--gold); }
+  .nav-btn.primary { border-color: var(--gold); color: var(--gold); }
+
+  /* ── ANIMATIONS ── */
+  @keyframes blink-light { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+  @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
+  @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+  @keyframes breathe { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes colorWash {
+    0% { filter: grayscale(1); }
+    100% { filter: grayscale(0); }
+  }
+  @keyframes furnish {
+    from { opacity: 0; transform: translateY(20px) scale(0.9); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  @keyframes writeLog {
+    from { width: 0; }
+    to { width: 100%; }
+  }
+  @keyframes growBranch {
+    from { stroke-dashoffset: 500; }
+    to { stroke-dashoffset: 0; }
+  }
+
+  .anim-float { animation: float 3s ease-in-out infinite; }
+  .anim-breathe { animation: breathe 4s ease-in-out infinite; }
+
+  /* Stagger helper */
+  .stagger-1 { animation-delay: 0.1s; }
+  .stagger-2 { animation-delay: 0.3s; }
+  .stagger-3 { animation-delay: 0.5s; }
+  .stagger-4 { animation-delay: 0.7s; }
+  .stagger-5 { animation-delay: 0.9s; }
+
+  /* Furnish animation class */
+  .furnish-anim {
+    opacity: 0;
+    animation: furnish 0.6s ease forwards;
+  }
+
+  /* ── SCENE-SPECIFIC WALLS ── */
+  .scene-1 .wall { background: linear-gradient(180deg, #141425 0%, #1a1a30 100%); }
+  .scene-2 .wall { background: linear-gradient(180deg, #1a1420 0%, #2e1a25 100%); }
+  .scene-3 .wall { background: linear-gradient(180deg, #14201a 0%, #1a2e25 100%); }
+  .scene-4 .wall { background: linear-gradient(180deg, #201420 0%, #2e1a2e 100%); }
+  .scene-5 .wall { background: linear-gradient(180deg, #1a1814 0%, #2e2a1a 100%); }
+  .scene-6 .wall { background: linear-gradient(180deg, #141820 0%, #1a2230 100%); }
+
+  /* ── SUBSTEP CONTENT ── */
+  .substep {
+    position: absolute; inset: 0;
+    opacity: 0;
+    transition: opacity 0.6s ease;
+    pointer-events: none;
+  }
+  .substep.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* Pass counter */
+  .pass-counter {
+    position: absolute;
+    width: 100%; height: 8px;
+    background: #5c4a3a;
+    border-top: 3px solid #8a6a4a;
+    z-index: 12;
+  }
+  .pass-window-frame {
+    position: absolute;
+    width: 300px; height: 200px;
+    border: 4px solid #5a4a3a;
+    border-radius: 4px;
+    background: rgba(255,255,255,0.02);
+    z-index: 11;
+  }
+
+  /* CAG / RAG comparison */
+  .compare-box {
+    position: absolute;
+    border: 2px solid;
+    border-radius: 6px;
+    padding: 16px;
+    z-index: 15;
+  }
+  .compare-box .compare-title {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px;
+    margin-bottom: 10px;
+  }
+  .compare-box .compare-desc {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    line-height: 1.5;
+    color: var(--text-muted);
+  }
+
+  /* Book stack (for CAG) */
+  .book-stack {
+    display: flex;
+    gap: 4px;
+    margin: 8px 0;
+  }
+  .mini-book {
+    width: 16px; height: 32px;
+    border-radius: 1px 2px 2px 1px;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+
+  /* Index cards (for RAG) */
+  .index-box {
+    width: 40px; height: 30px;
+    background: #f5f3ee;
+    border: 2px solid #d4d0c8;
+    border-radius: 2px;
+    margin: 8px 0;
+  }
+
+  /* Kitchen sync visual */
+  .kitchen-pair {
+    display: flex;
+    gap: 120px;
+    align-items: flex-start;
+    justify-content: center;
+    position: absolute;
+    width: 100%;
+    top: 100px;
+  }
+  .mini-kitchen {
+    width: 300px; height: 200px;
+    background: var(--surface);
+    border: 2px solid var(--gold-dim);
+    border-radius: 8px;
+    padding: 16px;
+    position: relative;
+  }
+  .mini-kitchen .mk-title {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 9px;
+    color: var(--gold);
+    margin-bottom: 8px;
+  }
+  .sync-arrows {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    z-index: 15;
+  }
+  .sync-arrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--gold);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+</style>
+</head>
+<body>
+
+<div class="scene-container" id="scene">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-title">THE KITCHEN</div>
+    <div class="header-scene" id="sceneLabel">1 / 6 — Entering the Kitchen</div>
+    <div class="progress-bar" id="progressBar" style="width:0%"></div>
+  </div>
+
+  <!-- Scene dots -->
+  <div class="scene-dots" id="sceneDots">
+    <div class="scene-dot-wrap" data-scene="0">
+      <div class="scene-dot active"></div>
+      <div class="scene-dot-label">1. Entering</div>
+    </div>
+    <div class="scene-dot-wrap" data-scene="1">
+      <div class="scene-dot"></div>
+      <div class="scene-dot-label">2. The Pass</div>
+    </div>
+    <div class="scene-dot-wrap" data-scene="2">
+      <div class="scene-dot"></div>
+      <div class="scene-dot-label">3. Git</div>
+    </div>
+    <div class="scene-dot-wrap" data-scene="3">
+      <div class="scene-dot"></div>
+      <div class="scene-dot-label">4. Brigade</div>
+    </div>
+    <div class="scene-dot-wrap" data-scene="4">
+      <div class="scene-dot"></div>
+      <div class="scene-dot-label">5. Four Pillars</div>
+    </div>
+    <div class="scene-dot-wrap" data-scene="5">
+      <div class="scene-dot"></div>
+      <div class="scene-dot-label">6. Full Kitchen</div>
+    </div>
+  </div>
+
+  <!-- World -->
+  <div class="world">
+
+    <!-- ═══════════════════════════════════════════════ -->
+    <!-- SCENE 1: ENTERING THE KITCHEN                  -->
+    <!-- ═══════════════════════════════════════════════ -->
+    <div class="scene scene-1 active" id="scene-0">
+      <div class="wall"></div>
+      <div class="floor"></div>
+
+      <!-- Door on the left -->
+      <div class="furniture" style="left:80px;top:260px;width:80px;height:130px;background:#3a2c20;border:4px solid #5a4a3a;border-radius:4px 4px 0 0;">
+        <div style="position:absolute;top:60px;right:10px;width:8px;height:8px;background:var(--gold);border-radius:50%;"></div>
+      </div>
+
+      <!-- Scroll shelf (entry) -->
+      <div class="furniture" style="left:200px;top:300px;">
+        <div style="width:80px;height:60px;background:#4a3a2c;border:3px solid #5a4a3a;border-radius:2px;">
+          <!-- Gold scroll -->
+          <div class="scroll-prop scroll-gold anim-float" style="left:6px;top:-10px;font-size:14px;">📜</div>
+          <!-- Teal scroll -->
+          <div class="scroll-prop scroll-teal anim-float stagger-2" style="left:40px;top:-10px;font-size:14px;">📋</div>
+        </div>
+      </div>
+      <div class="label" style="top:370px;left:195px;">
+        <span class="tag">SCROLL SHELF</span><br>CLAUDE.md &amp; .claude/
+      </div>
+
+      <!-- Grey Claude entering -->
+      <div class="character cairn-grey anim-walk" id="claude-entering" style="left:120px;top:360px;">
+        <div class="char-body">
+          <div class="backpack empty"></div>
+        </div>
+        <div class="char-name">CLAUDE</div>
+      </div>
+
+      <!-- Kitchen area (furniture appears with furnish-anim) -->
+      <!-- Counter -->
+      <div class="desk furniture furnish-anim stagger-1" style="top:480px;left:500px;width:160px;"></div>
+      <!-- Stove -->
+      <div class="obj-stove furniture furnish-anim stagger-2" style="top:340px;left:700px;"></div>
+      <!-- Fridge -->
+      <div class="fridge furniture furnish-anim stagger-3" style="top:300px;left:900px;"></div>
+      <!-- Bookshelf -->
+      <div class="bookshelf furniture furnish-anim stagger-4" style="top:280px;left:1100px;"></div>
+      <!-- Ticket rail -->
+      <div class="ticket-rail furniture furnish-anim stagger-5" style="top:260px;left:1300px;"></div>
+      <div class="label furnish-anim stagger-5" style="top:248px;left:1310px;">
+        <span class="tag">LOCKBOARD</span>
+      </div>
+
+      <!-- Window -->
+      <div class="obj-window furniture" style="top:60px;left:600px;"></div>
+      <div class="obj-window furniture" style="top:60px;left:1200px;"></div>
+      <div class="obj-clock furniture" style="top:50px;left:400px;"></div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════ -->
+    <!-- SCENE 2: THE PASS                               -->
+    <!-- ═══════════════════════════════════════════════ -->
+    <div class="scene scene-2" id="scene-1">
+      <div class="wall"></div>
+      <div class="floor"></div>
+
+      <!-- Pass window -->
+      <div class="pass-window-frame furniture" style="top:180px;left:810px;"></div>
+      <div class="label" style="top:168px;left:900px;">
+        <span class="tag">THE PASS</span>
+      </div>
+
+      <!-- Counter (the pass) -->
+      <div class="pass-counter furniture" style="top:390px;left:0;"></div>
+
+      <!-- Kitchen side (top) -->
+      <div class="obj-stove furniture" style="top:120px;left:300px;"></div>
+      <div class="fridge furniture" style="top:100px;left:500px;"></div>
+      <div class="desk furniture" style="top:130px;left:1300px;width:160px;"></div>
+      <div class="bookshelf furniture" style="top:100px;left:1550px;"></div>
+
+      <!-- Logbook on counter -->
+      <div class="obj-logbook furniture anim-breathe" style="top:360px;left:1600px;transform:scale(1.5);"></div>
+      <div class="label" style="top:345px;left:1660px;">
+        <span class="tag">LOGBOOK</span><br>writing itself...
+      </div>
+
+      <!-- Claude (kitchen side) -->
+      <div class="character cairn anim-type" style="top:240px;left:900px;">
+        <div class="char-body">
+          <div class="backpack small">
+            <div class="scroll-item" style="background:var(--gold);"></div>
+            <div class="scroll-item" style="background:var(--teal);"></div>
+          </div>
+        </div>
+        <div class="char-name">CAIRN</div>
+      </div>
+
+      <!-- User (dining side) -->
+      <div class="character user anim-idle" style="top:480px;left:880px;">
+        <div class="char-body"><div class="char-hair"></div></div>
+        <div class="char-name">ANDREA</div>
+      </div>
+
+      <!-- Ticket (order) floating -->
+      <div class="bubble visible" style="top:430px;left:940px;font-size:10px;max-width:180px;">
+        Build the corridor model at 1:5000
+      </div>
+
+      <!-- Big book (archibase) -->
+      <div class="big-book anim-float" style="top:460px;left:1200px;"></div>
+      <div class="label" style="top:520px;left:1190px;">
+        <span class="tag">ARCHIBASE</span><br>construction knowledge
+      </div>
+
+      <!-- CAG vs RAG comparison -->
+      <div class="compare-box" style="top:480px;left:200px;width:240px;border-color:var(--copper);background:rgba(184,122,86,0.06);">
+        <div class="compare-title" style="color:var(--copper);">CAG</div>
+        <div class="compare-desc">Everything pre-loaded. Heavy backpack, fast access.</div>
+        <div class="book-stack">
+          <div class="mini-book" style="background:var(--copper);"></div>
+          <div class="mini-book" style="background:var(--gold);"></div>
+          <div class="mini-book" style="background:var(--teal);"></div>
+          <div class="mini-book" style="background:var(--green);"></div>
+          <div class="mini-book" style="background:var(--purple);"></div>
+        </div>
+      </div>
+
+      <div class="compare-box" style="top:480px;left:480px;width:240px;border-color:var(--teal);background:rgba(91,143,168,0.06);">
+        <div class="compare-title" style="color:var(--teal);">RAG</div>
+        <div class="compare-desc">Fetch on demand. Light backpack, makes trips.</div>
+        <div class="index-box"></div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════ -->
+    <!-- SCENE 3: THE LOGBOOK — GIT                      -->
+    <!-- ═══════════════════════════════════════════════ -->
+    <div class="scene scene-3" id="scene-2">
+      <div class="wall"></div>
+      <div class="floor"></div>
+
+      <!-- Two kitchens syncing -->
+      <div class="kitchen-pair">
+        <!-- Andrea's kitchen -->
+        <div class="mini-kitchen">
+          <div class="mk-title">ANDREA'S KITCHEN</div>
+          <div class="character cairn anim-idle" style="position:relative;display:inline-block;">
+            <div class="char-body"></div>
+            <div class="char-name" style="font-size:6px;">CAIRN</div>
+          </div>
+          <div class="obj-logbook" style="position:absolute;bottom:16px;right:16px;transform:scale(1.3);"></div>
+        </div>
+
+        <!-- Sync arrows -->
+        <div style="display:flex;flex-direction:column;align-items:center;gap:12px;margin-top:80px;">
+          <div class="sync-arrow">push →</div>
+          <div class="server" style="position:relative;width:60px;height:72px;">
+            <div style="font-family:'Press Start 2P';font-size:6px;color:var(--green);position:absolute;bottom:-18px;left:50%;transform:translateX(-50%);white-space:nowrap;">GITHUB</div>
+          </div>
+          <div class="sync-arrow">← pull</div>
+        </div>
+
+        <!-- Henna's kitchen -->
+        <div class="mini-kitchen">
+          <div class="mk-title" style="color:var(--pink);">HENNA'S KITCHEN</div>
+          <div class="character nova anim-idle" style="position:relative;display:inline-block;">
+            <div class="char-body"></div>
+            <div class="char-name" style="font-size:6px;">NOVA</div>
+          </div>
+          <div class="obj-logbook" style="position:absolute;bottom:16px;right:16px;transform:scale(1.3);"></div>
+        </div>
+      </div>
+
+      <!-- Git branch diagram -->
+      <div class="git-viz" style="top:400px;left:200px;">
+        <svg width="1520" height="300" viewBox="0 0 1520 300">
+          <!-- Main branch (gold) -->
+          <line x1="50" y1="80" x2="1400" y2="80" stroke="#c9a84c" stroke-width="4" stroke-linecap="round"/>
+          <!-- Commits on main -->
+          <circle cx="50" cy="80" r="10" fill="#c9a84c" stroke="#0c0c14" stroke-width="3"/>
+          <circle cx="250" cy="80" r="10" fill="#c9a84c" stroke="#0c0c14" stroke-width="3"/>
+          <circle cx="500" cy="80" r="10" fill="#c9a84c" stroke="#0c0c14" stroke-width="3"/>
+          <circle cx="750" cy="80" r="10" fill="#c9a84c" stroke="#0c0c14" stroke-width="3"/>
+          <circle cx="1000" cy="80" r="10" fill="#c9a84c" stroke="#0c0c14" stroke-width="3"/>
+          <!-- Merge commit -->
+          <circle cx="1200" cy="80" r="13" fill="#5a9e6f" stroke="#0c0c14" stroke-width="3"/>
+          <circle cx="1400" cy="80" r="10" fill="#c9a84c" stroke="#0c0c14" stroke-width="3"/>
+
+          <!-- Feature branch (teal) — splits at commit 2, merges at merge -->
+          <path d="M 250,80 Q 350,140 500,160 L 900,160 Q 1050,160 1200,80" fill="none" stroke="#5b8fa8" stroke-width="3" stroke-linecap="round"/>
+          <circle cx="500" cy="160" r="8" fill="#5b8fa8" stroke="#0c0c14" stroke-width="3"/>
+          <circle cx="700" cy="160" r="8" fill="#5b8fa8" stroke="#0c0c14" stroke-width="3"/>
+          <circle cx="900" cy="160" r="8" fill="#5b8fa8" stroke="#0c0c14" stroke-width="3"/>
+
+          <!-- Dead end branch (red) — splits at commit 3 -->
+          <path d="M 500,80 Q 550,30 650,20 L 800,20" fill="none" stroke="#c45d4a" stroke-width="2.5" stroke-dasharray="6 4" stroke-linecap="round"/>
+          <circle cx="650" cy="20" r="7" fill="#c45d4a" stroke="#0c0c14" stroke-width="3"/>
+          <circle cx="800" cy="20" r="7" fill="#c45d4a" stroke="#0c0c14" stroke-width="3"/>
+          <!-- X mark on dead end -->
+          <line x1="830" y1="12" x2="850" y2="28" stroke="#c45d4a" stroke-width="2.5"/>
+          <line x1="850" y1="12" x2="830" y2="28" stroke="#c45d4a" stroke-width="2.5"/>
+
+          <!-- Labels -->
+          <text x="50" y="115" fill="#c9a84c" font-family="DM Mono" font-size="11">main</text>
+          <text x="500" y="195" fill="#5b8fa8" font-family="DM Mono" font-size="11">feature/corridor-model</text>
+          <text x="800" y="55" fill="#c45d4a" font-family="DM Mono" font-size="10">[DEAD] wci-alternative</text>
+          <text x="1200" y="115" fill="#5a9e6f" font-family="DM Mono" font-size="11">merge ✓</text>
+
+          <!-- Commit labels -->
+          <text x="30" y="65" fill="#9a9690" font-family="DM Mono" font-size="8">[DATA]</text>
+          <text x="230" y="65" fill="#9a9690" font-family="DM Mono" font-size="8">[MAP]</text>
+          <text x="480" y="65" fill="#9a9690" font-family="DM Mono" font-size="8">[VIZ]</text>
+          <text x="730" y="65" fill="#9a9690" font-family="DM Mono" font-size="8">[MODEL]</text>
+          <text x="980" y="65" fill="#9a9690" font-family="DM Mono" font-size="8">[BUILD]</text>
+          <text x="1380" y="65" fill="#9a9690" font-family="DM Mono" font-size="8">[SYNC]</text>
+        </svg>
+      </div>
+
+      <div class="label" style="top:380px;left:200px;">
+        <span class="tag">GIT LOG</span> — every branch is a design alternative explored without destroying the original
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════ -->
+    <!-- SCENE 4: THE BRIGADE                            -->
+    <!-- ═══════════════════════════════════════════════ -->
+    <div class="scene scene-4" id="scene-3">
+      <div class="wall"></div>
+      <div class="floor"></div>
+
+      <!-- Cloakroom doors -->
+      <div class="cloakroom-door" style="left:140px;top:260px;">
+        <div class="door-label">ANALYST</div>
+        <div class="door-icon">🔬</div>
+      </div>
+      <div class="cloakroom-door" style="left:260px;top:260px;">
+        <div class="door-label">MODELER</div>
+        <div class="door-icon">🏗️</div>
+      </div>
+      <div class="cloakroom-door" style="left:380px;top:260px;">
+        <div class="door-label">CARTO</div>
+        <div class="door-icon">🗺️</div>
+      </div>
+      <div class="cloakroom-door" style="left:500px;top:260px;">
+        <div class="door-label">VIZ</div>
+        <div class="door-icon">📊</div>
+      </div>
+      <div class="cloakroom-door" style="left:620px;top:260px;">
+        <div class="door-label">BUILDER</div>
+        <div class="door-icon">🔨</div>
+      </div>
+      <div class="cloakroom-door" style="left:740px;top:260px;">
+        <div class="door-label">PM</div>
+        <div class="door-icon">📋</div>
+      </div>
+
+      <div class="label" style="top:240px;left:140px;">
+        <span class="tag">CLOAKROOMS</span> — each door loads a specialist scroll
+      </div>
+
+      <!-- Level 1: Counter -->
+      <div style="position:absolute;top:480px;left:100px;text-align:center;">
+        <div class="label" style="position:relative;top:-20px;left:0;"><span class="tag">LEVEL 1</span> — one station</div>
+        <div class="desk" style="width:96px;position:relative;"></div>
+        <div class="character commis anim-idle" style="position:relative;left:30px;top:-80px;">
+          <div class="char-body"></div>
+        </div>
+      </div>
+
+      <!-- Level 2: Kitchen -->
+      <div style="position:absolute;top:480px;left:500px;text-align:center;">
+        <div class="label" style="position:relative;top:-20px;left:0;"><span class="tag">LEVEL 2</span> — sous chef + commis</div>
+        <div class="desk" style="width:128px;position:relative;"></div>
+        <div class="character cairn anim-idle" style="position:relative;left:10px;top:-90px;">
+          <div class="char-body"></div>
+          <div class="char-name">CLAUDE</div>
+        </div>
+        <div class="character commis anim-idle" style="position:absolute;left:120px;top:-20px;">
+          <div class="char-body"></div>
+        </div>
+        <div class="character commis anim-idle" style="position:absolute;left:160px;top:-20px;">
+          <div class="char-body"></div>
+        </div>
+      </div>
+
+      <!-- Level 3: Full brigade -->
+      <div style="position:absolute;top:430px;left:900px;">
+        <div class="label" style="position:relative;top:-20px;left:0;"><span class="tag">LEVEL 3</span> — full Michelin brigade</div>
+
+        <!-- Chef de cuisine (user) -->
+        <div class="character user anim-idle" style="position:relative;left:200px;top:-60px;">
+          <div class="char-body"><div class="char-hair"></div></div>
+          <div class="char-name">CHEF</div>
+        </div>
+
+        <!-- Sous chef -->
+        <div class="character cairn anim-idle" style="position:relative;left:190px;top:-50px;">
+          <div class="char-body"></div>
+          <div class="char-name">SOUS CHEF</div>
+        </div>
+
+        <!-- Main counter -->
+        <div class="desk" style="width:200px;position:relative;"></div>
+
+        <!-- Station desks with partie characters -->
+        <div class="desk" style="position:absolute;top:100px;left:-40px;width:96px;"></div>
+        <div class="character partie anim-type" style="position:absolute;top:60px;left:-10px;">
+          <div class="role-badge">ANALYST</div>
+          <div class="char-body"></div>
+        </div>
+
+        <div class="desk" style="position:absolute;top:100px;left:120px;width:96px;"></div>
+        <div class="character partie anim-type" style="position:absolute;top:60px;left:150px;">
+          <div class="role-badge">MODELER</div>
+          <div class="char-body"></div>
+        </div>
+
+        <div class="desk" style="position:absolute;top:100px;left:280px;width:96px;"></div>
+        <div class="character partie anim-type" style="position:absolute;top:60px;left:310px;">
+          <div class="role-badge">BUILDER</div>
+          <div class="char-body"></div>
+        </div>
+
+        <!-- Commis under parties -->
+        <div class="character commis anim-idle" style="position:absolute;top:160px;left:10px;">
+          <div class="char-body"></div>
+        </div>
+        <div class="character commis anim-idle" style="position:absolute;top:160px;left:170px;">
+          <div class="char-body"></div>
+        </div>
+        <div class="character commis anim-idle" style="position:absolute;top:160px;left:330px;">
+          <div class="char-body"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════ -->
+    <!-- SCENE 5: FOUR PILLARS                           -->
+    <!-- ═══════════════════════════════════════════════ -->
+    <div class="scene scene-5" id="scene-4">
+      <div class="wall"></div>
+      <div class="floor"></div>
+
+      <!-- Pillar 1: Organisation -->
+      <div class="pillar-zone highlight" style="left:40px;top:40px;width:420px;height:380px;border-color:var(--gold);background:rgba(201,168,76,0.04);">
+        <div class="pillar-title" style="color:var(--gold);">1. ORGANISATION</div>
+        <div class="pillar-desc">
+          <strong style="color:var(--text);">The ticket rail</strong> (LOCKBOARD) — what's on order, who's working what.<br><br>
+          <strong style="color:var(--text);">Closing procedures</strong> (session-end) — nothing left behind.<br><br>
+          <strong style="color:var(--text);">Labeling system</strong> (conventions) — everyone names things the same way.
+        </div>
+        <div class="ticket-rail" style="position:absolute;bottom:40px;left:40px;"></div>
+      </div>
+
+      <!-- Pillar 2: Knowledge -->
+      <div class="pillar-zone" style="left:500px;top:40px;width:420px;height:380px;border-color:var(--copper);background:rgba(184,122,86,0.04);">
+        <div class="pillar-title" style="color:var(--copper);">2. KNOWLEDGE</div>
+        <div class="pillar-desc">
+          <strong style="color:var(--text);">The big book</strong> — techniques, materials, temperatures, norms.<br><br>
+          You can be talented, but if you don't know the fundamentals — you're limited.<br><br>
+          Without knowledge, you can cook but you can't <em style="color:var(--copper);">build</em>.
+        </div>
+        <div class="big-book" style="position:absolute;bottom:30px;left:40px;"></div>
+      </div>
+
+      <!-- Pillar 3: Tools -->
+      <div class="pillar-zone" style="left:960px;top:40px;width:420px;height:380px;border-color:var(--teal);background:rgba(91,143,168,0.04);">
+        <div class="pillar-title" style="color:var(--teal);">3. TOOLS</div>
+        <div class="pillar-desc">
+          <strong style="color:var(--text);">The right equipment</strong> — not empty, not cluttered.<br><br>
+          <strong style="color:var(--text);">MCP cables</strong> connecting the kitchen to external tools.<br><br>
+          The multiprise (router) = one cable, multiple tools connected.
+        </div>
+        <!-- Cable visual -->
+        <div class="cable" style="position:absolute;bottom:60px;left:40px;width:200px;"></div>
+        <div style="position:absolute;bottom:45px;left:40px;display:flex;gap:8px;">
+          <div style="width:14px;height:14px;border:2px solid var(--teal);border-radius:2px;background:rgba(91,143,168,0.3);"></div>
+          <div style="width:14px;height:14px;border:2px solid var(--teal);border-radius:2px;background:rgba(91,143,168,0.3);"></div>
+          <div style="width:14px;height:14px;border:2px solid var(--teal);border-radius:2px;"></div>
+        </div>
+        <div style="position:absolute;bottom:30px;left:40px;font-family:'DM Mono';font-size:8px;color:var(--teal);opacity:0.6;">RHINO &middot; BLENDER &middot; QGIS</div>
+      </div>
+
+      <!-- Pillar 4: Ingredients -->
+      <div class="pillar-zone" style="left:40px;top:450px;width:1340px;height:340px;border-color:var(--green);background:rgba(90,158,111,0.04);">
+        <div class="pillar-title" style="color:var(--green);">4. INGREDIENTS — THE PANTRY (ARCHIBASE)</div>
+        <div style="display:flex;gap:40px;margin-top:12px;">
+          <!-- L1 -->
+          <div style="flex:1;padding:12px;border:1px solid rgba(201,168,76,0.2);border-radius:4px;">
+            <div style="font-family:'DM Mono';font-size:10px;color:var(--gold);margin-bottom:6px;">L1 — SQLite</div>
+            <div class="pillar-desc">Materials, KBOB (375 Swiss LCA), steel profiles, fire codes, SIA loads, room dimensions, spans, assemblies</div>
+            <div style="margin-top:8px;display:flex;gap:4px;">
+              <div style="width:24px;height:28px;border-radius:3px;background:rgba(201,168,76,0.2);border:1px solid rgba(201,168,76,0.3);"></div>
+              <div style="width:24px;height:28px;border-radius:3px;background:rgba(201,168,76,0.2);border:1px solid rgba(201,168,76,0.3);"></div>
+              <div style="width:24px;height:28px;border-radius:3px;background:rgba(201,168,76,0.2);border:1px solid rgba(201,168,76,0.3);"></div>
+            </div>
+          </div>
+          <!-- L2 -->
+          <div style="flex:1;padding:12px;border:1px solid rgba(184,122,86,0.2);border-radius:4px;">
+            <div style="font-family:'DM Mono';font-size:10px;color:var(--copper);margin-bottom:6px;">L2 — Markdown Guides</div>
+            <div class="pillar-desc">33 curated guides: materials, construction systems, typologies, norms, parametric design</div>
+            <div style="margin-top:8px;font-family:'DM Mono';font-size:9px;color:var(--copper);opacity:0.5;">📚 33 files</div>
+          </div>
+          <!-- L3 -->
+          <div style="flex:1;padding:12px;border:1px solid rgba(91,143,168,0.2);border-radius:4px;">
+            <div style="font-family:'DM Mono';font-size:10px;color:var(--teal);margin-bottom:6px;">L3 — Scripts</div>
+            <div class="pillar-desc">Parametric enforcement in code. Tested recipes — structural, envelope, partition logic.</div>
+            <div style="margin-top:8px;font-family:'DM Mono';font-size:9px;color:var(--teal);opacity:0.5;">⚙️ parametric</div>
+          </div>
+          <!-- L4 -->
+          <div style="flex:1;padding:12px;border:1px solid rgba(90,158,111,0.2);border-radius:4px;">
+            <div style="font-family:'DM Mono';font-size:10px;color:var(--green);margin-bottom:6px;">L4 — RAG</div>
+            <div class="pillar-desc">35K+ chunks: Dicobat, 21 SIA norms, Designing Buildings Wiki, Alexander patterns, Bloomsbury</div>
+            <div style="margin-top:8px;font-family:'DM Mono';font-size:9px;color:var(--green);opacity:0.5;">🔍 35,000+ chunks</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════ -->
+    <!-- SCENE 6: THE FULL KITCHEN                       -->
+    <!-- ═══════════════════════════════════════════════ -->
+    <div class="scene scene-6" id="scene-5">
+      <div class="wall"></div>
+      <div class="floor"></div>
+
+      <!-- Entry area (left) -->
+      <div class="furniture" style="left:40px;top:280px;width:60px;height:100px;background:#3a2c20;border:3px solid #5a4a3a;border-radius:4px 4px 0 0;">
+        <div style="position:absolute;top:40px;right:6px;width:6px;height:6px;background:var(--gold);border-radius:50%;"></div>
+      </div>
+      <div class="scroll-prop scroll-gold" style="left:50px;top:260px;width:24px;height:30px;font-size:10px;">📜</div>
+
+      <!-- Counter + stove -->
+      <div class="desk furniture" style="top:400px;left:150px;width:120px;"></div>
+      <div class="obj-stove furniture" style="top:300px;left:300px;width:72px;height:60px;"></div>
+
+      <!-- Fridge -->
+      <div class="fridge furniture" style="top:280px;left:440px;width:48px;height:84px;"></div>
+
+      <!-- The pass -->
+      <div class="pass-counter furniture" style="top:360px;left:540px;width:300px;height:6px;"></div>
+      <div class="label" style="top:348px;left:650px;"><span class="tag">PASS</span></div>
+
+      <!-- Ticket rail -->
+      <div class="ticket-rail furniture" style="top:250px;left:550px;width:140px;height:8px;"></div>
+
+      <!-- Logbook -->
+      <div class="obj-logbook furniture" style="top:380px;left:860px;"></div>
+
+      <!-- Bookshelf -->
+      <div class="bookshelf furniture" style="top:260px;left:920px;width:48px;height:96px;"></div>
+
+      <!-- Archibase book -->
+      <div class="big-book" style="top:390px;left:990px;width:36px;height:42px;"></div>
+
+      <!-- Pantry door -->
+      <div class="obj-pantry-door furniture" style="top:250px;left:1060px;width:60px;height:110px;"></div>
+
+      <!-- MCP cables -->
+      <div class="cable furniture" style="top:420px;left:1150px;width:180px;height:3px;"></div>
+      <div style="position:absolute;top:410px;left:1350px;display:flex;gap:4px;z-index:10;">
+        <div style="width:10px;height:10px;border:1.5px solid var(--gold);border-radius:1px;background:rgba(201,168,76,0.3);"></div>
+        <div style="width:10px;height:10px;border:1.5px solid var(--gold);border-radius:1px;background:rgba(201,168,76,0.3);"></div>
+      </div>
+
+      <!-- Cloakroom doors (small) -->
+      <div style="position:absolute;top:260px;left:1420px;display:flex;gap:8px;">
+        <div style="width:40px;height:70px;background:#3a3040;border:2px solid #5a4a5a;border-radius:3px 3px 0 0;text-align:center;padding-top:4px;font-size:10px;">🔬</div>
+        <div style="width:40px;height:70px;background:#3a3040;border:2px solid #5a4a5a;border-radius:3px 3px 0 0;text-align:center;padding-top:4px;font-size:10px;">🏗️</div>
+        <div style="width:40px;height:70px;background:#3a3040;border:2px solid #5a4a5a;border-radius:3px 3px 0 0;text-align:center;padding-top:4px;font-size:10px;">🗺️</div>
+        <div style="width:40px;height:70px;background:#3a3040;border:2px solid #5a4a5a;border-radius:3px 3px 0 0;text-align:center;padding-top:4px;font-size:10px;">📊</div>
+      </div>
+
+      <!-- Characters (the full brigade) -->
+      <!-- Chef -->
+      <div class="character user anim-idle" style="top:430px;left:640px;">
+        <div class="char-body"><div class="char-hair"></div></div>
+        <div class="char-name">CHEF</div>
+      </div>
+      <!-- Sous chef -->
+      <div class="character cairn anim-idle" style="top:300px;left:650px;">
+        <div class="char-body"></div>
+        <div class="char-name">CAIRN</div>
+      </div>
+      <!-- Parties -->
+      <div class="character partie anim-type" style="top:400px;left:200px;">
+        <div class="role-badge" style="font-size:6px;">ANALYST</div>
+        <div class="char-body"></div>
+      </div>
+      <div class="character partie anim-type" style="top:400px;left:440px;">
+        <div class="role-badge" style="font-size:6px;">MODELER</div>
+        <div class="char-body"></div>
+      </div>
+      <div class="character partie anim-type" style="top:400px;left:920px;">
+        <div class="role-badge" style="font-size:6px;">BUILDER</div>
+        <div class="char-body"></div>
+      </div>
+      <!-- Commis -->
+      <div class="character commis anim-idle" style="top:470px;left:250px;"><div class="char-body"></div></div>
+      <div class="character commis anim-idle" style="top:470px;left:490px;"><div class="char-body"></div></div>
+      <div class="character commis anim-idle" style="top:470px;left:970px;"><div class="char-body"></div></div>
+
+      <!-- Other account Claudes scattered -->
+      <div class="character lumen anim-idle" style="top:310px;left:170px;">
+        <div class="char-body"></div>
+        <div class="char-name" style="font-size:6px;">LUMEN</div>
+      </div>
+      <div class="character nova anim-idle" style="top:310px;left:900px;">
+        <div class="char-body"></div>
+        <div class="char-name" style="font-size:6px;">NOVA</div>
+      </div>
+      <div class="character meridian anim-idle" style="top:460px;left:1150px;">
+        <div class="char-body"></div>
+        <div class="char-name" style="font-size:6px;">MERIDIAN</div>
+      </div>
+
+      <!-- Takeaway text -->
+      <div style="position:absolute;bottom:40px;left:50%;transform:translateX(-50%);text-align:center;z-index:30;">
+        <div style="font-family:'Instrument Serif',serif;font-size:28px;color:var(--text);line-height:1.5;">
+          Not just a project — a <em style="color:var(--gold);font-style:normal;">documented process</em>.<br>
+          <span style="font-size:20px;color:var(--text-muted);">Not just architecture — the story of how the architecture was made.</span>
+        </div>
+      </div>
+
+      <!-- Windows -->
+      <div class="obj-window furniture" style="top:50px;left:300px;width:72px;height:54px;"></div>
+      <div class="obj-window furniture" style="top:50px;left:700px;width:72px;height:54px;"></div>
+      <div class="obj-window furniture" style="top:50px;left:1100px;width:72px;height:54px;"></div>
+    </div>
+
+  </div><!-- /world -->
+
+  <!-- Dialogue bar -->
+  <div class="dialogue-bar">
+    <div class="dialogue-portrait" id="portrait">
+      <div class="mini-char">
+        <div class="char-body" style="width:24px;height:36px;">
+          <div style="position:absolute;top:0;left:3px;width:18px;height:18px;border-radius:3px;background:#d4a574;"></div>
+          <div style="position:absolute;top:18px;left:1px;width:22px;height:18px;border-radius:2px;background:var(--gold);"></div>
+        </div>
+      </div>
+    </div>
+    <div class="dialogue-text">
+      <span class="speaker" id="speaker">NARRATOR</span>
+      <span id="dialogueContent">Every time a new conversation began, Claude walked in with an <em>empty backpack</em>.</span>
+    </div>
+    <div class="dialogue-nav">
+      <button class="nav-btn" id="btnPrev">&lt;</button>
+      <button class="nav-btn primary" id="btnNext">NEXT &gt;</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ── SCENE & NAVIGATION ENGINE ──
+
+const SCENES = [
+  {
+    title: '1 / 6 — Entering the Kitchen',
+    dialogues: [
+      { speaker: 'NARRATOR', text: 'Every time a new conversation began, Claude walked in with an <em>empty backpack</em>. No memory of yesterday\'s work.' },
+      { speaker: 'NARRATOR', text: 'Just inside the door: a small shelf with two scrolls waiting. <em>CLAUDE.md</em> — the map. <em>.claude/</em> — the blueprint.' },
+      { speaker: 'NARRATOR', text: 'The map shows WHERE to find things. Warm, hand-drawn, organic. The blueprint shows HOW things work. Cool, precise, mechanical.' },
+      { speaker: 'NARRATOR', text: 'Both scrolls slot into the backpack. <em>Grey washes to color.</em> The character is loaded — it has context.' },
+      { speaker: 'NARRATOR', text: 'As the colored character walks into the main kitchen... <em>the kitchen furnishes itself around them.</em> Context = the kitchen taking shape.' },
+    ]
+  },
+  {
+    title: '2 / 6 — The Pass',
+    dialogues: [
+      { speaker: 'ANDREA', text: 'Build the corridor model at 1:5000. Include terrain, buildings, and rail infrastructure.' },
+      { speaker: 'NARRATOR', text: 'Claude works: moves to stations, types, searches. Output gets <em>plated</em> — slides across the pass.' },
+      { speaker: 'NARRATOR', text: 'With each exchange, the <em>backpack gets bigger</em>. More conversation = more context consumed. The tension: working space shrinks.' },
+      { speaker: 'NARRATOR', text: 'The user throws a <em>big heavy book</em> — archibase. Claude catches it. Now Claude can BUILD, not just reason.' },
+      { speaker: 'NARRATOR', text: '<em>CAG</em>: everything pre-loaded, heavy but fast. <em>RAG</em>: light and nimble, fetch on demand. The system uses both.' },
+    ]
+  },
+  {
+    title: '3 / 6 — The Logbook (Git)',
+    dialogues: [
+      { speaker: 'NARRATOR', text: 'Every interaction already logged. The kitchen is <em>surveilled 24/7</em> — every change, every action, automatically registered.' },
+      { speaker: 'NARRATOR', text: 'Andrea\'s kitchen has a copy. Henna\'s kitchen has a copy. <em>Push</em> to sync, <em>pull</em> to catch up. Two kitchens, one book.' },
+      { speaker: 'NARRATOR', text: 'We didn\'t adopt git because we\'re programmers. We adopted it because <em>the only tools for this kind of work were built for programmers</em>.' },
+      { speaker: 'NARRATOR', text: 'Every <em>branch</em> = a design alternative explored. Every <em>merge</em> = a decision made. Every <em>dead end</em> = documented, not lost.' },
+    ]
+  },
+  {
+    title: '4 / 6 — The Brigade',
+    dialogues: [
+      { speaker: 'NARRATOR', text: 'There are other doors in the kitchen. Each one leads to a <em>cloakroom</em> for a specific role.' },
+      { speaker: 'NARRATOR', text: 'Inside: a focused scroll. Not the big map — a <em>zoomed-in view</em> of one area. Just what the specialist needs.' },
+      { speaker: 'NARRATOR', text: '<em>Level 1</em>: one Claude, one task. <em>Level 2</em>: sous chef + commis. <em>Level 3</em>: full Michelin brigade with stations.' },
+      { speaker: 'NARRATOR', text: 'Communication: sous chef calls out, stations respond, dishes converge at the pass. <em>Orchestration, not isolation.</em>' },
+    ]
+  },
+  {
+    title: '5 / 6 — Four Pillars',
+    dialogues: [
+      { speaker: 'NARRATOR', text: 'What does a Michelin brigade need to function? <em>Four things.</em>' },
+      { speaker: 'NARRATOR', text: '<em>Organisation</em>: the ticket rail, closing procedures, labeling. Built once, saves time every service.' },
+      { speaker: 'NARRATOR', text: '<em>Knowledge</em>: techniques, materials, norms. You can be talented, but without fundamentals — you\'re limited.' },
+      { speaker: 'NARRATOR', text: '<em>Tools</em>: the right equipment, connected via MCP. Not too much, not too little. Just enough to be productive.' },
+      { speaker: 'NARRATOR', text: '<em>Ingredients</em>: the pantry. Four layers — SQLite, Guides, Scripts, RAG. 35,000+ chunks of construction knowledge.' },
+    ]
+  },
+  {
+    title: '6 / 6 — The Full Kitchen',
+    dialogues: [
+      { speaker: 'NARRATOR', text: 'Pull back. The full kitchen: entryway, pass, brigade, pantry, logbook, cables. <em>The system alive.</em>' },
+      { speaker: 'NARRATOR', text: 'Not just a project — a <em>documented process</em>. Not just architecture — the story of how the architecture was made.' },
+    ]
+  }
+];
+
+let currentScene = 0;
+let currentDialogue = 0;
+
+const sceneLabel = document.getElementById('sceneLabel');
+const progressBar = document.getElementById('progressBar');
+const speaker = document.getElementById('speaker');
+const dialogueContent = document.getElementById('dialogueContent');
+const sceneDots = document.querySelectorAll('.scene-dot');
+const scenes = document.querySelectorAll('.scene');
+
+function updateScene() {
+  const data = SCENES[currentScene];
+
+  // Update header
+  sceneLabel.textContent = data.title;
+
+  // Update progress
+  const totalSteps = SCENES.reduce((sum, s) => sum + s.dialogues.length, 0);
+  let stepsCompleted = 0;
+  for (let i = 0; i < currentScene; i++) stepsCompleted += SCENES[i].dialogues.length;
+  stepsCompleted += currentDialogue;
+  progressBar.style.width = ((stepsCompleted / totalSteps) * 100) + '%';
+
+  // Update scene dots
+  document.querySelectorAll('.scene-dot').forEach((dot, i) => {
+    dot.classList.toggle('active', i === currentScene);
+  });
+
+  // Update scene visibility
+  scenes.forEach((s, i) => {
+    s.classList.toggle('active', i === currentScene);
+  });
+
+  // Update dialogue
+  const d = data.dialogues[currentDialogue];
+  speaker.textContent = d.speaker;
+  dialogueContent.innerHTML = d.text;
+}
+
+function next() {
+  const data = SCENES[currentScene];
+  if (currentDialogue < data.dialogues.length - 1) {
+    currentDialogue++;
+  } else if (currentScene < SCENES.length - 1) {
+    currentScene++;
+    currentDialogue = 0;
+  }
+  updateScene();
+}
+
+function prev() {
+  if (currentDialogue > 0) {
+    currentDialogue--;
+  } else if (currentScene > 0) {
+    currentScene--;
+    currentDialogue = SCENES[currentScene].dialogues.length - 1;
+  }
+  updateScene();
+}
+
+function goToScene(index) {
+  currentScene = index;
+  currentDialogue = 0;
+  updateScene();
+}
+
+// Button handlers
+document.getElementById('btnNext').addEventListener('click', next);
+document.getElementById('btnPrev').addEventListener('click', prev);
+
+// Scene dot handlers
+document.querySelectorAll('.scene-dot-wrap').forEach(wrap => {
+  wrap.addEventListener('click', () => {
+    goToScene(parseInt(wrap.dataset.scene));
+  });
+});
+
+// Keyboard navigation
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); next(); }
+  if (e.key === 'ArrowLeft') { e.preventDefault(); prev(); }
+  if (e.key === 'Home') { e.preventDefault(); goToScene(0); }
+  if (e.key === 'End') { e.preventDefault(); goToScene(SCENES.length - 1); }
+  // Number keys for direct scene access
+  if (e.key >= '1' && e.key <= '6') { goToScene(parseInt(e.key) - 1); }
+});
+
+// ── AUTO-SCALE ──
+function autoScale() {
+  const container = document.getElementById('scene');
+  const scaleX = window.innerWidth / 1920;
+  const scaleY = window.innerHeight / 1080;
+  const scale = Math.min(scaleX, scaleY);
+  container.style.transform = `scale(${scale})`;
+  container.style.left = ((window.innerWidth - 1920 * scale) / 2) + 'px';
+  container.style.top = ((window.innerHeight - 1080 * scale) / 2) + 'px';
+}
+window.addEventListener('resize', autoScale);
+autoScale();
+
+// Initialize
+updateScene();
+</script>
+</body>
+</html>

@@ -51,6 +51,29 @@ Meaning is produced at surfaces/interfaces, not hidden in depths. The data flows
 ### Diversity formula (via Comtesse)
 diversity × accessibility × time = urban vitality. Speed determines which diversity you can access (car = full line, train = node-to-node, bike = local texture). More diverse → more exchange. Homogeneity = stasis.
 
+## Agent team modeling lessons (Lock 07 v1, March 27 2026)
+
+### Team build with proper coordination does 530 objects in 90 minutes
+Lock 07 v1: 4 building agents (Site, Structure, Envelope, Circulation) + Lead coordinator + QC reviewer. 530 objects across 28 layers, full LOG 400 with 7-layer wall assemblies, 100% metadata compliance. The v3 workflow (health checks, coordination log, authority hierarchy) worked well.
+
+### Auto mode is the right permission level for overnight builds
+bypassPermissions is too dangerous. Auto mode auto-approves safe operations (MCP tools, file reads/writes) but blocks destructive ones. Combined with explicit allow-list entries for specific tools, it runs unattended without risk.
+
+### TeamCreate enables real inter-agent coordination
+Phase 1 agents (regular spawns) couldn't message each other. Phase 2 agents (TeamCreate) could coordinate directly — envelope-agent and circulation-agent resolved interface dimensions via DM without lead relay. Always use TeamCreate for multi-agent builds.
+
+### QC agent with fresh eyes catches what builders miss
+Dedicated QC agent found stair Z-level error (150mm below ground) and ramp gradient non-compliance (6.2% vs 6.0% SIA 500 max) that both building agents and roundtable missed. Fresh context = fresh eyes. Always spawn QC separately from builders.
+
+### Wall assembly layer placement matters for section legibility
+7-layer timber wall: structural stud layer (Layer 4, Insulation) should go on Shell::Walls sublayer, not Facade::Insulation. The Facade sublayers are for the outer/inner finish layers. Envelope agent initially put all 7 layers on Facade sublayers — QC caught it, agent fixed it.
+
+### Real terrain validation is essential before declaring "done"
+v1 used placeholder flat terrain at Z=374.0. Real swissALTI3D showed station area at 375.2m — a 1.2m mismatch that would bury the entrance. Always import real terrain and check building-to-ground alignment before finalizing.
+
+### The build prompt must match the research
+v1 prompt described Lock 07 as a "60m pedestrian bridge" — the research says it's a 2.1km corridor connection solving a hospital mobility island. The prompt author (or the overnight agent) must read the research before writing geometry specs. Wrong program = wasted build.
+
 ## Workflow lessons
 
 ### Monolithic scripts for large data
