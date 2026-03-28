@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Roadmap — Still On The Line</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=DM+Mono:wght@300;400&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  body {
+    background: #0c0c14;
+    color: #e8e6e1;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+  }
+
+  .wall {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+  }
+
+  /* ── Timeline lines ── */
+  .timeline-solid {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 68%;
+    height: 18px;
+    transform: translateY(-50%);
+    z-index: 1;
+    background: linear-gradient(to right,
+      #c9a84c 0%,
+      #c9a84c 40%,
+      #b87a56 55%,
+      #b87a56 85%,
+      rgba(184,122,86,0) 100%
+    );
+  }
+
+  .timeline-dashed {
+    position: absolute;
+    top: 50%;
+    left: 63%;
+    right: 2%;
+    height: 18px;
+    transform: translateY(-50%);
+    z-index: 0;
+    background: repeating-linear-gradient(to right,
+      rgba(91,143,168,0.35) 0px,
+      rgba(91,143,168,0.35) 22px,
+      transparent 22px,
+      transparent 36px
+    );
+    mask-image: linear-gradient(to right, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 8%, rgba(0,0,0,1) 30%, rgba(0,0,0,0.3) 100%);
+    -webkit-mask-image: linear-gradient(to right, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 8%, rgba(0,0,0,1) 30%, rgba(0,0,0,0.3) 100%);
+  }
+
+  /* ── Node: dot + stem + card as one unit ── */
+  .node {
+    position: absolute;
+    top: 50%;
+    z-index: 3;
+  }
+
+  /* ── Dot ── */
+  .node .dot {
+    position: absolute;
+    top: 0; left: 0;
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .node .dot::after {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 62px; height: 62px;
+    border-radius: 50%;
+    border: 2px solid;
+    pointer-events: none;
+  }
+
+  .node .dot.gold { background: #c9a84c; }
+  .node .dot.gold::after { border-color: rgba(201,168,76,0.3); }
+  .node .dot.copper { background: #b87a56; }
+  .node .dot.copper::after { border-color: rgba(184,122,86,0.3); }
+  .node .dot.teal { background: #5b8fa8; }
+  .node .dot.teal::after { border-color: rgba(91,143,168,0.3); }
+  .node .dot.teal-faint { background: rgba(91,143,168,0.5); }
+  .node .dot.teal-faint::after { border-color: rgba(91,143,168,0.2); }
+
+  /* ── Stem ── */
+  .node .stem {
+    position: absolute;
+    left: 0;
+    width: 2px;
+    transform: translateX(-50%);
+  }
+
+  .node.above .stem {
+    bottom: 24px;
+    height: 36px;
+  }
+
+  .node.below .stem {
+    top: 24px;
+    height: 36px;
+  }
+
+  .stem.gold { background: rgba(201,168,76,0.3); }
+  .stem.copper { background: rgba(184,122,86,0.3); }
+  .stem.teal { background: rgba(91,143,168,0.18); }
+
+  /* ── Card ── */
+  .node .card {
+    position: absolute;
+    left: 0;
+    width: 155px;
+  }
+
+  /* Default: card extends to the right of the dot */
+  .node.above .card {
+    bottom: 62px;
+    transform: translateX(-12%);
+  }
+
+  .node.below .card {
+    top: 62px;
+    transform: translateX(-12%);
+  }
+
+  /* Right-aligned cards (for dots near right screen edges) */
+  .node.card-right .card {
+    transform: translateX(-88%);
+  }
+
+  /* ── Step number ── */
+  .step-number {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 600;
+    font-size: 48px;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    margin-bottom: 2px;
+  }
+
+  .step-number.gold { color: rgba(201,168,76,0.2); }
+  .step-number.copper { color: rgba(184,122,86,0.25); }
+  .step-number.teal { color: rgba(91,143,168,0.15); }
+
+  /* ── Card text ── */
+  .card-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+  }
+
+  .card-label.gold { color: #c9a84c; }
+  .card-label.copper { color: #b87a56; }
+  .card-label.teal { color: #5b8fa8; }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin-bottom: 3px;
+  }
+
+  .card-icon {
+    width: 18px; height: 18px;
+    flex-shrink: 0;
+  }
+
+  .card-icon.gold path, .card-icon.gold line, .card-icon.gold circle,
+  .card-icon.gold polyline, .card-icon.gold rect, .card-icon.gold ellipse {
+    stroke: #c9a84c; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; fill: none;
+  }
+  .card-icon.copper path, .card-icon.copper line, .card-icon.copper circle,
+  .card-icon.copper polyline, .card-icon.copper rect {
+    stroke: #b87a56; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; fill: none;
+  }
+  .card-icon.teal path, .card-icon.teal line, .card-icon.teal circle,
+  .card-icon.teal polyline, .card-icon.teal rect {
+    stroke: #5b8fa8; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; fill: none; opacity: 0.6;
+  }
+
+  .card-title {
+    font-family: 'Instrument Serif', serif;
+    font-size: 20px;
+    letter-spacing: 0.01em;
+    color: #e8e6e1;
+    line-height: 1.2;
+  }
+
+  .card-title.muted { color: #9a9690; }
+
+  .card-body {
+    font-size: 12px;
+    line-height: 1.45;
+    color: #b8b4ad;
+    margin-top: 3px;
+  }
+
+  /* ── Title ── */
+  .title-block {
+    position: absolute;
+    top: 4%;
+    left: 2.5%;
+    z-index: 5;
+  }
+
+  .title-main {
+    font-family: 'Instrument Serif', serif;
+    font-size: 34px;
+    color: #c9a84c;
+    letter-spacing: 0.02em;
+  }
+
+  .title-sub {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    color: #706c66;
+    letter-spacing: 0.06em;
+    margin-top: 5px;
+  }
+
+  /* ── Endpoint ── */
+  .endpoint-diamond {
+    position: absolute;
+    top: 50%;
+    left: 95%;
+    transform: translate(-50%, -50%) rotate(45deg);
+    width: 40px; height: 40px;
+    background: #5b8fa8;
+    z-index: 3;
+  }
+
+  .endpoint-diamond::before {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 58px; height: 58px;
+    border: 2px solid rgba(91,143,168,0.25);
+  }
+
+  .endpoint-diamond::after {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 74px; height: 74px;
+    border: 1px solid rgba(91,143,168,0.12);
+  }
+
+  .endpoint-stem {
+    position: absolute;
+    top: 50%;
+    left: 95%;
+    width: 2px;
+    height: 36px;
+    margin-top: 24px;
+    transform: translateX(-50%);
+    background: rgba(91,143,168,0.18);
+    z-index: 2;
+  }
+
+  .endpoint-card {
+    position: absolute;
+    top: 50%;
+    left: 95%;
+    margin-top: 62px;
+    transform: translateX(-75%);
+    z-index: 5;
+    width: 170px;
+  }
+
+  .endpoint-card .ep-name {
+    font-family: 'Instrument Serif', serif;
+    font-size: 22px;
+    color: #5b8fa8;
+    margin-bottom: 3px;
+  }
+
+  .endpoint-card .ep-sub {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: rgba(91,143,168,0.5);
+    letter-spacing: 0.08em;
+  }
+
+  /* ── Screen seam guides (uncomment to debug) ── */
+  /*
+  .seam-v1, .seam-v2, .seam-h {
+    position: absolute; z-index: 99; background: rgba(255,0,0,0.2);
+  }
+  .seam-v1 { left: 33.33%; top: 0; width: 2px; height: 100%; }
+  .seam-v2 { left: 66.66%; top: 0; width: 2px; height: 100%; }
+  .seam-h { top: 50%; left: 0; width: 100%; height: 2px; }
+  */
+</style>
+</head>
+<body>
+
+<div class="wall">
+
+  <!-- Debug seam guides (uncomment to see screen boundaries)
+  <div class="seam-v1"></div>
+  <div class="seam-v2"></div>
+  <div class="seam-h"></div>
+  -->
+
+  <div class="title-block">
+    <div class="title-main">Roadmap</div>
+    <div class="title-sub">Still On The Line — Spring 2026</div>
+  </div>
+
+  <div class="timeline-solid"></div>
+  <div class="timeline-dashed"></div>
+
+  <!-- ══ LEFT SCREEN (0–33%) ══ -->
+  <!-- Dots at 6%, 16%, spread to avoid overlap. Cards stay within 0–33% -->
+
+  <!-- 01 — Corridor + Circuit (above, left-aligned) -->
+  <div class="node above" style="left: 6%;">
+    <div class="dot gold"></div>
+    <div class="stem gold"></div>
+    <div class="card">
+      <div class="step-number gold">01</div>
+      <div class="card-label gold">A01 — A04</div>
+      <div class="card-header">
+        <svg class="card-icon gold" viewBox="0 0 24 24"><polyline points="4,18 8,10 14,14 20,6"/></svg>
+        <div class="card-title">Corridor + Circuit</div>
+      </div>
+      <div class="card-body">49 stations, 9 locks scored and sited</div>
+    </div>
+  </div>
+
+  <!-- 02 — Knowledge System (below) -->
+  <div class="node below" style="left: 16%;">
+    <div class="dot gold"></div>
+    <div class="stem gold"></div>
+    <div class="card">
+      <div class="step-number gold">02</div>
+      <div class="card-label gold">archibase</div>
+      <div class="card-header">
+        <svg class="card-icon gold" viewBox="0 0 24 24"><ellipse cx="12" cy="8" rx="7" ry="3"/><path d="M5,12c0,1.66 3.13,3 7,3s7-1.34 7-3"/><path d="M5,16c0,1.66 3.13,3 7,3s7-1.34 7-3"/></svg>
+        <div class="card-title">Knowledge System</div>
+      </div>
+      <div class="card-body">61K chunks: SIA, KBOB, construction</div>
+    </div>
+  </div>
+
+  <!-- 03 — Agent Orchestration (above, card right-aligned to stay in screen) -->
+  <div class="node above card-right" style="left: 27%;">
+    <div class="dot gold"></div>
+    <div class="stem gold"></div>
+    <div class="card">
+      <div class="step-number gold">03</div>
+      <div class="card-label gold">infrastructure</div>
+      <div class="card-header">
+        <svg class="card-icon gold" viewBox="0 0 24 24"><circle cx="12" cy="7" r="2.5"/><circle cx="6" cy="17" r="2.5"/><circle cx="18" cy="17" r="2.5"/><line x1="12" y1="9.5" x2="7.5" y2="14.5"/><line x1="12" y1="9.5" x2="16.5" y2="14.5"/></svg>
+        <div class="card-title">Agent Orchestration</div>
+      </div>
+      <div class="card-body">Multi-agent teams, review pipeline</div>
+    </div>
+  </div>
+
+  <!-- ══ CENTER SCREEN (33–66%) ══ -->
+  <!-- Dots at 40%, 50%, 60%. Cards stay within 33–66% -->
+
+  <!-- 04 — First Locks Built (below) -->
+  <div class="node below" style="left: 40%;">
+    <div class="dot gold"></div>
+    <div class="stem gold"></div>
+    <div class="card">
+      <div class="step-number gold">04</div>
+      <div class="card-label gold">LOG 350</div>
+      <div class="card-header">
+        <svg class="card-icon gold" viewBox="0 0 24 24"><rect x="6" y="10" width="12" height="10"/><polyline points="4,10 12,4 20,10"/><line x1="12" y1="14" x2="12" y2="20"/></svg>
+        <div class="card-title">First Locks Built</div>
+      </div>
+      <div class="card-body">Precise geometry, structural + envelope + fire review</div>
+    </div>
+  </div>
+
+  <!-- 05 — Scaling Up (above) -->
+  <div class="node above" style="left: 50%;">
+    <div class="dot copper"></div>
+    <div class="stem copper"></div>
+    <div class="card">
+      <div class="step-number copper">05</div>
+      <div class="card-label copper">in progress</div>
+      <div class="card-header">
+        <svg class="card-icon copper" viewBox="0 0 24 24"><polyline points="15,4 20,4 20,9"/><line x1="20" y1="4" x2="13" y2="11"/><polyline points="9,20 4,20 4,15"/><line x1="4" y1="20" x2="11" y2="13"/></svg>
+        <div class="card-title">Scaling Up</div>
+      </div>
+      <div class="card-body">Cloud VMs, 9 locks in production</div>
+    </div>
+  </div>
+
+  <!-- 06 — Terrain Integration (below, card right-aligned) -->
+  <div class="node below card-right" style="left: 60%;">
+    <div class="dot copper"></div>
+    <div class="stem copper"></div>
+    <div class="card">
+      <div class="step-number copper">06</div>
+      <div class="card-label copper">in progress</div>
+      <div class="card-header">
+        <svg class="card-icon copper" viewBox="0 0 24 24"><polyline points="3,18 8,10 12,14 16,8 21,18"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        <div class="card-title">Terrain Integration</div>
+      </div>
+      <div class="card-body">Building-to-site workflows</div>
+    </div>
+  </div>
+
+  <!-- ══ RIGHT SCREEN (66–100%) ══ -->
+  <!-- Dots at 72%, 82%, 90%. Endpoint at 96%. Cards stay within 66–100% -->
+
+  <!-- 07 — Knowledge Expansion (above) -->
+  <div class="node above" style="left: 72%;">
+    <div class="dot teal"></div>
+    <div class="stem teal"></div>
+    <div class="card">
+      <div class="step-number teal">07</div>
+      <div class="card-label teal">planned</div>
+      <div class="card-header">
+        <svg class="card-icon teal" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12,5a7,7 0 0,1 7,7"/><path d="M12,19a7,7 0 0,1-7-7"/></svg>
+        <div class="card-title muted">Knowledge Expansion</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 08 — Infrastructure Scaling (below) -->
+  <div class="node below" style="left: 82%;">
+    <div class="dot teal-faint"></div>
+    <div class="stem teal"></div>
+    <div class="card">
+      <div class="step-number teal">08</div>
+      <div class="card-label teal">planned</div>
+      <div class="card-header">
+        <svg class="card-icon teal" viewBox="0 0 24 24"><rect x="5" y="5" width="5" height="5"/><rect x="14" y="5" width="5" height="5"/><rect x="5" y="14" width="5" height="5"/><rect x="14" y="14" width="5" height="5"/></svg>
+        <div class="card-title muted">Infrastructure Scaling</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 09 — Production Traceability (above, card right-aligned) -->
+  <div class="node above card-right" style="left: 90%;">
+    <div class="dot teal-faint"></div>
+    <div class="stem teal"></div>
+    <div class="card">
+      <div class="step-number teal">09</div>
+      <div class="card-label teal">planned</div>
+      <div class="card-header">
+        <svg class="card-icon teal" viewBox="0 0 24 24"><path d="M10,14l-2,2a3,3 0 0,1-4.24-4.24l4-4a3,3 0 0,1 4.24,0"/><path d="M14,10l2-2a3,3 0 0,1 4.24,4.24l-4,4a3,3 0 0,1-4.24,0"/></svg>
+        <div class="card-title muted">Production Traceability</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Endpoint -->
+  <div class="endpoint-diamond"></div>
+  <div class="endpoint-stem"></div>
+  <div class="endpoint-card">
+    <div class="ep-name">RelayLock Configurator</div>
+    <div class="ep-sub">apply anywhere, any community</div>
+  </div>
+
+</div>
+
+</body>
+</html>
