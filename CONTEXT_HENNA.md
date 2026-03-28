@@ -1,7 +1,7 @@
 # Henna — Working Context
 
 **Owner**: Henna Rafik (Meridian, Cadence, Nova)
-**Last updated:** 2026-03-25
+**Last updated:** 2026-03-27
 
 ---
 
@@ -41,3 +41,26 @@
 | 02-03 | Cadence | Karim's diary v4 — narrative anchor for A02 crit. |
 | 08-03 | Meridian | Built 24 candidate sites for horizontal elevator. Interactive React artifact. |
 | 26-03 | Cadence | Built full geodata pipeline: swisstopo extraction (terrain, LOD2 buildings, infrastructure from swissTLM3D), site-selector agent, Rhino MCP import. Fixed building triangles (TIN mesh export). Tested Morges + Vevey end-to-end. |
+| 27-03 | Nova | Comic book production: reviewed McNaught-style nurse temporal lock prompt (12 panels). Switched from Midjourney to Gemini — created v3 prompt file with natural language aspect ratios, no-bubble instructions, HOSPITAL sign fix. Designed dynamic asymmetric panel grid (inspired by reference comic) — compressed cold panels at top, expanding warm panels at bottom. InDesign A2 setup spec provided. |
+| 27-03 | Nova | Built interactive data sequence diagram for relay-lock pipeline. Landscape SVG: Architect → AI → Corridor/Healthcare datasets → Site Analysis → 5-criteria scoring → 8 decision questions → Lock types → Ranked propositions with sliders → 3 outputs (Rhino3D, Blender, Spec Sheet). Feedback loops for low scores and unclassified. PR #6 open (claude/thirsty-cray → henna/visuals). |
+
+## Handoff
+
+**What was done**
+- Built interactive data sequence diagram (`output/data_sequence_diagram_v2.html`) showing the full relay-lock pipeline
+- Corrected the flow based on Henna's verbal walkthrough — Architect gives problem+region → AI → datasets → site analysis → scoring → decision tree → propositions → sliders → outputs
+- PR #6 open: `claude/thirsty-cray` → `henna/visuals`
+
+**What's next**
+1. Merge PR #6 after review
+2. Minor fix: remove the circle behind the architect stick figure in v2
+3. Continue with presentation slides — this diagram is for Slide 4 (software architecture)
+4. Comic panels still pending (Gemini generation)
+
+**Watch out for**
+- The v2 file lives in both the worktree and `output/` in main — after merge, the worktree copy is canonical
+- The 3 feedback loop labels (score < 3.0, unclassified, slider change) now have step assignments but test they hide/show correctly
+
+**Files to look at**
+- `output/data_sequence_diagram_v2.html` — the landscape diagram (use this)
+- `output/data_sequence_diagram.html` — v1 vertical version (superseded)
