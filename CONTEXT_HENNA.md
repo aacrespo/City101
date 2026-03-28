@@ -42,26 +42,25 @@
 | 08-03 | Meridian | Built 24 candidate sites for horizontal elevator. Interactive React artifact. |
 | 26-03 | Cadence | Built full geodata pipeline: swisstopo extraction (terrain, LOD2 buildings, infrastructure from swissTLM3D), site-selector agent, Rhino MCP import. Fixed building triangles (TIN mesh export). Tested Morges + Vevey end-to-end. |
 | 27-03 | Nova | Comic book production: reviewed McNaught-style nurse temporal lock prompt (12 panels). Switched from Midjourney to Gemini — created v3 prompt file with natural language aspect ratios, no-bubble instructions, HOSPITAL sign fix. Designed dynamic asymmetric panel grid (inspired by reference comic) — compressed cold panels at top, expanding warm panels at bottom. InDesign A2 setup spec provided. |
+| 27-03 | Nova | Built interactive data sequence diagram for relay-lock pipeline. Landscape SVG: Architect → AI → Corridor/Healthcare datasets → Site Analysis → 5-criteria scoring → 8 decision questions → Lock types → Ranked propositions with sliders → 3 outputs (Rhino3D, Blender, Spec Sheet). Feedback loops for low scores and unclassified. PR #6 open (claude/thirsty-cray → henna/visuals). |
 
 ## Handoff
 
 **What was done**
-- Adapted 12-panel comic prompt from Midjourney to Gemini format → `prompts/[A04_ACTIVE]_comic_temporal_lock_nurse_v3_gemini.md`
-- Designed new asymmetric panel grid (cold panels compressed at top, warm panels expand at bottom — layout mirrors the palette shift)
-- Provided full InDesign A2 document setup (margins, grid, swatches, paragraph styles, layers)
+- Built interactive data sequence diagram (`output/data_sequence_diagram_v2.html`) showing the full relay-lock pipeline
+- Corrected the flow based on Henna's verbal walkthrough — Architect gives problem+region → AI → datasets → site analysis → scoring → decision tree → propositions → sliders → outputs
+- PR #6 open: `claude/thirsty-cray` → `henna/visuals`
 
 **What's next**
-1. Generate all 12 panels in Gemini using v3 prompts — start with Panel 1 (now says HOSPITAL, no bubbles)
-2. Set up InDesign document with the new asymmetric grid
-3. Assemble panels + add narration text (Instrument Serif italic) and timestamps (DM Mono)
-4. The new grid hasn't been written to a file yet — it was given in chat. Save it if needed.
+1. Merge PR #6 after review
+2. Minor fix: remove the circle behind the architect stick figure in v2
+3. Continue with presentation slides — this diagram is for Slide 4 (software architecture)
+4. Comic panels still pending (Gemini generation)
 
 **Watch out for**
-- Gemini may still add text/bubbles — regenerate if it does, the anti-bubble instruction is in each prompt
-- Palette discipline: panels 1–4 must stay cold (navy+blue), panels 7–12 must be warm (pink-mauve dominant)
-- The v3 file still has the OLD grid layout in its Assembly Notes section — the new asymmetric grid from this session was discussed in chat but not yet written into the file
+- The v2 file lives in both the worktree and `output/` in main — after merge, the worktree copy is canonical
+- The 3 feedback loop labels (score < 3.0, unclassified, slider change) now have step assignments but test they hide/show correctly
 
 **Files to look at**
-- `prompts/[A04_ACTIVE]_comic_temporal_lock_nurse_v3_gemini.md` — the Gemini prompts (use these)
-- `prompts/[A04_ACTIVE]_comic_temporal_lock_nurse.md` — original MJ version (reference only)
-- `prompts/[A04_ACTIVE]_comic_temporal_lock_nurse_v2_haugomat.md` — Haugomat style variant (reference only)
+- `output/data_sequence_diagram_v2.html` — the landscape diagram (use this)
+- `output/data_sequence_diagram.html` — v1 vertical version (superseded)
