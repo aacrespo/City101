@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Data Sequence — Still On The Line</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;700&family=Instrument+Serif&display=swap');
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{
+    --bg:#0a0a0f;--bg2:#111118;--bg3:#16161e;
+    --text:#e8e6e1;--muted:#8a8880;--dim:#5a5a55;
+    --accent:#c9a84c;--accent-g:rgba(201,168,76,0.15);
+    --blue:#4a9eff;--orange:#ff9f43;--purple:#a855f7;
+    --green:#22c55e;--red:#f43f5e;--cyan:#06b6d4;
+    --border:#2a2a35;
+    --lock1:#ff6b6b;--lock2:#ffa94d;--lock3:#ffd43b;--lock4:#69db7c;
+    --lock5:#4dabf7;--lock6:#9775fa;--lock7:#f06595;--lock8:#fcc419;
+    --font-d:'Instrument Serif',serif;
+    --font-b:'DM Sans',sans-serif;
+    --font-m:'DM Mono',monospace;
+  }
+  body{font-family:var(--font-b);background:var(--bg);color:var(--text);overflow-x:auto;overflow-y:auto;min-height:100vh}
+
+  /* Header */
+  header{display:flex;align-items:baseline;gap:24px;padding:20px 40px 12px;border-bottom:1px solid var(--border)}
+  header h1{font-family:var(--font-d);font-size:1.5rem;font-weight:400;color:var(--accent)}
+  header p{font-family:var(--font-m);font-size:.72rem;color:var(--muted)}
+
+  /* Controls */
+  .ctrl{display:flex;gap:8px;padding:10px 40px;border-bottom:1px solid rgba(255,255,255,.03);align-items:center;flex-wrap:wrap}
+  .ctrl button{font-family:var(--font-m);font-size:.68rem;padding:5px 12px;border:1px solid var(--border);background:rgba(255,255,255,.03);color:var(--muted);border-radius:3px;cursor:pointer;transition:.3s;text-transform:uppercase;letter-spacing:.06em}
+  .ctrl button:hover,.ctrl button.on{border-color:var(--accent);color:var(--accent);background:rgba(201,168,76,.08)}
+  .legend{display:flex;gap:14px;margin-left:auto;flex-wrap:wrap}
+  .legend-i{display:flex;align-items:center;gap:5px;font-family:var(--font-m);font-size:.62rem;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+  .legend-d{width:7px;height:7px;border-radius:2px}
+
+  /* Canvas */
+  .canvas{padding:24px 30px 40px;overflow:auto}
+  svg.dia{display:block}
+
+  /* Shared SVG text */
+  .lb{font-family:'DM Sans',sans-serif;font-size:11.5px;font-weight:700;fill:var(--text);text-anchor:middle;pointer-events:none}
+  .sub{font-family:'DM Mono',monospace;font-size:9px;fill:var(--muted);text-anchor:middle;pointer-events:none}
+  .badge-t{font-family:'DM Mono',monospace;font-size:10px;font-weight:700;fill:var(--bg);text-anchor:middle;dominant-baseline:central;pointer-events:none}
+  .fl{fill:none;stroke:rgba(201,168,76,.18);stroke-width:1.4}
+  .fl.on{stroke:rgba(201,168,76,.45);stroke-width:1.8}
+  .fl-fail{fill:none;stroke:rgba(244,63,94,.25);stroke-width:1.2;stroke-dasharray:5 3}
+  .fl-fail.on{stroke:rgba(244,63,94,.5);stroke-width:1.6}
+  .fl-loop{fill:none;stroke:rgba(168,85,247,.25);stroke-width:1.2;stroke-dasharray:5 3}
+  .fl-loop.on{stroke:rgba(168,85,247,.5);stroke-width:1.6}
+
+  .ng{cursor:pointer}
+  .ng:hover .nbg{filter:brightness(1.3)}
+  .nbg{transition:filter .3s}
+
+  /* Detail panel */
+  .dp{position:fixed;bottom:-400px;left:50%;transform:translateX(-50%);width:min(700px,92vw);max-height:380px;background:#0e0e18;border:1px solid var(--border);border-bottom:none;border-radius:12px 12px 0 0;padding:26px 30px;transition:bottom .4s cubic-bezier(.25,.46,.45,.94);overflow-y:auto;z-index:100;box-shadow:0 -8px 40px rgba(0,0,0,.5)}
+  .dp.open{bottom:0}
+  .dp .x{position:absolute;top:10px;right:14px;font-size:1.2rem;background:none;border:none;color:var(--muted);cursor:pointer;font-family:var(--font-m)}
+  .dp h2{font-family:var(--font-d);font-size:1.2rem;font-weight:400;color:var(--accent);margin-bottom:3px}
+  .dp .stag{font-family:var(--font-m);font-size:.65rem;color:var(--bg);background:var(--accent);padding:2px 7px;border-radius:3px;display:inline-block;margin-bottom:10px}
+  .dp p{font-size:.82rem;line-height:1.6;color:var(--text);margin-bottom:10px}
+  .dp table{width:100%;border-collapse:collapse;margin:8px 0}
+  .dp th{font-family:var(--font-m);font-size:.65rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);text-align:left;padding:3px 5px;border-bottom:1px solid var(--border)}
+  .dp td{font-size:.78rem;padding:5px;border-bottom:1px solid rgba(255,255,255,.03);color:var(--text)}
+  .dp td.m{font-family:var(--font-m);font-size:.72rem;color:var(--accent)}
+  .tag{display:inline-block;font-family:var(--font-m);font-size:.62rem;padding:2px 6px;border-radius:3px;margin:2px 2px 2px 0}
+  .t-b{background:rgba(74,158,255,.15);color:var(--blue);border:1px solid rgba(74,158,255,.25)}
+  .t-o{background:rgba(255,159,67,.15);color:var(--orange);border:1px solid rgba(255,159,67,.25)}
+  .t-p{background:rgba(168,85,247,.15);color:var(--purple);border:1px solid rgba(168,85,247,.25)}
+  .t-g{background:rgba(34,197,94,.15);color:var(--green);border:1px solid rgba(34,197,94,.25)}
+  .t-r{background:rgba(244,63,94,.15);color:var(--red);border:1px solid rgba(244,63,94,.25)}
+  .t-a{background:rgba(201,168,76,.12);color:var(--accent);border:1px solid rgba(201,168,76,.2)}
+  .t-c{background:rgba(6,182,212,.15);color:var(--cyan);border:1px solid rgba(6,182,212,.25)}
+
+  @keyframes pg{0%,100%{filter:drop-shadow(0 0 3px rgba(201,168,76,.12))}50%{filter:drop-shadow(0 0 10px rgba(201,168,76,.4))}}
+  .ng.hl{animation:pg 2s ease-in-out infinite}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Data Sequence</h1>
+  <p>relay-lock configurator · from architect's question to rhino geometry</p>
+</header>
+
+<div class="ctrl">
+  <button class="on" onclick="showAll()">Full Flow</button>
+  <button onclick="step(0)">Architect</button>
+  <button onclick="step(1)">1 — Ingest</button>
+  <button onclick="step(2)">2 — Score</button>
+  <button onclick="step(3)">3 — Decide</button>
+  <button onclick="step(4)">4 — Propose</button>
+  <button onclick="step(5)">5 — Output</button>
+  <div class="legend">
+    <div class="legend-i"><div class="legend-d" style="background:var(--text)"></div>Architect</div>
+    <div class="legend-i"><div class="legend-d" style="background:var(--blue)"></div>Data</div>
+    <div class="legend-i"><div class="legend-d" style="background:var(--orange)"></div>AI</div>
+    <div class="legend-i"><div class="legend-d" style="background:var(--purple)"></div>Scoring</div>
+    <div class="legend-i"><div class="legend-d" style="background:var(--green)"></div>Design</div>
+    <div class="legend-i"><div class="legend-d" style="background:var(--red)"></div>Output</div>
+  </div>
+</div>
+
+<div class="canvas">
+<svg class="dia" viewBox="0 0 1820 680" width="1820" height="680" xmlns="http://www.w3.org/2000/svg">
+<defs>
+  <marker id="a" markerWidth="7" markerHeight="5" refX="7" refY="2.5" orient="auto"><polygon points="0 0,7 2.5,0 5" fill="rgba(201,168,76,.35)"/></marker>
+  <marker id="af" markerWidth="7" markerHeight="5" refX="7" refY="2.5" orient="auto"><polygon points="0 0,7 2.5,0 5" fill="rgba(244,63,94,.4)"/></marker>
+  <marker id="al" markerWidth="7" markerHeight="5" refX="7" refY="2.5" orient="auto"><polygon points="0 0,7 2.5,0 5" fill="rgba(168,85,247,.4)"/></marker>
+  <linearGradient id="gb" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="rgba(74,158,255,.18)"/><stop offset="100%" stop-color="rgba(74,158,255,.04)"/></linearGradient>
+  <linearGradient id="go" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="rgba(255,159,67,.18)"/><stop offset="100%" stop-color="rgba(255,159,67,.04)"/></linearGradient>
+  <linearGradient id="gp" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="rgba(168,85,247,.18)"/><stop offset="100%" stop-color="rgba(168,85,247,.04)"/></linearGradient>
+  <linearGradient id="gg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="rgba(34,197,94,.18)"/><stop offset="100%" stop-color="rgba(34,197,94,.04)"/></linearGradient>
+  <linearGradient id="gr" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="rgba(244,63,94,.18)"/><stop offset="100%" stop-color="rgba(244,63,94,.04)"/></linearGradient>
+</defs>
+
+<!-- ═══ STEP 0: ARCHITECT ═══ -->
+<g class="ng" data-s="0" data-n="architect" onclick="det('architect')">
+  <!-- no outer circle -->
+  <circle cx="65" cy="245" r="9" fill="none" stroke="var(--text)" stroke-width="1.4"/>
+  <line x1="65" y1="254" x2="65" y2="278" stroke="var(--text)" stroke-width="1.4"/>
+  <line x1="50" y1="265" x2="80" y2="265" stroke="var(--text)" stroke-width="1.4"/>
+  <line x1="65" y1="278" x2="52" y2="296" stroke="var(--text)" stroke-width="1.4"/>
+  <line x1="65" y1="278" x2="78" y2="296" stroke="var(--text)" stroke-width="1.4"/>
+  <text class="lb" x="65" y="318" font-size="10.5">Architect</text>
+</g>
+
+<!-- Speech bubble -->
+<g class="ng" data-s="0" data-n="query" onclick="det('query')">
+  <rect class="nbg" x="105" y="195" width="145" height="72" rx="8" fill="rgba(255,255,255,.04)" stroke="rgba(255,255,255,.12)" stroke-width="1.3"/>
+  <polygon points="113,267 105,284 128,267" fill="rgba(255,255,255,.04)" stroke="rgba(255,255,255,.12)" stroke-width="1.3" stroke-linejoin="round"/>
+  <line x1="114" y1="266" x2="127" y2="266" stroke="var(--bg)" stroke-width="3"/>
+  <text font-family="var(--font-d)" font-size="12" fill="var(--text)" x="178" y="218" text-anchor="middle">Problem:</text>
+  <text font-family="var(--font-d)" font-size="11" fill="var(--muted)" x="178" y="234" text-anchor="middle">"healthcare workers</text>
+  <text font-family="var(--font-d)" font-size="11" fill="var(--muted)" x="178" y="248" text-anchor="middle">need shelter at night"</text>
+  <text font-family="var(--font-m)" font-size="9" fill="var(--accent)" x="178" y="262" text-anchor="middle">Region: Morges segment</text>
+</g>
+
+<!-- ═══ FLOW: Architect → AI ═══ -->
+<path class="fl" d="M250 231 L300 231" marker-end="url(#a)" data-s="0"/>
+
+<!-- ═══ STEP 1: AI ═══ -->
+<g class="ng" data-s="1" data-n="ai" onclick="det('ai')">
+  <rect class="nbg" x="300" y="200" width="140" height="62" rx="6" fill="url(#go)" stroke="rgba(255,159,67,.4)" stroke-width="1.2"/>
+  <text class="lb" x="370" y="226">AI Engine</text>
+  <text class="sub" x="370" y="242">community research</text>
+  <text class="sub" x="370" y="254">chain mapping</text>
+</g>
+<circle cx="315" cy="193" r="10" fill="var(--accent)"/>
+<text class="badge-t" x="315" y="193">1</text>
+
+<!-- AI ↔ Corridor Datasets -->
+<path class="fl" d="M370 200 C370 160,370 155,370 140" marker-end="url(#a)" data-s="1"/>
+<path class="fl" d="M380 140 C380 155,380 160,380 200" marker-end="url(#a)" data-s="1"/>
+
+<g class="ng" data-s="1" data-n="corridor" onclick="det('corridor')">
+  <!-- Cylinder: body -->
+  <rect class="nbg" x="310" y="92" width="120" height="45" fill="url(#gb)" stroke="rgba(74,158,255,.4)" stroke-width="1.2"/>
+  <!-- Cylinder: top ellipse -->
+  <ellipse cx="370" cy="92" rx="60" ry="10" fill="url(#gb)" stroke="rgba(74,158,255,.4)" stroke-width="1.2"/>
+  <!-- Cylinder: bottom ellipse (half, behind body) -->
+  <ellipse cx="370" cy="137" rx="60" ry="10" fill="url(#gb)" stroke="rgba(74,158,255,.4)" stroke-width="1.2"/>
+  <!-- Hide overlap -->
+  <rect x="311" y="93" width="118" height="43" fill="url(#gb)"/>
+  <!-- Side lines -->
+  <line x1="310" y1="92" x2="310" y2="137" stroke="rgba(74,158,255,.4)" stroke-width="1.2"/>
+  <line x1="430" y1="92" x2="430" y2="137" stroke="rgba(74,158,255,.4)" stroke-width="1.2"/>
+  <!-- Re-draw top ellipse on top -->
+  <ellipse cx="370" cy="92" rx="60" ry="10" fill="rgba(74,158,255,.1)" stroke="rgba(74,158,255,.5)" stroke-width="1.2"/>
+  <text class="lb" x="370" y="113">Corridor Datasets</text>
+  <text class="sub" x="370" y="129">49 stations · ~3,200 rec</text>
+</g>
+
+<!-- AI ↔ Healthcare Chain -->
+<path class="fl" d="M370 262 C370 290,370 295,370 310" marker-end="url(#a)" data-s="1"/>
+<path class="fl" d="M380 310 C380 295,380 290,380 262" marker-end="url(#a)" data-s="1"/>
+
+<g class="ng" data-s="1" data-n="healthcare" onclick="det('healthcare')">
+  <!-- Cylinder: body -->
+  <rect class="nbg" x="310" y="317" width="120" height="45" fill="url(#gb)" stroke="rgba(74,158,255,.4)" stroke-width="1.2"/>
+  <!-- Cylinder: bottom ellipse -->
+  <ellipse cx="370" cy="362" rx="60" ry="10" fill="url(#gb)" stroke="rgba(74,158,255,.4)" stroke-width="1.2"/>
+  <!-- Hide overlap -->
+  <rect x="311" y="318" width="118" height="43" fill="url(#gb)"/>
+  <!-- Side lines -->
+  <line x1="310" y1="317" x2="310" y2="362" stroke="rgba(74,158,255,.4)" stroke-width="1.2"/>
+  <line x1="430" y1="317" x2="430" y2="362" stroke="rgba(74,158,255,.4)" stroke-width="1.2"/>
+  <!-- Top ellipse -->
+  <ellipse cx="370" cy="317" rx="60" ry="10" fill="rgba(74,158,255,.1)" stroke="rgba(74,158,255,.5)" stroke-width="1.2"/>
+  <text class="lb" x="370" y="338">Healthcare Chain</text>
+  <text class="sub" x="370" y="354">8 flows · 24 sites</text>
+</g>
+
+<!-- Corridor ↔ Healthcare (cross-communication) -->
+<path class="fl" d="M340 140 C320 175,320 275,340 310" marker-end="url(#a)" data-s="1" stroke-dasharray="4 2"/>
+<path class="fl" d="M400 310 C420 275,420 175,400 140" marker-end="url(#a)" data-s="1" stroke-dasharray="4 2"/>
+
+<!-- ═══ FLOW: AI → Site Analysis ═══ -->
+<path class="fl" d="M440 231 L500 231" marker-end="url(#a)" data-s="1"/>
+
+<!-- ═══ STEP 2: SITE ANALYSIS → SCORING ═══ -->
+<g class="ng" data-s="2" data-n="site" onclick="det('site')">
+  <rect class="nbg" x="500" y="200" width="140" height="62" rx="6" fill="url(#gp)" stroke="rgba(168,85,247,.4)" stroke-width="1.2"/>
+  <text class="lb" x="570" y="226">Site Analysis</text>
+  <text class="sub" x="570" y="242">per-station profile</text>
+  <text class="sub" x="570" y="254">terrain · modal · temp.</text>
+</g>
+<circle cx="515" cy="193" r="10" fill="var(--accent)"/>
+<text class="badge-t" x="515" y="193">2</text>
+
+<path class="fl" d="M640 231 L700 231" marker-end="url(#a)" data-s="2"/>
+
+<!-- SCORING -->
+<g class="ng" data-s="2" data-n="scoring" onclick="det('scoring')">
+  <rect class="nbg" x="700" y="195" width="145" height="72" rx="6" fill="url(#gp)" stroke="rgba(168,85,247,.4)" stroke-width="1.2"/>
+  <text class="lb" x="773" y="220">5 Criteria Scoring</text>
+  <text class="sub" x="773" y="236">weighted · normalized 0–5</text>
+  <text class="sub" x="773" y="250">threshold: 3.0</text>
+  <text class="sub" x="773" y="262" fill="var(--red)">< 3.0 → needs more data</text>
+</g>
+
+<!-- FAIL: Score < 3.0 → back to Architect -->
+<path class="fl-fail" d="M773 267 C773 340,200 380,100 340 C60 325,55 300,65 290" marker-end="url(#af)" data-s="2"/>
+<text class="fl-fail" font-family="var(--font-m)" font-size="8" fill="var(--red)" x="380" y="365" data-s="2">score &lt; 3.0 → architect adds more data</text>
+
+<!-- PASS: Score ≥ 3.0 → Decision Tree -->
+<path class="fl" d="M845 231 L910 231" marker-end="url(#a)" data-s="2"/>
+<text font-family="var(--font-m)" font-size="8" fill="var(--green)" x="860" y="224">≥ 3.0</text>
+
+<!-- ═══ STEP 3: DECISION TREE ═══ -->
+<g class="ng" data-s="3" data-n="decisions" onclick="det('decisions')">
+  <rect class="nbg" x="910" y="100" width="185" height="290" rx="6" fill="url(#gg)" stroke="rgba(34,197,94,.35)" stroke-width="1.2"/>
+  <text class="lb" x="1003" y="122">Decision Tree</text>
+  <text class="sub" x="1003" y="136">8 geographic yes/no questions</text>
+
+  <!-- 8 mini decision rows -->
+  <g font-family="'DM Mono',monospace" font-size="8">
+    <rect x="922" y="148" width="161" height="16" rx="2" fill="rgba(255,107,107,.08)" stroke="rgba(255,107,107,.2)" stroke-width=".7"/>
+    <text fill="var(--muted)" x="928" y="159">D1 Geneva border?</text><text fill="var(--lock1)" x="1076" y="159" text-anchor="end">Border</text>
+
+    <rect x="922" y="168" width="161" height="16" rx="2" fill="rgba(255,169,77,.08)" stroke="rgba(255,169,77,.2)" stroke-width=".7"/>
+    <text fill="var(--muted)" x="928" y="179">D2 Industrial zone?</text><text fill="var(--lock2)" x="1076" y="179" text-anchor="end">Cargo</text>
+
+    <rect x="922" y="188" width="161" height="16" rx="2" fill="rgba(255,212,59,.08)" stroke="rgba(255,212,59,.2)" stroke-width=".7"/>
+    <text fill="var(--muted)" x="928" y="199">D3 Elevation &gt;300m?</text><text fill="var(--lock3)" x="1076" y="199" text-anchor="end">Altitude</text>
+
+    <rect x="922" y="208" width="161" height="16" rx="2" fill="rgba(105,219,124,.08)" stroke="rgba(105,219,124,.2)" stroke-width=".7"/>
+    <text fill="var(--muted)" x="928" y="219">D4 Dead window?</text><text fill="var(--lock4)" x="1076" y="219" text-anchor="end">Temporal</text>
+
+    <rect x="922" y="228" width="161" height="16" rx="2" fill="rgba(77,171,247,.08)" stroke="rgba(77,171,247,.2)" stroke-width=".7"/>
+    <text fill="var(--muted)" x="928" y="239">D5 Logistics hub?</text><text fill="var(--lock5)" x="1076" y="239" text-anchor="end">Visibility</text>
+
+    <rect x="922" y="248" width="161" height="16" rx="2" fill="rgba(151,117,250,.08)" stroke="rgba(151,117,250,.2)" stroke-width=".7"/>
+    <text fill="var(--muted)" x="928" y="259">D6 Hospital nearby?</text><text fill="var(--lock6)" x="1076" y="259" text-anchor="end">Gradient</text>
+
+    <rect x="922" y="268" width="161" height="16" rx="2" fill="rgba(240,101,149,.08)" stroke="rgba(240,101,149,.2)" stroke-width=".7"/>
+    <text fill="var(--muted)" x="928" y="279">D7 Alt.drop + ridership?</text><text fill="var(--lock7)" x="1076" y="279" text-anchor="end">Gap Relay</text>
+
+    <rect x="922" y="288" width="161" height="16" rx="2" fill="rgba(252,196,25,.08)" stroke="rgba(252,196,25,.2)" stroke-width=".7"/>
+    <text fill="var(--muted)" x="928" y="299">D8 Dam / infra threshold?</text><text fill="var(--lock8)" x="1076" y="299" text-anchor="end">Bridge</text>
+  </g>
+
+  <!-- Fallback -->
+  <rect x="922" y="312" width="161" height="20" rx="2" fill="rgba(244,63,94,.06)" stroke="rgba(244,63,94,.3)" stroke-width=".8"/>
+  <text font-family="var(--font-m)" font-size="8.5" fill="var(--red)" x="928" y="325">Fallback: Unclassified</text>
+  <text font-family="var(--font-m)" font-size="7.5" fill="var(--dim)" x="1076" y="325" text-anchor="end">no match</text>
+
+  <!-- YES label at right edge -->
+  <text font-family="var(--font-m)" font-size="8" fill="var(--green)" x="1100" y="230" text-anchor="start">YES →</text>
+</g>
+<circle cx="925" cy="93" r="10" fill="var(--accent)"/>
+<text class="badge-t" x="925" y="93">3</text>
+
+<!-- FAIL: Unclassified → back to Architect -->
+<path class="fl-fail" d="M1003 390 C1003 430,500 450,200 420 C100 410,60 370,65 310" marker-end="url(#af)" data-s="3"/>
+<text class="fl-fail" font-family="var(--font-m)" font-size="8" fill="var(--red)" x="500" y="445" data-s="3">unclassified → architect inputs more data / adjusts</text>
+
+<!-- YES: Decision match → weight × ranking → propositions -->
+<path class="fl" d="M1120 231 L1180 231" marker-end="url(#a)" data-s="3"/>
+
+<!-- ═══ STEP 4: PROPOSITIONS + RANKING ═══ -->
+<g class="ng" data-s="4" data-n="props" onclick="det('props')">
+  <rect class="nbg" x="1180" y="165" width="160" height="85" rx="6" fill="url(#gg)" stroke="rgba(34,197,94,.4)" stroke-width="1.2"/>
+  <text class="lb" x="1260" y="188">Propositions</text>
+  <text class="sub" x="1260" y="204">yes × weight = score</text>
+
+  <!-- Rank bars -->
+  <rect x="1195" y="214" width="60" height="5" rx="2" fill="var(--accent)" opacity=".9"/>
+  <text font-family="var(--font-m)" font-size="7" fill="var(--accent)" x="1260" y="219">Prop A — 0.82</text>
+  <rect x="1195" y="223" width="48" height="5" rx="2" fill="var(--accent)" opacity=".65"/>
+  <text font-family="var(--font-m)" font-size="7" fill="var(--muted)" x="1260" y="228">Prop B — 0.71</text>
+  <rect x="1195" y="232" width="35" height="5" rx="2" fill="var(--accent)" opacity=".4"/>
+  <text font-family="var(--font-m)" font-size="7" fill="var(--muted)" x="1260" y="237">Prop C — 0.58</text>
+</g>
+<circle cx="1195" cy="158" r="10" fill="var(--accent)"/>
+<text class="badge-t" x="1195" y="158">4</text>
+
+<!-- Propositions shown to Architect -->
+<path class="fl" d="M1340 207 L1400 207" marker-end="url(#a)" data-s="4"/>
+
+<!-- ARCHITECT REVIEW (sliders) -->
+<g class="ng" data-s="4" data-n="sliders" onclick="det('sliders')">
+  <rect class="nbg" x="1400" y="150" width="150" height="115" rx="6" fill="rgba(255,255,255,.04)" stroke="rgba(255,255,255,.1)" stroke-width="1.2"/>
+  <text class="lb" x="1475" y="172">Architect Review</text>
+  <text class="sub" x="1475" y="187">ranked propositions</text>
+
+  <!-- Sliders -->
+  <g font-family="'DM Mono',monospace" font-size="7.5" fill="var(--muted)">
+    <text x="1412" y="207">Pop.</text>
+    <rect x="1440" y="200" width="60" height="4" rx="2" fill="rgba(255,255,255,.06)"/>
+    <circle cx="1475" cy="202" r="4" fill="var(--accent)"/>
+
+    <text x="1412" y="222">Chain</text>
+    <rect x="1440" y="215" width="60" height="4" rx="2" fill="rgba(255,255,255,.06)"/>
+    <circle cx="1465" cy="217" r="4" fill="var(--accent)"/>
+
+    <text x="1412" y="237">Modal</text>
+    <rect x="1440" y="230" width="60" height="4" rx="2" fill="rgba(255,255,255,.06)"/>
+    <circle cx="1480" cy="232" r="4" fill="var(--accent)"/>
+
+    <text x="1412" y="252">Gap</text>
+    <rect x="1440" y="245" width="60" height="4" rx="2" fill="rgba(255,255,255,.06)"/>
+    <circle cx="1460" cy="247" r="4" fill="var(--accent)"/>
+  </g>
+</g>
+
+<!-- Slider loop: back to AI (re-run whole process) -->
+<path class="fl-loop" d="M1475 265 C1475 480,700 510,370 480 C250 470,250 400,370 262" marker-end="url(#al)" data-s="4"/>
+<text class="fl-loop" font-family="var(--font-m)" font-size="8" fill="var(--purple)" x="800" y="500" data-s="4">slider change → re-run entire pipeline with new weights</text>
+
+<!-- Architect chooses → clicks Output -->
+<path class="fl" d="M1550 207 L1610 207" marker-end="url(#a)" data-s="4"/>
+<text font-family="var(--font-m)" font-size="8" fill="var(--green)" x="1565" y="199">choose</text>
+
+<!-- ═══ STEP 5: OUTPUTS ═══ -->
+<circle cx="1625" cy="103" r="10" fill="var(--accent)"/>
+<text class="badge-t" x="1625" y="103">5</text>
+
+<!-- Output button -->
+<g class="ng" data-s="5" data-n="output" onclick="det('output')">
+  <rect class="nbg" x="1610" y="180" width="110" height="38" rx="6" fill="rgba(244,63,94,.12)" stroke="rgba(244,63,94,.5)" stroke-width="1.5"/>
+  <text class="lb" x="1665" y="203" fill="var(--red)">⏻ Output</text>
+</g>
+
+<!-- Output → 3 branches -->
+<path class="fl" d="M1665 218 C1665 240,1665 245,1665 260" data-s="5"/>
+<path class="fl" d="M1665 260 L1590 300" marker-end="url(#a)" data-s="5"/>
+<path class="fl" d="M1665 260 L1665 300" marker-end="url(#a)" data-s="5"/>
+<path class="fl" d="M1665 260 L1740 300" marker-end="url(#a)" data-s="5"/>
+
+<!-- Rhino 3D -->
+<g class="ng" data-s="5" data-n="rhino" onclick="det('rhino')">
+  <rect class="nbg" x="1520" y="300" width="140" height="55" rx="6" fill="url(#gr)" stroke="rgba(244,63,94,.4)" stroke-width="1.2"/>
+  <text class="lb" x="1590" y="323">Rhino 3D</text>
+  <text class="sub" x="1590" y="340">via MCP · .py script</text>
+</g>
+
+<!-- Blender -->
+<g class="ng" data-s="5" data-n="blender" onclick="det('blender')">
+  <rect class="nbg" x="1595" y="370" width="140" height="55" rx="6" fill="url(#gr)" stroke="rgba(244,63,94,.4)" stroke-width="1.2"/>
+  <text class="lb" x="1665" y="393">Blender Render</text>
+  <text class="sub" x="1665" y="410">via MCP · animation</text>
+</g>
+
+<!-- Spec Sheet -->
+<g class="ng" data-s="5" data-n="spec" onclick="det('spec')">
+  <rect class="nbg" x="1670" y="300" width="140" height="55" rx="6" fill="url(#gr)" stroke="rgba(244,63,94,.4)" stroke-width="1.2"/>
+  <text class="lb" x="1740" y="323">Spec Sheet</text>
+  <text class="sub" x="1740" y="340">PDF / HTML · data</text>
+</g>
+
+<!-- Output → Blender (needs extra path) -->
+<path class="fl" d="M1665 355 L1665 370" marker-end="url(#a)" data-s="5"/>
+
+<!-- MCP labels -->
+<text font-family="var(--font-m)" font-size="7.5" fill="var(--cyan)" x="1555" y="360">MCP</text>
+<text font-family="var(--font-m)" font-size="7.5" fill="var(--cyan)" x="1630" y="367">MCP</text>
+
+<!-- ═══ BOTTOM SPINE ═══ -->
+<line x1="40" y1="550" x2="1800" y2="550" stroke="rgba(201,168,76,.05)" stroke-width="1"/>
+<g font-family="var(--font-m)" font-size="8.5" fill="rgba(201,168,76,.25)" text-anchor="middle">
+  <text x="65" y="568">PROBLEM</text>
+  <text x="370" y="568">INGEST</text>
+  <text x="570" y="568">ANALYZE</text>
+  <text x="773" y="568">SCORE</text>
+  <text x="1003" y="568">DECIDE</text>
+  <text x="1260" y="568">PROPOSE</text>
+  <text x="1475" y="568">REVIEW</text>
+  <text x="1665" y="568">OUTPUT</text>
+</g>
+
+</svg>
+</div>
+
+<!-- Detail panel -->
+<div class="dp" id="dp">
+  <button class="x" onclick="cls()">&times;</button>
+  <div id="dc"></div>
+</div>
+
+<script>
+const D={
+  architect:{t:'The Architect',s:'Starting Point',d:'The person who starts everything. They identify a problem (a community in need) and a region along the 101km corridor. The system transforms this question into buildable architectural propositions.',tb:[['Input','Example'],['Problem','Healthcare workers stranded at night'],['Region','Morges to Lausanne segment'],['Intent','Focus on worst nighttime gaps']],tags:[['Human-driven','t-a'],['Problem-first','t-a']]},
+  query:{t:'Problem + Region',s:'Starting Point',d:'The architect\'s question: which community needs support, and where along the corridor? This gets structured into a query that drives the entire pipeline.',tags:[['Free text','t-a'],['→ Structured query','t-b']]},
+  ai:{t:'AI Engine',s:'Step 1 — Ingest',d:'The AI receives the problem + region, then queries both the Corridor Datasets and Healthcare Chain. It maps supply chains, identifies candidate sites, defines circulation types, and builds temporal profiles. There is bidirectional communication between the two data sources.',tb:[['Task','Output'],['Chain mapping','Supply chain flows for the community'],['Site identification','Candidate sites with coordinates'],['Circulation typing','Staff, patient, cargo, home care'],['Temporal profiling','Dead windows, peak patterns']],tags:[['LLM inference','t-o'],['Bidirectional data','t-b']]},
+  corridor:{t:'Corridor Datasets',s:'Step 1 — Data Source',d:'Pre-computed verified datasets covering the 101km Geneva–Villeneuve corridor. 49 stations, ~3,200 records. Months of collection.',tb:[['Dataset','Records','Key metric'],['WCI segments','49','0.0003–0.6431'],['Break points','49 × 25 cols','5 break dimensions'],['Journey workability','618','15% PRIME'],['Temporal frequency','49 × 28 cols','7 time slots'],['Ridership SBB','174','daily pax']],tags:[['Pre-computed','t-b'],['Static','t-b'],['~3,200 records','t-a']]},
+  healthcare:{t:'Healthcare Chain',s:'Step 1 — Community Data',d:'8 supply chain flows mapped, 24 candidate sites scored, 4 circulation types defined. High-confidence reference data from weeks of manual research.',tb:[['Component','Detail'],['Supply chain','8 flows: medication, food, staff, patients, postal, lab, waste, emergency'],['Sites','24 scored → top 9 selected'],['Circulations','staff, patient, cargo, home care'],['Dead window','01:30–03:30 (field-validated)']],tags:[['High confidence','t-g'],['Field-validated','t-g']]},
+  site:{t:'Site Analysis',s:'Step 2 — Per-Station Profile',d:'From the corridor data + healthcare chain, each station gets a full site analysis: terrain, modal availability, temporal patterns, population data, infrastructure readiness.',tags:[['Per station','t-p'],['Terrain + modal + temporal','t-p']]},
+  scoring:{t:'5 Criteria Scoring',s:'Step 2 — The Gate',d:'Each site is scored on 5 weighted criteria, normalized 0–5. If composite score < 3.0, the AI goes back to the architect saying "needs more data." The architect must provide more input before continuing.',tb:[['Criterion','Weight','Measures'],['Affected Population','25%','Workers in dead window'],['Chain Criticality','25%','What breaks if node fails'],['Modal Collapse','20%','Day modes vs night availability'],['Gap Distance','15%','km to nearest functional node'],['Infrastructure Readiness','15%','Existing modes + shared mobility']],tags:[['Deterministic','t-g'],['Threshold: 3.0','t-p'],['< 3.0 → reject','t-r']]},
+  decisions:{t:'Decision Tree',s:'Step 3 — 8 Geographic Questions',d:'Deterministic priority decision tree. Geography first. First YES wins. Each site maps to exactly one lock type. If all 8 questions = NO → Unclassified → goes back to architect.',tb:[['#','Question','YES → Lock Type','Site'],['1','Within 2km Geneva border?','Border Lock','Lancy-Pont-Rouge (km 4)'],['2','Industrial zone within 5km?','Cargo Lock','Geneva North (km 8)'],['3','Elevation drop >300m?','Altitude Lock','Nyon-Genolier (km 25)'],['4','Dead window critical temporal?','Temporal Lock','Morges (km 48)'],['5','Logistics hub nearby?','Visibility Lock','Crissier-Bussigny (km 58)'],['6','Hospital / medical anchor?','Gradient Dispatcher','CHUV Lausanne (km 65)'],['7','Alt. drop + ridership?','Gap Relay','Vevey (km 80)'],['8','Near dam / infra threshold?','Bridge Lock','Rennaz (km 89)'],['—','No match','Unclassified','→ back to architect']],tags:[['8 questions','t-g'],['First match wins','t-g'],['Fallback → architect','t-r']]},
+  props:{t:'Propositions',s:'Step 4 — Ranked Results',d:'Each YES answer is multiplied by its weight/ranking, producing multiple propositions. These are ranked by composite score and presented to the architect.',tags:[['Multiple propositions','t-g'],['Ranked by score','t-a'],['Weight × answer','t-p']]},
+  sliders:{t:'Architect Review',s:'Step 4 — Interactive Control',d:'The architect sees ranked propositions and has sliders to adjust weights. Changing any slider re-runs the ENTIRE pipeline — new scoring, new decisions, new ranking. The architect iterates until satisfied, then chooses a proposition and clicks Output.',tags:[['5 sliders','t-a'],['Full pipeline re-run','t-p'],['Architect chooses','t-a']]},
+  output:{t:'Output Button',s:'Step 5 — Generate',d:'Once the architect has chosen their proposition, they click the Output button. This triggers three parallel generations: a Rhino 3D script, a Blender animated rendering, and a spec sheet.',tags:[['Click to generate','t-r'],['3 outputs','t-r']]},
+  rhino:{t:'Rhino 3D',s:'Step 5 — Output 1',d:'Generates a .py RhinoCommon script with LOG 200–300 geometry: volumes, columns, slabs, openings, circulation paths. Sent to Rhino via MCP bridge.',tags:[['RhinoCommon','t-r'],['MCP bridge','t-c'],['Parametric','t-g']]},
+  blender:{t:'Blender Animated Rendering',s:'Step 5 — Output 2',d:'Generates an animated rendering of the proposition in Blender, also via MCP. Camera paths, lighting, material assignment — all automated.',tags:[['Blender','t-r'],['MCP bridge','t-c'],['Animation','t-o']]},
+  spec:{t:'Spec Sheet',s:'Step 5 — Output 3',d:'Complete technical document: scores, program, constraints, parameters. HTML/PDF for humans, JSON for machines.',tags:[['PDF/HTML','t-b'],['Complete data','t-a']]}
+};
+
+function det(id){
+  const d=D[id];if(!d)return;
+  let h=`<span class="stag">${d.s}</span><h2>${d.t}</h2><p>${d.d}</p>`;
+  if(d.tb&&d.tb.length>1){
+    h+='<table><thead><tr>';d.tb[0].forEach(c=>h+=`<th>${c}</th>`);h+='</tr></thead><tbody>';
+    for(let i=1;i<d.tb.length;i++){h+='<tr>';d.tb[i].forEach((c,j)=>h+=j===0?`<td><strong>${c}</strong></td>`:`<td class="m">${c}</td>`);h+='</tr>';}
+    h+='</tbody></table>';
+  }
+  if(d.tags){h+='<div style="margin-top:10px">';d.tags.forEach(([l,c])=>h+=`<span class="tag ${c}">${l}</span>`);h+='</div>';}
+  document.getElementById('dc').innerHTML=h;
+  document.getElementById('dp').classList.add('open');
+}
+function cls(){document.getElementById('dp').classList.remove('open')}
+
+function clr(){
+  document.querySelectorAll('.ng').forEach(n=>{n.classList.remove('hl');n.style.opacity=''});
+  document.querySelectorAll('.fl,.fl-fail,.fl-loop').forEach(l=>{l.classList.remove('on');l.style.opacity=''});
+  document.querySelectorAll('.ctrl button').forEach(b=>b.classList.remove('on'));
+}
+function showAll(){
+  clr();document.querySelectorAll('.ctrl button')[0].classList.add('on');
+  document.querySelectorAll('.fl,.fl-fail,.fl-loop').forEach(l=>l.classList.add('on'));
+}
+function step(s){
+  clr();
+  const bs=document.querySelectorAll('.ctrl button');
+  bs[s+1]&&bs[s+1].classList.add('on');
+  document.querySelectorAll('.ng').forEach(n=>n.style.opacity='.12');
+  document.querySelectorAll('.fl,.fl-fail,.fl-loop').forEach(l=>l.style.opacity='.06');
+  document.querySelectorAll(`.ng[data-s="${s}"]`).forEach(n=>{n.style.opacity='1';n.classList.add('hl')});
+  document.querySelectorAll(`[data-s="${s}"].fl,[data-s="${s}"].fl-fail,[data-s="${s}"].fl-loop`).forEach(l=>{l.style.opacity='1';l.classList.add('on')});
+  if(s>0)document.querySelectorAll(`.ng[data-s="${s-1}"]`).forEach(n=>n.style.opacity='.35');
+}
+
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape')cls();
+  if(e.key>='0'&&e.key<='5')step(parseInt(e.key));
+  if(e.key===' '){e.preventDefault();showAll();}
+});
+
+showAll();
+</script>
+</body>
+</html>

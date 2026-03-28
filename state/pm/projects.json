@@ -1,6 +1,32 @@
 {
   "projects": [
     {
+      "id": "henna-lock03-log400",
+      "name": "Lock Type 03 — Altitude North (LOG400 Full Build)",
+      "owner": "henna",
+      "status": "in_progress",
+      "priority": "midterm — due 2026-03-30",
+      "created": "2026-03-27",
+      "summary": "Build Lock 03 (Altitude North) from scratch at LOG400 in Rhino 'interior' (port 9003). 2 phases: spec roundtable (adds missing roof) + full build executor. ~2 sessions.",
+      "prompts_dir": "state/pm/henna-lock03-log400/prompts/",
+      "current_phase": "phase0",
+      "rhino_instance": "interior",
+      "rhino_port": 9003
+    },
+    {
+      "id": "henna-lock02-cargo-log400",
+      "name": "Lock Type 02 — Cargo Lock LOG400",
+      "owner": "henna",
+      "status": "in_progress",
+      "priority": "midterm",
+      "created": "2026-03-27",
+      "deadline": "2026-03-30",
+      "summary": "Upgrade Lock 02 Cargo from LOG200 base to LOG400 with complete roof system. 3 phases: Design → Review → Execute in Rhino port 9002.",
+      "prompts_dir": "state/pm/henna-lock02-cargo-log400/prompts/",
+      "rhino_target": "lock_02",
+      "rhino_port": 9002
+    },
+    {
       "id": "rhinobase-iboisbase",
       "name": "Knowledge Base Expansion (rhinobase + iboisbase)",
       "owner": "andrea",
@@ -20,6 +46,37 @@
       "depends_on": "rhinobase-iboisbase",
       "summary": "Add case_notes tables to bases, wire /rhino-review to write there. ~1.5 hrs + piggyback on modeling sessions.",
       "framework": "observations/research/strategy/knowledge_feedback_framework.md"
+    },
+    {
+      "id": "henna-lock05-visibility-v2",
+      "name": "Lock 05 Visibility Lock — v2 Full Rebuild",
+      "owner": "henna",
+      "status": "in_progress",
+      "priority": "midterm — due 2026-03-30",
+      "created": "2026-03-27",
+      "summary": "Full rebuild of Lock 05 with discussion-first agent team coordination. v1 had 361 elements but too many incoherences. v2: discuss → agree → build once → verify. 3 phases, 1 session.",
+      "prompts_dir": "state/pm/henna-lock05-visibility-v2/prompts/",
+      "current_phase": "phase0_interface_negotiation",
+      "rhino_target": "envelope",
+      "rhino_port": 9002,
+      "replaces": "lock_05_visibility_v1 (361 elements, 4 rounds of patching)"
+    },
+    {
+      "id": "henna-lock08-altitude-south-log400",
+      "name": "Lock Type 08 — Altitude South (LOG400 Full Build)",
+      "owner": "henna",
+      "status": "complete",
+      "priority": "midterm — due 2026-03-30",
+      "created": "2026-03-27",
+      "completed": "2026-03-27",
+      "deadline": "2026-03-30",
+      "summary": "Lock 08 Altitude South built at LOG400 in Rhino port 9002. 419 objects across 8 layers. Roundtable review applied 27 corrections (structural, envelope, fire safety). Full agent team build with health checks.",
+      "prompts_dir": "state/pm/henna-lock08-altitude-south-log400/prompts/",
+      "build_log": "output/city101_hub/lock_08_altitude_south_LOG400_build_log.md",
+      "spec_approved": "output/city101_hub/lock_08_altitude_south_LOG400_APPROVED.md",
+      "rhino_target": "envelope",
+      "rhino_port": 9002,
+      "element_count": 419
     },
     {
       "id": "fabrication-bridge",
