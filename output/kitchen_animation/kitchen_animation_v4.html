@@ -1,0 +1,1379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1920, height=1080">
+<title>The Kitchen v4 — Overcooked Style</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #FFF8ED;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    font-family: 'DM Sans', sans-serif;
+  }
+  canvas { display: block; }
+  #narration {
+    position: fixed; bottom: 70px; left: 50%; transform: translateX(-50%);
+    font-family: 'Instrument Serif', serif; font-size: 26px; color: #3A2A1A;
+    text-align: center; max-width: 800px; line-height: 1.5;
+    opacity: 0; transition: opacity 0.8s; z-index: 20;
+    text-shadow: 0 1px 4px rgba(255,248,237,0.8);
+    pointer-events: none;
+    background: rgba(255,248,237,0.85); padding: 12px 24px; border-radius: 8px;
+  }
+  #scene-label {
+    position: fixed; top: 24px; left: 50%; transform: translateX(-50%);
+    font-family: 'DM Mono', monospace; font-size: 13px; color: #8B7355;
+    letter-spacing: 2px; text-transform: uppercase; z-index: 20;
+    pointer-events: none; opacity: 0; transition: opacity 0.5s;
+  }
+  #controls {
+    position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%);
+    display: flex; gap: 10px; align-items: center; z-index: 30;
+  }
+  #controls button {
+    background: rgba(139,115,85,0.15); border: 1px solid rgba(139,115,85,0.3);
+    color: #8B7355; font-family: 'DM Mono', monospace; font-size: 12px;
+    padding: 6px 14px; cursor: pointer; border-radius: 4px;
+    transition: background 0.2s;
+  }
+  #controls button:hover { background: rgba(139,115,85,0.3); }
+  #controls button.active { background: rgba(201,168,76,0.3); border-color: #c9a84c; color: #c9a84c; }
+  #progress {
+    position: fixed; bottom: 0; left: 0; height: 4px;
+    background: linear-gradient(90deg, #C9A84C, #D97A4A); z-index: 30; transition: width 0.3s;
+  }
+  #scene-dots {
+    position: fixed; bottom: 46px; left: 50%; transform: translateX(-50%);
+    display: flex; gap: 8px; z-index: 20; pointer-events: none;
+  }
+  #scene-dots .dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: rgba(139,115,85,0.2); transition: background 0.3s;
+  }
+  #scene-dots .dot.active { background: #C9A84C; }
+  #scene-dots .dot.done { background: rgba(201,168,76,0.5); }
+  /* Scroll overlay */
+  #scroll-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    display: none; z-index: 25; pointer-events: none;
+    align-items: center; justify-content: center;
+    background: rgba(255,248,237,0.7);
+  }
+  #scroll-overlay.visible { display: flex; }
+  #scroll-content {
+    width: 680px; padding: 44px; border-radius: 4px;
+    font-family: 'Instrument Serif', serif; font-size: 19px;
+    line-height: 1.6; opacity: 0;
+    transform: scale(0.95); transition: opacity 0.6s, transform 0.6s;
+    box-shadow: 0 8px 40px rgba(58,42,26,0.2);
+  }
+  #scroll-content.show { opacity: 1; transform: scale(1); }
+  #scroll-content.map {
+    background: linear-gradient(135deg, #F5E6C8 0%, #EBD8B0 100%);
+    border: 3px solid #C9A84C; color: #5A4020;
+  }
+  #scroll-content.blueprint {
+    background: linear-gradient(135deg, #E0EEF5 0%, #D0DEE8 100%);
+    border: 3px solid #5B8FA8; color: #2A4A5A;
+  }
+  #scroll-content h3 { margin-bottom: 12px; font-size: 22px; }
+  #scroll-content .section { margin: 10px 0; }
+  #scroll-content .icon { font-size: 16px; margin-right: 6px; }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="narration"></div>
+<div id="scene-label"></div>
+<div id="scene-dots"></div>
+<div id="progress" style="width:0%"></div>
+<div id="scroll-overlay"><div id="scroll-content"></div></div>
+<div id="controls">
+  <button id="btn-prev">&#9664; Prev</button>
+  <button id="btn-play" class="active">&#9654; Play</button>
+  <button id="btn-next">Next &#9654;</button>
+  <button id="btn-speed">1x</button>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════
+// SECTION 1: CORE ENGINE
+// ═══════════════════════════════════════════════════
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+const W = 1920, H = 1080;
+canvas.width = W; canvas.height = H;
+
+function resize() {
+  const s = Math.min(window.innerWidth / W, window.innerHeight / H);
+  canvas.style.width = (W * s) + 'px';
+  canvas.style.height = (H * s) + 'px';
+}
+resize(); window.addEventListener('resize', resize);
+
+// ═══════════════════════════════════════════════════
+// SECTION 2: OVERCOOKED COLOR PALETTE
+// ═══════════════════════════════════════════════════
+const OC = {
+  // Environment
+  bg:              '#FFF8ED',
+  floorA:          '#C4785A',
+  floorB:          '#D4886A',
+  floorGrout:      '#A06048',
+  wallCream:       '#F2E6D0',
+  wallShadow:      '#D4C4A8',
+  wallTrim:        '#8B7355',
+  wallTrimDark:    '#6B5335',
+
+  // Counters
+  counterTop:      '#4A9B8E',
+  counterBase:     '#3A7B6E',
+  counterShadow:   '#2A5B4E',
+
+  // Wood
+  wood:            '#8B6B4A',
+  woodDark:        '#6B4B2A',
+  woodLight:       '#AB8B6A',
+
+  // Steel / appliances
+  steel:           '#A0A0B0',
+  steelDark:       '#707080',
+  steelLight:      '#C0C0D0',
+  stoveBlack:      '#3A3A3A',
+  stoveDark:       '#2A2A2A',
+  burnerOff:       '#555555',
+  burnerOn:        '#FF6B35',
+  fridgeWhite:     '#E8E8F0',
+  fridgeShadow:    '#C0C0D0',
+  fridgeDark:      '#A0A0B0',
+  sinkBowl:        '#D0D0E0',
+
+  // Characters
+  grey:            '#9A9A9A',
+  greyLight:       '#B0B0B0',
+  greyDark:        '#7A7A7A',
+  gold:            '#C9A84C',
+  goldLight:       '#E0C870',
+  goldDark:        '#A08030',
+  purple:          '#9B6BB0',
+  purpleLight:     '#B888CC',
+  purpleDark:      '#7A4A90',
+  hatWhite:        '#FFFFFF',
+  hatShadow:       '#E0E0E0',
+  hatBand:         '#D0D0D0',
+
+  // Props
+  scrollGold:      '#C9A84C',
+  scrollTeal:      '#5B8FA8',
+  backpack:        '#6B4B2A',
+  backpackLight:   '#8B6B4A',
+
+  // Aprons (Chefs de Partie)
+  apronAnalyst:    '#4A90D9',
+  apronModeler:    '#D97A4A',
+  apronBuilder:    '#4AD97A',
+  apronCarto:      '#D94A6A',
+
+  // UI
+  outline:         '#3A2A1A',
+  outlineAlpha:    'rgba(58,42,26,0.6)',
+  shadow:          'rgba(58,42,26,0.15)',
+  shadowDark:      'rgba(58,42,26,0.25)',
+};
+
+// ═══════════════════════════════════════════════════
+// SECTION 3: MATH & EASING
+// ═══════════════════════════════════════════════════
+const TILE = 80;
+
+function toIso(x, y, z) {
+  const sx = (x - y) * (TILE / 2);
+  const sy = (x + y) * (TILE / 4) - (z || 0) * (TILE / 2);
+  return { x: sx, y: sy };
+}
+
+function easeInOut(t) { return t < 0.5 ? 2*t*t : -1+(4-2*t)*t; }
+function easeOut(t) { return 1 - (1-t)*(1-t); }
+function easeOutBack(t) { const c = 1.4; return 1 + (c + 1) * Math.pow(t - 1, 3) + c * Math.pow(t - 1, 2); }
+function easeIn(t) { return t*t; }
+function lerp(a, b, t) { return a + (b - a) * t; }
+function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+function lerpColor(c1, c2, t) {
+  const r1 = parseInt(c1.slice(1,3),16), g1 = parseInt(c1.slice(3,5),16), b1 = parseInt(c1.slice(5,7),16);
+  const r2 = parseInt(c2.slice(1,3),16), g2 = parseInt(c2.slice(3,5),16), b2 = parseInt(c2.slice(5,7),16);
+  const r = Math.round(lerp(r1,r2,t)), g = Math.round(lerp(g1,g2,t)), b = Math.round(lerp(b1,b2,t));
+  return `rgb(${r},${g},${b})`;
+}
+function darken(hex, amt) {
+  const r = Math.max(0, parseInt(hex.slice(1,3),16) - amt);
+  const g = Math.max(0, parseInt(hex.slice(3,5),16) - amt);
+  const b = Math.max(0, parseInt(hex.slice(5,7),16) - amt);
+  return `rgb(${r},${g},${b})`;
+}
+
+// ─── Camera ───
+let cam = { x: W/2, y: H/2 + 40, zoom: 1.0, targetX: W/2, targetY: H/2 + 40, targetZoom: 1.0 };
+function camLerp() {
+  cam.x += (cam.targetX - cam.x) * 0.04;
+  cam.y += (cam.targetY - cam.y) * 0.04;
+  cam.zoom += (cam.targetZoom - cam.zoom) * 0.04;
+}
+function w2s(gx, gy, gz) {
+  const iso = toIso(gx, gy, gz || 0);
+  return { x: cam.x + iso.x * cam.zoom, y: cam.y + iso.y * cam.zoom };
+}
+
+// ─── Timing ───
+let globalTime = 0, sceneTime = 0, playing = true, speed = 1, currentScene = 0;
+let lastFrameTime = 0;
+
+// ═══════════════════════════════════════════════════
+// SECTION 4: ISOMETRIC PRIMITIVES
+// ═══════════════════════════════════════════════════
+
+function drawIsoBox(sx, sy, w, d, h, topCol, leftCol, rightCol, outlineW) {
+  // w,d,h in tile fractions. sx,sy = screen center of base
+  const tw = w * TILE / 2 * cam.zoom;
+  const td = d * TILE / 2 * cam.zoom;
+  const th = h * TILE / 2 * cam.zoom;
+  const ol = outlineW || 2;
+
+  // Top face
+  ctx.beginPath();
+  ctx.moveTo(sx, sy - th);
+  ctx.lineTo(sx + tw, sy + tw/2 - th);
+  ctx.lineTo(sx, sy + tw/2 + td/2 - th);
+  ctx.lineTo(sx - td, sy + td/2 - th);
+  ctx.closePath();
+  ctx.fillStyle = topCol;
+  ctx.fill();
+  ctx.strokeStyle = OC.outlineAlpha;
+  ctx.lineWidth = ol;
+  ctx.stroke();
+
+  // Left face
+  ctx.beginPath();
+  ctx.moveTo(sx - td, sy + td/2 - th);
+  ctx.lineTo(sx, sy + tw/2 + td/2 - th);
+  ctx.lineTo(sx, sy + tw/2 + td/2);
+  ctx.lineTo(sx - td, sy + td/2);
+  ctx.closePath();
+  ctx.fillStyle = leftCol;
+  ctx.fill();
+  ctx.strokeStyle = OC.outlineAlpha;
+  ctx.lineWidth = ol;
+  ctx.stroke();
+
+  // Right face
+  ctx.beginPath();
+  ctx.moveTo(sx, sy + tw/2 + td/2 - th);
+  ctx.lineTo(sx + tw, sy + tw/2 - th);
+  ctx.lineTo(sx + tw, sy + tw/2);
+  ctx.lineTo(sx, sy + tw/2 + td/2);
+  ctx.closePath();
+  ctx.fillStyle = rightCol;
+  ctx.fill();
+  ctx.strokeStyle = OC.outlineAlpha;
+  ctx.lineWidth = ol;
+  ctx.stroke();
+}
+
+function drawFloorTile(gx, gy, brightness) {
+  const p = w2s(gx, gy, 0);
+  const s = TILE / 2 * cam.zoom;
+  const isLight = (gx + gy) % 2 === 0;
+  let base = isLight ? OC.floorA : OC.floorB;
+  if (brightness < 1) base = lerpColor('#4A4A5A', base, brightness);
+
+  ctx.beginPath();
+  ctx.moveTo(p.x, p.y);
+  ctx.lineTo(p.x + s, p.y + s/2);
+  ctx.lineTo(p.x, p.y + s);
+  ctx.lineTo(p.x - s, p.y + s/2);
+  ctx.closePath();
+  ctx.fillStyle = base;
+  ctx.fill();
+  ctx.strokeStyle = brightness < 1 ? 'rgba(58,42,26,0.1)' : 'rgba(58,42,26,0.2)';
+  ctx.lineWidth = 1;
+  ctx.stroke();
+}
+
+function drawWall(gx, gy, w, wallH, brightness) {
+  // Back wall segment from (gx,gy) going w tiles in x direction
+  const s = TILE / 2 * cam.zoom;
+  const wh = wallH * TILE / 2 * cam.zoom;
+
+  let wallCol = OC.wallCream;
+  let trimCol = OC.wallTrim;
+  if (brightness < 1) {
+    wallCol = lerpColor('#5A5A6A', wallCol, brightness);
+    trimCol = lerpColor('#4A4A5A', trimCol, brightness);
+  }
+
+  for (let i = 0; i < w; i++) {
+    const p1 = w2s(gx + i, gy, 0);
+    const p2 = w2s(gx + i + 1, gy, 0);
+
+    // Wall face
+    ctx.beginPath();
+    ctx.moveTo(p1.x, p1.y);
+    ctx.lineTo(p2.x, p2.y);
+    ctx.lineTo(p2.x, p2.y - wh);
+    ctx.lineTo(p1.x, p1.y - wh);
+    ctx.closePath();
+    ctx.fillStyle = wallCol;
+    ctx.fill();
+    ctx.strokeStyle = OC.outlineAlpha;
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // Trim at bottom
+    ctx.beginPath();
+    ctx.moveTo(p1.x, p1.y);
+    ctx.lineTo(p2.x, p2.y);
+    ctx.lineTo(p2.x, p2.y - s * 0.2);
+    ctx.lineTo(p1.x, p1.y - s * 0.2);
+    ctx.closePath();
+    ctx.fillStyle = trimCol;
+    ctx.fill();
+  }
+}
+
+function drawSideWall(gx, gy, d, wallH, brightness) {
+  // Left wall from (gx,gy) going d tiles in y direction
+  const s = TILE / 2 * cam.zoom;
+  const wh = wallH * TILE / 2 * cam.zoom;
+
+  let wallCol = OC.wallShadow;
+  let trimCol = OC.wallTrimDark;
+  if (brightness < 1) {
+    wallCol = lerpColor('#4A4A5A', wallCol, brightness);
+    trimCol = lerpColor('#3A3A4A', trimCol, brightness);
+  }
+
+  for (let i = 0; i < d; i++) {
+    const p1 = w2s(gx, gy + i, 0);
+    const p2 = w2s(gx, gy + i + 1, 0);
+
+    ctx.beginPath();
+    ctx.moveTo(p1.x, p1.y);
+    ctx.lineTo(p2.x, p2.y);
+    ctx.lineTo(p2.x, p2.y - wh);
+    ctx.lineTo(p1.x, p1.y - wh);
+    ctx.closePath();
+    ctx.fillStyle = wallCol;
+    ctx.fill();
+    ctx.strokeStyle = OC.outlineAlpha;
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // Trim
+    ctx.beginPath();
+    ctx.moveTo(p1.x, p1.y);
+    ctx.lineTo(p2.x, p2.y);
+    ctx.lineTo(p2.x, p2.y - s * 0.2);
+    ctx.lineTo(p1.x, p1.y - s * 0.2);
+    ctx.closePath();
+    ctx.fillStyle = trimCol;
+    ctx.fill();
+  }
+}
+
+// ═══════════════════════════════════════════════════
+// SECTION 5: BLOCKY OCTOPUS CHARACTER
+// ═══════════════════════════════════════════════════
+
+function drawOctopus(sx, sy, opts) {
+  // opts: { color, colorLight, colorDark, hatHeight, walkFrame, facing, holdItem, backpackSize, alpha, scale }
+  const s = (opts.scale || 1) * cam.zoom;
+  const a = opts.alpha !== undefined ? opts.alpha : 1;
+  const wf = opts.walkFrame || 0;
+  const facing = opts.facing || 'right'; // 'left' or 'right'
+
+  ctx.save();
+  ctx.globalAlpha = a;
+  ctx.translate(sx, sy);
+  ctx.scale(s, s);
+
+  const bodyW = 36, bodyH = 32;
+  const headTop = -bodyH - 8; // head sits above body
+
+  // Drop shadow
+  ctx.fillStyle = OC.shadow;
+  ctx.fillRect(-20, 4, 40, 8);
+
+  // === TENTACLES (6 blocky strips, 3 per side) ===
+  const tentW = 6, tentH = 14;
+  const tentYBase = 0;
+  for (let side = -1; side <= 1; side += 2) {
+    for (let t = 0; t < 3; t++) {
+      const xOff = side * (6 + t * 8);
+      const yBob = Math.sin(wf * 0.15 + t * 1.2 + side * 0.5) * 3;
+
+      ctx.fillStyle = opts.color;
+      ctx.fillRect(xOff - tentW/2, tentYBase + yBob, tentW, tentH);
+      // Tip segment (slightly bent)
+      const bend = side * (Math.sin(wf * 0.12 + t) * 2);
+      ctx.fillStyle = opts.colorDark;
+      ctx.fillRect(xOff - tentW/2 + bend, tentYBase + tentH + yBob, tentW, 6);
+
+      // Outline
+      ctx.strokeStyle = OC.outlineAlpha;
+      ctx.lineWidth = 2;
+      ctx.strokeRect(xOff - tentW/2, tentYBase + yBob, tentW, tentH);
+      ctx.strokeRect(xOff - tentW/2 + bend, tentYBase + tentH + yBob, tentW, 6);
+    }
+  }
+
+  // === BACKPACK (behind body) ===
+  if (opts.backpackSize > 0) {
+    const bpS = opts.backpackSize; // 1-4
+    const bpW = 10 + bpS * 4;
+    const bpH = 12 + bpS * 5;
+    const bpX = facing === 'right' ? -bodyW/2 - bpW + 4 : bodyW/2 - 4;
+    ctx.fillStyle = OC.backpack;
+    ctx.fillRect(bpX, -bodyH + 4, bpW, bpH);
+    ctx.fillStyle = OC.backpackLight;
+    ctx.fillRect(bpX + 2, -bodyH + 6, bpW - 4, 3);
+    ctx.strokeStyle = OC.outlineAlpha;
+    ctx.lineWidth = 2;
+    ctx.strokeRect(bpX, -bodyH + 4, bpW, bpH);
+  }
+
+  // === BODY (square block) ===
+  const bodyBob = Math.sin(wf * 0.1) * 1.5;
+  ctx.fillStyle = opts.color;
+  ctx.fillRect(-bodyW/2, -bodyH + bodyBob, bodyW, bodyH);
+  // Light side
+  ctx.fillStyle = opts.colorLight;
+  ctx.fillRect(-bodyW/2, -bodyH + bodyBob, bodyW, 4);
+  // Dark bottom
+  ctx.fillStyle = opts.colorDark;
+  ctx.fillRect(-bodyW/2, -4 + bodyBob, bodyW, 4);
+  // Outline
+  ctx.strokeStyle = OC.outlineAlpha;
+  ctx.lineWidth = 2;
+  ctx.strokeRect(-bodyW/2, -bodyH + bodyBob, bodyW, bodyH);
+
+  // === EYES (square, white with black pupils) ===
+  const eyeY = -bodyH + 10 + bodyBob;
+  const eyeSpacing = 8;
+  // Left eye
+  ctx.fillStyle = '#FFFFFF';
+  ctx.fillRect(-eyeSpacing - 6, eyeY, 10, 8);
+  ctx.strokeStyle = OC.outlineAlpha;
+  ctx.lineWidth = 1.5;
+  ctx.strokeRect(-eyeSpacing - 6, eyeY, 10, 8);
+  // Pupil
+  const pupilOff = facing === 'right' ? 3 : 1;
+  ctx.fillStyle = '#1A1A1A';
+  ctx.fillRect(-eyeSpacing - 6 + pupilOff, eyeY + 3, 4, 4);
+  // Highlight
+  ctx.fillStyle = '#FFFFFF';
+  ctx.fillRect(-eyeSpacing - 6 + pupilOff + 2, eyeY + 2, 2, 2);
+
+  // Right eye
+  ctx.fillStyle = '#FFFFFF';
+  ctx.fillRect(eyeSpacing - 4, eyeY, 10, 8);
+  ctx.strokeStyle = OC.outlineAlpha;
+  ctx.lineWidth = 1.5;
+  ctx.strokeRect(eyeSpacing - 4, eyeY, 10, 8);
+  ctx.fillStyle = '#1A1A1A';
+  ctx.fillRect(eyeSpacing - 4 + pupilOff, eyeY + 3, 4, 4);
+  ctx.fillStyle = '#FFFFFF';
+  ctx.fillRect(eyeSpacing - 4 + pupilOff + 2, eyeY + 2, 2, 2);
+
+  // === CHEF HAT (blocky, stacked rectangles) ===
+  const hatH = opts.hatHeight || 16;
+  const hatY = -bodyH - 4 + bodyBob;
+  // Hat brim
+  ctx.fillStyle = OC.hatWhite;
+  ctx.fillRect(-16, hatY, 32, 5);
+  // Hat body (taller rectangle)
+  ctx.fillStyle = OC.hatWhite;
+  ctx.fillRect(-12, hatY - hatH, 24, hatH);
+  // Hat band
+  ctx.fillStyle = OC.hatBand;
+  ctx.fillRect(-12, hatY - 3, 24, 3);
+  // Hat shadow/shading
+  ctx.fillStyle = OC.hatShadow;
+  ctx.fillRect(-12, hatY - hatH, 24, 3);
+  // Outline
+  ctx.strokeStyle = OC.outlineAlpha;
+  ctx.lineWidth = 2;
+  ctx.strokeRect(-16, hatY, 32, 5);
+  ctx.strokeRect(-12, hatY - hatH, 24, hatH);
+
+  // === HELD ITEM ===
+  if (opts.holdItem === 'scroll-gold') {
+    const hx = facing === 'right' ? bodyW/2 + 2 : -bodyW/2 - 14;
+    ctx.fillStyle = OC.scrollGold;
+    ctx.fillRect(hx, -bodyH + 8 + bodyBob, 12, 18);
+    ctx.strokeStyle = OC.outlineAlpha;
+    ctx.lineWidth = 1.5;
+    ctx.strokeRect(hx, -bodyH + 8 + bodyBob, 12, 18);
+    // Roll ends
+    ctx.fillStyle = darken(OC.scrollGold, 30);
+    ctx.fillRect(hx - 1, -bodyH + 6 + bodyBob, 14, 4);
+    ctx.fillRect(hx - 1, -bodyH + 24 + bodyBob, 14, 4);
+  }
+  if (opts.holdItem === 'scroll-teal') {
+    const hx = facing === 'right' ? bodyW/2 + 2 : -bodyW/2 - 14;
+    ctx.fillStyle = OC.scrollTeal;
+    ctx.fillRect(hx, -bodyH + 8 + bodyBob, 12, 18);
+    ctx.strokeStyle = OC.outlineAlpha;
+    ctx.lineWidth = 1.5;
+    ctx.strokeRect(hx, -bodyH + 8 + bodyBob, 12, 18);
+    ctx.fillStyle = darken(OC.scrollTeal, 30);
+    ctx.fillRect(hx - 1, -bodyH + 6 + bodyBob, 14, 4);
+    ctx.fillRect(hx - 1, -bodyH + 24 + bodyBob, 14, 4);
+  }
+  if (opts.holdItem === 'both-scrolls') {
+    // Gold in right tentacle
+    ctx.fillStyle = OC.scrollGold;
+    ctx.fillRect(bodyW/2 + 2, -bodyH + 8 + bodyBob, 12, 18);
+    ctx.strokeStyle = OC.outlineAlpha;
+    ctx.lineWidth = 1.5;
+    ctx.strokeRect(bodyW/2 + 2, -bodyH + 8 + bodyBob, 12, 18);
+    // Teal in left tentacle
+    ctx.fillStyle = OC.scrollTeal;
+    ctx.fillRect(-bodyW/2 - 14, -bodyH + 8 + bodyBob, 12, 18);
+    ctx.strokeStyle = OC.outlineAlpha;
+    ctx.lineWidth = 1.5;
+    ctx.strokeRect(-bodyW/2 - 14, -bodyH + 8 + bodyBob, 12, 18);
+  }
+
+  // === APRON (for Chefs de Partie) ===
+  if (opts.apronColor) {
+    ctx.fillStyle = opts.apronColor;
+    ctx.fillRect(-bodyW/2 + 4, -bodyH/2 + bodyBob, bodyW - 8, bodyH/2 + 2);
+    ctx.strokeStyle = OC.outlineAlpha;
+    ctx.lineWidth = 1.5;
+    ctx.strokeRect(-bodyW/2 + 4, -bodyH/2 + bodyBob, bodyW - 8, bodyH/2 + 2);
+    // Apron string
+    ctx.fillStyle = darken(opts.apronColor, 30);
+    ctx.fillRect(-2, -bodyH/2 + bodyBob - 2, 4, 4);
+  }
+
+  ctx.restore();
+}
+
+// ═══════════════════════════════════════════════════
+// SECTION 6: KITCHEN ELEMENTS
+// ═══════════════════════════════════════════════════
+
+function drawCounter(gx, gy, brightness, alpha) {
+  if (alpha <= 0) return;
+  const p = w2s(gx + 0.5, gy + 0.5, 0);
+  ctx.save();
+  ctx.globalAlpha = alpha;
+  let top = brightness < 1 ? lerpColor('#5A5A6A', OC.counterTop, brightness) : OC.counterTop;
+  let left = brightness < 1 ? lerpColor('#4A4A5A', OC.counterBase, brightness) : OC.counterBase;
+  let right = brightness < 1 ? lerpColor('#3A3A4A', OC.counterShadow, brightness) : OC.counterShadow;
+  drawIsoBox(p.x, p.y, 0.9, 0.9, 0.5, top, left, right, 2);
+  ctx.restore();
+}
+
+function drawStove(gx, gy, brightness, alpha) {
+  if (alpha <= 0) return;
+  const p = w2s(gx + 0.5, gy + 0.5, 0);
+  ctx.save();
+  ctx.globalAlpha = alpha;
+  let top = brightness < 1 ? lerpColor('#4A4A5A', OC.stoveBlack, brightness) : OC.stoveBlack;
+  let left = brightness < 1 ? lerpColor('#3A3A4A', OC.stoveDark, brightness) : OC.stoveDark;
+  let right = brightness < 1 ? lerpColor('#2A2A3A', '#1A1A1A', brightness) : '#1A1A1A';
+  drawIsoBox(p.x, p.y, 0.9, 0.9, 0.5, top, left, right, 2);
+
+  // Burner circles (2x2 grid on top)
+  const bSize = 6 * cam.zoom;
+  const bY = -0.5 * TILE / 2 * cam.zoom;
+  const offsets = [[-8, -4], [8, -4], [-8, 4], [8, 4]];
+  for (const [bx, by] of offsets) {
+    ctx.fillStyle = brightness > 0.8 ? OC.burnerOn : OC.burnerOff;
+    ctx.fillRect(p.x + bx * cam.zoom - bSize/2, p.y + bY + by * cam.zoom - bSize/2, bSize, bSize);
+    ctx.strokeStyle = OC.outlineAlpha;
+    ctx.lineWidth = 1;
+    ctx.strokeRect(p.x + bx * cam.zoom - bSize/2, p.y + bY + by * cam.zoom - bSize/2, bSize, bSize);
+  }
+  ctx.restore();
+}
+
+function drawSink(gx, gy, brightness, alpha) {
+  if (alpha <= 0) return;
+  const p = w2s(gx + 0.5, gy + 0.5, 0);
+  ctx.save();
+  ctx.globalAlpha = alpha;
+  let top = brightness < 1 ? lerpColor('#5A5A6A', OC.steel, brightness) : OC.steel;
+  let left = brightness < 1 ? lerpColor('#4A4A5A', OC.steelDark, brightness) : OC.steelDark;
+  let right = brightness < 1 ? lerpColor('#3A3A4A', '#606068', brightness) : '#606068';
+  drawIsoBox(p.x, p.y, 0.9, 0.9, 0.5, top, left, right, 2);
+
+  // Basin
+  const basinY = -0.5 * TILE / 2 * cam.zoom;
+  ctx.fillStyle = OC.sinkBowl;
+  ctx.fillRect(p.x - 8 * cam.zoom, p.y + basinY - 4 * cam.zoom, 16 * cam.zoom, 8 * cam.zoom);
+
+  // Faucet (small tall rectangle)
+  ctx.fillStyle = OC.steelLight;
+  ctx.fillRect(p.x + 6 * cam.zoom, p.y + basinY - 14 * cam.zoom, 4 * cam.zoom, 12 * cam.zoom);
+  ctx.fillRect(p.x - 2 * cam.zoom, p.y + basinY - 14 * cam.zoom, 12 * cam.zoom, 3 * cam.zoom);
+  ctx.restore();
+}
+
+function drawFridge(gx, gy, brightness, alpha) {
+  if (alpha <= 0) return;
+  const p = w2s(gx + 0.5, gy + 0.5, 0);
+  ctx.save();
+  ctx.globalAlpha = alpha;
+  let top = brightness < 1 ? lerpColor('#5A5A6A', OC.fridgeWhite, brightness) : OC.fridgeWhite;
+  let left = brightness < 1 ? lerpColor('#4A4A5A', OC.fridgeShadow, brightness) : OC.fridgeShadow;
+  let right = brightness < 1 ? lerpColor('#3A3A4A', OC.fridgeDark, brightness) : OC.fridgeDark;
+  drawIsoBox(p.x, p.y, 0.85, 0.85, 1.2, top, left, right, 2);
+
+  // Door handle (right face)
+  const tw = 0.85 * TILE / 2 * cam.zoom;
+  const handleY = -0.6 * TILE / 2 * cam.zoom;
+  ctx.fillStyle = OC.steelDark;
+  ctx.fillRect(p.x + tw - 6 * cam.zoom, p.y + handleY + tw/4, 3 * cam.zoom, 10 * cam.zoom);
+
+  // Door line
+  ctx.strokeStyle = OC.outlineAlpha;
+  ctx.lineWidth = 1;
+  const doorY = -0.5 * TILE / 2 * cam.zoom;
+  ctx.beginPath();
+  ctx.moveTo(p.x + tw, p.y + doorY + tw/2);
+  ctx.lineTo(p.x, p.y + doorY + tw/2 + tw/4);
+  ctx.stroke();
+  ctx.restore();
+}
+
+function drawShelf(gx, gy, brightness, alpha, items) {
+  if (alpha <= 0) return;
+  const p = w2s(gx + 0.5, gy + 0.5, 0);
+  ctx.save();
+  ctx.globalAlpha = alpha;
+
+  const sw = 0.8 * TILE / 2 * cam.zoom;
+  let woodCol = brightness < 1 ? lerpColor('#5A5A6A', OC.wood, brightness) : OC.wood;
+
+  // Two shelf planks
+  for (let shelf = 0; shelf < 2; shelf++) {
+    const shelfY = -(0.7 + shelf * 0.4) * TILE / 2 * cam.zoom;
+    ctx.fillStyle = woodCol;
+    ctx.fillRect(p.x - sw, p.y + shelfY, sw * 2, 4 * cam.zoom);
+    ctx.strokeStyle = OC.outlineAlpha;
+    ctx.lineWidth = 1.5;
+    ctx.strokeRect(p.x - sw, p.y + shelfY, sw * 2, 4 * cam.zoom);
+  }
+
+  // Brackets
+  ctx.fillStyle = darken(woodCol, 20);
+  ctx.fillRect(p.x - sw + 4, p.y - 0.7 * TILE/2 * cam.zoom, 3 * cam.zoom, 0.4 * TILE/2 * cam.zoom + 4 * cam.zoom);
+  ctx.fillRect(p.x + sw - 8, p.y - 0.7 * TILE/2 * cam.zoom, 3 * cam.zoom, 0.4 * TILE/2 * cam.zoom + 4 * cam.zoom);
+
+  // Items on shelf
+  if (items) {
+    const shelfY1 = -(1.1) * TILE / 2 * cam.zoom - 4;
+    const shelfY2 = -(0.7) * TILE / 2 * cam.zoom - 4;
+    items.forEach((item, i) => {
+      const ix = p.x - sw + 8 + i * 16 * cam.zoom;
+      const iy = i < 2 ? shelfY1 : shelfY2;
+      ctx.fillStyle = item.color;
+      ctx.fillRect(ix, p.y + iy, 10 * cam.zoom, 14 * cam.zoom);
+      ctx.strokeStyle = OC.outlineAlpha;
+      ctx.lineWidth = 1;
+      ctx.strokeRect(ix, p.y + iy, 10 * cam.zoom, 14 * cam.zoom);
+      // Roll ends for scrolls
+      ctx.fillStyle = darken(item.color, 25);
+      ctx.fillRect(ix - 1, p.y + iy - 2, 12 * cam.zoom, 3);
+      ctx.fillRect(ix - 1, p.y + iy + 12 * cam.zoom, 12 * cam.zoom, 3);
+    });
+  }
+  ctx.restore();
+}
+
+function drawIsland(gx, gy, lenX, brightness, alpha) {
+  if (alpha <= 0) return;
+  for (let i = 0; i < lenX; i++) {
+    drawCounter(gx + i, gy, brightness, alpha);
+  }
+}
+
+function drawDoor(gx, gy, brightness, openAmount) {
+  const p1 = w2s(gx, gy, 0);
+  const p2 = w2s(gx, gy + 1, 0);
+  const wh = 1.5 * TILE / 2 * cam.zoom;
+
+  // Door frame
+  ctx.fillStyle = OC.woodDark;
+  ctx.beginPath();
+  ctx.moveTo(p1.x, p1.y);
+  ctx.lineTo(p2.x, p2.y);
+  ctx.lineTo(p2.x, p2.y - wh);
+  ctx.lineTo(p1.x, p1.y - wh);
+  ctx.closePath();
+  ctx.fill();
+
+  // Interior (dark or warm based on open)
+  if (openAmount > 0) {
+    const interiorBright = lerp(0.1, 0.8, openAmount);
+    ctx.fillStyle = lerpColor('#1A1A22', '#D4A060', interiorBright);
+    const inset = 3 * cam.zoom;
+    ctx.fillRect(
+      Math.min(p1.x, p2.x) + inset,
+      Math.min(p1.y, p2.y) - wh + inset,
+      Math.abs(p2.x - p1.x) - inset * 2,
+      wh - inset
+    );
+  }
+
+  // Frame outline
+  ctx.strokeStyle = OC.outlineAlpha;
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(p1.x, p1.y);
+  ctx.lineTo(p2.x, p2.y);
+  ctx.lineTo(p2.x, p2.y - wh);
+  ctx.lineTo(p1.x, p1.y - wh);
+  ctx.closePath();
+  ctx.stroke();
+}
+
+function drawTicketRail(gx, gy, lenX, brightness, alpha) {
+  if (alpha <= 0) return;
+  const p = w2s(gx, gy, 0);
+  ctx.save();
+  ctx.globalAlpha = alpha;
+  const railY = -1.3 * TILE / 2 * cam.zoom;
+  const railLen = lenX * TILE / 2 * cam.zoom;
+
+  // Rail bar
+  ctx.fillStyle = brightness < 1 ? lerpColor('#5A5A6A', OC.steel, brightness) : OC.steel;
+  ctx.fillRect(p.x, p.y + railY, railLen, 3 * cam.zoom);
+  ctx.strokeStyle = OC.outlineAlpha;
+  ctx.lineWidth = 1;
+  ctx.strokeRect(p.x, p.y + railY, railLen, 3 * cam.zoom);
+
+  // Tickets hanging
+  if (brightness > 0.6) {
+    for (let i = 0; i < 3; i++) {
+      const tx = p.x + (10 + i * 24) * cam.zoom;
+      ctx.fillStyle = '#FFFDE8';
+      ctx.fillRect(tx, p.y + railY + 3 * cam.zoom, 14 * cam.zoom, 18 * cam.zoom);
+      ctx.strokeStyle = OC.outlineAlpha;
+      ctx.lineWidth = 1;
+      ctx.strokeRect(tx, p.y + railY + 3 * cam.zoom, 14 * cam.zoom, 18 * cam.zoom);
+      // Text lines
+      ctx.fillStyle = '#AAA090';
+      for (let l = 0; l < 3; l++) {
+        ctx.fillRect(tx + 2 * cam.zoom, p.y + railY + (7 + l * 4) * cam.zoom, 10 * cam.zoom, 1.5 * cam.zoom);
+      }
+    }
+  }
+  ctx.restore();
+}
+
+function drawWindow(gx, gy, brightness, alpha) {
+  if (alpha <= 0) return;
+  const p = w2s(gx + 0.5, gy, 0);
+  ctx.save();
+  ctx.globalAlpha = alpha;
+  const wh = 1.5 * TILE / 2 * cam.zoom;
+  const winW = 0.6 * TILE / 2 * cam.zoom;
+  const winH = 0.5 * TILE / 2 * cam.zoom;
+  const winY = -wh + 0.3 * TILE / 2 * cam.zoom;
+
+  // Window frame
+  ctx.fillStyle = OC.wood;
+  ctx.fillRect(p.x - winW - 2, p.y + winY - 2, winW * 2 + 4, winH + 4);
+  // Glass
+  ctx.fillStyle = brightness < 1 ? '#3A4A5A' : '#B8D8F0';
+  ctx.fillRect(p.x - winW, p.y + winY, winW * 2, winH);
+  // Cross bar
+  ctx.fillStyle = OC.wood;
+  ctx.fillRect(p.x - 1, p.y + winY, 2, winH);
+  ctx.fillRect(p.x - winW, p.y + winY + winH/2 - 1, winW * 2, 2);
+  ctx.strokeStyle = OC.outlineAlpha;
+  ctx.lineWidth = 1.5;
+  ctx.strokeRect(p.x - winW - 2, p.y + winY - 2, winW * 2 + 4, winH + 4);
+  ctx.restore();
+}
+
+// ═══════════════════════════════════════════════════
+// SECTION 7: SPARKLE / POP EFFECTS
+// ═══════════════════════════════════════════════════
+
+let particles = [];
+
+function addSparkles(sx, sy, count, color) {
+  for (let i = 0; i < count; i++) {
+    particles.push({
+      x: sx, y: sy,
+      vx: (Math.random() - 0.5) * 4,
+      vy: (Math.random() - 0.5) * 4 - 2,
+      life: 1,
+      decay: 0.01 + Math.random() * 0.02,
+      size: 3 + Math.random() * 4,
+      color: color || OC.gold
+    });
+  }
+}
+
+function addPopRing(sx, sy) {
+  particles.push({
+    x: sx, y: sy, vx: 0, vy: 0,
+    life: 1, decay: 0.03,
+    size: 5, maxSize: 40,
+    type: 'ring', color: '#FFFFFF'
+  });
+}
+
+function updateParticles(dt) {
+  for (let i = particles.length - 1; i >= 0; i--) {
+    const p = particles[i];
+    p.life -= p.decay;
+    if (p.life <= 0) { particles.splice(i, 1); continue; }
+    p.x += p.vx;
+    p.y += p.vy;
+    if (p.type !== 'ring') p.vy += 0.1; // gravity
+  }
+}
+
+function drawParticles() {
+  for (const p of particles) {
+    ctx.save();
+    ctx.globalAlpha = p.life;
+    if (p.type === 'ring') {
+      const s = lerp(p.size, p.maxSize, 1 - p.life);
+      ctx.strokeStyle = p.color;
+      ctx.lineWidth = 2;
+      ctx.strokeRect(p.x - s/2, p.y - s/2, s, s);
+    } else {
+      ctx.fillStyle = p.color;
+      const s = p.size * p.life;
+      ctx.fillRect(p.x - s/2, p.y - s/2, s, s);
+    }
+    ctx.restore();
+  }
+}
+
+// ═══════════════════════════════════════════════════
+// SECTION 8: SCROLL OVERLAYS
+// ═══════════════════════════════════════════════════
+
+const scrollOverlay = document.getElementById('scroll-overlay');
+const scrollContent = document.getElementById('scroll-content');
+
+function showScroll(type) {
+  scrollOverlay.classList.add('visible');
+  scrollContent.className = type === 'map' ? 'map' : 'blueprint';
+
+  if (type === 'map') {
+    scrollContent.innerHTML = `
+      <h3>CLAUDE.md — The Map</h3>
+      <div class="section"><span class="icon">&#x1F5FA;</span> <strong>datasets/</strong> — all verified data lives here</div>
+      <div class="section"><span class="icon">&#x1F527;</span> <strong>tools/</strong> — reusable scripts & utilities</div>
+      <div class="section"><span class="icon">&#x1F50D;</span> <strong>observations/</strong> — findings, dead ends, theory</div>
+      <div class="section"><span class="icon">&#x1F4E6;</span> <strong>output/</strong> — staging area (agent work lands here)</div>
+      <div class="section"><span class="icon">&#x1F3AF;</span> <strong>deliverables/</strong> — submission-ready outputs</div>
+      <div class="section" style="margin-top:16px;font-size:16px;opacity:0.7">
+        "Where to find things. The briefing. Warm, hand-drawn, organic."
+      </div>
+    `;
+  } else {
+    scrollContent.innerHTML = `
+      <h3>.claude/ — The Blueprint</h3>
+      <div class="section"><span class="icon">&#x2699;</span> <strong>rules/</strong> — conventions, protocols, safety</div>
+      <div class="section"><span class="icon">&#x1F4CB;</span> <strong>commands/</strong> — slash commands for each role</div>
+      <div class="section"><span class="icon">&#x1F916;</span> <strong>agents/</strong> — specialist agent definitions</div>
+      <div class="section"><span class="icon">&#x1F504;</span> <strong>workflows/</strong> — step-by-step SOPs</div>
+      <div class="section" style="margin-top:16px;font-size:16px;opacity:0.7">
+        "How the kitchen works. Technical, precise, mechanical."
+      </div>
+    `;
+  }
+
+  requestAnimationFrame(() => scrollContent.classList.add('show'));
+}
+
+function hideScroll() {
+  scrollContent.classList.remove('show');
+  setTimeout(() => scrollOverlay.classList.remove('visible'), 600);
+}
+
+// ═══════════════════════════════════════════════════
+// SECTION 9: NARRATION
+// ═══════════════════════════════════════════════════
+
+const narrationEl = document.getElementById('narration');
+const sceneLabelEl = document.getElementById('scene-label');
+
+function setNarration(text) {
+  narrationEl.textContent = text;
+  narrationEl.style.opacity = text ? 1 : 0;
+}
+function setSceneLabel(text) {
+  sceneLabelEl.textContent = text;
+  sceneLabelEl.style.opacity = text ? 1 : 0;
+}
+
+// ═══════════════════════════════════════════════════
+// SECTION 10: SCENE 1 — "Entering the Kitchen"
+// ═══════════════════════════════════════════════════
+
+// Kitchen grid layout (14 wide x 10 deep)
+// Row 0 = back wall
+const KITCHEN = {
+  floorMinX: 0, floorMaxX: 12,
+  floorMinY: 0, floorMaxY: 8,
+  wallBackY: 0, wallBackLen: 12,
+  wallLeftX: 0, wallLeftLen: 8,
+  doorGridY: 3, // door at (0, 3)
+};
+
+// Furniture items with appearance order for Scene 1e
+const FURNITURE = [
+  { type: 'counter', gx: 1, gy: 1, delay: 0 },
+  { type: 'counter', gx: 2, gy: 1, delay: 0.3 },
+  { type: 'counter', gx: 3, gy: 1, delay: 0.5 },
+  { type: 'stove',   gx: 4, gy: 1, delay: 1.0 },
+  { type: 'stove',   gx: 5, gy: 1, delay: 1.2 },
+  { type: 'sink',    gx: 6, gy: 1, delay: 1.6 },
+  { type: 'counter', gx: 7, gy: 1, delay: 1.9 },
+  { type: 'fridge',  gx: 9, gy: 1, delay: 2.3 },
+  { type: 'shelf',   gx: 3, gy: 0, delay: 2.8, items: [{ color: '#E8A040' }, { color: '#60B090' }] },
+  { type: 'shelf',   gx: 7, gy: 0, delay: 3.0 },
+  { type: 'island',  gx: 3, gy: 4, lenX: 4, delay: 3.5 },
+  { type: 'ticket',  gx: 5, gy: 0, lenX: 3, delay: 4.2 },
+  { type: 'window',  gx: 1, gy: 0, delay: 0.8 },
+  { type: 'window',  gx: 8, gy: 0, delay: 2.5 },
+];
+
+// Scroll shelf (special — starts visible in 1b, items get picked up)
+const SCROLL_SHELF = { gx: 1, gy: 1 };
+
+// Character state
+let char = {
+  gx: -2, gy: 4, // start off-screen left
+  targetGx: -2, targetGy: 4,
+  color: OC.grey, colorLight: OC.greyLight, colorDark: OC.greyDark,
+  walkFrame: 0, facing: 'right',
+  holdItem: null,
+  backpackSize: 0,
+  hatHeight: 18,
+  alpha: 0,
+  moving: false,
+};
+
+function moveChar(tgx, tgy) {
+  char.targetGx = tgx;
+  char.targetGy = tgy;
+  char.moving = true;
+  if (tgx > char.gx) char.facing = 'right';
+  else if (tgx < char.gx) char.facing = 'left';
+}
+
+function updateChar(dt) {
+  if (char.moving) {
+    const dx = char.targetGx - char.gx;
+    const dy = char.targetGy - char.gy;
+    const dist = Math.sqrt(dx*dx + dy*dy);
+    if (dist < 0.05) {
+      char.gx = char.targetGx;
+      char.gy = char.targetGy;
+      char.moving = false;
+    } else {
+      const spd = 2.0 * dt;
+      char.gx += (dx / dist) * spd;
+      char.gy += (dy / dist) * spd;
+      char.walkFrame += 8 * dt;
+    }
+  }
+}
+
+// Scene 1 state
+let s1 = {
+  phase: '1a',
+  brightness: 0.25,       // dims the whole kitchen
+  targetBrightness: 0.25,
+  doorOpen: 0,
+  scrollsOnShelf: true,    // gold+teal scrolls visible on shelf
+  scrollPickedGold: false,
+  scrollPickedTeal: false,
+  showingScroll: null,     // 'map' or 'blueprint' or null
+  colorTransition: 0,      // 0 = grey, 1 = full color
+  furnitureStart: -1,      // timestamp when furniture starts appearing
+  furnitureAlphas: FURNITURE.map(() => 0),
+  phaseTimer: 0,
+};
+
+function drawScene1(t, dt) {
+  const st = sceneTime;
+
+  // ─── Phase transitions ───
+  if (st < 4) {
+    // 1a: Empty dim kitchen, character walks in
+    s1.phase = '1a';
+    s1.brightness = lerp(0.2, 0.3, clamp(st / 3, 0, 1));
+    if (st < 0.5) {
+      char.alpha = 0;
+    } else if (st < 2) {
+      char.alpha = clamp((st - 0.5) / 1, 0, 1);
+      if (st > 1 && !char.moving && char.gx < -1) moveChar(-0.5, 3.5);
+    } else {
+      char.alpha = 1;
+      if (!char.moving && char.gx < 0) moveChar(0.5, 3.5);
+    }
+    setNarration(st > 0.8 ? 'An empty kitchen. Dim, bare, unused.' : '');
+    setSceneLabel('Scene 1 — Entering the Kitchen');
+
+  } else if (st < 10) {
+    // 1b: Enter door, pick up scrolls
+    s1.phase = '1b';
+    s1.brightness = 0.35;
+    s1.doorOpen = clamp((st - 4) / 0.8, 0, 1);
+
+    if (st > 4.5 && char.gx < 1.5) {
+      moveChar(1.5, 1.8);
+      setNarration('Just inside the door: two scrolls waiting.');
+    }
+    if (st > 7 && !s1.scrollPickedGold) {
+      s1.scrollPickedGold = true;
+      char.holdItem = 'scroll-gold';
+      addSparkles(w2s(1.5, 1.8, 0.5).x, w2s(1.5, 1.8, 0.5).y, 6, OC.scrollGold);
+      setNarration('CLAUDE.md — the map of the repository.');
+    }
+    if (st > 8.8 && !s1.scrollPickedTeal) {
+      s1.scrollPickedTeal = true;
+      char.holdItem = 'both-scrolls';
+      addSparkles(w2s(1.5, 1.8, 0.5).x, w2s(1.5, 1.8, 0.5).y, 6, OC.scrollTeal);
+      setNarration('.claude/ — the blueprint of the kitchen.');
+    }
+
+  } else if (st < 22) {
+    // 1c: Open scrolls (overlays)
+    s1.phase = '1c';
+    char.holdItem = 'both-scrolls';
+
+    if (st < 15.5) {
+      // Show map
+      if (s1.showingScroll !== 'map') {
+        s1.showingScroll = 'map';
+        showScroll('map');
+        setNarration('');
+      }
+    } else if (st < 16) {
+      // Transition
+      if (s1.showingScroll === 'map') {
+        hideScroll();
+        s1.showingScroll = 'hiding';
+      }
+    } else if (st < 21.5) {
+      // Show blueprint
+      if (s1.showingScroll !== 'blueprint') {
+        s1.showingScroll = 'blueprint';
+        showScroll('blueprint');
+      }
+    } else {
+      if (s1.showingScroll === 'blueprint') {
+        hideScroll();
+        s1.showingScroll = null;
+      }
+    }
+
+  } else if (st < 26) {
+    // 1d: Color transition
+    s1.phase = '1d';
+    s1.showingScroll = null;
+    char.holdItem = null;
+    const ct = clamp((st - 22) / 3, 0, 1);
+    s1.colorTransition = easeInOut(ct);
+
+    char.color = lerpColor(OC.grey, OC.gold, s1.colorTransition);
+    char.colorLight = lerpColor(OC.greyLight, OC.goldLight, s1.colorTransition);
+    char.colorDark = lerpColor(OC.greyDark, OC.goldDark, s1.colorTransition);
+
+    s1.brightness = lerp(0.35, 0.5, ct);
+
+    // Backpack grows
+    char.backpackSize = Math.floor(ct * 2);
+
+    // Sparkles during transition
+    if (ct > 0.1 && ct < 0.9 && Math.random() < 0.15) {
+      const cp = w2s(char.gx, char.gy, 0.5);
+      addSparkles(cp.x, cp.y - 20 * cam.zoom, 2, OC.gold);
+    }
+
+    setNarration('Scrolls in the backpack. Grey washes to gold.');
+    setSceneLabel('Scene 1 — Context Loaded');
+
+  } else {
+    // 1e: Kitchen furnishes itself
+    s1.phase = '1e';
+    if (s1.furnitureStart < 0) s1.furnitureStart = st;
+    const ft = st - s1.furnitureStart;
+
+    // Brightness ramps to full
+    s1.brightness = lerp(0.5, 1.0, clamp(ft / 6, 0, 1));
+
+    // Character walks to center
+    if (!char.moving && Math.abs(char.gx - 5) > 0.2) {
+      moveChar(5, 3);
+    }
+
+    char.color = OC.gold;
+    char.colorLight = OC.goldLight;
+    char.colorDark = OC.goldDark;
+    char.backpackSize = 2;
+
+    // Furniture appears
+    for (let i = 0; i < FURNITURE.length; i++) {
+      const f = FURNITURE[i];
+      const elapsed = ft - f.delay;
+      if (elapsed > 0) {
+        const prev = s1.furnitureAlphas[i];
+        s1.furnitureAlphas[i] = clamp(easeOutBack(clamp(elapsed / 0.8, 0, 1)), 0, 1);
+        // Pop effect when first appearing
+        if (prev < 0.1 && s1.furnitureAlphas[i] >= 0.1) {
+          const fp = w2s(f.gx + 0.5, (f.type === 'island' ? f.gy : f.gy) + 0.5, 0.3);
+          addPopRing(fp.x, fp.y);
+        }
+      }
+    }
+
+    if (ft < 2) setNarration('Context loaded. The kitchen takes shape.');
+    else if (ft < 5) setNarration('Counters, stove, sink — everything appears.');
+    else setNarration('The character knows where things are. The kitchen is alive.');
+  }
+
+  // ─── DRAW ───
+  const b = s1.brightness;
+
+  // Background
+  ctx.fillStyle = lerpColor('#3A3A4A', OC.bg, b);
+  ctx.fillRect(0, 0, W, H);
+
+  // Floor tiles
+  for (let x = KITCHEN.floorMinX; x < KITCHEN.floorMaxX; x++) {
+    for (let y = KITCHEN.floorMinY; y < KITCHEN.floorMaxY; y++) {
+      drawFloorTile(x, y, b);
+    }
+  }
+
+  // Back wall
+  drawWall(KITCHEN.floorMinX, KITCHEN.wallBackY, KITCHEN.wallBackLen, 1.5, b);
+  // Left wall
+  drawSideWall(KITCHEN.floorMinX, KITCHEN.wallBackY, KITCHEN.wallLeftLen, 1.5, b);
+
+  // Windows (always partially visible)
+  drawWindow(1, 0, b, b > 0.2 ? 1 : 0);
+  drawWindow(8, 0, b, b > 0.2 ? 1 : 0);
+
+  // Door
+  drawDoor(0, KITCHEN.doorGridY, b, s1.doorOpen);
+
+  // Scroll shelf (visible in 1a-1b, before furniture appears)
+  if (s1.phase === '1a' || s1.phase === '1b') {
+    const shelfItems = [];
+    if (!s1.scrollPickedGold) shelfItems.push({ color: OC.scrollGold });
+    if (!s1.scrollPickedTeal) shelfItems.push({ color: OC.scrollTeal });
+    drawShelf(SCROLL_SHELF.gx, SCROLL_SHELF.gy, b, 1, shelfItems);
+  }
+
+  // Furniture (Scene 1e, or always if phase > 1e)
+  for (let i = 0; i < FURNITURE.length; i++) {
+    const f = FURNITURE[i];
+    const a = s1.furnitureAlphas[i];
+    if (a <= 0) continue;
+
+    switch (f.type) {
+      case 'counter': drawCounter(f.gx, f.gy, b, a); break;
+      case 'stove':   drawStove(f.gx, f.gy, b, a); break;
+      case 'sink':    drawSink(f.gx, f.gy, b, a); break;
+      case 'fridge':  drawFridge(f.gx, f.gy, b, a); break;
+      case 'shelf':   drawShelf(f.gx, f.gy, b, a, f.items); break;
+      case 'island':  drawIsland(f.gx, f.gy, f.lenX, b, a); break;
+      case 'ticket':  drawTicketRail(f.gx, f.gy, f.lenX, b, a); break;
+      case 'window':  break; // already drawn above
+    }
+  }
+
+  // Warm ambient glow (grows during 1e)
+  if (b > 0.5) {
+    const cp = w2s(5, 4, 0);
+    const grad = ctx.createRadialGradient(cp.x, cp.y, 0, cp.x, cp.y, 400 * cam.zoom);
+    grad.addColorStop(0, `rgba(255,200,100,${(b - 0.5) * 0.15})`);
+    grad.addColorStop(1, 'rgba(255,200,100,0)');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, W, H);
+  }
+
+  // Character
+  if (char.alpha > 0) {
+    updateChar(dt);
+    const cp = w2s(char.gx, char.gy, 0);
+    drawOctopus(cp.x, cp.y - 10 * cam.zoom, {
+      color: char.color,
+      colorLight: char.colorLight,
+      colorDark: char.colorDark,
+      hatHeight: char.hatHeight,
+      walkFrame: char.walkFrame,
+      facing: char.facing,
+      holdItem: char.holdItem,
+      backpackSize: char.backpackSize,
+      alpha: char.alpha,
+      scale: 1.2,
+    });
+  }
+
+  // Particles
+  updateParticles(dt);
+  drawParticles();
+}
+
+// ═══════════════════════════════════════════════════
+// SECTION 11: SCENES ARRAY & MAIN LOOP
+// ═══════════════════════════════════════════════════
+
+const SCENES = [
+  { name: 'Entering the Kitchen', duration: 36, draw: drawScene1 },
+  // Scenes 2-6 will be added after Scene 1 is validated
+];
+
+// Scene dots
+const dotsEl = document.getElementById('scene-dots');
+SCENES.forEach((s, i) => {
+  const dot = document.createElement('div');
+  dot.className = 'dot' + (i === 0 ? ' active' : '');
+  dotsEl.appendChild(dot);
+});
+
+function updateDots() {
+  const dots = dotsEl.querySelectorAll('.dot');
+  dots.forEach((d, i) => {
+    d.className = 'dot';
+    if (i < currentScene) d.classList.add('done');
+    if (i === currentScene) d.classList.add('active');
+  });
+}
+
+// Controls
+const btnPlay = document.getElementById('btn-play');
+const btnPrev = document.getElementById('btn-prev');
+const btnNext = document.getElementById('btn-next');
+const btnSpeed = document.getElementById('btn-speed');
+const progressEl = document.getElementById('progress');
+
+btnPlay.addEventListener('click', () => {
+  playing = !playing;
+  btnPlay.textContent = playing ? '⏸ Pause' : '▶ Play';
+  btnPlay.classList.toggle('active', playing);
+});
+
+btnPrev.addEventListener('click', () => {
+  if (currentScene > 0) {
+    currentScene--;
+    sceneTime = 0;
+    resetSceneState();
+    updateDots();
+  }
+});
+
+btnNext.addEventListener('click', () => {
+  if (currentScene < SCENES.length - 1) {
+    currentScene++;
+    sceneTime = 0;
+    resetSceneState();
+    updateDots();
+  }
+});
+
+const speeds = [1, 1.5, 2, 0.5];
+let speedIdx = 0;
+btnSpeed.addEventListener('click', () => {
+  speedIdx = (speedIdx + 1) % speeds.length;
+  speed = speeds[speedIdx];
+  btnSpeed.textContent = speed + 'x';
+});
+
+document.addEventListener('keydown', (e) => {
+  if (e.code === 'Space') { e.preventDefault(); btnPlay.click(); }
+  if (e.code === 'ArrowRight') btnNext.click();
+  if (e.code === 'ArrowLeft') btnPrev.click();
+});
+
+function resetSceneState() {
+  // Reset scene 1
+  s1.phase = '1a';
+  s1.brightness = 0.25;
+  s1.doorOpen = 0;
+  s1.scrollsOnShelf = true;
+  s1.scrollPickedGold = false;
+  s1.scrollPickedTeal = false;
+  s1.showingScroll = null;
+  s1.colorTransition = 0;
+  s1.furnitureStart = -1;
+  s1.furnitureAlphas = FURNITURE.map(() => 0);
+  char.gx = -2; char.gy = 4;
+  char.targetGx = -2; char.targetGy = 4;
+  char.color = OC.grey; char.colorLight = OC.greyLight; char.colorDark = OC.greyDark;
+  char.walkFrame = 0; char.facing = 'right';
+  char.holdItem = null; char.backpackSize = 0; char.alpha = 0; char.moving = false;
+  particles = [];
+  hideScroll();
+  setNarration('');
+}
+
+// ─── Main loop ───
+let rafId = null;
+function frame(timestamp) {
+  if (window._stopRAF) return;
+  const dt = lastFrameTime ? Math.min((timestamp - lastFrameTime) / 1000, 0.05) : 0.016;
+  lastFrameTime = timestamp;
+
+  if (playing) {
+    sceneTime += dt * speed;
+    globalTime += dt * speed;
+  }
+
+  camLerp();
+
+  // Draw current scene
+  const scene = SCENES[currentScene];
+  if (scene) {
+    scene.draw(sceneTime, dt * speed);
+
+    // Progress
+    const pct = (sceneTime / scene.duration) * 100;
+    progressEl.style.width = Math.min(pct, 100) + '%';
+
+    // Auto-advance
+    if (sceneTime >= scene.duration && currentScene < SCENES.length - 1) {
+      currentScene++;
+      sceneTime = 0;
+      resetSceneState();
+      updateDots();
+    }
+  }
+
+  rafId = requestAnimationFrame(frame);
+}
+
+// Start — use setInterval fallback for background tabs
+resetSceneState();
+rafId = requestAnimationFrame(frame);
+// Fallback: if RAF stalls (background tab), use setInterval
+setInterval(() => {
+  if (!window._stopRAF) frame(performance.now());
+}, 50);
+
+</script>
+</body>
+</html>

@@ -1,0 +1,1759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1920, height=1080">
+<title>The Kitchen — City101 Animation</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #0c0c14;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    font-family: 'DM Sans', sans-serif;
+  }
+  canvas { display: block; image-rendering: pixelated; }
+  #ui-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none; z-index: 10;
+  }
+  #narration {
+    position: fixed; bottom: 60px; left: 50%; transform: translateX(-50%);
+    font-family: 'Instrument Serif', serif; font-size: 28px; color: #e8e6e1;
+    text-align: center; max-width: 900px; line-height: 1.5;
+    opacity: 0; transition: opacity 0.8s; z-index: 20;
+    text-shadow: 0 2px 12px rgba(0,0,0,0.8);
+    pointer-events: none;
+  }
+  #scene-label {
+    position: fixed; top: 30px; left: 50%; transform: translateX(-50%);
+    font-family: 'DM Mono', monospace; font-size: 14px; color: #9a9690;
+    letter-spacing: 2px; text-transform: uppercase; z-index: 20;
+    pointer-events: none; opacity: 0; transition: opacity 0.5s;
+  }
+  #controls {
+    position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%);
+    display: flex; gap: 12px; align-items: center; z-index: 30;
+    pointer-events: all;
+  }
+  #controls button {
+    background: rgba(201,168,76,0.15); border: 1px solid rgba(201,168,76,0.3);
+    color: #c9a84c; font-family: 'DM Mono', monospace; font-size: 12px;
+    padding: 6px 14px; cursor: pointer; border-radius: 3px;
+    transition: background 0.2s;
+  }
+  #controls button:hover { background: rgba(201,168,76,0.3); }
+  #controls button.active { background: rgba(201,168,76,0.4); border-color: #c9a84c; }
+  #progress {
+    position: fixed; bottom: 0; left: 0; height: 3px;
+    background: #c9a84c; z-index: 30; transition: width 0.3s;
+  }
+  #scene-dots {
+    position: fixed; bottom: 42px; left: 50%; transform: translateX(-50%);
+    display: flex; gap: 8px; z-index: 20; pointer-events: none;
+  }
+  #scene-dots .dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: rgba(201,168,76,0.2); transition: background 0.3s;
+  }
+  #scene-dots .dot.active { background: #c9a84c; }
+  #scene-dots .dot.done { background: rgba(201,168,76,0.5); }
+  /* Scroll overlay */
+  #scroll-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    display: none; z-index: 25; pointer-events: none;
+    align-items: center; justify-content: center;
+    background: rgba(12,12,20,0.6);
+  }
+  #scroll-overlay.visible { display: flex; }
+  #scroll-content {
+    width: 700px; padding: 50px; border-radius: 8px;
+    font-family: 'Instrument Serif', serif; font-size: 20px;
+    line-height: 1.6; opacity: 0;
+    transform: scale(0.95); transition: opacity 0.6s, transform 0.6s;
+  }
+  #scroll-content.show { opacity: 1; transform: scale(1); }
+  #scroll-content.map {
+    background: linear-gradient(135deg, #2a2418 0%, #1a1610 100%);
+    border: 2px solid rgba(201,168,76,0.4); color: #c9a84c;
+  }
+  #scroll-content.blueprint {
+    background: linear-gradient(135deg, #0e1a22 0%, #0a1218 100%);
+    border: 2px solid rgba(91,143,168,0.4); color: #5b8fa8;
+  }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="narration"></div>
+<div id="scene-label"></div>
+<div id="scene-dots"></div>
+<div id="progress" style="width:0%"></div>
+<div id="scroll-overlay"><div id="scroll-content"></div></div>
+<div id="controls">
+  <button id="btn-prev">&#9664; Prev</button>
+  <button id="btn-play" class="active">&#9654; Play</button>
+  <button id="btn-next">Next &#9654;</button>
+  <button id="btn-speed">1x</button>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════
+// CORE ENGINE
+// ═══════════════════════════════════════════════════
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+const W = 1920, H = 1080;
+canvas.width = W; canvas.height = H;
+
+// Scale canvas to fit viewport
+function resize() {
+  const s = Math.min(window.innerWidth / W, window.innerHeight / H);
+  canvas.style.width = (W * s) + 'px';
+  canvas.style.height = (H * s) + 'px';
+}
+resize(); window.addEventListener('resize', resize);
+
+// ─── Colors ───
+const C = {
+  bg: '#0c0c14', bgR: 12, bgG: 12, bgB: 20,
+  gold: '#c9a84c', goldR: 201, goldG: 168, goldB: 76,
+  purple: '#9b6bb0', purpleR: 155, purpleG: 107, purpleB: 176,
+  teal: '#5b8fa8', tealR: 91, tealG: 143, tealB: 168,
+  text: '#e8e6e1', muted: '#9a9690',
+  copper: '#b87a56',
+  floor: '#16161e', floorLight: '#1a1a24',
+  wall: '#1e1e2a', wallLight: '#26263a',
+  counter: '#2a2520', counterTop: '#3a3530',
+  steel: '#4a4a55', steelLight: '#5a5a68',
+  wood: '#3a2e22', woodLight: '#4a3e32',
+  fridge: '#2a2a35', fridgeLight: '#3a3a48',
+  red: '#c45d4a', green: '#5a9e6f',
+  grey: '#6a6a72', greyLight: '#8a8a92',
+  white: '#e8e6e1',
+};
+
+// ─── Isometric helpers ───
+const ISO_SCALE = 4; // pixel multiplier
+const TILE = 140; // base tile size in iso — fills ~80% of 1920 canvas for 12-tile kitchen
+function toIso(x, y, z) {
+  // Convert grid coords to screen pixel coords (isometric 2:1)
+  const sx = (x - y) * (TILE / 2);
+  const sy = (x + y) * (TILE / 4) - z * (TILE / 2);
+  return { x: sx, y: sy };
+}
+
+// ─── Camera ───
+let cam = { x: W / 2, y: H / 2 - 100, zoom: 1.0, targetX: W/2, targetY: H/2 - 100, targetZoom: 1.0 };
+function camLerp() {
+  cam.x += (cam.targetX - cam.x) * 0.04;
+  cam.y += (cam.targetY - cam.y) * 0.04;
+  cam.zoom += (cam.targetZoom - cam.zoom) * 0.04;
+}
+function worldToScreen(ix, iy, iz) {
+  const iso = toIso(ix, iy, iz || 0);
+  return {
+    x: cam.x + iso.x * cam.zoom,
+    y: cam.y + iso.y * cam.zoom
+  };
+}
+
+// ─── Easing ───
+function easeInOut(t) { return t < 0.5 ? 2*t*t : -1+(4-2*t)*t; }
+function easeOut(t) { return 1 - (1-t)*(1-t); }
+function easeIn(t) { return t*t; }
+function lerp(a, b, t) { return a + (b - a) * t; }
+function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+
+// ─── Timing ───
+let globalTime = 0;
+let sceneTime = 0;
+let playing = true;
+let speed = 1;
+let currentScene = 0;
+
+// ═══════════════════════════════════════════════════
+// PIXEL ART DRAWING PRIMITIVES
+// ═══════════════════════════════════════════════════
+
+function drawPixelRect(x, y, w, h, color) {
+  ctx.fillStyle = color;
+  ctx.fillRect(Math.round(x), Math.round(y), Math.round(w), Math.round(h));
+}
+
+// Draw an isometric box (top, left face, right face)
+function drawIsoBox(sx, sy, w, d, h, topColor, leftColor, rightColor, alpha) {
+  const a = alpha || 1;
+  ctx.globalAlpha = a;
+  const hw = w / 2, hd = d / 2;
+  // Top face
+  ctx.fillStyle = topColor;
+  ctx.beginPath();
+  ctx.moveTo(sx, sy - h);
+  ctx.lineTo(sx + hw, sy - h + hd/2);
+  ctx.lineTo(sx, sy - h + d/2);
+  ctx.lineTo(sx - hw, sy - h + hd/2);
+  ctx.closePath();
+  ctx.fill();
+  // Left face
+  ctx.fillStyle = leftColor;
+  ctx.beginPath();
+  ctx.moveTo(sx - hw, sy - h + hd/2);
+  ctx.lineTo(sx, sy - h + d/2);
+  ctx.lineTo(sx, sy + d/2);
+  ctx.lineTo(sx - hw, sy + hd/2);
+  ctx.closePath();
+  ctx.fill();
+  // Right face
+  ctx.fillStyle = rightColor;
+  ctx.beginPath();
+  ctx.moveTo(sx + hw, sy - h + hd/2);
+  ctx.lineTo(sx, sy - h + d/2);
+  ctx.lineTo(sx, sy + d/2);
+  ctx.lineTo(sx + hw, sy + hd/2);
+  ctx.closePath();
+  ctx.fill();
+  ctx.globalAlpha = 1;
+}
+
+// Isometric floor tile
+function drawFloorTile(sx, sy, size, color1, color2) {
+  const hs = size / 2;
+  ctx.fillStyle = color1;
+  ctx.beginPath();
+  ctx.moveTo(sx, sy - hs/2);
+  ctx.lineTo(sx + hs, sy);
+  ctx.lineTo(sx, sy + hs/2);
+  ctx.lineTo(sx - hs, sy);
+  ctx.closePath();
+  ctx.fill();
+  // subtle grid line
+  ctx.strokeStyle = color2;
+  ctx.lineWidth = 0.5;
+  ctx.stroke();
+}
+
+// ═══════════════════════════════════════════════════
+// CHARACTER SPRITES
+// ═══════════════════════════════════════════════════
+
+function drawCharacter(sx, sy, opts) {
+  const { color = C.grey, scale = 1, backpackSize = 0, eyeState = 'open',
+          holdItem = null, apron = null, walking = false, walkFrame = 0,
+          alpha = 1, label = null, sparkle = false } = opts;
+
+  ctx.save();
+  ctx.globalAlpha = alpha;
+  ctx.translate(sx, sy);
+  ctx.scale(scale, scale);
+
+  const s = cam.zoom * 2.2; // character size multiplier for TILE=140
+
+  // Shadow
+  ctx.fillStyle = 'rgba(0,0,0,0.3)';
+  ctx.beginPath();
+  ctx.ellipse(0, 4*s, 12*s, 5*s, 0, 0, Math.PI*2);
+  ctx.fill();
+
+  // Legs (little feet)
+  const legBob = walking ? Math.sin(walkFrame * 0.3) * 2*s : 0;
+  ctx.fillStyle = darken(color, 0.3);
+  ctx.fillRect(-7*s, -2*s + legBob, 4*s, 6*s);
+  ctx.fillRect(3*s, -2*s - legBob, 4*s, 6*s);
+
+  // Body (round blob)
+  const bodyBob = walking ? Math.sin(walkFrame * 0.3) * 1*s : 0;
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.ellipse(0, -12*s + bodyBob, 14*s, 14*s, 0, 0, Math.PI*2);
+  ctx.fill();
+
+  // Body highlight
+  ctx.fillStyle = lighten(color, 0.2);
+  ctx.beginPath();
+  ctx.ellipse(-3*s, -16*s + bodyBob, 6*s, 5*s, -0.3, 0, Math.PI*2);
+  ctx.fill();
+
+  // Eyes
+  const ey = -14*s + bodyBob;
+  if (eyeState === 'open') {
+    ctx.fillStyle = '#fff';
+    ctx.beginPath(); ctx.ellipse(-5*s, ey, 3.5*s, 4*s, 0, 0, Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.ellipse(5*s, ey, 3.5*s, 4*s, 0, 0, Math.PI*2); ctx.fill();
+    ctx.fillStyle = '#1a1a2e';
+    ctx.beginPath(); ctx.ellipse(-4*s, ey+1*s, 2*s, 2.5*s, 0, 0, Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.ellipse(6*s, ey+1*s, 2*s, 2.5*s, 0, 0, Math.PI*2); ctx.fill();
+    // Tiny highlight
+    ctx.fillStyle = '#fff';
+    ctx.beginPath(); ctx.arc(-3*s, ey-1*s, 1*s, 0, Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.arc(7*s, ey-1*s, 1*s, 0, Math.PI*2); ctx.fill();
+  } else if (eyeState === 'closed') {
+    ctx.strokeStyle = '#1a1a2e';
+    ctx.lineWidth = 1.5*s;
+    ctx.beginPath(); ctx.moveTo(-7*s, ey); ctx.lineTo(-2*s, ey+1*s); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(3*s, ey); ctx.lineTo(8*s, ey+1*s); ctx.stroke();
+  }
+
+  // Backpack
+  if (backpackSize > 0) {
+    const bpScale = 0.3 + backpackSize * 0.18;
+    const bpW = 10*s * bpScale, bpH = 14*s * bpScale;
+    ctx.fillStyle = darken(color, 0.25);
+    ctx.beginPath();
+    ctx.ellipse(0, -4*s + bodyBob, bpW, bpH, 0, 0, Math.PI*2);
+    ctx.fill();
+    // Strap
+    ctx.strokeStyle = darken(color, 0.4);
+    ctx.lineWidth = 1.5*s;
+    ctx.beginPath();
+    ctx.moveTo(-5*s, -18*s + bodyBob);
+    ctx.quadraticCurveTo(-2*s, -6*s + bodyBob, 0, -4*s + bpH + bodyBob - 6*s);
+    ctx.stroke();
+  }
+
+  // Apron (specialist indicator)
+  if (apron) {
+    ctx.fillStyle = apron;
+    ctx.beginPath();
+    ctx.moveTo(-10*s, -6*s + bodyBob);
+    ctx.lineTo(10*s, -6*s + bodyBob);
+    ctx.lineTo(8*s, 2*s + bodyBob);
+    ctx.lineTo(-8*s, 2*s + bodyBob);
+    ctx.closePath();
+    ctx.fill();
+  }
+
+  // Held item
+  if (holdItem === 'scroll-gold') {
+    drawScroll(14*s, -10*s + bodyBob, C.gold, s);
+  } else if (holdItem === 'scroll-teal') {
+    drawScroll(14*s, -10*s + bodyBob, C.teal, s);
+  } else if (holdItem === 'book') {
+    drawBook(14*s, -8*s + bodyBob, C.copper, s);
+  }
+
+  // Sparkle effect
+  if (sparkle) {
+    const sparkT = (globalTime * 3) % (Math.PI * 2);
+    for (let i = 0; i < 4; i++) {
+      const ang = sparkT + i * Math.PI / 2;
+      const dist = 20*s + Math.sin(sparkT * 2 + i) * 4*s;
+      ctx.fillStyle = lighten(color, 0.5);
+      ctx.globalAlpha = 0.5 + Math.sin(sparkT + i) * 0.3;
+      ctx.beginPath();
+      ctx.arc(Math.cos(ang) * dist, -12*s + Math.sin(ang) * dist * 0.6, 2*s, 0, Math.PI*2);
+      ctx.fill();
+    }
+    ctx.globalAlpha = alpha;
+  }
+
+  // Label
+  if (label) {
+    ctx.fillStyle = C.muted;
+    ctx.font = `${10*s}px 'DM Mono', monospace`;
+    ctx.textAlign = 'center';
+    ctx.fillText(label, 0, 14*s);
+  }
+
+  ctx.restore();
+}
+
+function drawScroll(x, y, color, s) {
+  ctx.fillStyle = color;
+  ctx.fillRect(x - 3*s, y - 6*s, 6*s, 12*s);
+  // Ends
+  ctx.fillStyle = lighten(color, 0.3);
+  ctx.fillRect(x - 4*s, y - 7*s, 8*s, 2*s);
+  ctx.fillRect(x - 4*s, y + 5*s, 8*s, 2*s);
+}
+
+function drawBook(x, y, color, s) {
+  ctx.fillStyle = color;
+  ctx.fillRect(x - 5*s, y - 4*s, 10*s, 8*s);
+  ctx.fillStyle = darken(color, 0.3);
+  ctx.fillRect(x - 5*s, y - 4*s, 2*s, 8*s); // spine
+  ctx.fillStyle = lighten(color, 0.2);
+  ctx.fillRect(x - 2*s, y - 2*s, 6*s, 1*s); // title line
+}
+
+// ═══════════════════════════════════════════════════
+// KITCHEN ENVIRONMENT
+// ═══════════════════════════════════════════════════
+
+function drawKitchenFloor(ox, oy, gridW, gridD, alpha) {
+  ctx.globalAlpha = alpha || 1;
+  for (let gx = 0; gx < gridW; gx++) {
+    for (let gy = 0; gy < gridD; gy++) {
+      const p = worldToScreen(gx, gy, 0);
+      const tileColor = (gx + gy) % 2 === 0 ? '#141420' : '#18182a';
+      const lineColor = '#1c1c2e';
+      drawFloorTile(p.x + ox, p.y + oy, TILE * cam.zoom, tileColor, lineColor);
+    }
+  }
+  ctx.globalAlpha = 1;
+}
+
+function drawWall(ox, oy, length, facing, height, alpha) {
+  ctx.globalAlpha = alpha || 1;
+  for (let i = 0; i < length; i++) {
+    let p;
+    if (facing === 'back') {
+      p = worldToScreen(i, 0, 0);
+      drawIsoBox(p.x + ox, p.y + oy, TILE * cam.zoom, 4 * cam.zoom,
+        height * TILE/2 * cam.zoom, C.wallLight, C.wall, darken(C.wall, 0.15));
+    } else if (facing === 'left') {
+      p = worldToScreen(0, i, 0);
+      drawIsoBox(p.x + ox, p.y + oy, 4 * cam.zoom, TILE * cam.zoom,
+        height * TILE/2 * cam.zoom, C.wallLight, darken(C.wall, 0.15), C.wall);
+    }
+  }
+  ctx.globalAlpha = 1;
+}
+
+function drawCounter(ox, oy, gx, gy, length, facing, alpha) {
+  ctx.globalAlpha = alpha || 1;
+  for (let i = 0; i < length; i++) {
+    let p;
+    if (facing === 'horizontal') {
+      p = worldToScreen(gx + i, gy, 0);
+    } else {
+      p = worldToScreen(gx, gy + i, 0);
+    }
+    drawIsoBox(p.x + ox, p.y + oy,
+      TILE * 0.9 * cam.zoom, TILE * 0.9 * cam.zoom, TILE * 0.55 * cam.zoom,
+      C.counterTop, C.counter, darken(C.counter, 0.1));
+  }
+  ctx.globalAlpha = 1;
+}
+
+function drawFridge(ox, oy, gx, gy, alpha) {
+  ctx.globalAlpha = alpha || 1;
+  const p = worldToScreen(gx, gy, 0);
+  drawIsoBox(p.x + ox, p.y + oy,
+    TILE * 0.85 * cam.zoom, TILE * 0.85 * cam.zoom, TILE * 1.4 * cam.zoom,
+    C.fridgeLight, C.fridge, darken(C.fridge, 0.1));
+  // Handle
+  const hx = p.x + ox + 3 * cam.zoom;
+  const hy = p.y + oy - TILE * 0.7 * cam.zoom;
+  ctx.fillStyle = C.steel;
+  ctx.fillRect(hx, hy, 2 * cam.zoom, 8 * cam.zoom);
+  ctx.globalAlpha = 1;
+}
+
+function drawStove(ox, oy, gx, gy, alpha) {
+  ctx.globalAlpha = alpha || 1;
+  const p = worldToScreen(gx, gy, 0);
+  drawIsoBox(p.x + ox, p.y + oy,
+    TILE * 0.9 * cam.zoom, TILE * 0.9 * cam.zoom, TILE * 0.55 * cam.zoom,
+    '#2a2a2a', '#222', '#1a1a1a');
+  // Burners (circles on top)
+  const topY = p.y + oy - TILE * 0.55 * cam.zoom;
+  for (let b = 0; b < 4; b++) {
+    const bx = (b % 2 - 0.5) * 6 * cam.zoom;
+    const by = (Math.floor(b / 2) - 0.5) * 3 * cam.zoom;
+    ctx.fillStyle = '#c45d4a';
+    ctx.globalAlpha = (alpha || 1) * (0.3 + Math.sin(globalTime * 2 + b) * 0.15);
+    ctx.beginPath();
+    ctx.ellipse(p.x + ox + bx, topY + by, 3 * cam.zoom, 1.5 * cam.zoom, 0, 0, Math.PI*2);
+    ctx.fill();
+  }
+  ctx.globalAlpha = 1;
+}
+
+function drawShelf(ox, oy, gx, gy, alpha) {
+  ctx.globalAlpha = alpha || 1;
+  const p = worldToScreen(gx, gy, 0);
+  // Shelf brackets on wall
+  for (let sh = 0; sh < 2; sh++) {
+    const sy = p.y + oy - (TILE * (0.9 + sh * 0.5)) * cam.zoom;
+    ctx.fillStyle = C.wood;
+    ctx.fillRect(p.x + ox - 10*cam.zoom, sy, 20*cam.zoom, 3*cam.zoom);
+    // Items on shelf
+    if (sh === 0) {
+      ctx.fillStyle = C.gold;
+      ctx.fillRect(p.x + ox - 6*cam.zoom, sy - 5*cam.zoom, 4*cam.zoom, 5*cam.zoom);
+      ctx.fillStyle = C.teal;
+      ctx.fillRect(p.x + ox + 2*cam.zoom, sy - 4*cam.zoom, 3*cam.zoom, 4*cam.zoom);
+    }
+  }
+  ctx.globalAlpha = 1;
+}
+
+function drawDoor(ox, oy, gx, gy, label, isOpen, alpha) {
+  ctx.globalAlpha = alpha || 1;
+  const p = worldToScreen(gx, gy, 0);
+  const doorH = TILE * 1.2 * cam.zoom;
+  const doorW = TILE * 0.7 * cam.zoom;
+  // Frame
+  ctx.fillStyle = '#2a2520';
+  ctx.fillRect(p.x + ox - doorW/2, p.y + oy - doorH, doorW, doorH);
+  // Door
+  if (!isOpen) {
+    ctx.fillStyle = '#3a3228';
+    ctx.fillRect(p.x + ox - doorW/2 + 2, p.y + oy - doorH + 2, doorW - 4, doorH - 4);
+    // Handle
+    ctx.fillStyle = C.gold;
+    ctx.fillRect(p.x + ox + doorW/4, p.y + oy - doorH/2, 3*cam.zoom, 3*cam.zoom);
+  } else {
+    // Open — dark inside
+    ctx.fillStyle = '#0a0a10';
+    ctx.fillRect(p.x + ox - doorW/2 + 2, p.y + oy - doorH + 2, doorW - 4, doorH - 4);
+    // Light spill
+    ctx.fillStyle = 'rgba(201,168,76,0.05)';
+    ctx.fillRect(p.x + ox - doorW, p.y + oy - 4, doorW*2, 8);
+  }
+  // Label above
+  if (label) {
+    ctx.fillStyle = C.muted;
+    ctx.font = `${Math.max(9, 10 * cam.zoom)}px 'DM Mono', monospace`;
+    ctx.textAlign = 'center';
+    ctx.fillText(label, p.x + ox, p.y + oy - doorH - 6*cam.zoom);
+  }
+  ctx.globalAlpha = 1;
+}
+
+function drawTicketRail(ox, oy, gx, gy, tickets, alpha) {
+  ctx.globalAlpha = alpha || 1;
+  const p = worldToScreen(gx, gy, 0);
+  const railY = p.y + oy - TILE * 0.8 * cam.zoom;
+  // Rail bar
+  ctx.fillStyle = C.steel;
+  ctx.fillRect(p.x + ox - 30*cam.zoom, railY, 60*cam.zoom, 2*cam.zoom);
+  // Tickets
+  for (let t = 0; t < Math.min(tickets, 6); t++) {
+    const tx = p.x + ox - 25*cam.zoom + t * 10*cam.zoom;
+    ctx.fillStyle = '#e8e6e1';
+    ctx.fillRect(tx, railY + 3*cam.zoom, 7*cam.zoom, 10*cam.zoom);
+    // Lines on ticket
+    ctx.fillStyle = C.muted;
+    ctx.fillRect(tx + 1*cam.zoom, railY + 5*cam.zoom, 5*cam.zoom, 1*cam.zoom);
+    ctx.fillRect(tx + 1*cam.zoom, railY + 8*cam.zoom, 3*cam.zoom, 1*cam.zoom);
+  }
+  ctx.globalAlpha = 1;
+}
+
+function drawLogbook(ox, oy, gx, gy, entries, alpha) {
+  ctx.globalAlpha = alpha || 1;
+  const p = worldToScreen(gx, gy, 0);
+  const bx = p.x + ox, by = p.y + oy - TILE * 0.3 * cam.zoom;
+  // Book base
+  ctx.fillStyle = '#2a2018';
+  ctx.fillRect(bx - 12*cam.zoom, by - 2*cam.zoom, 24*cam.zoom, 16*cam.zoom);
+  // Pages
+  ctx.fillStyle = '#e8e6d8';
+  ctx.fillRect(bx - 10*cam.zoom, by, 20*cam.zoom, 12*cam.zoom);
+  // Text lines
+  for (let e = 0; e < Math.min(entries, 5); e++) {
+    ctx.fillStyle = 'rgba(12,12,20,0.4)';
+    ctx.fillRect(bx - 8*cam.zoom, by + 2*cam.zoom + e * 2.2*cam.zoom, (12 - e*1.5)*cam.zoom, 1*cam.zoom);
+  }
+  // Writing animation — pen/pencil
+  if (entries > 0) {
+    const penBob = Math.sin(globalTime * 4) * 2 * cam.zoom;
+    ctx.fillStyle = C.gold;
+    ctx.fillRect(bx + 6*cam.zoom + penBob, by + 1*cam.zoom, 1.5*cam.zoom, 8*cam.zoom);
+  }
+  ctx.globalAlpha = 1;
+}
+
+function drawPassCounter(ox, oy, startGx, gy, length, alpha) {
+  ctx.globalAlpha = alpha || 1;
+  for (let i = 0; i < length; i++) {
+    const p = worldToScreen(startGx + i, gy, 0);
+    // Taller counter (the pass)
+    drawIsoBox(p.x + ox, p.y + oy,
+      TILE * 0.9 * cam.zoom, TILE * 0.9 * cam.zoom, TILE * 0.7 * cam.zoom,
+      C.steelLight, C.steel, darken(C.steel, 0.15));
+  }
+  // Window/lamp above pass
+  const mp = worldToScreen(startGx + Math.floor(length/2), gy, 0);
+  ctx.fillStyle = 'rgba(201,168,76,0.08)';
+  ctx.fillRect(mp.x + ox - 25*cam.zoom, mp.y + oy - TILE * 1.6 * cam.zoom, 50*cam.zoom, TILE * 0.4 * cam.zoom);
+  // Warm light cone
+  const grad = ctx.createRadialGradient(
+    mp.x + ox, mp.y + oy - TILE * 0.7 * cam.zoom, 5,
+    mp.x + ox, mp.y + oy - TILE * 0.2 * cam.zoom, 60 * cam.zoom
+  );
+  grad.addColorStop(0, 'rgba(201,168,76,0.06)');
+  grad.addColorStop(1, 'rgba(201,168,76,0)');
+  ctx.fillStyle = grad;
+  ctx.fillRect(mp.x + ox - 60*cam.zoom, mp.y + oy - TILE * 1.6 * cam.zoom, 120*cam.zoom, TILE * 2 * cam.zoom);
+  ctx.globalAlpha = 1;
+}
+
+// ═══════════════════════════════════════════════════
+// UTILITY
+// ═══════════════════════════════════════════════════
+
+function darken(hex, amt) {
+  let r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
+  r = Math.max(0, Math.floor(r * (1 - amt)));
+  g = Math.max(0, Math.floor(g * (1 - amt)));
+  b = Math.max(0, Math.floor(b * (1 - amt)));
+  return `rgb(${r},${g},${b})`;
+}
+function lighten(hex, amt) {
+  let r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
+  r = Math.min(255, Math.floor(r + (255-r) * amt));
+  g = Math.min(255, Math.floor(g + (255-g) * amt));
+  b = Math.min(255, Math.floor(b + (255-b) * amt));
+  return `rgb(${r},${g},${b})`;
+}
+function hexToRgba(hex, a) {
+  let r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
+  return `rgba(${r},${g},${b},${a})`;
+}
+
+// ═══════════════════════════════════════════════════
+// NARRATION SYSTEM
+// ═══════════════════════════════════════════════════
+
+const narrationEl = document.getElementById('narration');
+const sceneLabelEl = document.getElementById('scene-label');
+const scrollOverlay = document.getElementById('scroll-overlay');
+const scrollContent = document.getElementById('scroll-content');
+
+function setNarration(text, fade) {
+  narrationEl.textContent = text;
+  narrationEl.style.opacity = text ? '1' : '0';
+}
+function clearNarration() { narrationEl.style.opacity = '0'; }
+function setSceneLabel(text) {
+  sceneLabelEl.textContent = text;
+  sceneLabelEl.style.opacity = text ? '0.8' : '0';
+}
+
+let scrollShown = false;
+function showScrollOverlay(type, content) {
+  scrollOverlay.classList.add('visible');
+  if (!scrollShown || scrollContent.innerHTML !== content) {
+    scrollContent.className = type === 'map' ? 'map show' : 'blueprint show';
+    scrollContent.innerHTML = content;
+    scrollShown = true;
+  }
+}
+function hideScrollOverlay() {
+  if (scrollShown) {
+    scrollContent.classList.remove('show');
+    scrollOverlay.classList.remove('visible');
+    scrollShown = false;
+  }
+}
+
+// ═══════════════════════════════════════════════════
+// SCENE DEFINITIONS
+// ═══════════════════════════════════════════════════
+
+const SCENES = [
+  { name: 'Scene 1', title: 'Entering the Kitchen', duration: 32 },
+  { name: 'Scene 2', title: 'The Pass', duration: 38 },
+  { name: 'Scene 3', title: 'The Logbook', duration: 28 },
+  { name: 'Scene 4', title: 'The Brigade', duration: 32 },
+  { name: 'Scene 5', title: 'Four Pillars', duration: 32 },
+  { name: 'Scene 6', title: 'The Full Kitchen', duration: 18 },
+];
+
+// Kitchen offset for centering
+const KOX = 0, KOY = 80;
+
+// ─── SCENE 1: Entering the Kitchen ───
+function drawScene1(t) {
+  const dur = SCENES[0].duration;
+  const p = t / dur; // 0→1 progress
+
+  cam.targetX = W/2;
+  cam.targetY = H/2 - 60;
+  cam.targetZoom = 1.0;
+
+  // Phase timings (seconds)
+  const dimPhase = t < 3;           // 0-3: dim kitchen
+  const walkPhase = t >= 3 && t < 6; // 3-6: character walks in
+  const scrollPhase = t >= 6 && t < 10; // 6-10: picks up scrolls
+  const mapPhase = t >= 10 && t < 15;   // 10-15: opens CLAUDE.md
+  const bpPhase = t >= 15 && t < 20;    // 15-20: opens .claude/
+  const colorPhase = t >= 20 && t < 23; // 20-23: color transition
+  const furnishPhase = t >= 23;          // 23+: kitchen furnishes
+
+  // Kitchen brightness
+  const brightness = dimPhase ? 0.3 : (furnishPhase ? Math.min(1, 0.3 + (t - 23) * 0.15) : 0.4 + (colorPhase ? (t-20)/3 * 0.3 : 0));
+
+  // Floor
+  drawKitchenFloor(KOX, KOY, 12, 10, brightness);
+
+  // Walls (back + left)
+  drawWall(KOX, KOY, 12, 'back', 3, brightness);
+  drawWall(KOX, KOY, 10, 'left', 3, brightness);
+
+  // Door (left wall, tile 1)
+  const doorOpen = t >= 4;
+  drawDoor(KOX, KOY, 0, 2, null, doorOpen, brightness);
+
+  // Shelf with scrolls (near door)
+  if (!scrollPhase || t < 8) {
+    const shelfP = worldToScreen(1, 1, 0);
+    ctx.globalAlpha = brightness;
+    // Small shelf
+    ctx.fillStyle = C.wood;
+    ctx.fillRect(shelfP.x + KOX - 8*cam.zoom, shelfP.y + KOY - 20*cam.zoom, 16*cam.zoom, 3*cam.zoom);
+    // Scrolls on shelf (disappear as picked up)
+    if (t < 7) {
+      drawScroll(shelfP.x + KOX - 3*cam.zoom, shelfP.y + KOY - 26*cam.zoom, C.gold, cam.zoom);
+    }
+    if (t < 8.5) {
+      drawScroll(shelfP.x + KOX + 5*cam.zoom, shelfP.y + KOY - 25*cam.zoom, C.teal, cam.zoom);
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  // Furniture (appears during furnish phase)
+  if (furnishPhase) {
+    const fa = easeOut(clamp((t - 23) / 4, 0, 1));
+    drawCounter(KOX, KOY, 3, 1, 4, 'horizontal', fa);
+    drawStove(KOX, KOY, 8, 1, clamp((t - 24) / 2, 0, 1));
+    drawFridge(KOX, KOY, 10, 1, clamp((t - 24.5) / 2, 0, 1));
+    drawShelf(KOX, KOY, 5, 0, clamp((t - 25) / 2, 0, 1));
+    drawTicketRail(KOX, KOY, 7, 0, Math.floor((t - 25) * 2), clamp((t - 25) / 2, 0, 1));
+    drawLogbook(KOX, KOY, 9, 3, 0, clamp((t - 26) / 2, 0, 1));
+  }
+
+  // Character
+  const charVisible = t >= 3;
+  if (charVisible) {
+    // Position: walks from door to center
+    let cx, cy;
+    if (walkPhase) {
+      const wp = (t - 3) / 3;
+      const startP = worldToScreen(0, 2, 0);
+      const endP = worldToScreen(3, 4, 0);
+      cx = lerp(startP.x, endP.x, easeOut(wp)) + KOX;
+      cy = lerp(startP.y, endP.y, easeOut(wp)) + KOY;
+    } else if (t < 23) {
+      const cp = worldToScreen(3, 4, 0);
+      cx = cp.x + KOX; cy = cp.y + KOY;
+    } else {
+      // Walk to station during furnish
+      const fp = easeInOut(clamp((t - 23) / 3, 0, 1));
+      const fromP = worldToScreen(3, 4, 0);
+      const toP = worldToScreen(5, 3, 0);
+      cx = lerp(fromP.x, toP.x, fp) + KOX;
+      cy = lerp(fromP.y, toP.y, fp) + KOY;
+    }
+
+    // Color transition
+    let charColor = C.grey;
+    if (colorPhase) {
+      const cp = (t - 20) / 3;
+      const r = Math.floor(lerp(106, C.goldR, cp));
+      const g = Math.floor(lerp(106, C.goldG, cp));
+      const b = Math.floor(lerp(114, C.goldB, cp));
+      charColor = `rgb(${r},${g},${b})`;
+    } else if (t >= 23) {
+      charColor = C.gold;
+    }
+
+    // Backpack size
+    let bpSize = 0;
+    if (t >= 8.5 && t < 10) bpSize = 1; // one scroll
+    else if (t >= 10 && t < 20) bpSize = 2; // both scrolls, studying
+    else if (t >= 20) bpSize = 2;
+
+    // Held item
+    let holdItem = null;
+    if (t >= 7 && t < 8.5) holdItem = 'scroll-gold';
+    else if (t >= 8.5 && t < 10) holdItem = 'scroll-teal';
+
+    drawCharacter(cx, cy, {
+      color: charColor,
+      backpackSize: bpSize,
+      walking: walkPhase || (furnishPhase && t < 26),
+      walkFrame: t * 8,
+      holdItem: holdItem,
+      sparkle: t >= 22 && t < 25
+    });
+  }
+
+  // Scroll overlays
+  if (mapPhase) {
+    showScrollOverlay('map',
+      `<h2 style="margin-bottom:16px;font-size:28px;">📜 CLAUDE.md — The Map</h2>
+      <p style="margin-bottom:12px;color:#c9a84c99;font-size:16px;font-family:'DM Mono',monospace;">WHERE to find things</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:16px;">
+        <div style="padding:8px;background:rgba(201,168,76,0.08);border-radius:4px;">📊 datasets/ — the walk-in fridge</div>
+        <div style="padding:8px;background:rgba(201,168,76,0.08);border-radius:4px;">🔧 tools/ — kitchen equipment</div>
+        <div style="padding:8px;background:rgba(201,168,76,0.08);border-radius:4px;">📋 workflows/ — standard procedures</div>
+        <div style="padding:8px;background:rgba(201,168,76,0.08);border-radius:4px;">🎯 deliverables/ — the pass</div>
+        <div style="padding:8px;background:rgba(201,168,76,0.08);border-radius:4px;">🔬 observations/ — R&D journal</div>
+        <div style="padding:8px;background:rgba(201,168,76,0.08);border-radius:4px;">📦 output/ — prep counter</div>
+      </div>`
+    );
+  } else if (bpPhase) {
+    showScrollOverlay('blueprint',
+      `<h2 style="margin-bottom:16px;font-size:28px;">⚙️ .claude/ — The Blueprint</h2>
+      <p style="margin-bottom:12px;color:#5b8fa899;font-size:16px;font-family:'DM Mono',monospace;">HOW the kitchen works</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:16px;">
+        <div style="padding:8px;background:rgba(91,143,168,0.08);border-radius:4px;">📐 conventions.md — labeling system</div>
+        <div style="padding:8px;background:rgba(91,143,168,0.08);border-radius:4px;">🔒 data-protocol.md — safety rules</div>
+        <div style="padding:8px;background:rgba(91,143,168,0.08);border-radius:4px;">🔌 tool-protocol.md — equipment manuals</div>
+        <div style="padding:8px;background:rgba(91,143,168,0.08);border-radius:4px;">🎭 commands/ — specialist cloakrooms</div>
+        <div style="padding:8px;background:rgba(91,143,168,0.08);border-radius:4px;">📡 agents/ — brigade definitions</div>
+        <div style="padding:8px;background:rgba(91,143,168,0.08);border-radius:4px;">⚡ rules/ — auto-loaded protocols</div>
+      </div>`
+    );
+  } else {
+    hideScrollOverlay();
+  }
+
+  // Narration
+  if (t < 3) setNarration('An empty kitchen. The room exists, but it\'s dim. Unused.');
+  else if (t < 6) setNarration('A new session begins. Claude walks in — grey, blank, no context.');
+  else if (t < 10) setNarration('Just inside the door: two scrolls waiting on a shelf.');
+  else if (t < 15) setNarration('CLAUDE.md — the treasure map. Where everything lives.');
+  else if (t < 20) setNarration('.claude/ — the blueprint. How everything works.');
+  else if (t < 23) setNarration('Scrolls go in the backpack. Grey washes to color. The agent is loaded.');
+  else if (t < 28) setNarration('The kitchen furnishes itself. Context is the space taking shape.');
+  else setNarration('');
+  setSceneLabel('Scene 1 — Entering the Kitchen');
+}
+
+// ─── SCENE 2: The Pass ───
+function drawScene2(t) {
+  const dur = SCENES[1].duration;
+  cam.targetX = W/2;
+  cam.targetY = H/2 - 60;
+  cam.targetZoom = 1.0;
+
+  // Full lit kitchen
+  drawKitchenFloor(KOX, KOY, 12, 10, 0.9);
+  drawWall(KOX, KOY, 12, 'back', 3, 0.9);
+  drawWall(KOX, KOY, 10, 'left', 3, 0.9);
+
+  // Kitchen furniture
+  drawCounter(KOX, KOY, 3, 1, 4, 'horizontal', 1);
+  drawStove(KOX, KOY, 8, 1, 1);
+  drawFridge(KOX, KOY, 10, 1, 1);
+  drawShelf(KOX, KOY, 5, 0, 1);
+
+  // The Pass counter (middle of room)
+  drawPassCounter(KOX, KOY, 3, 5, 6, 1);
+
+  // Ticket rail
+  drawTicketRail(KOX, KOY, 7, 0, Math.min(6, Math.floor(t / 4)), 1);
+
+  // Logbook (writing itself)
+  drawLogbook(KOX, KOY, 10, 3, Math.floor(t / 3), 1);
+
+  // User on dining side
+  const userP = worldToScreen(5, 7, 0);
+  drawCharacter(userP.x + KOX, userP.y + KOY, {
+    color: '#e8e6e1', scale: 1.1, label: 'CHEF',
+    eyeState: 'open'
+  });
+
+  // Claude on kitchen side
+  const claudeP = worldToScreen(5, 4, 0);
+  // Interaction cycle
+  const cycle = t % 8;
+  const isWorking = cycle > 2 && cycle < 6;
+  let bpSize = Math.min(4, Math.floor(t / 6));
+
+  let holdItem = null;
+  if (t >= 18 && t < 22) holdItem = 'book'; // catching archibase
+
+  drawCharacter(claudeP.x + KOX, claudeP.y + KOY, {
+    color: C.gold, backpackSize: bpSize,
+    walking: isWorking, walkFrame: t * 8,
+    holdItem: holdItem,
+    sparkle: t >= 22 && t < 25
+  });
+
+  // Ticket / plate animation across pass
+  if (cycle < 2) {
+    // Ticket coming from user
+    const ticketP = lerp(userP.y + KOY, claudeP.y + KOY + 20, cycle / 2);
+    const ticketX = lerp(userP.x + KOX, claudeP.x + KOX, cycle / 2);
+    ctx.fillStyle = '#e8e6e1';
+    ctx.fillRect(ticketX - 4*cam.zoom, ticketP - 6*cam.zoom, 8*cam.zoom, 10*cam.zoom);
+    ctx.fillStyle = C.muted;
+    ctx.fillRect(ticketX - 2*cam.zoom, ticketP - 3*cam.zoom, 5*cam.zoom, 1*cam.zoom);
+  } else if (cycle > 6) {
+    // Plate going back
+    const plateP = lerp(claudeP.y + KOY, userP.y + KOY - 10, (cycle - 6) / 2);
+    const plateX = lerp(claudeP.x + KOX, userP.x + KOX, (cycle - 6) / 2);
+    ctx.fillStyle = C.steel;
+    ctx.beginPath();
+    ctx.ellipse(plateX, plateP, 8*cam.zoom, 4*cam.zoom, 0, 0, Math.PI*2);
+    ctx.fill();
+    ctx.fillStyle = C.gold;
+    ctx.beginPath();
+    ctx.ellipse(plateX, plateP - 2*cam.zoom, 4*cam.zoom, 3*cam.zoom, 0, 0, Math.PI*2);
+    ctx.fill();
+  }
+
+  // CAG vs RAG visual (phase: 26-36)
+  if (t >= 26 && t < 36) {
+    const ragPhase = t >= 31;
+    const fadeIn = easeOut(clamp((t - 26) / 2, 0, 1));
+    const labelY = 120;
+
+    if (!ragPhase) {
+      // CAG: 5 stacked books
+      ctx.globalAlpha = fadeIn;
+      const booksP = worldToScreen(7, 3, 0);
+      for (let b = 0; b < 5; b++) {
+        const colors = [C.copper, C.teal, C.gold, C.red, C.green];
+        drawBook(booksP.x + KOX, booksP.y + KOY - b * 6*cam.zoom - 10*cam.zoom, colors[b], cam.zoom * 1.2);
+      }
+      ctx.fillStyle = C.text;
+      ctx.font = `${14*cam.zoom}px 'DM Mono', monospace`;
+      ctx.textAlign = 'center';
+      ctx.fillText('CAG — everything pre-loaded', booksP.x + KOX, booksP.y + KOY + 16*cam.zoom);
+      ctx.fillStyle = C.muted;
+      ctx.font = `${11*cam.zoom}px 'DM Mono', monospace`;
+      ctx.fillText('heavy backpack, fast access', booksP.x + KOX, booksP.y + KOY + 30*cam.zoom);
+      ctx.globalAlpha = 1;
+    } else {
+      // RAG: small box + index cards
+      const fadeIn2 = easeOut(clamp((t - 31) / 2, 0, 1));
+      ctx.globalAlpha = fadeIn2;
+      const boxP = worldToScreen(7, 3, 0);
+      // Small box
+      drawIsoBox(boxP.x + KOX, boxP.y + KOY - 5*cam.zoom,
+        14*cam.zoom, 10*cam.zoom, 8*cam.zoom,
+        C.woodLight, C.wood, darken(C.wood, 0.2));
+      // Index cards sticking out
+      for (let c = 0; c < 3; c++) {
+        ctx.fillStyle = '#e8e6d8';
+        ctx.fillRect(boxP.x + KOX - 4*cam.zoom + c*4*cam.zoom, boxP.y + KOY - 14*cam.zoom - c*1.5*cam.zoom, 5*cam.zoom, 8*cam.zoom);
+      }
+      ctx.fillStyle = C.text;
+      ctx.font = `${14*cam.zoom}px 'DM Mono', monospace`;
+      ctx.textAlign = 'center';
+      ctx.fillText('RAG — fetch on demand', boxP.x + KOX, boxP.y + KOY + 16*cam.zoom);
+      ctx.fillStyle = C.muted;
+      ctx.font = `${11*cam.zoom}px 'DM Mono', monospace`;
+      ctx.fillText('light backpack, pantry trips', boxP.x + KOX, boxP.y + KOY + 30*cam.zoom);
+      ctx.globalAlpha = 1;
+    }
+  }
+
+  // Big book throw (18-22s)
+  if (t >= 16 && t < 18) {
+    // Book flying across pass
+    const throwP = easeOut((t - 16) / 2);
+    const bx = lerp(userP.x + KOX, claudeP.x + KOX + 14*cam.zoom, throwP);
+    const by = lerp(userP.y + KOY - 10*cam.zoom, claudeP.y + KOY - 8*cam.zoom, throwP)
+      - Math.sin(throwP * Math.PI) * 40*cam.zoom; // arc
+    drawBook(bx, by, C.copper, cam.zoom * 1.5);
+  }
+
+  // Narration
+  if (t < 4) setNarration('The pass. User on one side. Claude on the other.');
+  else if (t < 10) setNarration('An order comes in. Claude works. Output gets plated and slid across.');
+  else if (t < 16) setNarration('With each exchange, the backpack grows. More conversation, more context consumed.');
+  else if (t < 22) setNarration('The user throws a big book — Archibase. Claude catches it. Now it can build.');
+  else if (t < 26) setNarration('The book costs backpack space. But now Claude knows materials, norms, assemblies.');
+  else if (t < 31) setNarration('CAG: everything pre-loaded. Five books on the counter. Fast, but heavy.');
+  else if (t < 36) setNarration('RAG: a small index box. Fetch what you need, when you need it. Light and nimble.');
+  else setNarration('In the corner — a logbook has been writing itself the whole time.');
+  setSceneLabel('Scene 2 — The Pass');
+}
+
+// ─── SCENE 3: The Logbook ───
+function drawScene3(t) {
+  cam.targetX = W/2;
+  cam.targetY = H/2 - 60;
+  cam.targetZoom = 1.0;
+
+  const dualView = t >= 8 && t < 18;
+  const branchView = t >= 18;
+
+  if (!dualView && !branchView) {
+    // Zoomed on logbook
+    drawKitchenFloor(KOX, KOY, 12, 10, 0.6);
+    drawWall(KOX, KOY, 12, 'back', 3, 0.6);
+
+    // Big logbook in center
+    const lbx = W/2, lby = H/2;
+    ctx.fillStyle = '#2a2018';
+    ctx.fillRect(lbx - 120, lby - 80, 240, 180);
+    ctx.fillStyle = '#e8e6d8';
+    ctx.fillRect(lbx - 110, lby - 70, 220, 160);
+
+    // Entries appearing
+    const numEntries = Math.min(8, Math.floor(t * 1.5));
+    for (let e = 0; e < numEntries; e++) {
+      const ey = lby - 55 + e * 18;
+      const entryAlpha = easeOut(clamp((t * 1.5 - e) / 1, 0, 1));
+      ctx.globalAlpha = entryAlpha;
+
+      // Date
+      ctx.fillStyle = C.gold;
+      ctx.font = '11px "DM Mono", monospace';
+      ctx.textAlign = 'left';
+      const dates = ['02-17', '02-24', '03-02', '03-04', '03-08', '03-10', '03-15', '03-16'];
+      ctx.fillText(dates[e] || '03-18', lbx - 100, ey);
+
+      // Prefix
+      const prefixes = ['[DATA]', '[VIZ]', '[BUILD]', '[DATA]', '[FIND]', '[MAP]', '[VIZ]', '[MODEL]'];
+      const prefixColors = [C.teal, C.gold, C.green, C.teal, C.copper, C.purple, C.gold, C.red];
+      ctx.fillStyle = prefixColors[e] || C.muted;
+      ctx.fillText(prefixes[e] || '[SYNC]', lbx - 50, ey);
+
+      // Message
+      ctx.fillStyle = C.text;
+      ctx.font = '11px "DM Sans", sans-serif';
+      const msgs = ['Animation pipeline: 4 agents, Phase 1 QA\'d', 'Transport Pulse v3: 29,135 trips', 'Scrollytelling site: 7 Leaflet maps', 'EV charging enriched v3', '24h venues: 133 locations', 'Relay-Lock network: 7 nodes mapped', 'Healthcare chain diagram v3', 'Lock 07 Rennaz: first Rhino model'];
+      ctx.fillText(msgs[e] || 'Context update', lbx - 5, ey);
+      ctx.globalAlpha = 1;
+    }
+
+    // Pen writing
+    if (numEntries < 8) {
+      const penY = lby - 55 + numEntries * 18;
+      const penBob = Math.sin(globalTime * 6) * 3;
+      ctx.fillStyle = C.gold;
+      ctx.beginPath();
+      ctx.moveTo(lbx - 100 + penBob + t * 8 % 80, penY - 5);
+      ctx.lineTo(lbx - 98 + penBob + t * 8 % 80, penY + 2);
+      ctx.lineTo(lbx - 102 + penBob + t * 8 % 80, penY + 2);
+      ctx.closePath();
+      ctx.fill();
+    }
+  }
+
+  if (dualView) {
+    // Two kitchens side by side
+    const fadeIn = easeOut(clamp((t - 8) / 2, 0, 1));
+    ctx.globalAlpha = fadeIn;
+
+    // Andrea's kitchen (left)
+    ctx.save();
+    ctx.translate(-280, 0);
+    drawKitchenFloor(KOX, KOY, 6, 5, 0.5);
+    drawWall(KOX, KOY, 6, 'back', 2, 0.5);
+    const aP = worldToScreen(3, 3, 0);
+    drawCharacter(aP.x + KOX, aP.y + KOY, { color: C.gold, scale: 0.8, label: 'ANDREA' });
+    drawLogbook(KOX, KOY, 4, 2, Math.floor((t - 8) * 2), 0.8);
+    ctx.restore();
+
+    // Henna's kitchen (right)
+    ctx.save();
+    ctx.translate(280, 0);
+    drawKitchenFloor(KOX, KOY, 6, 5, 0.5);
+    drawWall(KOX, KOY, 6, 'back', 2, 0.5);
+    const hP = worldToScreen(3, 3, 0);
+    drawCharacter(hP.x + KOX, hP.y + KOY, { color: C.purple, scale: 0.8, label: 'HENNA' });
+    drawLogbook(KOX, KOY, 4, 2, Math.floor((t - 9) * 2), 0.8);
+    ctx.restore();
+
+    // Sync arrows
+    const arrowPhase = (t - 10) % 4;
+    if (t >= 10) {
+      const arrowAlpha = 0.6;
+      ctx.globalAlpha = arrowAlpha;
+      // Push arrow (left → right)
+      if (arrowPhase < 2) {
+        const ap = easeInOut(arrowPhase / 2);
+        const ax = lerp(W/2 - 80, W/2 + 80, ap);
+        ctx.fillStyle = C.gold;
+        ctx.beginPath();
+        ctx.moveTo(ax + 10, H/2 - 30);
+        ctx.lineTo(ax + 20, H/2 - 25);
+        ctx.lineTo(ax + 10, H/2 - 20);
+        ctx.closePath();
+        ctx.fill();
+        ctx.fillStyle = C.gold;
+        ctx.font = '10px "DM Mono", monospace';
+        ctx.textAlign = 'center';
+        ctx.fillText('push', ax, H/2 - 40);
+      } else {
+        // Pull arrow (right → left)
+        const ap = easeInOut((arrowPhase - 2) / 2);
+        const ax = lerp(W/2 + 80, W/2 - 80, ap);
+        ctx.fillStyle = C.purple;
+        ctx.beginPath();
+        ctx.moveTo(ax - 10, H/2 + 10);
+        ctx.lineTo(ax - 20, H/2 + 15);
+        ctx.lineTo(ax - 10, H/2 + 20);
+        ctx.closePath();
+        ctx.fill();
+        ctx.fillStyle = C.purple;
+        ctx.font = '10px "DM Mono", monospace';
+        ctx.textAlign = 'center';
+        ctx.fillText('pull', ax, H/2 + 35);
+      }
+    }
+
+    // GitHub cloud in center
+    ctx.fillStyle = 'rgba(201,168,76,0.08)';
+    ctx.beginPath();
+    ctx.ellipse(W/2, H/2 - 90, 50, 25, 0, 0, Math.PI*2);
+    ctx.fill();
+    ctx.fillStyle = C.muted;
+    ctx.font = '11px "DM Mono", monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText('GitHub', W/2, H/2 - 87);
+
+    ctx.globalAlpha = 1;
+  }
+
+  if (branchView) {
+    // Branch diagram
+    const fadeIn = easeOut(clamp((t - 18) / 2, 0, 1));
+    ctx.globalAlpha = fadeIn;
+
+    const bx = W/2 - 200, by = H/2 - 60;
+    const lineH = 40;
+
+    // Background
+    ctx.fillStyle = 'rgba(12,12,20,0.9)';
+    ctx.fillRect(bx - 40, by - 40, 480, 250);
+    ctx.strokeStyle = 'rgba(201,168,76,0.2)';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(bx - 40, by - 40, 480, 250);
+
+    // Main branch (gold)
+    ctx.strokeStyle = C.gold;
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.moveTo(bx, by + 80);
+    ctx.lineTo(bx + 400, by + 80);
+    ctx.stroke();
+
+    // Commits on main
+    const commitCount = Math.min(7, Math.floor((t - 18) * 1.5));
+    for (let c = 0; c < commitCount; c++) {
+      ctx.fillStyle = C.gold;
+      ctx.beginPath();
+      ctx.arc(bx + 30 + c * 55, by + 80, 6, 0, Math.PI*2);
+      ctx.fill();
+    }
+
+    // Feature branch (teal) — branches off commit 2, merges at 5
+    if (commitCount >= 3) {
+      ctx.strokeStyle = C.teal;
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(bx + 140, by + 80);
+      ctx.quadraticCurveTo(bx + 160, by + 30, bx + 210, by + 30);
+      ctx.lineTo(bx + 270, by + 30);
+      if (commitCount >= 5) {
+        ctx.quadraticCurveTo(bx + 290, by + 30, bx + 305, by + 80);
+      }
+      ctx.stroke();
+      // Commits on feature branch
+      ctx.fillStyle = C.teal;
+      ctx.beginPath(); ctx.arc(bx + 210, by + 30, 5, 0, Math.PI*2); ctx.fill();
+      ctx.beginPath(); ctx.arc(bx + 250, by + 30, 5, 0, Math.PI*2); ctx.fill();
+
+      // Merge commit (green)
+      if (commitCount >= 5) {
+        ctx.fillStyle = C.green;
+        ctx.beginPath(); ctx.arc(bx + 305, by + 80, 7, 0, Math.PI*2); ctx.fill();
+      }
+    }
+
+    // Dead end branch (red) — branches off commit 4
+    if (commitCount >= 5) {
+      ctx.strokeStyle = C.red;
+      ctx.lineWidth = 2;
+      ctx.setLineDash([4, 4]);
+      ctx.beginPath();
+      ctx.moveTo(bx + 250, by + 80);
+      ctx.quadraticCurveTo(bx + 270, by + 130, bx + 320, by + 135);
+      ctx.stroke();
+      ctx.setLineDash([]);
+      // Dead end marker
+      ctx.fillStyle = C.red;
+      ctx.beginPath(); ctx.arc(bx + 320, by + 135, 5, 0, Math.PI*2); ctx.fill();
+      ctx.font = '10px "DM Mono", monospace';
+      ctx.fillText('[DEAD]', bx + 345, by + 138);
+    }
+
+    // Labels
+    ctx.font = '11px "DM Mono", monospace';
+    ctx.textAlign = 'left';
+    ctx.fillStyle = C.gold; ctx.fillText('main', bx + 410, by + 84);
+    if (commitCount >= 3) { ctx.fillStyle = C.teal; ctx.fillText('feature/healthcare', bx + 280, by + 24); }
+    ctx.fillStyle = C.muted; ctx.fillText('every branch = a design alternative', bx, by + 180);
+    ctx.fillText('every merge = a decision made', bx, by + 198);
+
+    ctx.globalAlpha = 1;
+  }
+
+  // Narration
+  if (t < 5) setNarration('While Claude was cooking, a logbook has been writing itself.');
+  else if (t < 8) setNarration('Every change, every action — automatically registered. No extra work.');
+  else if (t < 14) setNarration('Andrea\'s kitchen has a copy. Henna\'s kitchen has a copy. They sync through GitHub.');
+  else if (t < 18) setNarration('Push your changes. Pull the latest. Same book, never the same counter.');
+  else if (t < 24) setNarration('Zoom in: branches. Every branch is a design alternative explored without destroying the original.');
+  else setNarration('Every merge is a decision made. Every dead end is filed, not forgotten.');
+  setSceneLabel('Scene 3 — The Logbook');
+}
+
+// ─── SCENE 4: The Brigade ───
+function drawScene4(t) {
+  cam.targetX = W/2;
+  cam.targetY = H/2 - 60;
+  cam.targetZoom = t >= 18 ? lerp(1.0, 0.85, easeOut(clamp((t-18)/3, 0, 1))) : 1.0;
+
+  // Kitchen
+  drawKitchenFloor(KOX, KOY, 14, 12, 0.8);
+  drawWall(KOX, KOY, 14, 'back', 3, 0.8);
+  drawWall(KOX, KOY, 12, 'left', 3, 0.8);
+
+  // Specialist doors on back wall
+  const doorLabels = ['ANALYST', 'MODELER', 'BUILDER', 'CARTOGRAPHER', 'VISUALIZER'];
+  const doorColors = [C.teal, C.copper, C.green, C.purple, C.gold];
+  for (let d = 0; d < 5; d++) {
+    const doorOpenTime = 6 + d * 2;
+    const isOpen = t >= doorOpenTime;
+    drawDoor(KOX, KOY, 2 + d * 2.2, 0, doorLabels[d], isOpen, 0.8);
+  }
+
+  // Specialists entering
+  const specialists = [
+    { name: 'Analyst', color: C.teal, gx: 2, gy: 0, enterT: 8, stationGx: 2, stationGy: 4, apron: C.teal },
+    { name: 'Modeler', color: C.copper, gx: 4.2, gy: 0, enterT: 10, stationGx: 4, stationGy: 3, apron: C.copper },
+    { name: 'Builder', color: C.green, gx: 6.4, gy: 0, enterT: 12, stationGx: 6, stationGy: 4, apron: C.green },
+    { name: 'Cartographer', color: C.purple, gx: 8.6, gy: 0, enterT: 14, stationGx: 8, stationGy: 3, apron: C.purple },
+    { name: 'Visualizer', color: C.gold, gx: 10.8, gy: 0, enterT: 16, stationGx: 10, stationGy: 4, apron: C.gold },
+  ];
+
+  // Kitchen furniture
+  drawCounter(KOX, KOY, 3, 1, 4, 'horizontal', 1);
+  drawPassCounter(KOX, KOY, 3, 7, 8, 1);
+  drawFridge(KOX, KOY, 1, 2, 1);
+
+  for (const spec of specialists) {
+    if (t < spec.enterT) continue;
+
+    const walkDur = 3;
+    const wp = clamp((t - spec.enterT) / walkDur, 0, 1);
+    const doorP = worldToScreen(spec.gx, spec.gy, 0);
+    const stationP = worldToScreen(spec.stationGx, spec.stationGy, 0);
+    const cx = lerp(doorP.x, stationP.x, easeOut(wp)) + KOX;
+    const cy = lerp(doorP.y, stationP.y, easeOut(wp)) + KOY;
+
+    // Specialist scroll pickup visual
+    const hasScroll = wp > 0.3;
+
+    drawCharacter(cx, cy, {
+      color: spec.color, scale: 0.9,
+      apron: spec.apron,
+      backpackSize: hasScroll ? 1 : 0,
+      walking: wp < 1, walkFrame: t * 8,
+      label: spec.name,
+      sparkle: wp > 0.3 && wp < 0.6
+    });
+  }
+
+  // Main Claude (sous chef) in center
+  const sousP = worldToScreen(6, 5, 0);
+  drawCharacter(sousP.x + KOX, sousP.y + KOY, {
+    color: C.gold, scale: 1.1, backpackSize: 3,
+    label: 'SOUS CHEF', eyeState: 'open'
+  });
+
+  // User (chef de cuisine) at the pass
+  if (t >= 18) {
+    const userP = worldToScreen(6, 9, 0);
+    drawCharacter(userP.x + KOX, userP.y + KOY, {
+      color: '#e8e6e1', scale: 1.2, label: 'CHEF DE CUISINE'
+    });
+  }
+
+  // Commis (small) appear late
+  if (t >= 20) {
+    const commisPositions = [
+      { gx: 3, gy: 5 }, { gx: 9, gy: 5 }, { gx: 5, gy: 6 },
+    ];
+    for (let c = 0; c < commisPositions.length; c++) {
+      const cp = worldToScreen(commisPositions[c].gx, commisPositions[c].gy, 0);
+      const cAlpha = easeOut(clamp((t - 20 - c * 0.5) / 1.5, 0, 1));
+      drawCharacter(cp.x + KOX, cp.y + KOY, {
+        color: '#5a5a68', scale: 0.65, alpha: cAlpha,
+        label: 'commis'
+      });
+    }
+  }
+
+  // Communication lines (after brigade assembled)
+  if (t >= 22) {
+    const lineAlpha = 0.15 + Math.sin(globalTime * 2) * 0.08;
+    ctx.strokeStyle = hexToRgba(C.gold, lineAlpha);
+    ctx.lineWidth = 1;
+    // Sous chef to each specialist
+    for (const spec of specialists) {
+      const stP = worldToScreen(spec.stationGx, spec.stationGy, 0);
+      ctx.beginPath();
+      ctx.moveTo(sousP.x + KOX, sousP.y + KOY - 10*cam.zoom);
+      ctx.lineTo(stP.x + KOX, stP.y + KOY - 10*cam.zoom);
+      ctx.stroke();
+    }
+  }
+
+  // Narration
+  if (t < 6) setNarration('The kitchen has other doors. Each leads to a cloakroom for a specific role.');
+  else if (t < 12) setNarration('A Claude walks to a different door. Inside: a specialist scroll — a focused map.');
+  else if (t < 18) setNarration('The Analyst knows the fridge in detail. The Modeler knows the tool cabinet.');
+  else if (t < 24) setNarration('The full Michelin brigade. Chef de cuisine, sous chef, chefs de partie, commis.');
+  else setNarration('Communication flows: the sous chef orchestrates, stations respond, dishes converge.');
+  setSceneLabel('Scene 4 — The Brigade');
+}
+
+// ─── SCENE 5: Four Pillars ───
+function drawScene5(t) {
+  cam.targetX = W/2;
+  cam.targetY = H/2 - 60;
+  cam.targetZoom = 0.95;
+
+  // Kitchen
+  drawKitchenFloor(KOX, KOY, 14, 12, 0.7);
+  drawWall(KOX, KOY, 14, 'back', 3, 0.7);
+  drawWall(KOX, KOY, 12, 'left', 3, 0.7);
+
+  // Phase timing
+  const p1 = t < 8;   // Organisation
+  const p2 = t >= 8 && t < 16;  // Knowledge
+  const p3 = t >= 16 && t < 24; // Tools
+  const p4 = t >= 24;           // Ingredients
+
+  // Pillar labels
+  const pillarData = [
+    { name: '1. ORGANISATION', active: p1, x: W/2 - 350, color: C.gold },
+    { name: '2. KNOWLEDGE', active: p2, x: W/2 - 120, color: C.copper },
+    { name: '3. TOOLS', active: p3, x: W/2 + 110, color: C.teal },
+    { name: '4. INGREDIENTS', active: p4, x: W/2 + 340, color: C.green },
+  ];
+
+  // Top bar with pillar indicators
+  for (const pil of pillarData) {
+    ctx.fillStyle = pil.active ? pil.color : 'rgba(154,150,144,0.2)';
+    ctx.font = `${pil.active ? 'bold ' : ''}13px 'DM Mono', monospace`;
+    ctx.textAlign = 'center';
+    ctx.fillText(pil.name, pil.x, 70);
+    if (pil.active) {
+      ctx.fillStyle = hexToRgba(pil.color, 0.3);
+      ctx.fillRect(pil.x - 60, 76, 120, 2);
+    }
+  }
+
+  if (p1) {
+    // Organisation: ticket rail, lockboard, closing procedures
+    const fade = easeOut(clamp(t / 2, 0, 1));
+    drawTicketRail(KOX, KOY, 4, 1, Math.min(6, Math.floor(t)), fade);
+    drawCounter(KOX, KOY, 2, 1, 5, 'horizontal', fade);
+
+    // LOCKBOARD visualization
+    const lbx = W/2, lby = H/2 - 40;
+    ctx.globalAlpha = fade;
+    ctx.fillStyle = 'rgba(201,168,76,0.06)';
+    ctx.fillRect(lbx - 180, lby - 20, 360, 140);
+    ctx.strokeStyle = hexToRgba(C.gold, 0.3);
+    ctx.lineWidth = 1;
+    ctx.strokeRect(lbx - 180, lby - 20, 360, 140);
+
+    ctx.fillStyle = C.gold;
+    ctx.font = '14px "DM Mono", monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText('LOCKBOARD — the ticket rail', lbx, lby);
+
+    const items = [
+      'Andrea: Slide 5 kitchen animation',
+      'Henna: Model 9 écluse types',
+      'Claude: Embedding pipeline overnight',
+    ];
+    ctx.font = '12px "DM Sans", sans-serif';
+    ctx.textAlign = 'left';
+    for (let i = 0; i < items.length; i++) {
+      const itemFade = easeOut(clamp((t - 2 - i) / 1.5, 0, 1));
+      ctx.globalAlpha = fade * itemFade;
+      ctx.fillStyle = i === 0 ? C.gold : i === 1 ? C.purple : C.teal;
+      ctx.fillText('■', lbx - 160, lby + 30 + i * 28);
+      ctx.fillStyle = C.text;
+      ctx.fillText(items[i], lbx - 140, lby + 30 + i * 28);
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  if (p2) {
+    // Knowledge: the big book
+    const fade = easeOut(clamp((t - 8) / 2, 0, 1));
+    ctx.globalAlpha = fade;
+
+    const bkx = W/2, bky = H/2 - 20;
+    // Big book
+    ctx.fillStyle = C.copper;
+    ctx.fillRect(bkx - 60, bky - 40, 120, 90);
+    ctx.fillStyle = darken(C.copper, 0.3);
+    ctx.fillRect(bkx - 60, bky - 40, 15, 90); // spine
+    ctx.fillStyle = lighten(C.copper, 0.15);
+    ctx.font = 'bold 14px "DM Sans", sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('ARCHIBASE', bkx + 5, bky);
+    ctx.font = '11px "DM Mono", monospace';
+    ctx.fillStyle = C.text;
+    ctx.fillText('Materials · Norms · Assemblies · Spans', bkx + 5, bky + 20);
+    ctx.fillStyle = C.muted;
+    ctx.fillText('The knowledge to actually build', bkx + 5, bky + 70);
+    ctx.globalAlpha = 1;
+  }
+
+  if (p3) {
+    // Tools: MCP cables
+    const fade = easeOut(clamp((t - 16) / 2, 0, 1));
+    ctx.globalAlpha = fade;
+
+    const tx = W/2, ty = H/2 - 40;
+    // Central hub (router / multiprise)
+    ctx.fillStyle = '#2a2a35';
+    ctx.fillRect(tx - 40, ty, 80, 30);
+    ctx.strokeStyle = C.teal;
+    ctx.lineWidth = 2;
+    ctx.strokeRect(tx - 40, ty, 80, 30);
+    ctx.fillStyle = C.teal;
+    ctx.font = '10px "DM Mono", monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText('MCP ROUTER', tx, ty + 18);
+
+    // Cables to tools
+    const tools = [
+      { name: 'Rhino', x: tx - 160, y: ty - 50, color: '#c45d4a' },
+      { name: 'Blender', x: tx + 160, y: ty - 50, color: '#e8a340' },
+      { name: 'QGIS', x: tx - 120, y: ty + 70, color: C.green },
+      { name: 'OSM', x: tx + 120, y: ty + 70, color: C.teal },
+    ];
+
+    for (let i = 0; i < tools.length; i++) {
+      const tool = tools[i];
+      const cableFade = easeOut(clamp((t - 17 - i * 0.8) / 1.5, 0, 1));
+      ctx.globalAlpha = fade * cableFade;
+
+      // Cable glow
+      const pulseAlpha = 0.3 + Math.sin(globalTime * 3 + i) * 0.15;
+      ctx.strokeStyle = hexToRgba(tool.color, pulseAlpha);
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(tx, ty + 15);
+      ctx.quadraticCurveTo((tx + tool.x) / 2, (ty + tool.y) / 2 - 20, tool.x, tool.y);
+      ctx.stroke();
+
+      // Tool box
+      ctx.fillStyle = 'rgba(12,12,20,0.8)';
+      ctx.fillRect(tool.x - 35, tool.y - 12, 70, 24);
+      ctx.strokeStyle = tool.color;
+      ctx.lineWidth = 1;
+      ctx.strokeRect(tool.x - 35, tool.y - 12, 70, 24);
+      ctx.fillStyle = tool.color;
+      ctx.font = '11px "DM Mono", monospace';
+      ctx.textAlign = 'center';
+      ctx.fillText(tool.name, tool.x, tool.y + 4);
+    }
+
+    ctx.fillStyle = C.muted;
+    ctx.globalAlpha = fade;
+    ctx.font = '12px "DM Mono", monospace';
+    ctx.fillText('the multiprise — one cable, multiple tools', tx, ty + 110);
+    ctx.globalAlpha = 1;
+  }
+
+  if (p4) {
+    // Ingredients: the pantry (archibase layers)
+    const fade = easeOut(clamp((t - 24) / 2, 0, 1));
+    ctx.globalAlpha = fade;
+
+    const px = W/2, py = H/2 - 60;
+
+    // Pantry frame
+    ctx.fillStyle = 'rgba(42,32,24,0.4)';
+    ctx.fillRect(px - 200, py - 10, 400, 200);
+    ctx.strokeStyle = hexToRgba(C.wood, 0.4);
+    ctx.lineWidth = 1;
+    ctx.strokeRect(px - 200, py - 10, 400, 200);
+
+    ctx.fillStyle = C.green;
+    ctx.font = 'bold 14px "DM Mono", monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText('THE PANTRY — Archibase', px, py + 10);
+
+    const layers = [
+      { name: 'L1 — SQLite', desc: 'Materials, KBOB, profiles, fire codes', color: C.gold, icon: '🏺' },
+      { name: 'L2 — Guides', desc: '33 curated technique books', color: C.copper, icon: '📖' },
+      { name: 'L3 — Scripts', desc: 'Tested recipes (parametric code)', color: C.teal, icon: '📜' },
+      { name: 'L4 — RAG', desc: '35K+ chunks: norms, patterns, wiki', color: C.green, icon: '🔍' },
+    ];
+
+    for (let i = 0; i < layers.length; i++) {
+      const ly = py + 30 + i * 38;
+      const layerFade = easeOut(clamp((t - 25 - i * 1) / 1.5, 0, 1));
+      ctx.globalAlpha = fade * layerFade;
+
+      // Layer bar
+      ctx.fillStyle = hexToRgba(layers[i].color, 0.15);
+      ctx.fillRect(px - 180, ly, 360, 30);
+      ctx.strokeStyle = hexToRgba(layers[i].color, 0.4);
+      ctx.lineWidth = 1;
+      ctx.strokeRect(px - 180, ly, 360, 30);
+
+      ctx.fillStyle = layers[i].color;
+      ctx.font = 'bold 12px "DM Mono", monospace';
+      ctx.textAlign = 'left';
+      ctx.fillText(layers[i].icon + ' ' + layers[i].name, px - 170, ly + 18);
+
+      ctx.fillStyle = C.muted;
+      ctx.font = '11px "DM Sans", sans-serif';
+      ctx.fillText(layers[i].desc, px + 10, ly + 18);
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  // Narration
+  if (t < 8) setNarration('Pillar one: Organisation. The ticket rail, closing procedures, the labeling system. Built once, saves time every service.');
+  else if (t < 16) setNarration('Pillar two: Knowledge. You can be talented, but without techniques and norms — you\'re limited.');
+  else if (t < 24) setNarration('Pillar three: Tools. The right equipment. MCP cables connecting the kitchen to Rhino, Blender, QGIS.');
+  else setNarration('Pillar four: Ingredients. The pantry — four layers of construction knowledge.');
+  setSceneLabel('Scene 5 — Four Pillars');
+}
+
+// ─── SCENE 6: The Full Kitchen ───
+function drawScene6(t) {
+  cam.targetX = W/2;
+  cam.targetY = H/2 - 60;
+  cam.targetZoom = lerp(0.85, 0.72, easeOut(clamp(t/4, 0, 1)));
+
+  // Full kitchen
+  drawKitchenFloor(KOX, KOY, 14, 12, 0.9);
+  drawWall(KOX, KOY, 14, 'back', 3, 0.9);
+  drawWall(KOX, KOY, 12, 'left', 3, 0.9);
+
+  // All furniture
+  drawCounter(KOX, KOY, 3, 1, 5, 'horizontal', 1);
+  drawStove(KOX, KOY, 9, 1, 1);
+  drawFridge(KOX, KOY, 11, 1, 1);
+  drawPassCounter(KOX, KOY, 3, 7, 8, 1);
+  drawShelf(KOX, KOY, 6, 0, 1);
+  drawTicketRail(KOX, KOY, 4, 0, 5, 1);
+  drawLogbook(KOX, KOY, 12, 3, Math.floor(t * 2), 1);
+
+  // Doors
+  const doorLabels = ['ANALYST', 'MODELER', 'BUILDER', 'CARTO', 'VIZ'];
+  for (let d = 0; d < 5; d++) {
+    drawDoor(KOX, KOY, 2 + d * 2.2, 0, doorLabels[d], true, 0.8);
+  }
+
+  // All characters moving
+  const chars = [
+    { color: C.gold, gx: 6, gy: 5, label: 'Sous Chef', scale: 1.05, bp: 3 },
+    { color: C.teal, gx: 2, gy: 3, label: 'Analyst', scale: 0.85, apron: C.teal, bp: 1 },
+    { color: C.copper, gx: 4, gy: 4, label: 'Modeler', scale: 0.85, apron: C.copper, bp: 1 },
+    { color: C.green, gx: 8, gy: 3, label: 'Builder', scale: 0.85, apron: C.green, bp: 1 },
+    { color: C.purple, gx: 10, gy: 4, label: 'Carto', scale: 0.85, apron: C.purple, bp: 1 },
+    { color: '#e8e6e1', gx: 6, gy: 9, label: 'Chef', scale: 1.15, bp: 0 },
+  ];
+
+  for (const ch of chars) {
+    const wobbleX = Math.sin(globalTime * 1.5 + ch.gx) * 0.3;
+    const wobbleY = Math.cos(globalTime * 1.2 + ch.gy) * 0.2;
+    const p = worldToScreen(ch.gx + wobbleX, ch.gy + wobbleY, 0);
+    drawCharacter(p.x + KOX, p.y + KOY, {
+      color: ch.color, scale: ch.scale,
+      label: ch.label, apron: ch.apron,
+      backpackSize: ch.bp,
+      walking: true, walkFrame: globalTime * 6 + ch.gx * 3
+    });
+  }
+
+  // Commis
+  for (let c = 0; c < 4; c++) {
+    const cx = 3 + c * 2.5;
+    const cy = 6 + Math.sin(globalTime + c) * 0.5;
+    const p = worldToScreen(cx, cy, 0);
+    drawCharacter(p.x + KOX, p.y + KOY, {
+      color: '#5a5a68', scale: 0.55,
+      walking: true, walkFrame: globalTime * 10 + c * 5
+    });
+  }
+
+  // MCP cables (glowing lines to edges)
+  const cableAlpha = 0.15 + Math.sin(globalTime * 2) * 0.08;
+  ctx.strokeStyle = hexToRgba(C.teal, cableAlpha);
+  ctx.lineWidth = 2;
+  const hubP = worldToScreen(12, 6, 0);
+  // Cable going off-screen (to tools)
+  ctx.beginPath();
+  ctx.moveTo(hubP.x + KOX, hubP.y + KOY);
+  ctx.lineTo(W - 50, hubP.y + KOY - 50);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(hubP.x + KOX, hubP.y + KOY);
+  ctx.lineTo(W - 50, hubP.y + KOY + 30);
+  ctx.stroke();
+
+  // Communication pulses between characters
+  if (t > 2) {
+    const pulseT = (globalTime * 2) % 6;
+    ctx.strokeStyle = hexToRgba(C.gold, 0.12);
+    ctx.lineWidth = 1;
+    for (let i = 1; i < 5; i++) {
+      const from = worldToScreen(6, 5, 0);
+      const to = worldToScreen(chars[i].gx, chars[i].gy, 0);
+      ctx.beginPath();
+      ctx.moveTo(from.x + KOX, from.y + KOY);
+      ctx.lineTo(to.x + KOX, to.y + KOY);
+      ctx.stroke();
+    }
+  }
+
+  // Fade to closing text
+  if (t >= 10) {
+    const fadeAlpha = easeIn(clamp((t - 10) / 4, 0, 0.7));
+    ctx.fillStyle = `rgba(12,12,20,${fadeAlpha})`;
+    ctx.fillRect(0, 0, W, H);
+
+    if (t >= 12) {
+      const textAlpha = easeOut(clamp((t - 12) / 3, 0, 1));
+      ctx.globalAlpha = textAlpha;
+      ctx.fillStyle = C.text;
+      ctx.font = '32px "Instrument Serif", serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('Not just a project — a documented process.', W/2, H/2 - 20);
+      ctx.font = 'italic 24px "Instrument Serif", serif';
+      ctx.fillStyle = C.gold;
+      ctx.fillText('Not just architecture — the story of how it was made.', W/2, H/2 + 30);
+      ctx.globalAlpha = 1;
+    }
+  }
+
+  // Narration
+  if (t < 6) setNarration('The full kitchen. Everything running. The system alive.');
+  else if (t < 10) setNarration('Characters moving, plating, communicating. The logbook writing itself.');
+  else clearNarration();
+  setSceneLabel(t < 12 ? 'Scene 6 — The Full Kitchen' : '');
+}
+
+// ═══════════════════════════════════════════════════
+// MAIN LOOP
+// ═══════════════════════════════════════════════════
+
+const sceneDrawFns = [drawScene1, drawScene2, drawScene3, drawScene4, drawScene5, drawScene6];
+
+// Build scene dots
+const dotsContainer = document.getElementById('scene-dots');
+for (let i = 0; i < SCENES.length; i++) {
+  const dot = document.createElement('div');
+  dot.className = 'dot';
+  dotsContainer.appendChild(dot);
+}
+
+function updateDots() {
+  const dots = dotsContainer.querySelectorAll('.dot');
+  dots.forEach((d, i) => {
+    d.className = 'dot' + (i === currentScene ? ' active' : i < currentScene ? ' done' : '');
+  });
+}
+
+let lastTime = performance.now();
+
+function gameLoop(now) {
+  const dt = (now - lastTime) / 1000;
+  lastTime = now;
+
+  if (playing) {
+    sceneTime += dt * speed;
+    globalTime += dt * speed;
+  }
+
+  // Scene transition
+  if (sceneTime >= SCENES[currentScene].duration) {
+    if (currentScene < SCENES.length - 1) {
+      sceneTime = 0;
+      currentScene++;
+      hideScrollOverlay();
+    } else {
+      sceneTime = SCENES[currentScene].duration;
+      playing = false;
+    }
+  }
+
+  // Camera interpolation
+  camLerp();
+
+  // Clear
+  ctx.fillStyle = C.bg;
+  ctx.fillRect(0, 0, W, H);
+
+  // Subtle vignette
+  const vg = ctx.createRadialGradient(W/2, H/2, 200, W/2, H/2, W * 0.7);
+  vg.addColorStop(0, 'rgba(12,12,20,0)');
+  vg.addColorStop(1, 'rgba(0,0,0,0.4)');
+  ctx.fillStyle = vg;
+  ctx.fillRect(0, 0, W, H);
+
+  // Draw current scene
+  sceneDrawFns[currentScene](sceneTime);
+
+  // Update UI
+  updateDots();
+  const totalDur = SCENES.reduce((s, sc) => s + sc.duration, 0);
+  let elapsed = 0;
+  for (let i = 0; i < currentScene; i++) elapsed += SCENES[i].duration;
+  elapsed += sceneTime;
+  document.getElementById('progress').style.width = (elapsed / totalDur * 100) + '%';
+
+  requestAnimationFrame(gameLoop);
+}
+
+// ─── Controls ───
+const btnPlay = document.getElementById('btn-play');
+const btnPrev = document.getElementById('btn-prev');
+const btnNext = document.getElementById('btn-next');
+const btnSpeed = document.getElementById('btn-speed');
+
+btnPlay.addEventListener('click', () => {
+  playing = !playing;
+  btnPlay.innerHTML = playing ? '&#9646;&#9646; Pause' : '&#9654; Play';
+  btnPlay.classList.toggle('active', playing);
+});
+
+btnPrev.addEventListener('click', () => {
+  if (currentScene > 0) {
+    currentScene--;
+    sceneTime = 0;
+    hideScrollOverlay();
+  }
+});
+
+btnNext.addEventListener('click', () => {
+  if (currentScene < SCENES.length - 1) {
+    currentScene++;
+    sceneTime = 0;
+    hideScrollOverlay();
+  }
+});
+
+const speeds = [1, 1.5, 2, 0.5];
+let speedIdx = 0;
+btnSpeed.addEventListener('click', () => {
+  speedIdx = (speedIdx + 1) % speeds.length;
+  speed = speeds[speedIdx];
+  btnSpeed.textContent = speed + 'x';
+});
+
+// Keyboard
+document.addEventListener('keydown', (e) => {
+  if (e.code === 'Space') { e.preventDefault(); btnPlay.click(); }
+  if (e.code === 'ArrowRight') btnNext.click();
+  if (e.code === 'ArrowLeft') btnPrev.click();
+});
+
+// Start
+requestAnimationFrame(gameLoop);
+</script>
+</body>
+</html>

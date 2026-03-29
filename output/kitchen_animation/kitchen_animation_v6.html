@@ -1,0 +1,1692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>The Kitchen v6 — Overcooked</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;700&display=swap');
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:#555; overflow:hidden; display:flex; align-items:center; justify-content:center; height:100vh; }
+  canvas { display:block; }
+  #narration {
+    position:fixed; bottom:80px; left:50%; transform:translateX(-50%);
+    font-family:'Instrument Serif',serif; font-size:24px; color:#FFF;
+    text-align:center; max-width:700px; line-height:1.4;
+    opacity:0; transition:opacity 0.8s; z-index:20;
+    text-shadow:0 2px 8px rgba(0,0,0,0.6);
+    background:rgba(0,0,0,0.5); padding:10px 24px; border-radius:8px;
+    pointer-events:none;
+  }
+  #scene-label {
+    position:fixed; top:20px; left:50%; transform:translateX(-50%);
+    font-family:'DM Mono',monospace; font-size:12px; color:#FFF;
+    letter-spacing:2px; text-transform:uppercase; z-index:20;
+    pointer-events:none; opacity:0; transition:opacity 0.5s;
+    text-shadow:0 1px 4px rgba(0,0,0,0.5);
+  }
+  #controls {
+    position:fixed; bottom:12px; left:50%; transform:translateX(-50%);
+    display:flex; gap:8px; align-items:center; z-index:30;
+  }
+  #controls button {
+    background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.3);
+    color:#FFF; font-family:'DM Mono',monospace; font-size:11px;
+    padding:5px 12px; cursor:pointer; border-radius:4px; transition:background 0.2s;
+  }
+  #controls button:hover { background:rgba(255,255,255,0.3); }
+  #controls button.active { background:rgba(255,180,50,0.4); border-color:#FFB432; color:#FFB432; }
+  #progress { position:fixed; bottom:0; left:0; height:3px; background:#FFB432; z-index:30; transition:width 0.3s; }
+  /* Scroll overlay */
+  #scroll-overlay {
+    position:fixed; top:0; left:0; width:100%; height:100%;
+    display:none; z-index:25; pointer-events:none;
+    align-items:center; justify-content:center;
+    background:rgba(0,0,0,0.5);
+  }
+  #scroll-overlay.visible { display:flex; }
+  #scroll-content {
+    width:620px; padding:40px; border-radius:6px;
+    font-family:'Instrument Serif',serif; font-size:18px;
+    line-height:1.6; opacity:0;
+    transform:scale(0.95); transition:opacity 0.6s,transform 0.6s;
+    box-shadow:0 8px 40px rgba(0,0,0,0.4);
+  }
+  #scroll-content.show { opacity:1; transform:scale(1); }
+  #scroll-content.map {
+    background:linear-gradient(135deg,#F5E6C8,#EBD8B0);
+    border:3px solid #C9A84C; color:#5A4020;
+  }
+  #scroll-content.blueprint {
+    background:linear-gradient(135deg,#E0EEF5,#D0DEE8);
+    border:3px solid #5B8FA8; color:#2A4A5A;
+  }
+  #scroll-content h3 { margin-bottom:10px; font-size:20px; }
+  #scroll-content .s { margin:8px 0; }
+  #scroll-content.logbook {
+    background:linear-gradient(135deg,#1A1A2E,#16213E);
+    border:3px solid #4A6; color:#C0E0C0;
+    font-family:'DM Mono',monospace; font-size:15px; line-height:2;
+  }
+  #scroll-content.logbook h3 { color:#4AE04A; font-size:18px; }
+  #scroll-content.logbook .s { color:#8BC34A; opacity:0.9; }
+  #scroll-content.logbook .s::before { content:'$ '; color:#666; }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="narration"></div>
+<div id="scene-label"></div>
+<div id="progress" style="width:0%"></div>
+<div id="scroll-overlay"><div id="scroll-content"></div></div>
+<div id="controls">
+  <button id="btn-prev">&#9664;</button>
+  <button id="btn-play" class="active">&#9654;</button>
+  <button id="btn-next">&#9654;&#9654;</button>
+  <button id="btn-speed">1x</button>
+</div>
+<script>
+// ══════════════════════════════════════
+// ENGINE
+// ══════════════════════════════════════
+const C = document.getElementById('c');
+const X = C.getContext('2d');
+const W = 1920, H = 1080;
+C.width = W; C.height = H;
+function resize() {
+  const s = Math.min(innerWidth/W, innerHeight/H);
+  C.style.width = (W*s)+'px'; C.style.height = (H*s)+'px';
+}
+resize(); addEventListener('resize', resize);
+
+// ══════════════════════════════════════
+// OVERCOOKED TOP-DOWN PROJECTION
+// ══════════════════════════════════════
+// Overcooked uses a steep top-down oblique projection
+// X goes right, Y goes "into screen" (up on screen = further away)
+// Z goes up (higher = drawn higher on screen)
+// Tilt factor: for every 1 unit of Y depth, move ~0.55 units up on screen
+// This gives the "looking down at ~65 degrees" feel
+
+const PX = 64;  // pixels per grid unit
+const TILT = 0.6; // Y compression (1.0 = flat top-down, 0.5 = more angled)
+const Z_LIFT = 0.7; // how much Z height lifts objects on screen
+
+// World to screen
+function ws(gx, gy, gz) {
+  const sx = gx * PX;
+  const sy = gy * PX * TILT - (gz || 0) * PX * Z_LIFT;
+  return { x: sx, y: sy };
+}
+
+// Camera
+let cam = { x: 0, y: 0, tx: 0, ty: 0 };
+function sc(gx, gy, gz) {
+  const w = ws(gx, gy, gz);
+  return { x: W/2 + w.x - cam.x, y: H/2 + w.y - cam.y };
+}
+
+// ══════════════════════════════════════
+// COLORS — matched to Overcooked screenshot
+// ══════════════════════════════════════
+const OC = {
+  // Outside
+  street: '#7A7A72',
+  sidewalk: '#C8B898',
+  grass: '#6B8E4A',
+
+  // Walls (thick brick border)
+  wallTop: '#A0704A',       // top of wall (seen from above)
+  wallInner: '#8B5E3A',     // inner face
+  wallOuter: '#6B4020',     // outer face (darker)
+  wallTrim: '#5A3018',      // dark edge
+
+  // Floor
+  floorA: '#E8D8B8',        // light tan tile
+  floorB: '#DEC8A8',        // slightly darker tan
+  floorEdge: '#C8B898',
+
+  // Counters (teal — THE Overcooked color)
+  ctrTop: '#4AABA0',        // counter top surface
+  ctrFront: '#3A8B7E',      // counter front face
+  ctrSide: '#2A7A6E',       // counter side face
+  ctrDark: '#1A5A4E',
+
+  // Stove
+  stoveTop: '#3A3A3A',
+  stoveFront: '#2A2A2A',
+  burner: '#FF5522',
+  panRed: '#CC3322',
+  panHandle: '#5A5A5A',
+
+  // Sink
+  sinkTop: '#B0B0B8',
+  sinkFront: '#909098',
+  sinkBowl: '#D0D0D8',
+
+  // Fridge
+  fridgeTop: '#E0E0E8',
+  fridgeFront: '#C8C8D0',
+  fridgeSide: '#B0B0B8',
+
+  // Characters
+  skinLight: '#F5D0A0',
+  skinMed: '#E0B888',
+  charGrey: '#9A9A9A',
+  charGreyDk: '#7A7A7A',
+  charGold: '#C9A84C',
+  charGoldDk: '#A08030',
+  charPurple: '#9B6BB0',
+  charPurpleDk: '#7A4A90',
+  hatWhite: '#FFFFFF',
+  hatShadow: '#E8E8E8',
+
+  // Props
+  scrollGold: '#C9A84C',
+  scrollTeal: '#5B8FA8',
+  backpack: '#6B4B2A',
+
+  // Plants
+  potBrown: '#8B5E3A',
+  leafGreen: '#5A9E4A',
+  leafDark: '#3A7E2A',
+
+  // Outline
+  outline: 'rgba(40,25,10,0.5)',
+};
+
+// ══════════════════════════════════════
+// DRAW HELPERS
+// ══════════════════════════════════════
+function lerp(a,b,t){return a+(b-a)*t}
+function clamp(v,lo,hi){return Math.max(lo,Math.min(hi,v))}
+function easeOut(t){return 1-(1-t)*(1-t)}
+function easeOutBack(t){const c=1.4;return 1+(c+1)*Math.pow(t-1,3)+c*Math.pow(t-1,2)}
+function easeInOut(t){return t<.5?2*t*t:-1+(4-2*t)*t}
+function lerpCol(c1,c2,t){
+  const r1=parseInt(c1.slice(1,3),16),g1=parseInt(c1.slice(3,5),16),b1=parseInt(c1.slice(5,7),16);
+  const r2=parseInt(c2.slice(1,3),16),g2=parseInt(c2.slice(3,5),16),b2=parseInt(c2.slice(5,7),16);
+  return `rgb(${Math.round(lerp(r1,r2,t))},${Math.round(lerp(g1,g2,t))},${Math.round(lerp(b1,b2,t))})`;
+}
+
+// Draw a top-down box (seen from above at an angle)
+// gx,gy = grid position, w,d = width/depth in grid units, h = height
+function drawBox(gx, gy, w, d, h, topCol, frontCol, sideCol, bright) {
+  bright = bright !== undefined ? bright : 1;
+  const dimTop = bright < 1 ? lerpCol('#444', topCol, bright) : topCol;
+  const dimFront = bright < 1 ? lerpCol('#333', frontCol, bright) : frontCol;
+  const dimSide = bright < 1 ? lerpCol('#333', sideCol, bright) : sideCol;
+
+  // 4 corners of the top face
+  const tl = sc(gx, gy, h);
+  const tr = sc(gx+w, gy, h);
+  const br = sc(gx+w, gy+d, h);
+  const bl = sc(gx, gy+d, h);
+
+  // 4 corners of the bottom
+  const btl = sc(gx, gy, 0);
+  const btr = sc(gx+w, gy, 0);
+  const bbr = sc(gx+w, gy+d, 0);
+  const bbl = sc(gx, gy+d, 0);
+
+  // Front face (bottom edge, facing viewer — the +y side)
+  X.beginPath();
+  X.moveTo(bl.x, bl.y); X.lineTo(br.x, br.y);
+  X.lineTo(bbr.x, bbr.y); X.lineTo(bbl.x, bbl.y);
+  X.closePath();
+  X.fillStyle = dimFront; X.fill();
+  X.strokeStyle = OC.outline; X.lineWidth = 1.5; X.stroke();
+
+  // Right side face
+  X.beginPath();
+  X.moveTo(tr.x, tr.y); X.lineTo(br.x, br.y);
+  X.lineTo(bbr.x, bbr.y); X.lineTo(btr.x, btr.y);
+  X.closePath();
+  X.fillStyle = dimSide; X.fill();
+  X.strokeStyle = OC.outline; X.lineWidth = 1.5; X.stroke();
+
+  // Top face
+  X.beginPath();
+  X.moveTo(tl.x, tl.y); X.lineTo(tr.x, tr.y);
+  X.lineTo(br.x, br.y); X.lineTo(bl.x, bl.y);
+  X.closePath();
+  X.fillStyle = dimTop; X.fill();
+  X.strokeStyle = OC.outline; X.lineWidth = 1.5; X.stroke();
+}
+
+// ══════════════════════════════════════
+// KITCHEN LAYOUT
+// ══════════════════════════════════════
+// Kitchen interior: grid (0,0) to (10,8)
+// Wall thickness: 0.6 grid units
+const KW = 10, KD = 8;  // kitchen width, depth
+const WT = 0.6;          // wall thickness
+const WH = 1.8;          // wall height
+
+// Furniture definitions
+const FURN = [
+  // Back wall counters (along y=0 inside)
+  { type:'counter', x:0, y:0, w:1, d:1 },
+  { type:'counter', x:1, y:0, w:1, d:1 },
+  { type:'counter', x:2, y:0, w:1, d:1 },
+  { type:'stove',   x:3, y:0, w:1, d:1 },
+  { type:'stove',   x:4, y:0, w:1, d:1 },
+  { type:'sink',    x:5, y:0, w:1, d:1 },
+  { type:'counter', x:6, y:0, w:1, d:1 },
+  { type:'counter', x:7, y:0, w:1, d:1 },
+  { type:'fridge',  x:9, y:0, w:1, d:1 },
+  // Center island (H-shaped like Overcooked)
+  { type:'counter', x:2, y:3, w:1, d:1 },
+  { type:'counter', x:3, y:3, w:1, d:1 },
+  { type:'counter', x:4, y:3, w:1, d:1 },
+  { type:'counter', x:5, y:3, w:1, d:1 },
+  { type:'counter', x:2, y:5, w:1, d:1 },
+  { type:'counter', x:3, y:5, w:1, d:1 },
+  { type:'counter', x:4, y:5, w:1, d:1 },
+  { type:'counter', x:5, y:5, w:1, d:1 },
+  // Connecting piece (the H crossbar)
+  { type:'counter', x:3, y:4, w:1, d:1 },
+  { type:'counter', x:4, y:4, w:1, d:1 },
+  // Right wall items
+  { type:'counter', x:9, y:3, w:1, d:1 },
+  { type:'counter', x:9, y:4, w:1, d:1 },
+  { type:'counter', x:9, y:5, w:1, d:1 },
+  // Pass counter (appears during kitchen awakening in Scene 1)
+  { type:'counter', x:7, y:1, w:1, d:1 },
+  { type:'counter', x:7, y:2, w:1, d:1 },
+  { type:'counter', x:7, y:5, w:1, d:1 },
+  { type:'counter', x:7, y:6, w:1, d:1 },
+];
+
+// ══════════════════════════════════════
+// COLLISION MAP & PATHFINDING
+// ══════════════════════════════════════
+// Grid: 0 to KW-1 in x, 0 to KD-1 in y. true = walkable
+function buildCollisionMap(furnArray) {
+  const fa = furnArray || FURN;
+  const map = [];
+  for (let x = 0; x < KW; x++) {
+    map[x] = [];
+    for (let y = 0; y < KD; y++) {
+      map[x][y] = true; // default walkable
+    }
+  }
+  // Block furniture tiles
+  for (const f of fa) {
+    for (let dx = 0; dx < f.w; dx++) {
+      for (let dy = 0; dy < f.d; dy++) {
+        const fx = f.x + dx, fy = f.y + dy;
+        if (fx >= 0 && fx < KW && fy >= 0 && fy < KD) map[fx][fy] = false;
+      }
+    }
+  }
+  return map;
+}
+let collMap = buildCollisionMap();
+
+// Simple A* pathfinding
+function findPath(sx, sy, ex, ey) {
+  const startX = Math.round(clamp(sx, 0, KW-1));
+  const startY = Math.round(clamp(sy, 0, KD-1));
+  const endX = Math.round(clamp(ex, 0, KW-1));
+  const endY = Math.round(clamp(ey, 0, KD-1));
+
+  if (startX === endX && startY === endY) return [];
+
+  const open = [{x:startX, y:startY, g:0, h:0, f:0, parent:null}];
+  const closed = new Set();
+  const key = (x,y) => x + ',' + y;
+
+  function heuristic(x,y) { return Math.abs(x-endX) + Math.abs(y-endY); }
+
+  while (open.length > 0) {
+    // Find lowest f
+    let best = 0;
+    for (let i = 1; i < open.length; i++) {
+      if (open[i].f < open[best].f) best = i;
+    }
+    const cur = open.splice(best, 1)[0];
+    const ck = key(cur.x, cur.y);
+    if (closed.has(ck)) continue;
+    closed.add(ck);
+
+    if (cur.x === endX && cur.y === endY) {
+      // Reconstruct path
+      const path = [];
+      let n = cur;
+      while (n.parent) { path.unshift({x: n.x + 0.5, y: n.y + 0.5}); n = n.parent; }
+      return path;
+    }
+
+    // Neighbors (4-directional)
+    const dirs = [[0,-1],[1,0],[0,1],[-1,0]];
+    for (const [dx,dy] of dirs) {
+      const nx = cur.x+dx, ny = cur.y+dy;
+      if (nx < 0 || nx >= KW || ny < 0 || ny >= KD) continue;
+      if (!collMap[nx][ny]) continue;
+      const nk = key(nx,ny);
+      if (closed.has(nk)) continue;
+      const g = cur.g + 1;
+      const h = heuristic(nx,ny);
+      open.push({x:nx, y:ny, g, h, f:g+h, parent:cur});
+    }
+  }
+  return []; // no path found — go direct as fallback
+}
+
+// Path-following movement
+let charPath = [];
+let charPathIdx = 0;
+
+function moveToWithPath(gx, gy) {
+  const path = findPath(Math.round(ch.gx), Math.round(ch.gy), Math.round(gx), Math.round(gy));
+  if (path.length > 0) {
+    charPath = path;
+    charPathIdx = 0;
+    ch.moving = true;
+  }
+  // No fallback — if no path found, character stays put
+  if (gx > ch.gx) ch.facing = 'right';
+  else if (gx < ch.gx) ch.facing = 'left';
+}
+
+// Grid-based tile hopping (Overcooked style)
+let hopTimer = 0;
+const HOP_DUR = 0.12; // seconds per tile hop
+let hopFX = 0, hopFY = 0, hopTX = 0, hopTY = 0;
+let hopping = false;
+
+function updateChPath(dt) {
+  if (!ch.moving) return;
+
+  // Currently hopping between tiles
+  if (hopping) {
+    hopTimer += dt;
+    const t = clamp(hopTimer / HOP_DUR, 0, 1);
+    ch.gx = lerp(hopFX, hopTX, t);
+    ch.gy = lerp(hopFY, hopTY, t);
+    ch.wf += 10 * dt;
+    ch.hopBounce = Math.sin(t * Math.PI) * 0.15;
+    if (t >= 1) {
+      ch.gx = hopTX; ch.gy = hopTY;
+      hopping = false; ch.hopBounce = 0;
+    }
+    return;
+  }
+
+  // Start next hop from path
+  if (charPath.length > 0 && charPathIdx < charPath.length) {
+    const next = charPath[charPathIdx];
+    hopFX = ch.gx; hopFY = ch.gy;
+    hopTX = next.x; hopTY = next.y;
+    hopTimer = 0; hopping = true;
+    charPathIdx++;
+    if (hopTX > hopFX) ch.facing = 'right';
+    else if (hopTX < hopFX) ch.facing = 'left';
+  } else if (ch.tgx !== undefined && (Math.abs(ch.gx - ch.tgx) > 0.1 || Math.abs(ch.gy - ch.tgy) > 0.1)) {
+    // Fallback: direct smooth movement (for outside-to-door travel in Scene 1)
+    const dx = ch.tgx - ch.gx, dy = ch.tgy - ch.gy;
+    const dist = Math.sqrt(dx*dx + dy*dy);
+    if (dist < 0.15) { ch.gx = ch.tgx; ch.gy = ch.tgy; ch.moving = false; }
+    else { const spd = 2.5 * dt; ch.gx += dx/dist*spd; ch.gy += dy/dist*spd; ch.wf += 8*dt; }
+    if (Math.abs(dx) > Math.abs(dy)) ch.facing = dx > 0 ? 'right' : 'left';
+  } else {
+    ch.moving = false; charPath = [];
+    ch.hopBounce = 0;
+  }
+}
+
+// ══════════════════════════════════════
+// DRAW: OUTSIDE ENVIRONMENT
+// ══════════════════════════════════════
+function drawOutside(b) {
+  // Fill entire canvas with street color
+  X.fillStyle = b < 1 ? lerpCol('#333', OC.street, b) : OC.street;
+  X.fillRect(0, 0, W, H);
+
+  // Sidewalk area around kitchen
+  const margin = 2; // grid units of sidewalk
+  const sw1 = sc(-WT - margin, -WT - margin, 0);
+  const sw2 = sc(KW + WT + margin, -WT - margin, 0);
+  const sw3 = sc(KW + WT + margin, KD + WT + margin, 0);
+  const sw4 = sc(-WT - margin, KD + WT + margin, 0);
+  X.fillStyle = b < 1 ? lerpCol('#444', OC.sidewalk, b) : OC.sidewalk;
+  X.beginPath();
+  X.moveTo(sw1.x, sw1.y); X.lineTo(sw2.x, sw2.y);
+  X.lineTo(sw3.x, sw3.y); X.lineTo(sw4.x, sw4.y);
+  X.closePath(); X.fill();
+}
+
+// ══════════════════════════════════════
+// DRAW: FLOOR
+// ══════════════════════════════════════
+function drawFloor(b) {
+  for (let gx = 0; gx < KW; gx++) {
+    for (let gy = 0; gy < KD; gy++) {
+      const tl = sc(gx, gy, 0);
+      const tr = sc(gx+1, gy, 0);
+      const br = sc(gx+1, gy+1, 0);
+      const bl = sc(gx, gy+1, 0);
+      const isLight = (gx+gy)%2===0;
+      let col = isLight ? OC.floorA : OC.floorB;
+      if (b<1) col = lerpCol('#555', col, b);
+      X.beginPath();
+      X.moveTo(tl.x,tl.y); X.lineTo(tr.x,tr.y);
+      X.lineTo(br.x,br.y); X.lineTo(bl.x,bl.y);
+      X.closePath();
+      X.fillStyle = col; X.fill();
+      X.strokeStyle = b<1?'rgba(0,0,0,0.05)':'rgba(0,0,0,0.08)';
+      X.lineWidth = 0.5; X.stroke();
+    }
+  }
+}
+
+// ══════════════════════════════════════
+// DRAW: WALLS (thick border seen from above)
+// ══════════════════════════════════════
+function drawWalls(b, doorOpen) {
+  // Back wall (y = -WT to 0)
+  drawBox(-WT, -WT, KW + WT*2, WT, WH, OC.wallTop, OC.wallInner, OC.wallOuter, b);
+
+  // Left wall (x = -WT to 0), excluding door
+  // Door is at y = 3 to 4.5
+  const doorY1 = 3, doorY2 = 4.5;
+  // Wall segment before door
+  drawBox(-WT, 0, WT, doorY1, WH, OC.wallTop, OC.wallInner, OC.wallOuter, b);
+  // Wall segment after door
+  drawBox(-WT, doorY2, WT, KD - doorY2 + WT, WH, OC.wallTop, OC.wallInner, OC.wallOuter, b);
+
+  // Door: wall segment that shrinks as door opens
+  if (doorOpen < 1) {
+    // Door wall shrinks downward as it opens
+    const doorWallH = WH * (1 - doorOpen);
+    drawBox(-WT, doorY1, WT, doorY2 - doorY1, doorWallH, OC.wallTop, OC.wallInner, OC.wallOuter, b);
+  }
+  // Warm glow when door is open
+  if (doorOpen > 0.3) {
+    const d1 = sc(-WT, doorY1, 0);
+    const d2 = sc(0, doorY1, 0);
+    const d3 = sc(0, doorY2, 0);
+    const d4 = sc(-WT, doorY2, 0);
+    X.fillStyle = `rgba(180,140,60,${(doorOpen - 0.3) * 0.3 * b})`;
+    X.beginPath();
+    X.moveTo(d1.x,d1.y); X.lineTo(d2.x,d2.y);
+    X.lineTo(d3.x,d3.y); X.lineTo(d4.x,d4.y);
+    X.closePath(); X.fill();
+  }
+
+  // Right wall
+  drawBox(KW, 0, WT, KD, WH, OC.wallTop, OC.wallOuter, OC.wallOuter, b);
+
+  // Front wall (bottom, y = KD to KD+WT) — shorter so you can see inside
+  drawBox(-WT, KD, KW + WT*2, WT, WH * 0.4, OC.wallTop, OC.wallInner, OC.wallOuter, b);
+}
+
+// ══════════════════════════════════════
+// DRAW: FURNITURE
+// ══════════════════════════════════════
+const CTR_H = 0.55; // counter height
+const FRIDGE_H = 1.1;
+
+function drawFurniture(items, alphas, b) {
+  // Sort by Y position for proper overlapping (back to front)
+  const sorted = items.map((f,i) => ({...f, idx:i})).sort((a,c) => a.y - c.y);
+
+  for (const f of sorted) {
+    const a = alphas[f.idx];
+    if (a <= 0.01) continue;
+    X.save();
+    X.globalAlpha = a;
+
+    const h = f.type === 'fridge' ? FRIDGE_H : CTR_H;
+
+    switch(f.type) {
+      case 'counter':
+        drawBox(f.x+0.05, f.y+0.05, 0.9, 0.9, h, OC.ctrTop, OC.ctrFront, OC.ctrSide, b);
+        break;
+      case 'stove':
+        drawBox(f.x+0.05, f.y+0.05, 0.9, 0.9, h, OC.stoveTop, OC.stoveFront, OC.stoveFront, b);
+        // Burners (4 circles on top)
+        if (b > 0.5) {
+          const offsets = [[0.25,0.3],[0.65,0.3],[0.25,0.7],[0.65,0.7]];
+          for (const [ox,oy] of offsets) {
+            const bp = sc(f.x+ox, f.y+oy, h);
+            X.fillStyle = b > 0.8 ? OC.burner : '#555';
+            X.beginPath();
+            X.arc(bp.x, bp.y, 5, 0, Math.PI*2);
+            X.fill();
+          }
+          // Red pan on front-left burner
+          const pp = sc(f.x+0.5, f.y+0.5, h+0.05);
+          X.fillStyle = OC.panRed;
+          X.beginPath();
+          X.ellipse(pp.x, pp.y, 12, 8, 0, 0, Math.PI*2);
+          X.fill();
+          X.strokeStyle = OC.outline; X.lineWidth = 1; X.stroke();
+          // Handle
+          X.fillStyle = OC.panHandle;
+          X.fillRect(pp.x+10, pp.y-2, 8, 4);
+        }
+        break;
+      case 'sink':
+        drawBox(f.x+0.05, f.y+0.05, 0.9, 0.9, h, OC.sinkTop, OC.sinkFront, OC.sinkFront, b);
+        // Basin
+        const sp = sc(f.x+0.5, f.y+0.5, h);
+        X.fillStyle = OC.sinkBowl;
+        X.beginPath();
+        X.ellipse(sp.x, sp.y, 10, 7, 0, 0, Math.PI*2);
+        X.fill();
+        // Faucet
+        X.fillStyle = '#AAA';
+        const fp = sc(f.x+0.5, f.y+0.2, h);
+        X.fillRect(fp.x-2, fp.y-10, 4, 10);
+        X.fillRect(fp.x-6, fp.y-10, 12, 3);
+        break;
+      case 'fridge':
+        drawBox(f.x+0.05, f.y+0.05, 0.9, 0.9, FRIDGE_H, OC.fridgeTop, OC.fridgeFront, OC.fridgeSide, b);
+        // Handle
+        const hp = sc(f.x+0.7, f.y+0.5, FRIDGE_H * 0.6);
+        X.fillStyle = '#888';
+        X.fillRect(hp.x, hp.y, 3, 12);
+        break;
+    }
+    X.restore();
+  }
+}
+
+// ══════════════════════════════════════
+// DRAW: OVERCOOKED CHARACTER
+// ══════════════════════════════════════
+function drawChar(gx, gy, opts) {
+  // Small, chunky, seen from above — like Overcooked
+  const hb = opts.hopBounce || 0;
+  const p = sc(gx, gy, hb);
+  const sx = p.x, sy = p.y;
+  const s = (opts.scale || 1);
+  const a = opts.alpha !== undefined ? opts.alpha : 1;
+  const wf = opts.walkFrame || 0;
+  const walking = opts.isWalking || false;
+
+  X.save();
+  X.globalAlpha = a;
+  X.translate(sx, sy);
+  X.scale(s, s);
+
+  const bob = walking ? Math.sin(wf * 0.3) * 2 : Math.sin(wf * 0.05) * 0.5;
+  const legSwing = walking ? Math.sin(wf * 0.3) * 3 : 0;
+
+  // Drop shadow
+  X.fillStyle = 'rgba(0,0,0,0.2)';
+  X.beginPath();
+  X.ellipse(0, 4, 14, 6, 0, 0, Math.PI*2);
+  X.fill();
+
+  // === LEGS (tiny, below body) ===
+  X.fillStyle = opts.colorDark || '#666';
+  X.fillRect(-6, 0 + legSwing, 5, 6);
+  X.fillRect(2, 0 - legSwing, 5, 6);
+  // Shoes
+  X.fillStyle = '#3A2A1A';
+  X.fillRect(-7, 4 + legSwing, 7, 3);
+  X.fillRect(1, 4 - legSwing, 7, 3);
+
+  // === BODY (round blob from above) ===
+  X.fillStyle = opts.color || OC.charGrey;
+  X.beginPath();
+  X.ellipse(0, -8 + bob, 14, 12, 0, 0, Math.PI*2);
+  X.fill();
+  X.strokeStyle = OC.outline; X.lineWidth = 2; X.stroke();
+
+  // Light highlight on top
+  X.fillStyle = opts.colorLight || '#AAA';
+  X.beginPath();
+  X.ellipse(0, -12 + bob, 10, 5, 0, 0, Math.PI*2);
+  X.fill();
+
+  // === ARMS ===
+  const armSwing = walking ? Math.sin(wf * 0.3) * 4 : 0;
+  // Left arm
+  X.fillStyle = opts.color || OC.charGrey;
+  X.beginPath();
+  X.ellipse(-14, -6 + bob - armSwing, 5, 4, -0.3, 0, Math.PI*2);
+  X.fill();
+  X.strokeStyle = OC.outline; X.lineWidth = 1.5; X.stroke();
+  // Right arm
+  X.beginPath();
+  X.ellipse(14, -6 + bob + armSwing, 5, 4, 0.3, 0, Math.PI*2);
+  X.fill();
+  X.strokeStyle = OC.outline; X.lineWidth = 1.5; X.stroke();
+  // Hands
+  X.fillStyle = OC.skinLight;
+  X.beginPath(); X.arc(-16, -4 + bob - armSwing, 3, 0, Math.PI*2); X.fill();
+  X.beginPath(); X.arc(16, -4 + bob + armSwing, 3, 0, Math.PI*2); X.fill();
+
+  // === HEAD (round, skin colored, seen from above) ===
+  X.fillStyle = OC.skinLight;
+  X.beginPath();
+  X.arc(0, -20 + bob, 11, 0, Math.PI*2);
+  X.fill();
+  X.strokeStyle = OC.outline; X.lineWidth = 2; X.stroke();
+
+  // Eyes (looking down-forward in top-down view)
+  const facing = opts.facing || 'right';
+  const ex = facing === 'right' ? 2 : -2;
+  X.fillStyle = '#FFF';
+  X.beginPath(); X.arc(-4+ex, -18+bob, 3.5, 0, Math.PI*2); X.fill();
+  X.beginPath(); X.arc(4+ex, -18+bob, 3.5, 0, Math.PI*2); X.fill();
+  X.fillStyle = '#111';
+  X.beginPath(); X.arc(-3+ex, -17.5+bob, 2, 0, Math.PI*2); X.fill();
+  X.beginPath(); X.arc(5+ex, -17.5+bob, 2, 0, Math.PI*2); X.fill();
+  // Eye highlights
+  X.fillStyle = '#FFF';
+  X.beginPath(); X.arc(-2.5+ex, -19+bob, 1, 0, Math.PI*2); X.fill();
+  X.beginPath(); X.arc(5.5+ex, -19+bob, 1, 0, Math.PI*2); X.fill();
+
+  // === CHEF HAT (big, white, puffy — seen from above) ===
+  X.fillStyle = OC.hatWhite;
+  // Hat base (sits on head)
+  X.beginPath();
+  X.ellipse(0, -28+bob, 13, 6, 0, 0, Math.PI*2);
+  X.fill();
+  // Hat puff (the tall part, seen as a circle from above)
+  X.beginPath();
+  X.ellipse(0, -32+bob, 11, 9, 0, 0, Math.PI*2);
+  X.fill();
+  X.strokeStyle = OC.outline; X.lineWidth = 1.5; X.stroke();
+  // Hat crease lines
+  X.strokeStyle = OC.hatShadow; X.lineWidth = 1;
+  X.beginPath(); X.arc(-3, -33+bob, 4, 0.5, 2.5); X.stroke();
+  X.beginPath(); X.arc(3, -31+bob, 3, 0.8, 2.2); X.stroke();
+
+  // === BACKPACK ===
+  if (opts.backpackSize > 0) {
+    const bps = opts.backpackSize;
+    const bpR = 6 + bps * 3;
+    const bpDir = facing === 'right' ? -1 : 1;
+    X.fillStyle = OC.backpack;
+    X.beginPath();
+    X.ellipse(bpDir * 10, -6 + bob, bpR, bpR * 0.7, 0, 0, Math.PI*2);
+    X.fill();
+    X.strokeStyle = OC.outline; X.lineWidth = 1.5; X.stroke();
+  }
+
+  // === HELD ITEMS ===
+  if (opts.holdItem === 'scroll-gold' || opts.holdItem === 'both-scrolls') {
+    X.fillStyle = OC.scrollGold;
+    X.fillRect(16, -12 + bob + armSwing, 8, 14);
+    X.strokeStyle = OC.outline; X.lineWidth = 1; X.strokeRect(16, -12+bob+armSwing, 8, 14);
+  }
+  if (opts.holdItem === 'scroll-teal' || opts.holdItem === 'both-scrolls') {
+    X.fillStyle = OC.scrollTeal;
+    X.fillRect(-24, -12 + bob - armSwing, 8, 14);
+    X.strokeStyle = OC.outline; X.lineWidth = 1; X.strokeRect(-24, -12+bob-armSwing, 8, 14);
+  }
+
+  X.restore();
+}
+
+// ══════════════════════════════════════
+// DRAW: PLANTS / DECORATIONS
+// ══════════════════════════════════════
+function drawPlant(gx, gy, b) {
+  if (b < 0.3) return;
+  const p = sc(gx, gy, 0);
+  X.save(); X.globalAlpha = b;
+  // Pot
+  X.fillStyle = OC.potBrown;
+  X.fillRect(p.x-8, p.y-6, 16, 12);
+  X.strokeStyle = OC.outline; X.lineWidth = 1; X.strokeRect(p.x-8, p.y-6, 16, 12);
+  // Leaves
+  X.fillStyle = OC.leafGreen;
+  X.beginPath(); X.arc(p.x, p.y-14, 10, 0, Math.PI*2); X.fill();
+  X.fillStyle = OC.leafDark;
+  X.beginPath(); X.arc(p.x-4, p.y-18, 6, 0, Math.PI*2); X.fill();
+  X.beginPath(); X.arc(p.x+5, p.y-16, 5, 0, Math.PI*2); X.fill();
+  X.restore();
+}
+
+// ══════════════════════════════════════
+// DRAW: SHELF WITH SCROLLS
+// ══════════════════════════════════════
+function drawScrollShelf(gx, gy, b, hasGold, hasTeal) {
+  drawBox(gx, gy, 1, 0.5, 0.7, OC.wallTop, OC.wallInner, OC.wallOuter, b);
+  const sp = sc(gx+0.5, gy+0.25, 0.75);
+  if (hasGold) {
+    X.fillStyle = OC.scrollGold;
+    X.fillRect(sp.x-12, sp.y-6, 10, 14);
+    X.strokeStyle = OC.outline; X.lineWidth = 1; X.strokeRect(sp.x-12, sp.y-6, 10, 14);
+  }
+  if (hasTeal) {
+    X.fillStyle = OC.scrollTeal;
+    X.fillRect(sp.x+2, sp.y-6, 10, 14);
+    X.strokeStyle = OC.outline; X.lineWidth = 1; X.strokeRect(sp.x+2, sp.y-6, 10, 14);
+  }
+}
+
+// ══════════════════════════════════════
+// PARTICLES
+// ══════════════════════════════════════
+let particles = [];
+function addSparkle(sx,sy,n,col){
+  for(let i=0;i<n;i++) particles.push({
+    x:sx,y:sy,vx:(Math.random()-.5)*4,vy:(Math.random()-.5)*4-2,
+    life:1,decay:0.015+Math.random()*0.02,size:2+Math.random()*3,color:col||'#FFD700'
+  });
+}
+function addPop(sx,sy){
+  particles.push({x:sx,y:sy,vx:0,vy:0,life:1,decay:0.04,size:5,maxSize:30,type:'ring',color:'#FFF'});
+}
+function tickParticles(dt){
+  for(let i=particles.length-1;i>=0;i--){
+    const p=particles[i]; p.life-=p.decay;
+    if(p.life<=0){particles.splice(i,1);continue}
+    p.x+=p.vx; p.y+=p.vy;
+    if(p.type!=='ring') p.vy+=0.1;
+  }
+}
+function drawParticles(){
+  for(const p of particles){
+    X.save(); X.globalAlpha=p.life;
+    if(p.type==='ring'){
+      const s=lerp(p.size,p.maxSize,1-p.life);
+      X.strokeStyle=p.color; X.lineWidth=2;
+      X.beginPath(); X.arc(p.x,p.y,s,0,Math.PI*2); X.stroke();
+    } else {
+      X.fillStyle=p.color;
+      const s=p.size*p.life;
+      X.fillRect(p.x-s/2,p.y-s/2,s,s);
+    }
+    X.restore();
+  }
+}
+
+// ══════════════════════════════════════
+// SCROLL OVERLAYS
+// ══════════════════════════════════════
+const scrollOvl = document.getElementById('scroll-overlay');
+const scrollCnt = document.getElementById('scroll-content');
+function showScroll(type, originX, originY){
+  scrollOvl.classList.add('visible');
+  scrollCnt.className = type;
+  // If origin coords provided, expand from that point
+  if (originX !== undefined && originY !== undefined) {
+    // Convert canvas coords to viewport coords
+    const canvasEl = document.getElementById('c');
+    const rect = canvasEl.getBoundingClientRect();
+    const scaleX = rect.width / W, scaleY = rect.height / H;
+    const vpX = rect.left + originX * scaleX;
+    const vpY = rect.top + originY * scaleY;
+    scrollCnt.style.transformOrigin = `${vpX}px ${vpY}px`;
+    scrollCnt.style.transform = 'scale(0)';
+    scrollCnt.style.opacity = '0';
+  } else {
+    scrollCnt.style.transformOrigin = 'center center';
+  }
+  if (type === 'map') {
+    scrollCnt.innerHTML = `<h3>CLAUDE.md — The Map</h3>
+    <div class="s">&#x1F5FA; <b>datasets/</b> — all verified data</div>
+    <div class="s">&#x1F527; <b>tools/</b> — reusable scripts</div>
+    <div class="s">&#x1F50D; <b>observations/</b> — findings & theory</div>
+    <div class="s">&#x1F4E6; <b>output/</b> — staging area</div>
+    <div class="s">&#x1F3AF; <b>deliverables/</b> — submission-ready</div>
+    <div class="s" style="margin-top:14px;font-size:13px;opacity:.7">"Where to find things."</div>`;
+  } else if (type === 'blueprint') {
+    scrollCnt.innerHTML = `<h3>.claude/ — The Blueprint</h3>
+    <div class="s">&#x2699; <b>rules/</b> — conventions & protocols</div>
+    <div class="s">&#x1F4CB; <b>commands/</b> — slash commands per role</div>
+    <div class="s">&#x1F916; <b>agents/</b> — specialist definitions</div>
+    <div class="s">&#x1F504; <b>workflows/</b> — step-by-step SOPs</div>
+    <div class="s" style="margin-top:14px;font-size:13px;opacity:.7">"How the kitchen works."</div>`;
+  } else if (type === 'logbook') {
+    scrollCnt.innerHTML = `<h3>The Log — git</h3>
+    <div class="s">git add datasets/transit_freq.csv</div>
+    <div class="s">git commit -m "[DATA] transit frequency"</div>
+    <div class="s">git push origin main</div>
+    <div class="s">git merge henna/corridor-model</div>
+    <div class="s">git log --oneline -5</div>
+    <div class="s">git rebase main</div>
+    <div class="s">git tag v0.4-midterm</div>
+    <div class="s" style="margin-top:14px;font-size:13px;opacity:.7;color:#8A8">"Every action, automatically recorded."</div>`;
+  }
+  // Use double-rAF to ensure initial styles are applied before transition starts
+  requestAnimationFrame(()=>{
+    requestAnimationFrame(()=>{
+      scrollCnt.style.transform = '';
+      scrollCnt.style.opacity = '';
+      scrollCnt.classList.add('show');
+    });
+  });
+}
+function hideScroll(){
+  scrollCnt.classList.remove('show');
+  setTimeout(()=>scrollOvl.classList.remove('visible'),600);
+}
+
+// ══════════════════════════════════════
+// NARRATION
+// ══════════════════════════════════════
+const narEl = document.getElementById('narration');
+const labEl = document.getElementById('scene-label');
+function narrate(t){ narEl.textContent=t; narEl.style.opacity=t?1:0; }
+function label(t){ labEl.textContent=t; labEl.style.opacity=t?1:0; }
+
+// ══════════════════════════════════════
+// SCENE 1 STATE
+// ══════════════════════════════════════
+let bright = 0.2;
+let doorOpen = 0;
+let pickedGold = false, pickedTeal = false;
+let showingScroll = null;
+let colorT = 0; // 0=grey, 1=gold
+let reachedCenter = false; // prevents re-triggering movement in phase 1e
+let furnStart = -1;
+let furnAlpha = FURN.map(()=>0);
+
+// Character
+let ch = {
+  gx: -3, gy: 3.5,
+  tgx: -3, tgy: 3.5,
+  color: OC.charGrey, colorLight: '#B0B0B0', colorDark: OC.charGreyDk,
+  wf: 0, facing: 'right',
+  holdItem: null, backpackSize: 0,
+  alpha: 0, moving: false, hopBounce: 0,
+};
+function moveToSmart(gx, gy) {
+  // If character is outside kitchen (gx < 0), use direct movement to door
+  if (ch.gx < 0 || gx < 0) {
+    ch.tgx = gx; ch.tgy = gy; ch.moving = true;
+    charPath = [];
+    if (gx > ch.gx) ch.facing = 'right';
+    else if (gx < ch.gx) ch.facing = 'left';
+  } else {
+    moveToWithPath(gx, gy);
+  }
+}
+function updateCh(dt) {
+  updateChPath(dt);
+}
+
+// Center camera on kitchen
+cam.x = ws(KW/2, KD/2, 0).x;
+cam.y = ws(KW/2, KD/2, 0).y - 30;
+cam.tx = cam.x; cam.ty = cam.y;
+
+// ══════════════════════════════════════
+// SCENE 1 DRAW
+// ══════════════════════════════════════
+function drawScene1(t, dt) {
+  // Clear canvas every frame
+  X.clearRect(0, 0, W, H);
+  const st = sceneTime;
+
+  // Phase logic
+  if (st < 4) {
+    // 1a: Dim kitchen visible, character walks to door
+    bright = lerp(0.4, 0.5, clamp(st/3,0,1));
+    if (st > 0.5) ch.alpha = clamp((st-0.5)/1,0,1);
+    // Stage 1: walk toward the door from outside (stay on y=3.7 — inside door gap y=3 to 4.5)
+    if (st > 1.5 && !ch.moving && ch.gx < -1) moveToSmart(-0.8, 3.7);
+    // Stage 2: walk through the door opening
+    if (st > 2.5 && !ch.moving && ch.gx < 0) {
+      doorOpen = 1; // Door opens as character arrives
+      moveToSmart(0.5, 3.7);
+    }
+    narrate(st > 0.8 ? 'An empty kitchen. Dim, bare, unused.' : '');
+    label('Scene 1 — Entering the Kitchen');
+
+  } else if (st < 7) {
+    // 1b: Inside, pick up scrolls
+    bright = 0.55;
+    doorOpen = 1;
+    // Walk to scroll shelf (pathfinding avoids furniture)
+    if (st > 4.2 && !ch.moving && ch.gx < 1.3) moveToSmart(1.5, 1.5);
+    if (st > 5.5 && !pickedGold) {
+      pickedGold = true; ch.holdItem = 'scroll-gold';
+      const sp = sc(1.5,1.5,0.5); addSparkle(sp.x,sp.y,6,OC.scrollGold);
+      narrate('CLAUDE.md — the map of the repository.');
+    }
+    if (st > 6.2 && !pickedTeal) {
+      pickedTeal = true; ch.holdItem = 'both-scrolls';
+      const sp = sc(1.5,1.5,0.5); addSparkle(sp.x,sp.y,6,OC.scrollTeal);
+      narrate('.claude/ — the blueprint of the kitchen.');
+    }
+    if (st > 4.2 && st < 5.5) narrate('Just inside: two scrolls waiting.');
+
+  } else if (st < 24) {
+    // 1c: Open scrolls — CLAUDE.md first (8s), then .claude/ (7s)
+    bright = 0.55;
+    ch.holdItem = 'both-scrolls';
+    if (st < 15) {
+      // CLAUDE.md scroll (st 7–15, 8 seconds)
+      if (showingScroll !== 'map') { showingScroll='map'; showScroll('map'); }
+      narrate('CLAUDE.md — the map of the repository.');
+    } else if (st < 16) {
+      // Gap — hide map scroll
+      if (showingScroll === 'map') { hideScroll(); showingScroll='hiding'; }
+      narrate('');
+    } else if (st < 23) {
+      // .claude/ scroll (st 16–23, 7 seconds)
+      if (showingScroll !== 'bp') { showingScroll='bp'; showScroll('blueprint'); }
+      narrate('.claude/ — the blueprint of the kitchen.');
+    } else {
+      // Gap — hide blueprint scroll
+      if (showingScroll === 'bp') { hideScroll(); showingScroll=null; }
+      narrate('');
+    }
+
+  } else if (st < 28) {
+    // 1d: Color transition — grey to gold after both scrolls
+    if (showingScroll) { hideScroll(); showingScroll = null; }
+    ch.holdItem = null;
+    const ct = clamp((st-24)/3,0,1);
+    colorT = easeInOut(ct);
+    ch.color = lerpCol(OC.charGrey, OC.charGold, colorT);
+    ch.colorLight = lerpCol('#B0B0B0', '#E0C870', colorT);
+    ch.colorDark = lerpCol(OC.charGreyDk, OC.charGoldDk, colorT);
+    ch.backpackSize = Math.floor(ct*2);
+    bright = lerp(0.55, 0.7, ct);
+    if (ct>0.1 && ct<0.9 && Math.random()<0.12) {
+      const cp = sc(ch.gx,ch.gy,0.5); addSparkle(cp.x,cp.y-20,2,OC.charGold);
+    }
+    narrate('Scrolls in the backpack. Grey washes to gold.');
+    label('Scene 1 — Context Loaded');
+
+  } else {
+    // 1e: Kitchen furnishes
+    if (furnStart<0) furnStart=st;
+    const ft = st - furnStart;
+    bright = lerp(0.7, 1.0, clamp(ft/5,0,1));
+    // Walk to open area (7,4) and stop — only once
+    if (!reachedCenter && !ch.moving) {
+      moveToSmart(7, 4);
+      reachedCenter = true; // never re-trigger
+    }
+    ch.color = OC.charGold; ch.colorLight = '#E0C870'; ch.colorDark = OC.charGoldDk;
+    ch.backpackSize = 2;
+
+    // Stagger furniture appearance
+    for (let i=0; i<FURN.length; i++) {
+      const delay = i * 0.2;
+      const elapsed = ft - delay;
+      if (elapsed > 0) {
+        const prev = furnAlpha[i];
+        furnAlpha[i] = clamp(easeOutBack(clamp(elapsed/0.6,0,1)),0,1);
+        if (prev < 0.1 && furnAlpha[i] >= 0.1) {
+          const fp = sc(FURN[i].x+0.5, FURN[i].y+0.5, 0.3);
+          addPop(fp.x, fp.y);
+        }
+      }
+    }
+
+    if (ft<2) narrate('Context loaded. The kitchen takes shape.');
+    else if (ft<5) narrate('Counters, stove, sink — everything appears.');
+    else narrate('The kitchen is alive.');
+  }
+
+  // ═══ RENDER ═══
+  updateCh(dt);
+
+  // Outside
+  drawOutside(bright);
+
+  // Plants around edges
+  drawPlant(-1.5, -0.5, bright);
+  drawPlant(KW+1, -0.5, bright);
+  drawPlant(-1.5, KD+0.5, bright);
+  drawPlant(KW+1, KD+0.5, bright);
+  drawPlant(KW+1, 2, bright);
+  drawPlant(KW+1, 6, bright);
+
+  // Floor
+  drawFloor(bright);
+
+  // Walls
+  drawWalls(bright, doorOpen);
+
+  // Scroll shelf (visible early)
+  if (st < 28) {
+    drawScrollShelf(0.5, 1.5, bright, !pickedGold, !pickedTeal);
+  }
+
+  // Furniture
+  drawFurniture(FURN, furnAlpha, bright);
+
+  // Character
+  if (ch.alpha > 0) {
+    drawChar(ch.gx, ch.gy, {
+      color: ch.color, colorLight: ch.colorLight, colorDark: ch.colorDark,
+      walkFrame: ch.wf, facing: ch.facing,
+      holdItem: ch.holdItem, backpackSize: ch.backpackSize,
+      alpha: ch.alpha, scale: 1, isWalking: ch.moving, hopBounce: ch.hopBounce||0,
+    });
+  }
+
+  // Particles
+  tickParticles(dt);
+  drawParticles();
+
+  // Warm glow in 1e
+  if (bright > 0.5) {
+    const cp = sc(5,4,0);
+    const grad = X.createRadialGradient(cp.x,cp.y,0,cp.x,cp.y,300);
+    grad.addColorStop(0,`rgba(255,200,80,${(bright-0.5)*0.1})`);
+    grad.addColorStop(1,'rgba(255,200,80,0)');
+    X.fillStyle = grad; X.fillRect(0,0,W,H);
+  }
+}
+
+// ══════════════════════════════════════
+// MAIN LOOP
+// ══════════════════════════════════════
+let globalTime=0, sceneTime=0, playing=true, speed=1, lastT=0;
+
+function resetScene1(){
+  collMap = buildCollisionMap(FURN); // restore Scene 1 collision map
+  bright=0.2; doorOpen=0;
+  pickedGold=false; pickedTeal=false;
+  showingScroll=null; colorT=0; furnStart=-1;
+  furnAlpha=FURN.map(()=>0);
+  ch.gx=-3; ch.gy=3.5; ch.tgx=-3; ch.tgy=3.5;
+  ch.color=OC.charGrey; ch.colorLight='#B0B0B0'; ch.colorDark=OC.charGreyDk;
+  ch.wf=0; ch.facing='right'; ch.holdItem=null; ch.backpackSize=0;
+  ch.alpha=0; ch.moving=false;
+  reachedCenter=false;
+  particles=[]; hideScroll(); narrate(''); label('');
+}
+
+// ══════════════════════════════════════
+// SCENE 2: "THE PASS"
+// ══════════════════════════════════════
+
+// --- User character ---
+let usr = {
+  gx:8.5, gy:3.5, tgx:8.5, tgy:3.5,
+  color:'#9B6BB0', colorLight:'#C090D0', colorDark:'#7A4A90',
+  wf:0, facing:'left', holdItem:null, backpackSize:0,
+  alpha:0, moving:false
+};
+function moveUsr(gx,gy){
+  usr.tgx=gx; usr.tgy=gy; usr.moving=true;
+  if(gx>usr.gx) usr.facing='right'; else if(gx<usr.gx) usr.facing='left';
+}
+function updateUsr(dt){
+  if(!usr.moving) return;
+  const dx=usr.tgx-usr.gx, dy=usr.tgy-usr.gy;
+  const dist=Math.sqrt(dx*dx+dy*dy);
+  if(dist<0.15){usr.gx=usr.tgx;usr.gy=usr.tgy;usr.moving=false;return}
+  const spd=2*dt;
+  usr.gx+=dx/dist*spd; usr.gy+=dy/dist*spd;
+  usr.wf+=7*dt;
+  if(Math.abs(dx)>Math.abs(dy)) usr.facing=dx>0?'right':'left';
+}
+
+// --- Scene 2 state ---
+let s2_phase = 0;
+let s2_passAlpha = 0;
+let s2_orderCycle = 0; // 0,1,2 (three order cycles)
+let s2_cycleState = 'idle'; // idle, ordering, cooking, plating, sliding, received
+let s2_cycleTimer = 0;
+let s2_bubbleText = '';
+let s2_bubbleAlpha = 0;
+let s2_bubbleWho = 'user'; // 'user' or 'claude'
+let s2_platePos = {gx:0,gy:0,alpha:0};
+let s2_bookThrown = false;
+let s2_bookPos = {gx:8,gy:3,gz:0,alpha:0};
+let s2_bookOnDesk = false;
+let s2_cagBooks = 0; // 0-5
+let s2_ragMode = false;
+let s2_ragTrips = 0;
+let s2_logLines = 0; // 0-8
+let s2_logHighlight = 0;
+
+const ORDERS = [
+  {order:'Analyze transit data', plate:'Transit frequency map'},
+  {order:'Cross-reference stations', plate:'Station correlation table'},
+  {order:'Build corridor viz', plate:'Interactive scrollytelling'}
+];
+
+// --- Scene 2 furniture = Scene 1 kitchen + pass counter + dining side ---
+const FURN2 = [
+  // === SAME AS SCENE 1 (back wall) ===
+  {type:'counter',x:0,y:0,w:1,d:1},{type:'counter',x:1,y:0,w:1,d:1},
+  {type:'counter',x:2,y:0,w:1,d:1},{type:'stove',x:3,y:0,w:1,d:1},
+  {type:'stove',x:4,y:0,w:1,d:1},{type:'sink',x:5,y:0,w:1,d:1},
+  {type:'counter',x:6,y:0,w:1,d:1},{type:'counter',x:7,y:0,w:1,d:1},
+  // Center island (H-shaped, same as scene 1)
+  {type:'counter',x:2,y:3,w:1,d:1},{type:'counter',x:3,y:3,w:1,d:1},
+  {type:'counter',x:4,y:3,w:1,d:1},{type:'counter',x:5,y:3,w:1,d:1},
+  {type:'counter',x:2,y:5,w:1,d:1},{type:'counter',x:3,y:5,w:1,d:1},
+  {type:'counter',x:4,y:5,w:1,d:1},{type:'counter',x:5,y:5,w:1,d:1},
+  {type:'counter',x:3,y:4,w:1,d:1},{type:'counter',x:4,y:4,w:1,d:1},
+  // Pass counter (same as Scene 1 — already present)
+  {type:'counter',x:7,y:1,w:1,d:1},{type:'counter',x:7,y:2,w:1,d:1},
+  // Pass window open at y=3,4 (walkable)
+  {type:'counter',x:7,y:5,w:1,d:1},{type:'counter',x:7,y:6,w:1,d:1},
+  // NO counter at (7,7) — removed
+  // Logbook counter (kitchen side, left of pass)
+  {type:'counter',x:6,y:6,w:1,d:1},
+];
+let furn2Alpha = FURN2.map(()=>1);
+
+// --- New draw functions ---
+
+// Speech bubble
+function drawSpeechBubble(sx, sy, text, alpha, tailDir) {
+  if(alpha<0.01) return;
+  X.save(); X.globalAlpha = alpha;
+  X.font = '18px "DM Sans",sans-serif';
+  const tw = X.measureText(text).width;
+  const bw = Math.max(tw+44, 140);
+  const bh = 48;
+  const bx = sx - bw/2, by = sy - bh - 14;
+  // Shadow
+  X.fillStyle = 'rgba(0,0,0,0.15)';
+  X.beginPath(); X.roundRect(bx+3, by+3, bw, bh, 10); X.fill();
+  // Bubble body
+  X.fillStyle = '#FFF';
+  X.strokeStyle = OC.outline; X.lineWidth = 2;
+  X.beginPath(); X.roundRect(bx, by, bw, bh, 10); X.fill(); X.stroke();
+  // Tail
+  const tx = tailDir === 'left' ? bx + 20 : bx + bw - 20;
+  X.fillStyle = '#FFF';
+  X.beginPath();
+  X.moveTo(tx-7, by+bh); X.lineTo(tx+7, by+bh); X.lineTo(tx, by+bh+12);
+  X.closePath(); X.fill();
+  X.beginPath();
+  X.moveTo(tx-7, by+bh); X.lineTo(tx, by+bh+12); X.stroke();
+  X.beginPath();
+  X.moveTo(tx+7, by+bh); X.lineTo(tx, by+bh+12); X.stroke();
+  // Text
+  X.fillStyle = '#333'; X.textAlign = 'center';
+  X.fillText(text, sx, by + bh/2 + 6);
+  X.restore();
+}
+
+// Plate (circular, with food icon)
+function drawPlate(gx, gy, alpha) {
+  if(alpha<0.01) return;
+  const p = sc(gx, gy, CTR_H + 0.1);
+  X.save(); X.globalAlpha = alpha;
+  // Plate
+  X.fillStyle = '#F5F0E8';
+  X.beginPath(); X.ellipse(p.x, p.y, 14, 9, 0, 0, Math.PI*2); X.fill();
+  X.strokeStyle = OC.outline; X.lineWidth = 1.5; X.stroke();
+  // Food
+  X.fillStyle = '#8BC34A';
+  X.beginPath(); X.ellipse(p.x, p.y-1, 8, 5, 0, 0, Math.PI*2); X.fill();
+  // Steam
+  X.strokeStyle = 'rgba(255,255,255,0.5)'; X.lineWidth = 1.5;
+  const t = globalTime * 2;
+  X.beginPath(); X.moveTo(p.x-3, p.y-12); X.quadraticCurveTo(p.x-6, p.y-18+Math.sin(t)*2, p.x-2, p.y-22); X.stroke();
+  X.beginPath(); X.moveTo(p.x+3, p.y-14); X.quadraticCurveTo(p.x+6, p.y-20+Math.cos(t)*2, p.x+2, p.y-24); X.stroke();
+  X.restore();
+}
+
+// Book (3D block)
+function drawBook(gx, gy, gz, w, d, h, col, alpha) {
+  if(alpha<0.01) return;
+  X.save(); X.globalAlpha = alpha;
+  const darkCol = lerpCol(col, '#000', 0.3);
+  const sideCol = lerpCol(col, '#000', 0.15);
+  drawBox(gx, gy, w, d, h, col, darkCol, sideCol, 1);
+  // Page lines on the front face
+  const bl = sc(gx, gy+d, 0); const br = sc(gx+w, gy+d, 0);
+  const tl = sc(gx, gy+d, h); const tr = sc(gx+w, gy+d, h);
+  X.strokeStyle = 'rgba(255,255,240,0.4)'; X.lineWidth = 0.5;
+  for(let i=1; i<4; i++){
+    const t = i/4;
+    const lx = lerp(bl.x,tl.x,t), ly = lerp(bl.y,tl.y,t);
+    const rx = lerp(br.x,tr.x,t), ry = lerp(br.y,tr.y,t);
+    X.beginPath(); X.moveTo(lx,ly); X.lineTo(rx,ry); X.stroke();
+  }
+  X.restore();
+}
+
+// Logbook (open book with writing)
+function drawLogbook(gx, gy, lines, highlight, b) {
+  if(b<0.1) return;
+  const p = sc(gx+0.5, gy+0.5, CTR_H+0.05);
+  X.save(); X.globalAlpha = b;
+  // Glow when highlighted
+  if(highlight > 0) {
+    X.shadowColor = '#FFD700'; X.shadowBlur = highlight * 20;
+  }
+  // Open book (two pages)
+  X.fillStyle = '#F5F0E0';
+  X.fillRect(p.x-22, p.y-14, 20, 28);
+  X.fillRect(p.x+2, p.y-14, 20, 28);
+  X.strokeStyle = OC.outline; X.lineWidth = 1;
+  X.strokeRect(p.x-22, p.y-14, 20, 28);
+  X.strokeRect(p.x+2, p.y-14, 20, 28);
+  // Spine
+  X.fillStyle = '#8B5E3A'; X.fillRect(p.x-2, p.y-15, 4, 30);
+  X.shadowBlur = 0;
+  // Lines of text (appear over time)
+  X.fillStyle = '#555'; X.font = '6px monospace';
+  const allLines = ['git add .','commit -m "data"','push origin','merge branch','git log','rebase main','cherry-pick','tag v1.0'];
+  for(let i=0; i<Math.min(lines, 8); i++) {
+    const page = i < 4 ? 0 : 1;
+    const row = i % 4;
+    const lx = page === 0 ? p.x-20 : p.x+4;
+    const ly = p.y - 8 + row * 7;
+    X.fillText(allLines[i], lx, ly);
+  }
+  X.restore();
+}
+
+// Index card box (for RAG)
+function drawIndexBox(gx, gy, alpha) {
+  if(alpha<0.01) return;
+  X.save(); X.globalAlpha = alpha;
+  drawBox(gx, gy, 0.6, 0.4, 0.3, '#E8D8B8', '#C8B898', '#B8A888', 1);
+  // Cards sticking out
+  const p = sc(gx+0.3, gy+0.1, 0.35);
+  X.fillStyle = '#FFF'; X.strokeStyle = OC.outline; X.lineWidth = 0.5;
+  for(let i=0;i<3;i++){
+    X.save(); X.translate(p.x+i*5-5, p.y-i*2);
+    X.rotate(-0.1+i*0.1);
+    X.fillRect(-4,-8,8,12); X.strokeRect(-4,-8,8,12);
+    X.restore();
+  }
+  X.restore();
+}
+
+// Pass window (the opening in the pass counter)
+function drawPassWindow(b) {
+  // Warm glow in the pass opening (y=3 to y=5 at x=7)
+  const p1 = sc(7, 3, 0); const p2 = sc(8, 5, 0);
+  X.save(); X.globalAlpha = 0.15 * b;
+  X.fillStyle = '#FFD700';
+  X.fillRect(Math.min(p1.x,p2.x), Math.min(p1.y,p2.y),
+    Math.abs(p2.x-p1.x), Math.abs(p2.y-p1.y));
+  X.restore();
+}
+
+// ══════════════════════════════════════
+// SCENE 2 DRAW
+// ══════════════════════════════════════
+function resetScene2() {
+  bright = 1;
+  doorOpen = 1;
+  s2_phase = 0;
+  s2_passAlpha = 0;
+  s2_orderCycle = 0;
+  s2_cycleState = 'idle';
+  s2_cycleTimer = 0;
+  s2_bubbleText = '';
+  s2_bubbleAlpha = 0;
+  s2_platePos = {gx:0,gy:0,alpha:0};
+  s2_bookThrown = false;
+  s2_bookPos = {gx:8,gy:3,gz:0,alpha:0};
+  s2_bookOnDesk = false;
+  s2_cagBooks = 0;
+  s2_ragMode = false;
+  s2_ragTrips = 0;
+  s2_logLines = 0;
+  s2_logHighlight = 0;
+  furn2Alpha = FURN2.map(()=>1);
+  // Rebuild collision map for Scene 2 layout
+  collMap = buildCollisionMap(FURN2);
+  // Claude starts where Scene 1 left them (reachedCenter target was 7,4 → cell center 7.5,4.5)
+  ch.gx=6.5; ch.gy=2.5; ch.tgx=6.5; ch.tgy=2.5;
+  ch.color=OC.charGold; ch.colorLight='#E0C870'; ch.colorDark=OC.charGoldDk;
+  ch.wf=0; ch.facing='right'; ch.holdItem=null; ch.backpackSize=2;
+  ch.alpha=1; ch.moving=false;
+  charPath=[]; charPathIdx=0;
+  // User starts off-screen right
+  usr.gx=11; usr.gy=4; usr.alpha=0; usr.moving=false;
+  usr.backpackSize=0; usr.holdItem=null;
+  particles=[];
+  hideScroll(); narrate(''); label('');
+}
+
+function drawScene2(t, dt) {
+  X.clearRect(0, 0, W, H);
+  const st = sceneTime;
+
+  // ═══ PHASE LOGIC ═══
+
+  if (st < 3) {
+    // 2a-setup: Camera settled, pass fades in, user appears
+    label('Scene 2 — The Pass');
+    s2_passAlpha = 1; // Pass already present from Scene 1
+    if (st > 1) {
+      usr.alpha = clamp((st-1)/1.5, 0, 1);
+      if (usr.gx > 8.6) moveUsr(8.5, 4);
+    }
+    narrate('The pass — where orders come in and dishes go out.');
+    // Logbook starts accumulating
+    s2_logLines = 0;
+
+  } else if (st < 18) {
+    // 2a-loop: Three order→cook→plate→slide cycles
+    label('Scene 2 — The Pass');
+    s2_passAlpha = 1;
+    usr.alpha = 1;
+
+    // Manage order cycles by time
+    const cycleLen = 5; // seconds per cycle
+    const cycleTime = st - 3;
+    const currentCycle = Math.min(Math.floor(cycleTime / cycleLen), 2);
+    const withinCycle = cycleTime - currentCycle * cycleLen;
+    s2_orderCycle = currentCycle;
+
+    if (withinCycle < 1.2) {
+      // User orders (speech bubble)
+      s2_bubbleText = ORDERS[currentCycle].order;
+      s2_bubbleAlpha = clamp(withinCycle/0.4, 0, 1);
+      s2_bubbleWho = 'user';
+      s2_platePos.alpha = 0;
+      // User walks to pass
+      if (!usr.moving && usr.gx > 8.2) moveUsr(8, 4);
+    } else if (withinCycle < 3) {
+      // Claude cooks (moves to stove then back)
+      s2_bubbleAlpha = clamp(1-(withinCycle-1.2)/0.5, 0, 1);
+      if (withinCycle < 2 && !ch.moving && ch.gy > 1.5) {
+        moveToSmart(2+currentCycle, 1); // walk to stove area (y=1, cell center at 1.5)
+      }
+      if (withinCycle > 2.2 && !ch.moving && ch.gy < 1.8) {
+        moveToSmart(5, 2); // walk back to home station
+      }
+      // Log line appears
+      s2_logLines = Math.min(currentCycle * 2 + 1, 8);
+    } else if (withinCycle < 4) {
+      // Plating — plate appears and slides across pass
+      s2_bubbleAlpha = 0;
+      const slideT = (withinCycle - 3);
+      s2_platePos.gx = lerp(5, 8.5, easeOut(slideT));
+      s2_platePos.gy = 4;
+      s2_platePos.alpha = 1;
+      if (slideT > 0.5) {
+        s2_bubbleText = ORDERS[currentCycle].plate;
+        s2_bubbleWho = 'claude';
+        s2_bubbleAlpha = clamp((slideT-0.5)/0.3, 0, 1);
+      }
+      s2_logLines = Math.min(currentCycle * 2 + 2, 8);
+    } else {
+      // User receives
+      s2_platePos.alpha = clamp(1-(withinCycle-4)/0.5, 0, 1);
+      s2_bubbleAlpha = clamp(1-(withinCycle-4)/0.5, 0, 1);
+      ch.backpackSize = 2 + (currentCycle + 1) * 0.5;
+      if (currentCycle < 2 && !usr.moving && usr.gx < 8.4) moveUsr(8.5, 4);
+      // Sparkle on backpack growth
+      if (withinCycle < 4.3) {
+        const cp = sc(ch.gx, ch.gy, 0.3);
+        addSparkle(cp.x, cp.y-10, 1, OC.charGold);
+      }
+    }
+
+    if (st > 3 && st < 5) narrate('An order comes in. Claude gets to work.');
+    else if (st > 8 && st < 10) narrate('Another order. The backpack grows with each exchange.');
+    else if (st > 13 && st < 15) narrate('More context consumed. More capability.');
+
+  } else if (st < 21) {
+    // 2b: Backpack highlight — Claude at (1,3)
+    label('Scene 2 — Context Weight');
+    s2_bubbleAlpha = 0; s2_platePos.alpha = 0;
+    if (!ch.moving && (Math.abs(ch.gx-1.5)>0.3 || Math.abs(ch.gy-3.5)>0.3)) moveToSmart(1, 3);
+    ch.backpackSize = 3.5;
+    // Pulsing glow on backpack
+    const pulse = 0.5 + Math.sin(st*3)*0.3;
+    if (Math.random()<0.08) {
+      const cp=sc(ch.gx,ch.gy,0.3); addSparkle(cp.x-15,cp.y,1,'#FF8844');
+    }
+    narrate('Every exchange fills the backpack. Context is weight.');
+
+  } else if (st < 28) {
+    // 2c: Big book (archibase)
+    label('Scene 2 — Knowledge');
+    if (st < 23) {
+      // Book appears in user's hands, flies across
+      if (!s2_bookThrown) {
+        s2_bookPos.alpha = 1;
+        const throwT = clamp((st-21)/2, 0, 1);
+        s2_bookPos.gx = lerp(8, 2.25, easeOut(throwT));
+        s2_bookPos.gy = lerp(3.5, 3.25, easeOut(throwT));
+        s2_bookPos.gz = Math.sin(throwT * Math.PI) * 1.5; // arc
+        if (throwT >= 0.95) { s2_bookThrown = true; addPop(sc(2,3.5,0.5).x, sc(2,3.5,0.5).y); }
+      }
+      narrate('The user throws a heavy book across the pass.');
+    } else if (st < 25) {
+      // Claude catches, backpack grows
+      s2_bookPos.gx = 2; s2_bookPos.gy = 3.5; s2_bookPos.gz = 0;
+      ch.backpackSize = lerp(3.5, 5, clamp((st-23)/1.5, 0, 1));
+      if (Math.random()<0.1) {
+        const cp=sc(ch.gx,ch.gy,0.5); addSparkle(cp.x,cp.y-20,2,'#8B5E3A');
+      }
+      narrate('Archibase — construction knowledge. Claude can build now.');
+    } else {
+      // Book placed on workstation
+      s2_bookOnDesk = true;
+      s2_bookPos.gx = 2.25; s2_bookPos.gy = 3.25; s2_bookPos.gz = CTR_H + 0.05;
+      ch.backpackSize = 5;
+      narrate('The book sits on the workstation. More capable, more loaded.');
+    }
+
+  } else if (st < 35) {
+    // 2d: CAG vs RAG
+    if (st < 30.5) {
+      // CAG: 5 books stack up one by one
+      label('Scene 2 — CAG: Context as Knowledge');
+      s2_ragMode = false;
+      s2_cagBooks = Math.min(Math.floor((st-28)/0.5) + 1, 5);
+      ch.backpackSize = 5 + s2_cagBooks * 0.5;
+      narrate('CAG: everything pre-loaded. Fast access, heavy carry.');
+    } else if (st < 31.5) {
+      // Transition: books glow and shake before transforming
+      label('Scene 2 — But what if...');
+      s2_ragMode = false;
+      s2_cagBooks = 5;
+      // Sparkle effect on books
+      if (Math.random() < 0.15) {
+        const bp = sc(2, 3.5, CTR_H + 0.5);
+        addSparkle(bp.x, bp.y, 2, '#FFD700');
+      }
+      narrate('But what if you didn\'t carry everything at once?');
+    } else {
+      // RAG: books shrink away, index box pops in
+      label('Scene 2 — RAG: Retrieval on Demand');
+      s2_ragMode = true;
+      const ragT = st - 31.5;
+      s2_cagBooks = 0; // books gone, replaced by index box
+      ch.backpackSize = lerp(7.5, 3, clamp(ragT/2, 0, 1));
+      // Pop effect when index box appears
+      if (ragT > 0.5 && ragT < 0.7 && s2_ragTrips === 0) {
+        s2_ragTrips = 1;
+        const bp = sc(2, 3.5, CTR_H); addPop(bp.x, bp.y);
+      }
+      // Claude walks to pantry (fridge area) and back
+      if (ragT > 1.5 && ragT < 2 && !ch.moving && ch.gy < 5.5) {
+        moveToSmart(1, 6); // walk to pantry area
+      }
+      if (ragT > 2.5 && !ch.moving && ch.gx < 2) {
+        moveToSmart(1, 2); // walk back
+      }
+      narrate('RAG: fetch on demand. Light and nimble, but you make trips.');
+    }
+
+  } else {
+    // 2e: Logbook — fullscreen overlay (like the scrolls)
+    label('Scene 2 — The Log');
+    s2_logLines = 8;
+    s2_logHighlight = clamp((st-35)/1, 0, 1);
+    ch.backpackSize = 4;
+    // Claude stands at (5,6) near the logbook
+    if (!ch.moving && (Math.abs(ch.gx-5.5)>0.3 || Math.abs(ch.gy-6.5)>0.3)) moveToSmart(5, 6);
+    // Show logbook overlay — expanding from the logbook's on-screen position
+    if (showingScroll !== 'logbook') {
+      showingScroll = 'logbook';
+      const lp = sc(6.5, 6.5, CTR_H);
+      showScroll('logbook', lp.x, lp.y);
+    }
+    narrate('While all this happened, the logbook wrote itself. Every action recorded.');
+  }
+
+  // ═══ UPDATE ═══
+  updateCh(dt);
+  updateUsr(dt);
+  if(!usr.moving) usr.wf += dt;
+
+  // ═══ RENDER ═══
+  drawOutside(bright);
+  // Plants
+  drawPlant(-1.5, -0.5, bright); drawPlant(KW+1, -0.5, bright);
+  drawPlant(-1.5, KD+0.5, bright); drawPlant(KW+1, KD+0.5, bright);
+  drawPlant(KW+1, 2, bright); drawPlant(KW+1, 6, bright);
+  // Floor
+  drawFloor(bright);
+  // Walls
+  drawWalls(bright, 1); // door always open in scene 2
+  // Pass window glow
+  drawPassWindow(s2_passAlpha);
+  // Furniture (scene 2 layout)
+  drawFurniture(FURN2, furn2Alpha, bright);
+
+  // Book on desk
+  if (s2_bookOnDesk) {
+    drawBook(s2_bookPos.gx, s2_bookPos.gy, s2_bookPos.gz, 0.5, 0.4, 0.35, '#6B4020', 1);
+  }
+  // Flying book
+  if (s2_bookPos.alpha > 0 && !s2_bookOnDesk) {
+    drawBook(s2_bookPos.gx, s2_bookPos.gy, s2_bookPos.gz, 0.5, 0.4, 0.35, '#6B4020', s2_bookPos.alpha);
+  }
+
+  // CAG books stacked on workstation (on the H-island counter)
+  if (s2_cagBooks > 0 && !s2_ragMode) {
+    for (let i=0; i<s2_cagBooks; i++) {
+      const colors = ['#8B3030','#305080','#508030','#804080','#806030'];
+      // Flat books stacked upward — thick, visible front faces, slight y cascade
+      drawBook(2.25, 3.25 + i*0.03, CTR_H + 0.05 + i*0.28, 0.5, 0.4, 0.25, colors[i], 1);
+    }
+  }
+  // RAG: index card box only (books are gone)
+  if (s2_ragMode) {
+    drawIndexBox(2.25, 3.25, 1);
+  }
+
+  // Logbook
+  drawLogbook(6, 6, s2_logLines, s2_logHighlight, bright);
+
+  // Characters (sorted by Y for depth)
+  const chars = [
+    {who:'ch', gy:ch.gy},
+    {who:'usr', gy:usr.gy}
+  ].sort((a,b) => a.gy - b.gy);
+
+  for (const c of chars) {
+    if (c.who === 'ch' && ch.alpha > 0) {
+      drawChar(ch.gx, ch.gy, {
+        color:ch.color, colorLight:ch.colorLight, colorDark:ch.colorDark,
+        walkFrame:ch.wf, facing:ch.facing, holdItem:ch.holdItem,
+        backpackSize:ch.backpackSize, alpha:ch.alpha, scale:1,
+        isWalking:ch.moving, hopBounce:ch.hopBounce||0
+      });
+    }
+    if (c.who === 'usr' && usr.alpha > 0) {
+      drawChar(usr.gx, usr.gy, {
+        color:usr.color, colorLight:usr.colorLight, colorDark:usr.colorDark,
+        walkFrame:usr.wf, facing:usr.facing, holdItem:usr.holdItem,
+        backpackSize:usr.backpackSize, alpha:usr.alpha, scale:1,
+        isWalking:usr.moving
+      });
+    }
+  }
+
+  // Plate sliding across pass
+  if (s2_platePos.alpha > 0) {
+    drawPlate(s2_platePos.gx, s2_platePos.gy, s2_platePos.alpha);
+  }
+
+  // Speech bubbles
+  if (s2_bubbleAlpha > 0) {
+    if (s2_bubbleWho === 'user') {
+      const bp = sc(usr.gx, usr.gy, 1.0);
+      drawSpeechBubble(bp.x, bp.y - 25, s2_bubbleText, s2_bubbleAlpha, 'right');
+    } else {
+      const bp = sc(ch.gx, ch.gy, 1.0);
+      drawSpeechBubble(bp.x, bp.y - 25, s2_bubbleText, s2_bubbleAlpha, 'left');
+    }
+  }
+
+  // Particles
+  tickParticles(dt);
+  drawParticles();
+
+  // Warm golden glow (stronger than Scene 1 for vibrant feel)
+  const cp = sc(5,4,0);
+  const grad = X.createRadialGradient(cp.x,cp.y,0,cp.x,cp.y,500);
+  grad.addColorStop(0,'rgba(255,200,80,0.18)');
+  grad.addColorStop(0.5,'rgba(255,180,60,0.08)');
+  grad.addColorStop(1,'rgba(255,200,80,0)');
+  X.fillStyle = grad; X.fillRect(0,0,W,H);
+}
+
+// ══════════════════════════════════════
+// SCENE MANAGEMENT
+// ══════════════════════════════════════
+let currentScene = 0;
+
+const SCENES = [
+  { name:'Entering the Kitchen', duration:38, draw:drawScene1, reset:resetScene1 },
+  { name:'The Pass', duration:44, draw:drawScene2, reset:resetScene2 }
+];
+
+const btnPlay=document.getElementById('btn-play');
+const btnPrev=document.getElementById('btn-prev');
+const btnNext=document.getElementById('btn-next');
+const btnSpd=document.getElementById('btn-speed');
+const progEl=document.getElementById('progress');
+
+btnPlay.onclick=()=>{ playing=!playing; btnPlay.textContent=playing?'⏸':'▶'; btnPlay.classList.toggle('active',playing); };
+btnPrev.onclick=()=>{
+  if(sceneTime > 2) { sceneTime=0; SCENES[currentScene].reset(); }
+  else if(currentScene > 0) { currentScene--; sceneTime=0; SCENES[currentScene].reset(); }
+};
+btnNext.onclick=()=>{
+  if(currentScene < SCENES.length-1) { currentScene++; sceneTime=0; SCENES[currentScene].reset(); }
+  else { sceneTime = Math.min(sceneTime+5, SCENES[currentScene].duration); }
+};
+const spds=[1,1.5,2,0.5]; let si=0;
+btnSpd.onclick=()=>{ si=(si+1)%spds.length; speed=spds[si]; btnSpd.textContent=speed+'x'; };
+document.onkeydown=e=>{
+  if(e.code==='Space'){e.preventDefault();btnPlay.onclick();}
+  if(e.code==='ArrowRight') sceneTime=Math.min(sceneTime+3,SCENES[currentScene].duration);
+  if(e.code==='ArrowLeft') sceneTime=Math.max(sceneTime-3,0);
+};
+
+function frame(ts){
+  const dt = lastT ? Math.min((ts-lastT)/1000, 0.05) : 0.016;
+  lastT = ts;
+  if(playing){ sceneTime+=dt*speed; globalTime+=dt*speed; }
+  cam.x+=(cam.tx-cam.x)*0.04; cam.y+=(cam.ty-cam.y)*0.04;
+
+  const scene = SCENES[currentScene];
+
+  // Auto-advance to next scene
+  if (sceneTime >= scene.duration && currentScene < SCENES.length - 1) {
+    currentScene++;
+    sceneTime = 0;
+    SCENES[currentScene].reset();
+    // Reset camera to kitchen center
+    cam.tx = ws(KW/2, KD/2, 0).x;
+    cam.ty = ws(KW/2, KD/2, 0).y - 30;
+  }
+
+  scene.draw(sceneTime, dt*speed);
+
+  // Progress bar across ALL scenes
+  const totalDur = SCENES.reduce((s,sc)=>s+sc.duration, 0);
+  const elapsed = SCENES.slice(0,currentScene).reduce((s,sc)=>s+sc.duration,0) + sceneTime;
+  progEl.style.width = Math.min(elapsed/totalDur*100,100)+'%';
+
+  requestAnimationFrame(frame);
+}
+
+resetScene1();
+cam.x = ws(KW/2, KD/2, 0).x;
+cam.y = ws(KW/2, KD/2, 0).y - 30;
+cam.tx = cam.x; cam.ty = cam.y;
+requestAnimationFrame(frame);
+setInterval(()=>frame(performance.now()),50);
+</script>
+</body>
+</html>

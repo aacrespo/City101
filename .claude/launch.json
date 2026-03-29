@@ -2,28 +2,11 @@
   "version": "0.0.1",
   "configurations": [
     {
-      "name": "site-server",
+      "name": "kitchen-animation",
       "runtimeExecutable": "python3",
-      "runtimeArgs": ["-m", "http.server", "8080", "--directory", "/Users/andreacrespo/CLAUDE/city101/visualizations/site"],
-      "port": 8080
-    },
-    {
-      "name": "viz-server",
-      "runtimeExecutable": "python3",
-      "runtimeArgs": ["-m", "http.server", "8081", "--directory", "/Users/andreacrespo/CLAUDE/city101/visualizations"],
-      "port": 8081
-    },
-    {
-      "name": "presentation",
-      "runtimeExecutable": "python3",
-      "runtimeArgs": ["-m", "http.server", "8082", "--directory", "/Users/andreacrespo/CLAUDE/city101/deliverables/A04"],
-      "port": 8082
-    },
-    {
-      "name": "roadmap",
-      "runtimeExecutable": "python3",
-      "runtimeArgs": ["-m", "http.server", "8083", "--directory", "/Users/andreacrespo/CLAUDE/city101/output/roadmap"],
-      "port": 8083
+      "runtimeArgs": ["-m", "http.server", "--directory", "C:/Users/Henna Rafik/Desktop/Huang - Sentient/Claude code MAX/City101/output/kitchen_animation"],
+      "port": 8093,
+      "autoPort": true
     }
   ]
 }
