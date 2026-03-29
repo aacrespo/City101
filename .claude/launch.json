@@ -3,8 +3,8 @@
   "configurations": [
     {
       "name": "kitchen-animation",
-      "runtimeExecutable": "python3",
-      "runtimeArgs": ["-m", "http.server", "--directory", "C:/Users/Henna Rafik/Desktop/Huang - Sentient/Claude code MAX/City101/output/kitchen_animation"],
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-m", "http.server", "8093", "--directory", "C:/Users/Henna Rafik/Desktop/Huang - Sentient/Claude code MAX/City101/output/kitchen_animation"],
       "port": 8093,
       "autoPort": true
     }

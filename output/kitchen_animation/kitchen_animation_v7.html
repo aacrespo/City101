@@ -1,0 +1,3272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Kitchen — Overcooked Style (v7)</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#1a1a2e;overflow:hidden;font-family:'Segoe UI',system-ui,sans-serif}
+canvas{display:block}
+
+/* ═══ NARRATION ═══ */
+#narration{
+  position:fixed;top:30px;left:50%;transform:translateX(-50%);
+  background:rgba(0,0,0,0.75);color:#fff;padding:12px 28px;border-radius:24px;
+  font-size:18px;text-align:center;max-width:700px;opacity:0;
+  transition:opacity 0.5s;pointer-events:none;z-index:20;
+  border:2px solid rgba(255,255,255,0.15);
+}
+#narration.show{opacity:1}
+
+/* ═══ SCENE LABEL ═══ */
+#scene-label{
+  position:fixed;top:80px;left:50%;transform:translateX(-50%);
+  color:rgba(255,255,255,0.5);font-size:13px;letter-spacing:2px;
+  text-transform:uppercase;z-index:20;pointer-events:none;
+}
+
+/* ═══ TIMESTAMP ═══ */
+#timestamp{
+  position:fixed;top:10px;right:20px;
+  background:rgba(0,0,0,0.6);color:#aaa;padding:6px 14px;border-radius:8px;
+  font-size:12px;font-family:'Courier New',monospace;z-index:20;pointer-events:none;
+}
+
+/* ═══ GRID INFO (debug) ═══ */
+#grid-info{
+  position:fixed;top:10px;left:20px;
+  background:rgba(0,0,0,0.6);color:#0f0;padding:6px 14px;border-radius:8px;
+  font-size:12px;font-family:'Courier New',monospace;z-index:20;
+  display:none;pointer-events:none;
+}
+
+/* ═══ ORDER TICKETS (Overcooked style) ═══ */
+#tickets{
+  position:fixed;top:0;left:50%;transform:translateX(-50%);
+  display:flex;gap:6px;z-index:15;pointer-events:none;opacity:0;
+  transition:opacity 0.4s;
+}
+#tickets.show{opacity:1}
+.ticket{
+  background:#fff;border:2px solid #ddd;border-radius:0 0 8px 8px;
+  padding:8px 12px;min-width:80px;text-align:center;
+  box-shadow:0 3px 8px rgba(0,0,0,0.2);
+}
+.ticket-icon{font-size:20px}
+.ticket-items{font-size:11px;color:#666;margin-top:4px}
+.ticket.done{border-color:#4CAF50;background:#e8f5e9}
+.ticket.active{border-color:#FF9800;background:#fff3e0}
+
+/* ═══ SCROLL OVERLAY ═══ */
+#scroll-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,0.85);
+  display:flex;align-items:center;justify-content:center;
+  z-index:30;opacity:0;pointer-events:none;transition:opacity 0.5s;
+}
+#scroll-overlay.show{opacity:1;pointer-events:auto}
+#scroll-content{
+  max-width:700px;max-height:80vh;padding:40px;border-radius:16px;
+  color:#fff;font-size:16px;line-height:1.6;overflow-y:auto;
+}
+#scroll-content.map{
+  background:linear-gradient(135deg,#3d2b1f,#5c3d2e);
+  border:3px solid #c9a84c;font-family:Georgia,serif;
+}
+#scroll-content.blueprint{
+  background:linear-gradient(135deg,#1a2a3a,#2a3a4a);
+  border:3px solid #5b8fa8;font-family:'Courier New',monospace;
+}
+#scroll-content.logbook{
+  background:linear-gradient(135deg,#2a1f0f,#3d2b1a);
+  border:3px solid #c9a84c;font-family:Georgia,serif;
+}
+
+/* ═══ CONTROLS ═══ */
+#controls{
+  position:fixed;bottom:60px;left:50%;transform:translateX(-50%);
+  display:flex;gap:8px;z-index:20;
+}
+#controls button{
+  background:rgba(0,0,0,0.7);color:#fff;border:1px solid rgba(255,255,255,0.2);
+  padding:8px 16px;border-radius:8px;cursor:pointer;font-size:13px;
+  transition:background 0.2s;
+}
+#controls button:hover{background:rgba(255,255,255,0.15)}
+#controls button.active{background:rgba(74,158,158,0.5);border-color:#4A9E9E}
+
+/* ═══ TIMELINE ═══ */
+#timeline{
+  position:fixed;bottom:16px;left:40px;right:40px;height:32px;z-index:20;
+}
+#timeline-track{
+  position:absolute;bottom:0;left:0;right:0;height:20px;
+  background:rgba(0,0,0,0.5);border-radius:10px;cursor:pointer;
+  border:1px solid rgba(255,255,255,0.1);overflow:hidden;
+}
+#timeline-segments{
+  position:absolute;inset:0;display:flex;border-radius:10px;overflow:hidden;
+}
+.tl-seg{height:100%;position:relative;transition:filter 0.2s}
+.tl-seg:hover{filter:brightness(1.3)}
+.tl-seg-label{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  font-size:9px;color:rgba(255,255,255,0.7);white-space:nowrap;
+  pointer-events:none;
+}
+#timeline-thumb{
+  position:absolute;top:-2px;width:4px;height:24px;
+  background:#fff;border-radius:2px;pointer-events:none;
+  box-shadow:0 0 6px rgba(255,255,255,0.5);z-index:2;
+}
+#timeline-time{
+  position:absolute;top:-2px;right:0;color:rgba(255,255,255,0.5);
+  font-size:11px;font-family:'Courier New',monospace;
+}
+.tl-phase-tick{
+  position:absolute;top:0;width:1px;height:100%;
+  background:rgba(255,255,255,0.25);pointer-events:none;
+}
+</style>
+</head>
+<body>
+
+<canvas id="c"></canvas>
+
+<div id="narration"></div>
+<div id="scene-label"></div>
+<div id="timestamp"></div>
+<div id="grid-info"></div>
+
+<div id="tickets"></div>
+
+<div id="scroll-overlay">
+  <div id="scroll-content"></div>
+</div>
+
+<div id="controls">
+  <button id="btn-prev" title="Previous scene (↑)">⏮ Prev</button>
+  <button id="btn-play" title="Play/Pause (Space)">▶ Play</button>
+  <button id="btn-next" title="Next scene (↓)">Next ⏭</button>
+  <button id="btn-speed" title="Speed">1x</button>
+  <button id="btn-grid" title="Toggle grid (G)">Grid</button>
+</div>
+
+<div id="timeline">
+  <div id="timeline-time"></div>
+  <div id="timeline-track">
+    <div id="timeline-segments"></div>
+    <div id="timeline-thumb"></div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+// SECTION 1: ENGINE — Projection, Camera, Helpers
+// ═══════════════════════════════════════════════════════════════
+
+const C = document.getElementById('c');
+const X = C.getContext('2d');
+let W, H;
+
+// Pixel size per grid cell
+let PX = 64;
+// Oblique top-down projection params (Overcooked-like ~60° view)
+const TILT = 0.55;    // Y compression (more top-down)
+const Z_LIFT = 0.80;  // Z height factor (more visible depth)
+
+// Camera
+let cam = { x: 0, y: 0, zoom: 1 };
+let targetCam = { x: 0, y: 0, zoom: 1 };
+
+function resize() {
+  W = C.width = window.innerWidth;
+  H = C.height = window.innerHeight;
+  // Auto-scale PX so 14 cols + road + margins fit comfortably
+  // Need ~16 cols worth of width (14 grid + road + margin)
+  PX = Math.min(Math.floor(W / 19), Math.floor(H / 12), 72);
+}
+window.addEventListener('resize', resize);
+resize();
+
+// World to screen (grid coords → pixel coords)
+function ws(gx, gy, gz = 0) {
+  return {
+    x: gx * PX,
+    y: gy * PX * TILT - gz * PX * Z_LIFT
+  };
+}
+
+// With camera offset
+function sc(gx, gy, gz = 0) {
+  const w = ws(gx, gy, gz);
+  return {
+    x: (w.x + cam.x) * cam.zoom + W / 2,
+    y: (w.y + cam.y) * cam.zoom + H / 2
+  };
+}
+
+// Helpers
+function lerp(a, b, t) { return a + (b - a) * t; }
+function clamp(v, mn, mx) { return Math.max(mn, Math.min(mx, v)); }
+function easeInOut(t) { return t < 0.5 ? 2*t*t : 1-Math.pow(-2*t+2,2)/2; }
+function easeOut(t) { return 1 - Math.pow(1 - t, 3); }
+function easeIn(t) { return t * t * t; }
+
+// ═══════════════════════════════════════════════════════════════
+// SECTION 2: COLORS — Overcooked Palette (Image 2 dominant)
+// ═══════════════════════════════════════════════════════════════
+
+const OC = {
+  // Floor
+  floorA: '#E8D5B0',    // cream tile
+  floorB: '#DBC9A0',    // tan tile (subtle checker)
+
+  // Walls
+  wallFront: '#4A7A7A',  // teal wall face
+  wallTop: '#5A9A9A',    // teal wall top
+  wallSide: '#3A6A6A',   // teal wall shadow
+  wallTrim: '#3D8B8B',   // teal accent
+  wallBrown: '#6B4E3D',  // warm brown accent
+
+  // Counters (teal dominant like image 2)
+  counterTop: '#E8DDD0', // warm cream surface
+  counterFront: '#4A9E9E', // teal front
+  counterSide: '#3A8080',  // teal shadow
+
+  // Stove
+  stoveTop: '#555555',
+  stoveFront: '#444444',
+  stoveSide: '#333333',
+  flame: '#FF6B35',
+  flameGlow: '#FFB347',
+  burnerRing: '#777',
+
+  // Sink
+  sinkTop: '#B8C8D0',
+  sinkFront: '#7A8B9A',
+  sinkSide: '#6A7B8A',
+  water: '#88CCEE',
+
+  // Fridge
+  fridgeTop: '#D8D8D8',
+  fridgeFront: '#E8E8E8',
+  fridgeSide: '#C0C0C0',
+  fridgeHandle: '#888',
+
+  // Pass
+  passFront: '#6B5040',
+  passTop: '#8B7060',
+  passSide: '#5A4030',
+  passWindow: '#2A2A3E',
+
+  // Characters
+  claudeGrey: '#94A3B8',
+  claudeGold: '#FFD166',
+  claudeGoldDk: '#E0B040',
+  claudePurple: '#A78BFA',
+  claudePurpleDk: '#7C5FC4',
+  skinTone: '#FFDBB4',
+  hatWhite: '#F5F5F0',
+  hatBand: '#DDD',
+
+  // Backpack
+  bpEmpty: '#8B7355',
+  bpSmall: '#9B8365',
+  bpMedium: '#AB9375',
+  bpFull: '#BBA385',
+  bpOverflow: '#CC4444',
+
+  // Props
+  scrollGold: '#C9A84C',
+  scrollTeal: '#5B8FA8',
+  bookRed: '#C0392B',
+  bookBlue: '#2980B9',
+  bookGreen: '#27AE60',
+  logbook: '#8B6914',
+  plate: '#F5F0E8',
+
+  // Decorative
+  plantGreen: '#4CAF50',
+  plantDark: '#2E7D32',
+  plantPot: '#8D6E63',
+
+  // Outside
+  road: '#5A6A7A',
+  roadLine: '#FFD166',
+  sidewalk: '#9BA89B',
+  grassDark: '#5A7A5A',
+
+  // UI
+  uiBg: 'rgba(0,0,0,0.7)',
+  uiText: '#FFFFFF',
+  uiAccent: '#4A9E9E',
+
+  // Specialists (Scene 4)
+  analystBlue: '#4A7AB5',
+  modelerGreen: '#5A9E4A',
+  builderOrange: '#D97A4A',
+  cartoCopper: '#B87A56',
+
+  // Git (Scene 3)
+  branchMain: '#C9A84C',
+  branchFeature: '#5B8FA8',
+  branchMerge: '#5A9E6F',
+  branchDead: '#C45D4A',
+};
+
+// ═══════════════════════════════════════════════════════════════
+// SECTION 3: GRID SYSTEM — 14x12, Cell Types, Collision
+// ═══════════════════════════════════════════════════════════════
+
+const COLS = 14, ROWS = 12;
+
+const CELL = {
+  WALL: 0,
+  FLOOR: 1,
+  COUNTER: 2,
+  STOVE: 3,
+  SINK: 4,
+  FRIDGE: 5,
+  PASS: 6,
+  PASS_WINDOW: 7,
+  LOGBOOK: 8,
+  DOOR: 9,
+};
+
+// Build cell type map
+// Default: WALL for border, FLOOR for interior
+let cellMap = [];
+function buildCellMap(furnList) {
+  cellMap = [];
+  for (let c = 0; c < COLS; c++) {
+    cellMap[c] = [];
+    for (let r = 0; r < ROWS; r++) {
+      // Borders are walls
+      if (r === 0 || r === ROWS - 1 || c === COLS - 1) {
+        cellMap[c][r] = CELL.WALL;
+      } else if (c === 0) {
+        cellMap[c][r] = CELL.WALL;
+      } else {
+        cellMap[c][r] = CELL.FLOOR;
+      }
+    }
+  }
+  // Doors
+  cellMap[0][2] = CELL.DOOR;   // Main door (top)
+  cellMap[0][10] = CELL.DOOR;  // Specialist door (bottom)
+
+  // Place furniture
+  for (const f of furnList) {
+    const ct = f.cellType || CELL.COUNTER;
+    for (let dc = 0; dc < (f.w || 1); dc++) {
+      for (let dr = 0; dr < (f.d || 1); dr++) {
+        const fc = f.col + dc;
+        const fr = f.row + dr;
+        if (fc >= 0 && fc < COLS && fr >= 0 && fr < ROWS) {
+          cellMap[fc][fr] = ct;
+        }
+      }
+    }
+  }
+}
+
+// Collision: walkable?
+function isWalkable(c, r) {
+  if (c < 0 || c >= COLS || r < 0 || r >= ROWS) return false;
+  const t = cellMap[c][r];
+  return t === CELL.FLOOR || t === CELL.DOOR;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// SECTION 3b: FURNITURE DEFINITIONS
+// ═══════════════════════════════════════════════════════════════
+
+// Scene 1-2 furniture layout (14x12 grid)
+const FURN_MAIN = [
+  // Back wall counters
+  { type: 'counter', col: 2, row: 1, w: 1, d: 1, cellType: CELL.COUNTER },
+  { type: 'stove',   col: 3, row: 1, w: 1, d: 1, cellType: CELL.STOVE },
+  { type: 'stove',   col: 4, row: 1, w: 1, d: 1, cellType: CELL.STOVE },
+  { type: 'sink',    col: 5, row: 1, w: 1, d: 1, cellType: CELL.SINK },
+  { type: 'sink',    col: 6, row: 1, w: 1, d: 1, cellType: CELL.SINK },
+  { type: 'counter', col: 8, row: 1, w: 1, d: 1, cellType: CELL.COUNTER },
+  { type: 'counter', col: 9, row: 1, w: 1, d: 1, cellType: CELL.COUNTER },
+  { type: 'fridge',  col: 11, row: 1, w: 1, d: 1, cellType: CELL.FRIDGE },
+
+  // H-island top bar
+  { type: 'counter', col: 3, row: 4, w: 1, d: 1, cellType: CELL.COUNTER },
+  { type: 'counter', col: 4, row: 4, w: 1, d: 1, cellType: CELL.COUNTER },
+  { type: 'counter', col: 5, row: 4, w: 1, d: 1, cellType: CELL.COUNTER },
+  { type: 'counter', col: 6, row: 4, w: 1, d: 1, cellType: CELL.COUNTER },
+
+  // H-island crossbar
+  { type: 'counter', col: 5, row: 5, w: 1, d: 1, cellType: CELL.COUNTER },
+
+  // H-island bottom bar
+  { type: 'counter', col: 3, row: 6, w: 1, d: 1, cellType: CELL.COUNTER },
+  { type: 'counter', col: 4, row: 6, w: 1, d: 1, cellType: CELL.COUNTER },
+  { type: 'counter', col: 5, row: 6, w: 1, d: 1, cellType: CELL.COUNTER },
+  { type: 'counter', col: 6, row: 6, w: 1, d: 1, cellType: CELL.COUNTER },
+
+  // Pass counters (right side)
+  { type: 'pass', col: 11, row: 3, w: 1, d: 1, cellType: CELL.PASS },
+  { type: 'pass', col: 11, row: 4, w: 1, d: 1, cellType: CELL.PASS },
+  { type: 'pass_window', col: 11, row: 5, w: 1, d: 1, cellType: CELL.PASS_WINDOW },
+  { type: 'pass_window', col: 11, row: 6, w: 1, d: 1, cellType: CELL.PASS_WINDOW },
+  { type: 'pass', col: 11, row: 7, w: 1, d: 1, cellType: CELL.PASS },
+  { type: 'pass', col: 11, row: 8, w: 1, d: 1, cellType: CELL.PASS },
+
+  // Logbook counter
+  { type: 'logbook', col: 8, row: 8, w: 1, d: 1, cellType: CELL.LOGBOOK },
+];
+
+// Build initial map
+buildCellMap(FURN_MAIN);
+
+// ═══════════════════════════════════════════════════════════════
+// SECTION 4: PATHFINDING — A* (4-directional)
+// ═══════════════════════════════════════════════════════════════
+
+function findPath(sc, sr, ec, er) {
+  if (!isWalkable(ec, er)) return null;
+  if (sc === ec && sr === er) return [{ c: sc, r: sr }];
+
+  const key = (c, r) => c * 100 + r;
+  const open = [{ c: sc, r: sr, g: 0, f: 0, parent: null }];
+  const closed = new Set();
+  const gMap = new Map();
+  gMap.set(key(sc, sr), 0);
+
+  const dirs = [[0, -1], [1, 0], [0, 1], [-1, 0]]; // N E S W
+
+  let best = null;
+  let iter = 0;
+  while (open.length > 0 && iter++ < 2000) {
+    // Find lowest f
+    let bi = 0;
+    for (let i = 1; i < open.length; i++) {
+      if (open[i].f < open[bi].f) bi = i;
+    }
+    const cur = open.splice(bi, 1)[0];
+    const ck = key(cur.c, cur.r);
+
+    if (cur.c === ec && cur.r === er) {
+      // Reconstruct
+      const path = [];
+      let n = cur;
+      while (n) { path.unshift({ c: n.c, r: n.r }); n = n.parent; }
+      return path;
+    }
+
+    closed.add(ck);
+
+    for (const [dc, dr] of dirs) {
+      const nc = cur.c + dc, nr = cur.r + dr;
+      const nk = key(nc, nr);
+      if (!isWalkable(nc, nr) || closed.has(nk)) continue;
+
+      const ng = cur.g + 1;
+      const prev = gMap.get(nk);
+      if (prev !== undefined && ng >= prev) continue;
+
+      gMap.set(nk, ng);
+      const h = Math.abs(nc - ec) + Math.abs(nr - er);
+      open.push({ c: nc, r: nr, g: ng, f: ng + h, parent: cur });
+    }
+  }
+  return null; // No path
+}
+
+// ═══════════════════════════════════════════════════════════════
+// SECTION 5: DRAWING — Environment
+// ═══════════════════════════════════════════════════════════════
+
+function drawBox(gx, gy, w, d, h, topCol, frontCol, sideCol, gz = 0) {
+  const tl = sc(gx, gy, gz + h);
+  const tr = sc(gx + w, gy, gz + h);
+  const br = sc(gx + w, gy + d, gz + h);
+  const bl = sc(gx, gy + d, gz + h);
+
+  const blBot = sc(gx, gy + d, gz);
+  const brBot = sc(gx + w, gy + d, gz);
+  const trBot = sc(gx + w, gy, gz);
+
+  // Top face
+  X.fillStyle = topCol;
+  X.beginPath();
+  X.moveTo(tl.x, tl.y); X.lineTo(tr.x, tr.y);
+  X.lineTo(br.x, br.y); X.lineTo(bl.x, bl.y);
+  X.closePath(); X.fill();
+
+  // Front face
+  X.fillStyle = frontCol;
+  X.beginPath();
+  X.moveTo(bl.x, bl.y); X.lineTo(br.x, br.y);
+  X.lineTo(brBot.x, brBot.y); X.lineTo(blBot.x, blBot.y);
+  X.closePath(); X.fill();
+
+  // Right side face
+  X.fillStyle = sideCol;
+  X.beginPath();
+  X.moveTo(br.x, br.y); X.lineTo(tr.x, tr.y);
+  X.lineTo(trBot.x, trBot.y); X.lineTo(brBot.x, brBot.y);
+  X.closePath(); X.fill();
+
+  // Outlines
+  X.strokeStyle = 'rgba(0,0,0,0.2)';
+  X.lineWidth = 1;
+  // Top outline
+  X.beginPath();
+  X.moveTo(tl.x, tl.y); X.lineTo(tr.x, tr.y);
+  X.lineTo(br.x, br.y); X.lineTo(bl.x, bl.y);
+  X.closePath(); X.stroke();
+  // Front outline
+  X.beginPath();
+  X.moveTo(bl.x, bl.y); X.lineTo(blBot.x, blBot.y);
+  X.lineTo(brBot.x, brBot.y); X.lineTo(br.x, br.y);
+  X.stroke();
+  // Side outline
+  X.beginPath();
+  X.moveTo(tr.x, tr.y); X.lineTo(trBot.x, trBot.y);
+  X.stroke();
+}
+
+function drawOutside() {
+  // Sky/background
+  X.fillStyle = '#2A2A3E';
+  X.fillRect(0, 0, W, H);
+
+  // Road outside (right of kitchen)
+  const roadL = sc(COLS - 0.5, 0, 0);
+  const roadR = sc(COLS + 3, ROWS, 0);
+  X.fillStyle = OC.road;
+  X.fillRect(roadL.x, 0, W, H);
+
+  // Road dashes
+  X.strokeStyle = OC.roadLine;
+  X.lineWidth = 2;
+  X.setLineDash([12, 8]);
+  const rlx = sc(COLS + 1, 0, 0).x;
+  X.beginPath(); X.moveTo(rlx, 0); X.lineTo(rlx, H); X.stroke();
+  X.setLineDash([]);
+
+  // Sidewalk
+  const swL = sc(COLS - 1, 0, 0);
+  const swR = sc(COLS - 0.3, ROWS, 0);
+  X.fillStyle = OC.sidewalk;
+  X.fillRect(swL.x, 0, swR.x - swL.x, H);
+
+  // Ground outside left
+  const gL = sc(-3, 0, 0);
+  const gR = sc(0, ROWS, 0);
+  X.fillStyle = OC.grassDark;
+  X.fillRect(0, 0, gR.x, H);
+}
+
+function drawFloor() {
+  for (let c = 1; c < COLS - 1; c++) {
+    for (let r = 1; r < ROWS - 1; r++) {
+      if (cellMap[c][r] === CELL.WALL) continue;
+
+      const tl = sc(c, r, 0);
+      const tr = sc(c + 1, r, 0);
+      const br = sc(c + 1, r + 1, 0);
+      const bl = sc(c, r + 1, 0);
+
+      // Checkerboard
+      X.fillStyle = (c + r) % 2 === 0 ? OC.floorA : OC.floorB;
+      X.beginPath();
+      X.moveTo(tl.x, tl.y); X.lineTo(tr.x, tr.y);
+      X.lineTo(br.x, br.y); X.lineTo(bl.x, bl.y);
+      X.closePath(); X.fill();
+
+      // Subtle grid line
+      X.strokeStyle = 'rgba(0,0,0,0.05)';
+      X.lineWidth = 0.5;
+      X.stroke();
+    }
+  }
+}
+
+function drawWalls() {
+  const wallH = 2.2;
+  const wallThick = 0.4;
+
+  // Back wall (row 0, full width)
+  drawBox(0, 0, COLS, wallThick, wallH,
+    OC.wallTop, OC.wallFront, OC.wallSide);
+
+  // Teal trim strip on back wall
+  drawBox(0, wallThick - 0.05, COLS, 0.05, 0.15,
+    OC.wallTrim, OC.wallTrim, OC.wallTrim, wallH * 0.4);
+
+  // Right wall (col 13)
+  drawBox(COLS - 1, 0, wallThick, ROWS, wallH,
+    OC.wallTop, OC.wallFront, OC.wallSide);
+
+  // Front wall (row 11) — lower so we can see inside
+  drawBox(0, ROWS - 1, COLS, wallThick, wallH * 0.4,
+    OC.wallTop, OC.wallFront, OC.wallSide);
+
+  // Left wall — with door gaps
+  // Top section (row 0 to row 2 gap)
+  drawBox(0, 0, wallThick, 2, wallH,
+    OC.wallTop, OC.wallFront, OC.wallSide);
+  // Between doors (row 3 to row 9)
+  drawBox(0, 3, wallThick, 7, wallH,
+    OC.wallTop, OC.wallFront, OC.wallSide);
+  // Bottom section (row 11)
+  drawBox(0, ROWS - 1, wallThick, 1, wallH,
+    OC.wallTop, OC.wallFront, OC.wallSide);
+
+  // Door frames
+  drawDoorFrame(0, 2, wallH, 'KITCHEN');
+  drawDoorFrame(0, 10, wallH, 'STAFF');
+}
+
+function drawDoorFrame(c, r, wallH, label) {
+  const doorH = wallH * 0.85;
+  // Door opening (darker)
+  drawBox(c, r, 0.3, 1, doorH,
+    '#2A2A2A', '#1A1A1A', '#222', 0);
+
+  // Door label
+  const pos = sc(c + 0.15, r + 0.5, doorH + 0.1);
+  X.fillStyle = OC.scrollGold;
+  X.font = `bold ${Math.round(PX * 0.15)}px 'Segoe UI', system-ui`;
+  X.textAlign = 'center';
+  X.fillText(label, pos.x, pos.y);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// SECTION 6: DRAWING — Furniture
+// ═══════════════════════════════════════════════════════════════
+
+function drawFurniture(furnList, kitchenAlpha = 1) {
+  if (kitchenAlpha < 1) X.globalAlpha = kitchenAlpha;
+  const sorted = [...furnList].sort((a, b) => a.row - b.row);
+  for (const f of sorted) drawSingleFurniture(f);
+  X.globalAlpha = 1;
+}
+
+function drawSingleFurniture(f) {
+    const c = f.col, r = f.row;
+    const w = f.w || 1, d = f.d || 1;
+    const h = 0.75;
+
+    switch (f.type) {
+      case 'counter':
+        drawBox(c, r, w, d, h, OC.counterTop, OC.counterFront, OC.counterSide);
+        break;
+
+      case 'stove':
+        drawBox(c, r, w, d, h, OC.stoveTop, OC.stoveFront, OC.stoveSide);
+        // Burner rings
+        drawBurner(c + 0.3, r + 0.3, h);
+        drawBurner(c + 0.7, r + 0.7, h);
+        break;
+
+      case 'sink':
+        drawBox(c, r, w, d, h, OC.sinkTop, OC.sinkFront, OC.sinkSide);
+        // Basin
+        drawSinkBasin(c + 0.5, r + 0.5, h);
+        break;
+
+      case 'fridge':
+        drawBox(c, r, w, d, 1.4, OC.fridgeTop, OC.fridgeFront, OC.fridgeSide);
+        // Handle
+        const hPos = sc(c + 0.15, r + 0.3, 1.1);
+        X.fillStyle = OC.fridgeHandle;
+        X.fillRect(hPos.x - 2, hPos.y, 4, PX * 0.3);
+        break;
+
+      case 'pass':
+        drawBox(c, r, w, d, h, OC.passTop, OC.passFront, OC.passSide);
+        break;
+
+      case 'pass_window':
+        // Lower counter with gap above
+        drawBox(c, r, w, d, h * 0.5, OC.passTop, OC.passFront, OC.passSide);
+        // Window frame hint
+        const wTop = sc(c, r, h);
+        const wBot = sc(c + 1, r + 1, h);
+        X.strokeStyle = OC.passFront;
+        X.lineWidth = 2;
+        X.strokeRect(wTop.x, wTop.y, wBot.x - wTop.x, (wBot.y - wTop.y) * 0.6);
+        break;
+
+      case 'logbook':
+        drawBox(c, r, w, d, h, OC.counterTop, OC.counterFront, OC.counterSide);
+        // Logbook on top
+        drawLogbookProp(c + 0.2, r + 0.2, h);
+        break;
+    }
+}
+
+function drawBurner(gx, gy, h) {
+  const p = sc(gx, gy, h + 0.02);
+  const rad = PX * 0.12;
+  X.strokeStyle = OC.burnerRing;
+  X.lineWidth = 2;
+  X.beginPath(); X.arc(p.x, p.y, rad, 0, Math.PI * 2); X.stroke();
+  // Glow if active
+  if (sceneTime > 3 && currentScene === 1) {
+    X.fillStyle = 'rgba(255,107,53,0.3)';
+    X.beginPath(); X.arc(p.x, p.y, rad * 1.3, 0, Math.PI * 2); X.fill();
+  }
+}
+
+function drawSinkBasin(gx, gy, h) {
+  const p = sc(gx, gy, h + 0.02);
+  const rad = PX * 0.14;
+  X.fillStyle = '#6A7A8A';
+  X.beginPath(); X.ellipse(p.x, p.y, rad, rad * TILT, 0, 0, Math.PI * 2); X.fill();
+  X.fillStyle = OC.water;
+  X.globalAlpha = 0.4;
+  X.beginPath(); X.ellipse(p.x, p.y, rad * 0.7, rad * 0.7 * TILT, 0, 0, Math.PI * 2); X.fill();
+  X.globalAlpha = 1;
+}
+
+function drawLogbookProp(gx, gy, h) {
+  // Small book on counter
+  const bw = 0.5, bd = 0.6, bh = 0.08;
+  drawBox(gx, gy, bw, bd, bh, OC.logbook, '#6B5010', '#5B4008', h);
+  // Pages
+  const pp = sc(gx + 0.1, gy + 0.1, h + bh + 0.01);
+  X.fillStyle = '#F5F0E0';
+  X.fillRect(pp.x, pp.y, PX * 0.2, PX * 0.15 * TILT);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// SECTION 7: DRAWING — Characters (Overcooked style)
+// ═══════════════════════════════════════════════════════════════
+
+function drawCharacter(char) {
+  const { gx, gy, color, colorDk, facing, backpackSize, heldItem,
+          scaleF, badge, opacity, bobPhase } = char;
+
+  if (opacity !== undefined && opacity <= 0) return;
+  if (opacity !== undefined) X.globalAlpha = opacity;
+
+  const s = (scaleF || 1);
+  const gz = 0; // Standing on ground level
+
+  // Bob animation (walking bounce)
+  const bob = (bobPhase || 0);
+  const bounceH = Math.abs(Math.sin(bob * Math.PI * 2)) * 0.08;
+
+  const basePos = sc(gx + 0.5, gy + 0.5, gz + bounceH + 0.3);
+  const px = basePos.x;
+  const py = basePos.y;
+  const sz = PX * 0.6 * s;  // Bigger character (Overcooked chunky style)
+
+  // Drop shadow (stronger)
+  X.fillStyle = 'rgba(0,0,0,0.35)';
+  const shadowPos = sc(gx + 0.5, gy + 0.7, 0);
+  X.beginPath();
+  X.ellipse(shadowPos.x, shadowPos.y, sz * 0.55, sz * 0.22, 0, 0, Math.PI * 2);
+  X.fill();
+
+  // Legs (two small cylinders)
+  const legW = sz * 0.15;
+  const legH = sz * 0.25;
+  X.fillStyle = colorDk || '#888';
+  // Left leg
+  X.fillRect(px - sz * 0.22 - legW / 2, py + sz * 0.1, legW, legH);
+  // Right leg
+  X.fillRect(px + sz * 0.22 - legW / 2, py + sz * 0.1, legW, legH);
+
+  // Shoes
+  X.fillStyle = '#333';
+  X.fillRect(px - sz * 0.22 - legW / 2 - 1, py + sz * 0.1 + legH - 3, legW + 2, 4);
+  X.fillRect(px + sz * 0.22 - legW / 2 - 1, py + sz * 0.1 + legH - 3, legW + 2, 4);
+
+  // Body (rounded rectangle / ellipse) with thick outline
+  X.fillStyle = color || OC.claudeGrey;
+  X.beginPath();
+  X.ellipse(px, py - sz * 0.05, sz * 0.35, sz * 0.38, 0, 0, Math.PI * 2);
+  X.fill();
+  X.strokeStyle = 'rgba(0,0,0,0.4)';
+  X.lineWidth = 2.5;
+  X.stroke();
+
+  // Badge/apron (for specialists)
+  if (badge) {
+    X.fillStyle = badge;
+    X.beginPath();
+    X.ellipse(px, py + sz * 0.1, sz * 0.15, sz * 0.12, 0, 0, Math.PI * 2);
+    X.fill();
+  }
+
+  // Arms
+  const armY = py - sz * 0.05;
+  X.fillStyle = color || OC.claudeGrey;
+  // Left arm
+  X.beginPath();
+  X.ellipse(px - sz * 0.38, armY, sz * 0.1, sz * 0.15, -0.2, 0, Math.PI * 2);
+  X.fill();
+  // Right arm
+  X.beginPath();
+  X.ellipse(px + sz * 0.38, armY, sz * 0.1, sz * 0.15, 0.2, 0, Math.PI * 2);
+  X.fill();
+
+  // Held item
+  if (heldItem) {
+    drawHeldItem(px + sz * 0.4, armY - sz * 0.1, heldItem, sz * 0.5);
+  }
+
+  // Head
+  X.fillStyle = OC.skinTone;
+  X.beginPath();
+  X.arc(px, py - sz * 0.42, sz * 0.25, 0, Math.PI * 2);
+  X.fill();
+  X.strokeStyle = 'rgba(0,0,0,0.3)';
+  X.lineWidth = 1.5;
+  X.stroke();
+
+  // Eyes (based on facing)
+  const eyeSize = sz * 0.04;
+  const eyeY = py - sz * 0.44;
+  let exOff = 0, eyOff = 0;
+  if (facing === 'right') exOff = sz * 0.04;
+  else if (facing === 'left') exOff = -sz * 0.04;
+  else if (facing === 'up') eyOff = -sz * 0.02;
+  else eyOff = sz * 0.02;
+
+  X.fillStyle = '#333';
+  X.beginPath();
+  X.arc(px - sz * 0.08 + exOff, eyeY + eyOff, eyeSize, 0, Math.PI * 2);
+  X.fill();
+  X.beginPath();
+  X.arc(px + sz * 0.08 + exOff, eyeY + eyOff, eyeSize, 0, Math.PI * 2);
+  X.fill();
+
+  // Chef hat
+  X.fillStyle = OC.hatWhite;
+  const hatY = py - sz * 0.6;
+  const hatW = sz * 0.3;
+  const hatH = sz * 0.22;
+  // Hat base (band)
+  X.fillStyle = OC.hatBand;
+  X.fillRect(px - hatW, hatY + hatH * 0.6, hatW * 2, hatH * 0.3);
+  // Hat puff
+  X.fillStyle = OC.hatWhite;
+  X.beginPath();
+  X.ellipse(px, hatY + hatH * 0.3, hatW * 0.9, hatH * 0.7, 0, Math.PI, 0);
+  X.fill();
+  X.beginPath();
+  X.arc(px, hatY, hatW * 0.5, 0, Math.PI * 2);
+  X.fill();
+
+  // Backpack (behind character)
+  if (backpackSize > 0) {
+    const bpH = sz * 0.15 * clamp(backpackSize, 0.3, 2);
+    const bpW = sz * 0.2 * clamp(backpackSize, 0.5, 1.5);
+    const bpCol = backpackSize > 1.5 ? OC.bpOverflow :
+                  backpackSize > 1.0 ? OC.bpFull :
+                  backpackSize > 0.5 ? OC.bpMedium : OC.bpSmall;
+    X.fillStyle = bpCol;
+    X.fillRect(px - bpW / 2, py - sz * 0.2, bpW, bpH);
+    X.strokeStyle = 'rgba(0,0,0,0.2)';
+    X.strokeRect(px - bpW / 2, py - sz * 0.2, bpW, bpH);
+  }
+
+  X.globalAlpha = 1;
+}
+
+function drawHeldItem(x, y, item, sz) {
+  switch (item) {
+    case 'scroll_gold':
+      X.fillStyle = OC.scrollGold;
+      X.fillRect(x - sz * 0.3, y - sz * 0.15, sz * 0.6, sz * 0.3);
+      X.strokeStyle = '#A08030';
+      X.lineWidth = 1;
+      X.strokeRect(x - sz * 0.3, y - sz * 0.15, sz * 0.6, sz * 0.3);
+      break;
+    case 'scroll_teal':
+      X.fillStyle = OC.scrollTeal;
+      X.fillRect(x - sz * 0.3, y - sz * 0.15, sz * 0.6, sz * 0.3);
+      X.strokeStyle = '#4A7A8A';
+      X.lineWidth = 1;
+      X.strokeRect(x - sz * 0.3, y - sz * 0.15, sz * 0.6, sz * 0.3);
+      break;
+    case 'plate':
+      X.fillStyle = OC.plate;
+      X.beginPath();
+      X.ellipse(x, y, sz * 0.25, sz * 0.12, 0, 0, Math.PI * 2);
+      X.fill();
+      X.strokeStyle = '#DDD';
+      X.stroke();
+      break;
+    case 'book':
+      X.fillStyle = OC.bookRed;
+      X.fillRect(x - sz * 0.2, y - sz * 0.25, sz * 0.4, sz * 0.5);
+      X.fillStyle = '#F5F0E0';
+      X.fillRect(x - sz * 0.15, y - sz * 0.2, sz * 0.3, sz * 0.4);
+      break;
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// SECTION 8: DRAWING — Plants & Decorations
+// ═══════════════════════════════════════════════════════════════
+
+function drawPlants() {
+  drawPlant(1.5, 0.6, 0.65);   // Back left corner
+  drawPlant(12, 0.6, 0.65);    // Back right
+  drawPlant(1.5, 10.5, 0);     // Front left
+  drawPlant(10, 10.5, 0);      // Front right
+}
+
+function drawPlant(gx, gy, gz) {
+  const p = sc(gx, gy, gz);
+  const sz = PX * 0.2;
+
+  // Pot
+  X.fillStyle = OC.plantPot;
+  X.beginPath();
+  X.moveTo(p.x - sz * 0.4, p.y);
+  X.lineTo(p.x - sz * 0.3, p.y + sz * 0.5);
+  X.lineTo(p.x + sz * 0.3, p.y + sz * 0.5);
+  X.lineTo(p.x + sz * 0.4, p.y);
+  X.closePath(); X.fill();
+
+  // Leaves
+  X.fillStyle = OC.plantGreen;
+  X.beginPath(); X.arc(p.x, p.y - sz * 0.2, sz * 0.35, 0, Math.PI * 2); X.fill();
+  X.fillStyle = OC.plantDark;
+  X.beginPath(); X.arc(p.x - sz * 0.15, p.y - sz * 0.3, sz * 0.2, 0, Math.PI * 2); X.fill();
+  X.beginPath(); X.arc(p.x + sz * 0.2, p.y - sz * 0.15, sz * 0.18, 0, Math.PI * 2); X.fill();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// SECTION 9: PARTICLES
+// ═══════════════════════════════════════════════════════════════
+
+let particles = [];
+
+function addParticle(gx, gy, type = 'sparkle', color = '#FFD166') {
+  particles.push({
+    x: gx, y: gy, gz: 0.8,
+    vx: (Math.random() - 0.5) * 0.02,
+    vy: -Math.random() * 0.015,
+    life: 1.0,
+    decay: 0.015 + Math.random() * 0.01,
+    color, type,
+    size: 2 + Math.random() * 3,
+  });
+}
+
+function updateAndDrawParticles(dt) {
+  for (let i = particles.length - 1; i >= 0; i--) {
+    const p = particles[i];
+    p.x += p.vx;
+    p.y += p.vy;
+    p.gz += 0.01;
+    p.life -= p.decay;
+    if (p.life <= 0) { particles.splice(i, 1); continue; }
+
+    const sp = sc(p.x, p.y, p.gz);
+    X.globalAlpha = p.life;
+    X.fillStyle = p.color;
+
+    if (p.type === 'sparkle') {
+      X.beginPath();
+      X.arc(sp.x, sp.y, p.size * p.life, 0, Math.PI * 2);
+      X.fill();
+    } else if (p.type === 'pop') {
+      X.strokeStyle = p.color;
+      X.lineWidth = 2;
+      X.beginPath();
+      X.arc(sp.x, sp.y, p.size * (1 - p.life) * 5, 0, Math.PI * 2);
+      X.stroke();
+    }
+  }
+  X.globalAlpha = 1;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// SECTION 9b: SPEECH BUBBLES (drawn on canvas)
+// ═══════════════════════════════════════════════════════════════
+
+let speechBubbles = [];
+
+function addSpeechBubble(gx, gy, text, duration = 3, color = '#FFF') {
+  speechBubbles.push({
+    gx, gy, text, life: duration, maxLife: duration, color,
+  });
+}
+
+function updateAndDrawSpeechBubbles(dt) {
+  for (let i = speechBubbles.length - 1; i >= 0; i--) {
+    const b = speechBubbles[i];
+    b.life -= dt;
+    if (b.life <= 0) { speechBubbles.splice(i, 1); continue; }
+
+    const fadeIn = clamp((b.maxLife - b.life) / 0.3, 0, 1);
+    const fadeOut = clamp(b.life / 0.4, 0, 1);
+    const alpha = Math.min(fadeIn, fadeOut);
+
+    // Float up slightly over time
+    const floatY = (1 - b.life / b.maxLife) * 0.3;
+
+    const p = sc(b.gx + 0.5, b.gy - 0.3 - floatY, 1.5);
+    const fontSize = Math.max(11, Math.round(PX * 0.17));
+
+    X.globalAlpha = alpha;
+
+    // Measure text
+    X.font = `bold ${fontSize}px 'Segoe UI', system-ui, sans-serif`;
+    const metrics = X.measureText(b.text);
+    const tw = metrics.width + 20;
+    const th = fontSize + 14;
+
+    // Bubble background
+    const bx = p.x - tw / 2;
+    const by = p.y - th;
+    X.fillStyle = 'rgba(255,255,255,0.95)';
+    roundRect(X, bx, by, tw, th, 10);
+    X.fill();
+    X.strokeStyle = 'rgba(0,0,0,0.15)';
+    X.lineWidth = 1.5;
+    roundRect(X, bx, by, tw, th, 10);
+    X.stroke();
+
+    // Tail (small triangle pointing down)
+    X.fillStyle = 'rgba(255,255,255,0.95)';
+    X.beginPath();
+    X.moveTo(p.x - 6, by + th);
+    X.lineTo(p.x + 6, by + th);
+    X.lineTo(p.x, by + th + 8);
+    X.closePath();
+    X.fill();
+
+    // Text
+    X.fillStyle = '#333';
+    X.textAlign = 'center';
+    X.fillText(b.text, p.x, by + th - 7);
+  }
+  X.globalAlpha = 1;
+  X.textAlign = 'left';
+}
+
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + w - r, y);
+  ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+  ctx.lineTo(x + w, y + h - r);
+  ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+  ctx.lineTo(x + r, y + h);
+  ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+  ctx.lineTo(x, y + r);
+  ctx.quadraticCurveTo(x, y, x + r, y);
+  ctx.closePath();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// SECTION 9c: FLYING PLATES (plate slides across pass)
+// ═══════════════════════════════════════════════════════════════
+
+let flyingPlates = [];
+
+function addFlyingPlate(fromGx, fromGy, toGx, toGy, duration = 0.8) {
+  flyingPlates.push({
+    fromGx, fromGy, toGx, toGy,
+    progress: 0, duration, active: true,
+  });
+}
+
+function updateAndDrawFlyingPlates(dt) {
+  for (let i = flyingPlates.length - 1; i >= 0; i--) {
+    const fp = flyingPlates[i];
+    fp.progress += dt / fp.duration;
+    if (fp.progress >= 1) { flyingPlates.splice(i, 1); continue; }
+
+    const t = easeOut(fp.progress);
+    const px = lerp(fp.fromGx, fp.toGx, t);
+    const py = lerp(fp.fromGy, fp.toGy, t);
+    // Arc upward
+    const arcH = Math.sin(fp.progress * Math.PI) * 0.8;
+
+    const p = sc(px + 0.5, py + 0.5, 0.75 + arcH);
+    const plateSz = PX * 0.18;
+
+    // Plate
+    X.fillStyle = OC.plate;
+    X.beginPath();
+    X.ellipse(p.x, p.y, plateSz, plateSz * 0.5, 0, 0, Math.PI * 2);
+    X.fill();
+    X.strokeStyle = '#DDD';
+    X.lineWidth = 1;
+    X.stroke();
+
+    // Food on plate (small colored dot)
+    X.fillStyle = '#D4A574';
+    X.beginPath();
+    X.arc(p.x, p.y - 2, plateSz * 0.35, 0, Math.PI * 2);
+    X.fill();
+
+    // Trail sparkle
+    if (Math.random() < 0.3) {
+      addParticle(px + 0.5, py + 0.5, 'sparkle', OC.claudeGold);
+    }
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// SECTION 10: OVERLAYS — Narration, Scrolls, Scene Labels
+// ═══════════════════════════════════════════════════════════════
+
+const narrationEl = document.getElementById('narration');
+const sceneLabelEl = document.getElementById('scene-label');
+const scrollOverlay = document.getElementById('scroll-overlay');
+const scrollContent = document.getElementById('scroll-content');
+const timestampEl = document.getElementById('timestamp');
+const gridInfoEl = document.getElementById('grid-info');
+
+let activeNarration = '';
+let narrationTarget = '';
+
+function setNarration(text) {
+  narrationTarget = text;
+  if (text) {
+    narrationEl.textContent = text;
+    narrationEl.classList.add('show');
+  } else {
+    narrationEl.classList.remove('show');
+  }
+}
+
+function setSceneLabel(text) {
+  sceneLabelEl.textContent = text;
+}
+
+function showScroll(type) {
+  scrollContent.className = type;
+  if (type === 'map') {
+    scrollContent.innerHTML = `
+      <h2 style="color:${OC.scrollGold};margin-bottom:16px">📜 CLAUDE.md — The Map</h2>
+      <p>The treasure map of the entire repository.</p>
+      <ul style="margin:12px 0;padding-left:20px;line-height:2">
+        <li><strong>datasets/</strong> — all verified production data</li>
+        <li><strong>tools/</strong> — reusable scripts and utilities</li>
+        <li><strong>observations/</strong> — findings, dead ends, theory</li>
+        <li><strong>output/</strong> — staging area for agent work</li>
+        <li><strong>deliverables/</strong> — submission-ready outputs</li>
+        <li><strong>geodata/</strong> — swisstopo extraction pipeline</li>
+      </ul>
+      <p style="color:${OC.scrollGold};font-style:italic">Where to find things. The briefing.</p>
+    `;
+  } else if (type === 'blueprint') {
+    scrollContent.innerHTML = `
+      <h2 style="color:${OC.scrollTeal};margin-bottom:16px">⚙️ .claude/ — The Blueprint</h2>
+      <p>Technical drawing of the kitchen machinery.</p>
+      <ul style="margin:12px 0;padding-left:20px;line-height:2;font-size:14px">
+        <li><code>conventions.md</code> — coordinates, commit prefixes, file safety</li>
+        <li><code>data-protocol.md</code> — collection rules, quality gates</li>
+        <li><code>tool-protocol.md</code> — how to use tools and workflows</li>
+        <li><code>commands/</code> — slash commands for each role</li>
+        <li><code>rules/</code> — auto-loaded protocols</li>
+      </ul>
+      <p style="color:${OC.scrollTeal};font-style:italic">How the kitchen works. The rules.</p>
+    `;
+  } else if (type === 'logbook') {
+    scrollContent.innerHTML = `
+      <h2 style="color:${OC.scrollGold};margin-bottom:16px">📖 The Logbook — Git</h2>
+      <p>Every interaction, every change, every version — automatically recorded.</p>
+      <div style="margin:16px 0;padding:16px;background:rgba(0,0,0,0.3);border-radius:8px;font-family:'Courier New',monospace;font-size:13px;line-height:1.8">
+        <div style="color:#5A9E6F">● <span style="color:#C9A84C">bfd235d</span> — Merge PR #7: kitchen storyboard updates</div>
+        <div style="color:#5A9E6F">● <span style="color:#C9A84C">049f8a4</span> — [SYNC] Resolve merge conflict</div>
+        <div style="color:#5A9E6F">● <span style="color:#C9A84C">ef9cffc</span> — [BUILD] Kitchen animation overnight</div>
+        <div style="color:#5A9E6F">● <span style="color:#C9A84C">51e5300</span> — Merge henna/visuals</div>
+        <div style="color:#5A9E6F">● <span style="color:#C9A84C">cce06f8</span> — [SYNC] Session end — data sequence diagram</div>
+        <div style="margin-top:8px;color:#888">... 147 more entries</div>
+      </div>
+      <p>Two kitchens, one book. Andrea updates → syncs to master. Henna pulls the latest.</p>
+      <p style="color:${OC.scrollGold};font-style:italic;margin-top:12px">Every branch is a design alternative. Every merge is a decision made.</p>
+    `;
+  }
+  scrollOverlay.classList.add('show');
+}
+
+function hideScroll() {
+  scrollOverlay.classList.remove('show');
+}
+
+// ═══════════════════════════════════════════════════════════════
+// SECTION 11: DEBUG GRID OVERLAY
+// ═══════════════════════════════════════════════════════════════
+
+let showGrid = false;
+
+function drawDebugGrid() {
+  if (!showGrid) return;
+
+  gridInfoEl.style.display = 'block';
+
+  const fontSize = Math.max(8, Math.round(PX * 0.13));
+  X.font = `${fontSize}px 'Courier New', monospace`;
+  X.textAlign = 'center';
+
+  for (let c = 0; c < COLS; c++) {
+    for (let r = 0; r < ROWS; r++) {
+      const tl = sc(c, r, 0);
+      const tr = sc(c + 1, r, 0);
+      const br = sc(c + 1, r + 1, 0);
+      const bl = sc(c, r + 1, 0);
+
+      const ct = cellMap[c][r];
+      let col;
+      if (ct === CELL.FLOOR || ct === CELL.DOOR) {
+        col = 'rgba(0,255,0,0.15)';
+      } else if (ct === CELL.WALL) {
+        col = 'rgba(255,0,0,0.15)';
+      } else {
+        col = 'rgba(255,165,0,0.2)'; // Furniture
+      }
+
+      X.fillStyle = col;
+      X.beginPath();
+      X.moveTo(tl.x, tl.y); X.lineTo(tr.x, tr.y);
+      X.lineTo(br.x, br.y); X.lineTo(bl.x, bl.y);
+      X.closePath(); X.fill();
+
+      // Grid lines
+      X.strokeStyle = 'rgba(255,255,255,0.2)';
+      X.lineWidth = 0.5;
+      X.stroke();
+
+      // Coordinate label
+      const center = sc(c + 0.5, r + 0.5, 0.05);
+      X.fillStyle = 'rgba(255,255,255,0.6)';
+      X.fillText(`${c},${r}`, center.x, center.y);
+    }
+  }
+
+  // Update grid info panel
+  if (claude) {
+    const cc = Math.floor(claude.gx);
+    const cr = Math.floor(claude.gy);
+    gridInfoEl.textContent = `GRID: Claude at (${cc}, ${cr}) | Cell: ${cellTypeName(cellMap[cc]?.[cr])}`;
+  }
+}
+
+function cellTypeName(t) {
+  return ['WALL','FLOOR','COUNTER','STOVE','SINK','FRIDGE','PASS','PASS_WIN','LOGBOOK','DOOR'][t] || '?';
+}
+
+// ═══════════════════════════════════════════════════════════════
+// SECTION 12: CHARACTER MOVEMENT
+// ═══════════════════════════════════════════════════════════════
+
+const HOP_DUR = 0.14; // seconds per tile hop
+
+function createCharacter(opts = {}) {
+  return {
+    gx: opts.gx || 0,
+    gy: opts.gy || 0,
+    color: opts.color || OC.claudeGrey,
+    colorDk: opts.colorDk || '#777',
+    facing: opts.facing || 'right',
+    backpackSize: opts.backpackSize || 0,
+    heldItem: opts.heldItem || null,
+    scaleF: opts.scaleF || 1,
+    badge: opts.badge || null,
+    opacity: opts.opacity !== undefined ? opts.opacity : 1,
+    bobPhase: 0,
+    // Movement
+    path: null,
+    pathIdx: 0,
+    hopProgress: 0,
+    fromX: 0, fromY: 0,
+    toX: 0, toY: 0,
+    moving: false,
+    onArrive: null,
+  };
+}
+
+function moveCharTo(char, tc, tr, onDone) {
+  const sc2 = Math.floor(char.gx);
+  const sr2 = Math.floor(char.gy);
+  if (sc2 === tc && sr2 === tr) {
+    if (onDone) onDone();
+    return;
+  }
+  const path = findPath(sc2, sr2, tc, tr);
+  if (!path || path.length < 2) {
+    if (onDone) onDone();
+    return;
+  }
+  char.path = path;
+  char.pathIdx = 1;
+  char.fromX = path[0].c;
+  char.fromY = path[0].r;
+  char.toX = path[1].c;
+  char.toY = path[1].r;
+  char.hopProgress = 0;
+  char.moving = true;
+  char.onArrive = onDone;
+  updateFacing(char);
+}
+
+function updateFacing(char) {
+  const dx = char.toX - char.fromX;
+  const dy = char.toY - char.fromY;
+  if (Math.abs(dx) >= Math.abs(dy)) {
+    char.facing = dx > 0 ? 'right' : 'left';
+  } else {
+    char.facing = dy > 0 ? 'down' : 'up';
+  }
+}
+
+function updateCharMovement(char, dt) {
+  if (!char.moving || !char.path) return;
+
+  char.hopProgress += dt / HOP_DUR;
+  char.bobPhase += dt * 6;
+
+  if (char.hopProgress >= 1) {
+    char.gx = char.toX;
+    char.gy = char.toY;
+    char.pathIdx++;
+
+    if (char.pathIdx < char.path.length) {
+      char.fromX = char.toX;
+      char.fromY = char.toY;
+      char.toX = char.path[char.pathIdx].c;
+      char.toY = char.path[char.pathIdx].r;
+      char.hopProgress = 0;
+      updateFacing(char);
+    } else {
+      char.moving = false;
+      char.path = null;
+      char.bobPhase = 0;
+      if (char.onArrive) {
+        const cb = char.onArrive;
+        char.onArrive = null;
+        cb();
+      }
+    }
+  } else {
+    // Interpolate with bounce
+    const t = easeInOut(char.hopProgress);
+    char.gx = lerp(char.fromX, char.toX, t);
+    char.gy = lerp(char.fromY, char.toY, t);
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// SECTION 13: USER CHARACTER (dining side)
+// ═══════════════════════════════════════════════════════════════
+
+function drawUser(gx, gy, opacity = 1) {
+  if (opacity <= 0) return;
+  X.globalAlpha = opacity;
+
+  const p = sc(gx + 0.5, gy + 0.5, 0.3);
+  const sz = PX * 0.55;
+
+  // Shadow
+  const sp = sc(gx + 0.5, gy + 0.7, 0);
+  X.fillStyle = 'rgba(0,0,0,0.15)';
+  X.beginPath();
+  X.ellipse(sp.x, sp.y, sz * 0.4, sz * 0.15, 0, 0, Math.PI * 2);
+  X.fill();
+
+  // Body (warm tone — human, not AI)
+  X.fillStyle = '#E07050';
+  X.beginPath();
+  X.ellipse(p.x, p.y, sz * 0.32, sz * 0.36, 0, 0, Math.PI * 2);
+  X.fill();
+
+  // Head
+  X.fillStyle = OC.skinTone;
+  X.beginPath();
+  X.arc(p.x, p.y - sz * 0.38, sz * 0.22, 0, Math.PI * 2);
+  X.fill();
+
+  // Hair
+  X.fillStyle = '#5A3825';
+  X.beginPath();
+  X.arc(p.x, p.y - sz * 0.45, sz * 0.18, Math.PI, 0);
+  X.fill();
+
+  // Eyes (looking left, toward kitchen)
+  X.fillStyle = '#333';
+  X.beginPath();
+  X.arc(p.x - sz * 0.1, p.y - sz * 0.4, sz * 0.03, 0, Math.PI * 2);
+  X.fill();
+  X.beginPath();
+  X.arc(p.x + sz * 0.04, p.y - sz * 0.4, sz * 0.03, 0, Math.PI * 2);
+  X.fill();
+
+  X.globalAlpha = 1;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// SECTION 14: SCENE MANAGEMENT
+// ═══════════════════════════════════════════════════════════════
+
+let currentScene = 0;
+let sceneTime = 0;
+let globalTime = 0;
+let playing = false;
+let speed = 1;
+let claude = null;
+let userChar = { gx: 12, gy: 5, opacity: 0 };
+
+const SCENES = [
+  { name: 'Entering the Kitchen', duration: 38,
+    phases: [
+      { id: '1a', t: 0, label: 'Empty kitchen' },
+      { id: '1b', t: 6, label: 'Picking up scrolls' },
+      { id: '1c', t: 14, label: 'Opening the maps' },
+      { id: '1d', t: 26, label: 'Color appears' },
+      { id: '1e', t: 30, label: 'Kitchen furnishes' },
+    ]
+  },
+  { name: 'The Pass', duration: 44,
+    phases: [
+      { id: '2a', t: 0, label: 'First interaction' },
+      { id: '2b', t: 18, label: 'Backpack grows' },
+      { id: '2c', t: 21, label: 'Archibase' },
+      { id: '2d', t: 28, label: 'CAG vs RAG' },
+      { id: '2e', t: 35, label: 'The log' },
+    ]
+  },
+  { name: 'The Logbook', duration: 30,
+    phases: [
+      { id: '3a', t: 0, label: 'Automatic record' },
+      { id: '3b', t: 10, label: 'Two kitchens' },
+      { id: '3c', t: 20, label: 'Branch diagram' },
+    ]
+  },
+  { name: 'The Brigade', duration: 35,
+    phases: [
+      { id: '4a', t: 0, label: 'Analyst enters' },
+      { id: '4b', t: 10, label: 'Specialist scroll' },
+      { id: '4c', t: 20, label: 'Full brigade' },
+    ]
+  },
+  { name: 'Four Pillars', duration: 30,
+    phases: [
+      { id: '5a', t: 0, label: 'Infrastructure' },
+      { id: '5b', t: 7, label: 'Knowledge' },
+      { id: '5c', t: 14, label: 'Tools' },
+      { id: '5d', t: 22, label: 'Ingredients' },
+    ]
+  },
+  { name: 'The Full Kitchen', duration: 18,
+    phases: [
+      { id: '6a', t: 0, label: 'Everything running' },
+      { id: '6b', t: 12, label: 'Fade out' },
+    ]
+  },
+];
+
+function getPhaseLabel() {
+  const scene = SCENES[currentScene];
+  if (!scene) return '';
+  let label = '';
+  for (const p of scene.phases) {
+    if (sceneTime >= p.t) label = p.id + ' — ' + p.label;
+  }
+  return label;
+}
+
+function getTotalDuration() {
+  return SCENES.reduce((s, sc2) => s + sc2.duration, 0);
+}
+
+function getGlobalTime() {
+  let t = 0;
+  for (let i = 0; i < currentScene; i++) t += SCENES[i].duration;
+  return t + sceneTime;
+}
+
+function formatTime(s) {
+  const m = Math.floor(s / 60);
+  const sec = Math.floor(s % 60);
+  return `${m}:${sec.toString().padStart(2, '0')}`;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// SECTION 15: SCENE 1 — Entering the Kitchen
+// ═══════════════════════════════════════════════════════════════
+
+let s1 = {
+  kitchenAlpha: 0,    // Kitchen furniture visibility (fades in during 1e)
+  claudeColor: null,  // null = grey, then transitions
+  scrollShelfVisible: true,
+  scroll1Taken: false,
+  scroll2Taken: false,
+  colorTransition: 0, // 0 = grey, 1 = full color
+  initialized: false,
+  phase: '1a',
+  sequenceStep: 0,
+};
+
+function initScene1() {
+  s1 = {
+    kitchenAlpha: 0,
+    scrollShelfVisible: true,
+    scroll1Taken: false,
+    scroll2Taken: false,
+    colorTransition: 0,
+    initialized: true,
+    phase: '1a',
+    sequenceStep: 0,
+  };
+  claude = createCharacter({
+    gx: -1, gy: 2,
+    color: OC.claudeGrey,
+    colorDk: '#777',
+    backpackSize: 0,
+  });
+  userChar.opacity = 0;
+  setNarration('');
+  hideScroll();
+
+  // Center camera on kitchen (center of the 14x12 grid)
+  const kitchenW = COLS * PX;
+  const kitchenH = ROWS * PX * TILT;
+  targetCam.x = -kitchenW / 2;
+  targetCam.y = -kitchenH / 2 + PX * 2;
+  targetCam.zoom = 1;
+  cam.x = targetCam.x;
+  cam.y = targetCam.y;
+}
+
+function updateScene1(dt) {
+  const st = sceneTime;
+
+  // Phase 1a: Empty kitchen, grey character approaches (0-6s)
+  if (st < 6) {
+    s1.phase = '1a';
+    s1.kitchenAlpha = 0.15; // Dim kitchen
+
+    // Claude walks toward door from outside
+    if (!claude.moving && s1.sequenceStep === 0) {
+      setNarration('An empty kitchen. The room exists but it\'s dim, bare, unused.');
+      claude.gx = -1;
+      claude.gy = 2;
+      moveCharTo(claude, 1, 2, () => { s1.sequenceStep = 1; });
+    }
+  }
+
+  // Phase 1b: Picking up scrolls (6-14s)
+  else if (st < 14) {
+    s1.phase = '1b';
+    s1.kitchenAlpha = 0.2;
+
+    if (s1.sequenceStep === 1 && !claude.moving) {
+      setNarration('Just inside: a small shelf with two scrolls waiting.');
+      s1.sequenceStep = 2;
+    }
+    // Pick up scroll 1 at st ~8
+    if (st >= 8 && !s1.scroll1Taken) {
+      s1.scroll1Taken = true;
+      claude.heldItem = 'scroll_gold';
+      setNarration('CLAUDE.md — the map of the entire repository.');
+      addParticle(claude.gx + 0.5, claude.gy + 0.3, 'sparkle', OC.scrollGold);
+      addParticle(claude.gx + 0.3, claude.gy + 0.5, 'sparkle', OC.scrollGold);
+    }
+    // Pick up scroll 2 at st ~11
+    if (st >= 11 && !s1.scroll2Taken) {
+      s1.scroll2Taken = true;
+      claude.heldItem = 'scroll_teal';
+      setNarration('.claude/ — the blueprint of the kitchen.');
+      addParticle(claude.gx + 0.5, claude.gy + 0.3, 'sparkle', OC.scrollTeal);
+      addParticle(claude.gx + 0.3, claude.gy + 0.5, 'sparkle', OC.scrollTeal);
+    }
+  }
+
+  // Phase 1c: Opening the maps (14-26s)
+  else if (st < 26) {
+    s1.phase = '1c';
+
+    // Show CLAUDE.md map overlay (14-19s)
+    if (st >= 14 && st < 19) {
+      if (st >= 14.5 && st < 18.5) {
+        showScroll('map');
+      }
+      claude.heldItem = 'scroll_gold';
+      setNarration('The treasure map: where to find datasets, tools, observations...');
+    }
+
+    // Show .claude/ blueprint overlay (20-25s)
+    if (st >= 19 && st < 19.5) {
+      hideScroll();
+    }
+    if (st >= 20 && st < 25) {
+      if (st >= 20.5 && st < 24.5) {
+        showScroll('blueprint');
+      }
+      claude.heldItem = 'scroll_teal';
+      setNarration('The blueprint: conventions, protocols, how the kitchen works.');
+    }
+    if (st >= 25) {
+      hideScroll();
+    }
+  }
+
+  // Phase 1d: Color appears (26-30s)
+  else if (st < 30) {
+    s1.phase = '1d';
+    hideScroll();
+
+    const ct = (st - 26) / 4; // 0→1 over 4 seconds
+    s1.colorTransition = easeInOut(clamp(ct, 0, 1));
+
+    // Lerp color from grey to gold
+    claude.color = lerpColor(OC.claudeGrey, OC.claudeGold, s1.colorTransition);
+    claude.colorDk = lerpColor('#777', OC.claudeGoldDk, s1.colorTransition);
+    claude.heldItem = null;
+    claude.backpackSize = lerp(0, 0.3, s1.colorTransition);
+
+    if (ct < 0.2) {
+      setNarration('Scrolls slot into the backpack. Context loaded.');
+    } else {
+      setNarration('Grey washes to color. The agent is ready.');
+    }
+
+    // Sparkles during transition
+    if (Math.random() < 0.15) {
+      addParticle(claude.gx + Math.random(), claude.gy + Math.random(), 'sparkle', OC.claudeGold);
+    }
+  }
+
+  // Phase 1e: Kitchen furnishes itself (30-38s)
+  else {
+    s1.phase = '1e';
+
+    const ft = (st - 30) / 8; // 0→1 over 8 seconds
+    s1.kitchenAlpha = easeOut(clamp(ft, 0, 1));
+
+    claude.color = OC.claudeGold;
+    claude.colorDk = OC.claudeGoldDk;
+
+    // Move Claude into the kitchen
+    if (s1.sequenceStep < 3 && !claude.moving) {
+      s1.sequenceStep = 3;
+      moveCharTo(claude, 7, 3);
+    }
+
+    if (ft < 0.3) {
+      setNarration('The kitchen furnishes itself around them...');
+    } else if (ft < 0.7) {
+      setNarration('Context = the kitchen taking shape.');
+    } else {
+      setNarration('The kitchen is alive.');
+    }
+
+    // Sparkles as furniture appears
+    if (ft < 0.8 && Math.random() < 0.1) {
+      const rc = 1 + Math.floor(Math.random() * 11);
+      const rr = 1 + Math.floor(Math.random() * 10);
+      addParticle(rc, rr, 'sparkle', '#FFD166');
+    }
+  }
+
+  // Draw scroll shelf (if still visible and in scene)
+  if (st >= 6 && st < 14 && s1.scrollShelfVisible) {
+    drawScrollShelf(1.5, 2, 0.75);
+  }
+}
+
+function drawScrollShelf(gx, gy, gz) {
+  const p = sc(gx, gy, gz);
+  const sz = PX * 0.15;
+
+  // Small shelf
+  drawBox(gx - 0.15, gy - 0.1, 0.5, 0.3, 0.3, '#8B7355', '#6B5335', '#5B4325', 0.3);
+
+  // Scrolls on shelf (if not taken)
+  if (!s1.scroll1Taken) {
+    X.fillStyle = OC.scrollGold;
+    X.fillRect(p.x - sz, p.y - sz * 0.8, sz * 0.8, sz * 0.4);
+  }
+  if (!s1.scroll2Taken) {
+    X.fillStyle = OC.scrollTeal;
+    X.fillRect(p.x + sz * 0.2, p.y - sz * 0.8, sz * 0.8, sz * 0.4);
+  }
+}
+
+function lerpColor(c1, c2, t) {
+  // Simple hex color lerp
+  const r1 = parseInt(c1.slice(1, 3), 16), g1 = parseInt(c1.slice(3, 5), 16), b1 = parseInt(c1.slice(5, 7), 16);
+  const r2 = parseInt(c2.slice(1, 3), 16), g2 = parseInt(c2.slice(3, 5), 16), b2 = parseInt(c2.slice(5, 7), 16);
+  const r = Math.round(lerp(r1, r2, t));
+  const g = Math.round(lerp(g1, g2, t));
+  const b = Math.round(lerp(b1, b2, t));
+  return `#${r.toString(16).padStart(2,'0')}${g.toString(16).padStart(2,'0')}${b.toString(16).padStart(2,'0')}`;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// SECTION 16: SCENE 2 — The Pass
+// ═══════════════════════════════════════════════════════════════
+
+let s2 = {
+  initialized: false,
+  phase: '2a',
+  orderCycle: 0,
+  orderState: 'idle', // idle, cooking, plating, serving
+  bookThrown: false,
+  cagPhase: false,
+  ragPhase: false,
+  logbookGlow: 0,
+  tickets: [],
+};
+
+function initScene2() {
+  s2 = {
+    initialized: true,
+    phase: '2a',
+    orderCycle: 0,
+    orderState: 'idle',
+    bookThrown: false,
+    cagPhase: false,
+    ragPhase: false,
+    logbookGlow: 0,
+    bookFlyT: -1,
+    tickets: [
+      { icon: '🍳', items: 'omelette + salad', status: 'pending' },
+      { icon: '🍝', items: 'pasta + sauce', status: 'pending' },
+      { icon: '🥗', items: 'bowl + dressing', status: 'pending' },
+    ],
+  };
+
+  claude = createCharacter({
+    gx: 7, gy: 3,
+    color: OC.claudeGold,
+    colorDk: OC.claudeGoldDk,
+    backpackSize: 0.3,
+  });
+  userChar = { gx: 12, gy: 5, opacity: 0 };
+  setNarration('');
+  hideScroll();
+}
+
+function updateScene2(dt) {
+  const st = sceneTime;
+
+  // Phase 2a: First interaction loop (0-18s)
+  if (st < 18) {
+    s2.phase = '2a';
+
+    // User appears
+    userChar.opacity = clamp(st / 2, 0, 1);
+
+    // No ticket UI — orders come as speech bubbles
+    updateTickets(false);
+
+    // Order texts for speech bubbles
+    const orderTexts = ['🍳 Omelette + salad!', '🍝 Pasta + sauce!', '🥗 Bowl + dressing!'];
+
+    // Order cycles (3 loops of ~5s each)
+    const cycleT = (st - 2) % 5.5;
+    const cycleN = Math.floor((st - 2) / 5.5);
+
+    if (st >= 2 && cycleN < 3) {
+      if (cycleN !== s2.orderCycle) {
+        s2.orderCycle = cycleN;
+        s2.orderState = 'idle';
+      }
+
+      // State machine for each cycle
+      if (cycleT < 0.5 && s2.orderState === 'idle') {
+        s2.orderState = 'cooking';
+        setNarration('An order comes in. Claude works: moves to stations, searches, cooks.');
+        // User says the order as a speech bubble
+        addSpeechBubble(userChar.gx, userChar.gy, orderTexts[cycleN] || '🍽 Order up!', 2.5);
+        // Move to stove
+        moveCharTo(claude, 3, 2, () => {
+          claude.facing = 'up';
+        });
+      }
+      if (cycleT >= 2.5 && cycleT < 3 && s2.orderState === 'cooking') {
+        s2.orderState = 'plating';
+        claude.heldItem = 'plate';
+        // Move toward pass
+        moveCharTo(claude, 10, 5, () => {
+          claude.facing = 'right';
+        });
+      }
+      if (cycleT >= 4 && s2.orderState === 'plating') {
+        s2.orderState = 'serving';
+        setNarration('Output gets plated — slides across the pass.');
+        claude.heldItem = null;
+        // Plate flies across the pass window to the user!
+        addFlyingPlate(10, 5, 12, 5, 0.7);
+        addParticle(11, 5.5, 'pop', OC.claudeGold);
+        // Move back
+        moveCharTo(claude, 7, 5);
+      }
+    }
+
+    if (st >= 16) {
+      setNarration('Basic loop: order → cook → plate → present.');
+      if (s2.tickets.length > 2) s2.tickets[2].status = 'done';
+    }
+  }
+
+  // Phase 2b: Backpack grows (18-21s)
+  else if (st < 21) {
+    s2.phase = '2b';
+    updateTickets(false);
+
+    const bt = (st - 18) / 3;
+    claude.backpackSize = lerp(0.3, 0.7, easeInOut(bt));
+
+    if (!claude.moving && claude.gx !== 5) {
+      moveCharTo(claude, 5, 5, () => { claude.facing = 'down'; });
+    }
+
+    setNarration('With each exchange, the backpack gets fuller. More conversation = more context consumed.');
+
+    // Particles showing growth
+    if (Math.random() < 0.1) {
+      addParticle(claude.gx + 0.5, claude.gy + 0.3, 'sparkle', OC.bpMedium);
+    }
+  }
+
+  // Phase 2c: Archibase book (21-28s)
+  else if (st < 28) {
+    s2.phase = '2c';
+
+    if (!s2.bookThrown && st >= 22) {
+      s2.bookThrown = true;
+      setNarration('User hands Claude a big heavy book — the archibase. Knowledge.');
+    }
+
+    // Book flying animation (22-24s) — drawn in drawSceneOverlays()
+    if (st >= 22 && st < 24) {
+      s2.bookFlyT = (st - 22) / 2;
+    } else {
+      s2.bookFlyT = -1;
+    }
+
+    if (st >= 24) {
+      claude.backpackSize = lerp(0.7, 1.0, clamp((st - 24) / 2, 0, 1));
+      setNarration('Backpack grows significantly. But now Claude is more capable.');
+      claude.heldItem = 'book';
+    }
+    if (st >= 26) {
+      claude.heldItem = null;
+      setNarration('The book = knowledge. It knows how to build things, not just reason.');
+    }
+  }
+
+  // Phase 2d: CAG vs RAG (28-35s)
+  else if (st < 35) {
+    s2.phase = '2d';
+
+    if (st < 31.5) {
+      // CAG phase
+      s2.cagPhase = true;
+      s2.ragPhase = false;
+      setNarration('CAG: 5 thick books stacked — everything pre-loaded. Fast access, heavy carry.');
+      claude.backpackSize = lerp(1.0, 1.6, clamp((st - 28) / 3, 0, 1));
+    } else {
+      // RAG phase
+      s2.cagPhase = false;
+      s2.ragPhase = true;
+      setNarration('RAG: a small index card box. Fetch on demand. Backpack stays lighter.');
+      claude.backpackSize = lerp(1.6, 0.8, clamp((st - 31.5) / 2, 0, 1));
+    }
+
+    // Draw CAG books or RAG box on island
+    if (s2.cagPhase) {
+      drawCAGBooks(4, 4, 0.65);
+    }
+    if (s2.ragPhase) {
+      drawRAGBox(4, 4, 0.65);
+    }
+  }
+
+  // Phase 2e: The log (35-44s)
+  else {
+    s2.phase = '2e';
+    s2.cagPhase = false;
+    s2.ragPhase = false;
+
+    claude.backpackSize = 0.8;
+    s2.logbookGlow = 0.5 + Math.sin(st * 2) * 0.3;
+
+    if (st < 38) {
+      setNarration('Meanwhile, a logbook on the counter has been writing itself...');
+      hideScroll();
+      if (!claude.moving && Math.floor(claude.gx) !== 7) {
+        moveCharTo(claude, 7, 8, () => { claude.facing = 'right'; });
+      }
+    } else if (st < 43) {
+      // Show logbook overlay (like map/blueprint)
+      if (st >= 38.5 && st < 42.5) {
+        showScroll('logbook');
+      } else {
+        hideScroll();
+      }
+      setNarration('The kitchen is surveilled 24/7. Every change, every action, automatically registered.');
+    } else {
+      hideScroll();
+      setNarration('The logbook grows thicker with every session...');
+    }
+
+    // Logbook glow effect
+    if (s2.logbookGlow > 0) {
+      const lp = sc(8.5, 8.5, 0.75);
+      X.fillStyle = `rgba(201,168,76,${s2.logbookGlow * 0.3})`;
+      X.beginPath();
+      X.arc(lp.x, lp.y, PX * 0.4, 0, Math.PI * 2);
+      X.fill();
+    }
+  }
+}
+
+function drawCAGBooks(gx, gy, gz) {
+  // 5 stacked thick books
+  const colors = [OC.bookRed, OC.bookBlue, OC.bookGreen, '#8E44AD', '#E67E22'];
+  for (let i = 0; i < 5; i++) {
+    drawBox(gx + 0.15, gy + 0.15, 0.7, 0.5, 0.1,
+      colors[i], colors[i], colors[i], gz + i * 0.1);
+  }
+  // Label
+  const p = sc(gx + 0.5, gy, gz + 0.6);
+  X.fillStyle = '#FFF';
+  X.font = `bold ${Math.round(PX * 0.12)}px 'Segoe UI'`;
+  X.textAlign = 'center';
+  X.fillText('CAG', p.x, p.y);
+}
+
+function drawRAGBox(gx, gy, gz) {
+  // Small index card box
+  drawBox(gx + 0.25, gy + 0.2, 0.5, 0.4, 0.25,
+    '#D4C4A0', '#B0A080', '#A09070', gz);
+  // Cards peeking out
+  for (let i = 0; i < 3; i++) {
+    const cp = sc(gx + 0.3 + i * 0.12, gy + 0.22, gz + 0.26);
+    X.fillStyle = '#F5F0E0';
+    X.fillRect(cp.x, cp.y - PX * 0.08, PX * 0.06, PX * 0.07);
+  }
+  // Label
+  const p = sc(gx + 0.5, gy, gz + 0.35);
+  X.fillStyle = '#FFF';
+  X.font = `bold ${Math.round(PX * 0.12)}px 'Segoe UI'`;
+  X.textAlign = 'center';
+  X.fillText('RAG', p.x, p.y);
+}
+
+function updateTickets(show) {
+  const el = document.getElementById('tickets');
+  if (!show) { el.classList.remove('show'); return; }
+  el.classList.add('show');
+
+  el.innerHTML = s2.tickets.map(t => `
+    <div class="ticket ${t.status}">
+      <div class="ticket-icon">${t.icon}</div>
+      <div class="ticket-items">${t.items}</div>
+    </div>
+  `).join('');
+}
+
+// ═══════════════════════════════════════════════════════════════
+// SECTION 16b: SCENE 3 — The Logbook (Git)
+// ═══════════════════════════════════════════════════════════════
+
+let s3 = { initialized: false, entriesShown: 0, splitPhase: 0, branchOverlay: false };
+
+const LOG_ENTRIES = [
+  { hash: 'bfd235d', msg: 'Merge PR #7: kitchen storyboard', color: OC.branchMerge },
+  { hash: '049f8a4', msg: '[SYNC] Resolve merge conflict', color: OC.branchMain },
+  { hash: 'ef9cffc', msg: '[BUILD] Kitchen animation overnight', color: OC.branchMain },
+  { hash: '51e5300', msg: 'Merge henna/visuals', color: OC.branchMerge },
+  { hash: 'cce06f8', msg: '[SYNC] Session end — data diagram', color: OC.branchMain },
+  { hash: '3829fff', msg: '[VIZ] Healthcare diagram v5 polish', color: OC.branchFeature },
+];
+
+function initScene3() {
+  s3 = { initialized: true, entriesShown: 0, splitPhase: 0, branchOverlay: false };
+  claude = createCharacter({ gx: 7, gy: 7, color: OC.claudeGold, colorDk: OC.claudeGoldDk, backpackSize: 0.8 });
+  userChar.opacity = 0;
+  // Camera focuses on logbook area
+  targetCam.x = -(COLS * PX) / 2;
+  targetCam.y = -(ROWS * PX * TILT) / 2 + PX * 2;
+  cam.x = targetCam.x; cam.y = targetCam.y;
+}
+
+function updateScene3(dt) {
+  const st = sceneTime;
+
+  // Phase 3a: Automatic record (0-10s)
+  if (st < 10) {
+    s3.entriesShown = Math.min(LOG_ENTRIES.length, Math.floor(st / 1.5));
+
+    if (!claude.moving && Math.floor(claude.gx) !== 7) {
+      moveCharTo(claude, 7, 7, () => { claude.facing = 'right'; });
+    }
+
+    // Draw log entries floating above logbook
+    for (let i = 0; i < s3.entriesShown; i++) {
+      const e = LOG_ENTRIES[i];
+      const entryAlpha = clamp((st - i * 1.5) / 0.5, 0, 1);
+      const ey = 7.8 - i * 0.35;
+      const ep = sc(8.5, ey, 1.2 + i * 0.15);
+      X.globalAlpha = entryAlpha * 0.9;
+      X.font = `${Math.round(PX * 0.11)}px 'Courier New', monospace`;
+      X.fillStyle = e.color;
+      X.textAlign = 'left';
+      X.fillText(`● ${e.hash}`, ep.x - PX * 0.8, ep.y);
+      X.fillStyle = '#DDD';
+      X.fillText(e.msg, ep.x - PX * 0.1, ep.y);
+    }
+    X.globalAlpha = 1;
+    X.textAlign = 'left';
+
+    // Logbook glow
+    const lp = sc(8.5, 8.5, 0.75);
+    X.fillStyle = `rgba(201,168,76,${0.3 + Math.sin(st * 3) * 0.15})`;
+    X.beginPath(); X.arc(lp.x, lp.y, PX * 0.5, 0, Math.PI * 2); X.fill();
+
+    // Camera icons in corners
+    drawCameraIcon(2, 1, st);
+    drawCameraIcon(10, 1, st);
+    drawCameraIcon(2, 9, st);
+    drawCameraIcon(10, 9, st);
+
+    if (st < 3) setNarration('Every interaction Claude had — already logged.');
+    else if (st < 7) setNarration('The kitchen cameras caught everything. No extra work needed.');
+    else setNarration('A dated entry for every action. Automatic.');
+  }
+
+  // Phase 3b: Two kitchens syncing (10-20s) — drawn in drawSceneOverlays()
+  else if (st < 20) {
+    s3.splitPhase = (st - 10) / 10;
+    setNarration(st < 14
+      ? 'Andrea\'s kitchen has a copy. Henna\'s kitchen has a copy.'
+      : 'When Andrea updates → it syncs back. When Henna starts → she pulls the latest.');
+  }
+
+  // Phase 3c: Git branch diagram (20-30s) — drawn in drawSceneOverlays()
+  else {
+    s3.branchOverlay = (st >= 20.5 && st < 29);
+    hideScroll(); // Don't use HTML overlay — draw on canvas instead
+
+    if (st < 24) setNarration('Every branch = a design alternative explored without destroying the original.');
+    else if (st < 28) setNarration('Every merge = a decision made.');
+    else setNarration('The logbook grows thick with every session.');
+  }
+}
+
+function drawCameraIcon(gx, gy, t) {
+  const p = sc(gx, gy, 1.5);
+  const sz = PX * 0.08;
+  const blink = Math.sin(t * 4 + gx) > 0.5 ? 1 : 0.3;
+  X.globalAlpha = blink * 0.6;
+  X.fillStyle = '#FF4444';
+  X.beginPath(); X.arc(p.x, p.y, sz, 0, Math.PI * 2); X.fill();
+  X.fillStyle = '#333';
+  X.fillRect(p.x - sz * 1.5, p.y - sz * 0.6, sz * 3, sz * 1.2);
+  X.globalAlpha = 1;
+}
+
+function drawSplitKitchens(bt, st) {
+  const cx = W / 2, cy = H / 2;
+  const kw = W * 0.35, kh = H * 0.35;
+  const gap = W * 0.06;
+  const fadeIn = clamp(bt * 3, 0, 1);
+
+  X.globalAlpha = fadeIn * 0.85;
+
+  // Dim background
+  X.fillStyle = 'rgba(0,0,0,0.7)';
+  X.fillRect(0, 0, W, H);
+
+  // Left kitchen (Andrea - gold)
+  const lx = cx - gap - kw;
+  X.fillStyle = 'rgba(201,168,76,0.15)';
+  X.fillRect(lx, cy - kh/2, kw, kh);
+  X.strokeStyle = OC.claudeGold;
+  X.lineWidth = 3;
+  X.strokeRect(lx, cy - kh/2, kw, kh);
+  // Mini kitchen interior
+  drawMiniKitchenInterior(lx, cy - kh/2, kw, kh, OC.claudeGold);
+  // Label
+  X.fillStyle = OC.claudeGold;
+  X.font = `bold ${Math.round(PX * 0.22)}px 'Segoe UI', system-ui`;
+  X.textAlign = 'center';
+  X.fillText('Andrea', lx + kw/2, cy - kh/2 - 12);
+
+  // Right kitchen (Henna - purple)
+  const rx = cx + gap;
+  X.fillStyle = 'rgba(167,139,250,0.15)';
+  X.fillRect(rx, cy - kh/2, kw, kh);
+  X.strokeStyle = OC.claudePurple;
+  X.lineWidth = 3;
+  X.strokeRect(rx, cy - kh/2, kw, kh);
+  drawMiniKitchenInterior(rx, cy - kh/2, kw, kh, OC.claudePurple);
+  X.fillStyle = OC.claudePurple;
+  X.font = `bold ${Math.round(PX * 0.22)}px 'Segoe UI', system-ui`;
+  X.textAlign = 'center';
+  X.fillText('Henna', rx + kw/2, cy - kh/2 - 12);
+
+  // Master logbook in center
+  const bookY = cy - PX * 0.3;
+  X.fillStyle = OC.logbook;
+  X.fillRect(cx - PX * 0.2, bookY, PX * 0.4, PX * 0.5);
+  X.fillStyle = '#F5F0E0';
+  X.fillRect(cx - PX * 0.15, bookY + 4, PX * 0.3, PX * 0.4);
+  X.fillStyle = '#FFF';
+  X.font = `bold ${Math.round(PX * 0.12)}px 'Segoe UI'`;
+  X.fillText('master', cx, bookY + PX * 0.65);
+
+  // Animated arrows
+  const arrowPhase = (st % 4) / 4;
+  // Push arrow (gold → center)
+  if (arrowPhase < 0.5) {
+    const at = arrowPhase * 2;
+    drawArrow(lx + kw, cy, cx - PX * 0.3, cy, at, OC.claudeGold, 'push');
+  }
+  // Pull arrow (center → purple)
+  else {
+    const at = (arrowPhase - 0.5) * 2;
+    drawArrow(cx + PX * 0.3, cy, rx, cy, at, OC.claudePurple, 'pull');
+  }
+
+  X.globalAlpha = 1;
+  X.textAlign = 'left';
+}
+
+function drawMiniKitchenInterior(x, y, w, h, tint) {
+  const cellW = w / 8, cellH = h / 6;
+  // Checkered floor
+  for (let c = 0; c < 8; c++) {
+    for (let r = 0; r < 6; r++) {
+      X.fillStyle = (c + r) % 2 === 0 ? 'rgba(232,213,176,0.4)' : 'rgba(219,201,160,0.4)';
+      X.fillRect(x + c * cellW, y + r * cellH, cellW, cellH);
+    }
+  }
+  // Counters (tinted)
+  X.fillStyle = tint;
+  X.globalAlpha *= 0.4;
+  X.fillRect(x + cellW, y, cellW * 6, cellH); // back counter
+  X.fillRect(x + cellW * 2, y + cellH * 2, cellW * 3, cellH); // island
+  X.fillRect(x + cellW * 2, y + cellH * 4, cellW * 3, cellH); // island
+  X.globalAlpha /= 0.4;
+  // Logbook
+  X.fillStyle = OC.logbook;
+  X.fillRect(x + cellW * 5, y + cellH * 4.5, cellW * 0.8, cellH * 0.6);
+}
+
+function drawArrow(x1, y1, x2, y2, progress, color, label) {
+  const px = lerp(x1, x2, easeInOut(progress));
+  const py = lerp(y1, y2, easeInOut(progress));
+
+  // Line
+  X.strokeStyle = color;
+  X.lineWidth = 3;
+  X.setLineDash([6, 4]);
+  X.beginPath(); X.moveTo(x1, y1); X.lineTo(px, py); X.stroke();
+  X.setLineDash([]);
+
+  // Arrowhead
+  const angle = Math.atan2(y2 - y1, x2 - x1);
+  const sz = 10;
+  X.fillStyle = color;
+  X.beginPath();
+  X.moveTo(px, py);
+  X.lineTo(px - sz * Math.cos(angle - 0.4), py - sz * Math.sin(angle - 0.4));
+  X.lineTo(px - sz * Math.cos(angle + 0.4), py - sz * Math.sin(angle + 0.4));
+  X.closePath(); X.fill();
+
+  // Label
+  X.fillStyle = '#FFF';
+  X.font = `${Math.round(PX * 0.12)}px 'Segoe UI'`;
+  X.textAlign = 'center';
+  X.fillText(label, (x1 + x2) / 2, y1 - 14);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// SECTION 16c: SCENE 4 — The Brigade
+// ═══════════════════════════════════════════════════════════════
+
+let s4 = { initialized: false, specialists: [], phase: '4a', analystEntered: false, montageStep: 0 };
+
+const SPECIALIST_DEFS = [
+  { role: 'Analyst',      color: OC.analystBlue,   colorDk: '#3A5A8A', station: { gx: 10, gy: 2 }, scrollType: 'analyst' },
+  { role: 'Modeler',      color: OC.modelerGreen,  colorDk: '#3A7E2A', station: { gx: 3, gy: 3 },  scrollType: 'modeler' },
+  { role: 'Builder',      color: OC.builderOrange,  colorDk: '#B05A2A', station: { gx: 3, gy: 7 },  scrollType: 'builder' },
+  { role: 'Cartographer', color: OC.cartoCopper,   colorDk: '#8A5A3A', station: { gx: 8, gy: 3 },  scrollType: 'carto' },
+];
+
+function initScene4() {
+  s4 = { initialized: true, specialists: [], phase: '4a', analystEntered: false, montageStep: 0 };
+  claude = createCharacter({ gx: 7, gy: 5, color: OC.claudeGold, colorDk: OC.claudeGoldDk, backpackSize: 0.8 });
+  userChar = { gx: 12, gy: 5, opacity: 1 };
+  targetCam.x = -(COLS * PX) / 2;
+  targetCam.y = -(ROWS * PX * TILT) / 2 + PX * 2;
+}
+
+function updateScene4(dt) {
+  const st = sceneTime;
+
+  // Update all specialist movement
+  for (const sp of s4.specialists) {
+    updateCharMovement(sp, dt);
+  }
+
+  // Phase 4a: Analyst enters (0-10s)
+  if (st < 10) {
+    s4.phase = '4a';
+
+    if (st < 2) {
+      setNarration('So far, Claude entered through one door. But there are other doors...');
+    } else if (!s4.analystEntered && st >= 3) {
+      s4.analystEntered = true;
+      const analyst = createCharacter({
+        gx: -1, gy: 10, color: OC.claudeGrey, colorDk: '#777',
+        backpackSize: 0, badge: null, scaleF: 0.9,
+      });
+      s4.specialists.push(analyst);
+      setNarration('A Claude walks to a different door: ANALYST.');
+      moveCharTo(analyst, 1, 10);
+    }
+
+    // Transition analyst to blue after arriving
+    if (s4.specialists[0] && !s4.specialists[0].moving && st >= 6) {
+      const a = s4.specialists[0];
+      const ct2 = clamp((st - 6) / 2, 0, 1);
+      a.color = lerpColor(OC.claudeGrey, OC.analystBlue, ct2);
+      a.colorDk = lerpColor('#777', '#3A5A8A', ct2);
+      a.badge = ct2 > 0.5 ? OC.analystBlue : null;
+      a.backpackSize = lerp(0, 0.25, ct2);
+      if (ct2 > 0.1 && ct2 < 0.9 && Math.random() < 0.1) {
+        addParticle(a.gx + 0.5, a.gy + 0.3, 'sparkle', OC.analystBlue);
+      }
+      if (st >= 8) setNarration('Picks up a specialist scroll — focused knowledge for one domain.');
+    }
+  }
+
+  // Phase 4b: Specialist scroll (10-20s)
+  else if (st < 20) {
+    s4.phase = '4b';
+
+    // Show specialist scroll overlay
+    if (st >= 10.5 && st < 18) {
+      showScroll('specialist');
+    } else {
+      hideScroll();
+    }
+
+    // Move analyst to station
+    if (s4.specialists[0] && !s4.specialists[0].moving && Math.floor(s4.specialists[0].gx) !== 10) {
+      moveCharTo(s4.specialists[0], 10, 2, () => { s4.specialists[0].facing = 'up'; });
+    }
+
+    if (st < 15) setNarration('The Analyst scroll: every shelf of the fridge mapped. Datasets, sources, quality gates.');
+    else setNarration('Backpack grows a tiny bit — just what they need. Efficient.');
+  }
+
+  // Phase 4c: Full brigade montage (20-35s)
+  else {
+    s4.phase = '4c';
+    hideScroll();
+
+    // Spawn remaining specialists
+    if (s4.montageStep === 0 && st >= 21) {
+      s4.montageStep = 1;
+      for (let i = 1; i < SPECIALIST_DEFS.length; i++) {
+        const def = SPECIALIST_DEFS[i];
+        const sp = createCharacter({
+          gx: -1, gy: 10, color: def.color, colorDk: def.colorDk,
+          backpackSize: 0.2, badge: def.color, scaleF: 0.9,
+        });
+        s4.specialists.push(sp);
+        // Stagger entry
+        setTimeout(() => {
+          moveCharTo(sp, 1, 9, () => {
+            moveCharTo(sp, def.station.gx, def.station.gy);
+          });
+        }, i * 400);
+      }
+      setNarration('Multiple Claudes enter — Modeler, Builder, Cartographer. Each picks up their scroll.');
+    }
+
+    // Speech bubbles for coordination
+    if (s4.montageStep === 1 && st >= 27 && s4.montageStep < 2) {
+      s4.montageStep = 2;
+      addSpeechBubble(10, 2, '📊 Data ready!', 3);
+      setTimeout(() => addSpeechBubble(3, 3, '🏗️ Model firing!', 3), 800);
+      setTimeout(() => addSpeechBubble(3, 7, '📦 Building...', 3), 1600);
+      setTimeout(() => addSpeechBubble(8, 3, '🗺️ Map updated!', 3), 2400);
+    }
+
+    // Spawn commis (small sub-agents) at st~29
+    if (s4.montageStep === 2 && st >= 29 && s4.montageStep < 3) {
+      s4.montageStep = 3;
+      // Each specialist calls a commis (75% of specialist size, same color)
+      const commisDefs = [
+        { parent: 0, gx: 9, gy: 3 },  // Analyst's commis
+        { parent: 1, gx: 4, gy: 2 },  // Modeler's commis
+        { parent: 2, gx: 2, gy: 8 },  // Builder's commis
+      ];
+      for (const cd of commisDefs) {
+        const parentDef = SPECIALIST_DEFS[cd.parent];
+        const commis = createCharacter({
+          gx: parentDef.station.gx, gy: parentDef.station.gy,
+          color: parentDef.color, colorDk: parentDef.colorDk,
+          backpackSize: 0, badge: null, scaleF: 0.65,
+        });
+        s4.specialists.push(commis);
+        moveCharTo(commis, cd.gx, cd.gy);
+      }
+      setNarration('Commis appear — junior agents. Quick tasks, focused, disposable.');
+      addSpeechBubble(9, 3, '🔪 On it!', 2.5);
+      setTimeout(() => addSpeechBubble(4, 2, '📐 Measuring...', 2.5), 600);
+      setTimeout(() => addSpeechBubble(2, 8, '📋 Checking...', 2.5), 1200);
+    }
+
+    if (st < 25) setNarration('The kitchen fills with specialists. Each at their station.');
+    else if (st < 30) setNarration('The full Michelin brigade. Chef de cuisine at the pass, sous chef orchestrating.');
+    else setNarration('Communication: stations respond, dishes converge at the pass.');
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// SECTION 16d: SCENE 5 — Four Pillars
+// ═══════════════════════════════════════════════════════════════
+
+let s5 = { initialized: false, pillar: 0, pantryOpen: 0, specialists: [] };
+
+function initScene5() {
+  s5 = { initialized: true, pillar: 0, pantryOpen: 0, specialists: [] };
+  claude = createCharacter({ gx: 7, gy: 5, color: OC.claudeGold, colorDk: OC.claudeGoldDk, backpackSize: 0.8 });
+  userChar = { gx: 12, gy: 5, opacity: 1 };
+
+  // Re-create specialists at their stations
+  s5.specialists = SPECIALIST_DEFS.map(def => createCharacter({
+    gx: def.station.gx, gy: def.station.gy, color: def.color, colorDk: def.colorDk,
+    backpackSize: 0.2, badge: def.color, scaleF: 0.9,
+  }));
+
+  targetCam.x = -(COLS * PX) / 2;
+  targetCam.y = -(ROWS * PX * TILT) / 2 + PX * 2;
+}
+
+function updateScene5(dt) {
+  const st = sceneTime;
+
+  // Determine current pillar
+  if (st < 7) s5.pillar = 1;
+  else if (st < 14) s5.pillar = 2;
+  else if (st < 22) s5.pillar = 3;
+  else s5.pillar = 4;
+
+  // All drawing moved to drawSceneOverlays() — just set state + narration here
+  switch (s5.pillar) {
+    case 1:
+      setNarration('Pillar 1: Organisation. The ticket rail, closing procedures, labeling system.');
+      break;
+    case 2:
+      setNarration('Pillar 2: Knowledge. Techniques, materials, norms — the archibase.');
+      break;
+    case 3:
+      setNarration('Pillar 3: Tools. The right equipment — MCP connecting kitchen to external tools.');
+      break;
+    case 4:
+      s5.pantryOpen = clamp((st - 22) / 2, 0, 1);
+      if (st < 25) setNarration('Pillar 4: Ingredients. The pantry door opens...');
+      else setNarration('SQLite jars, technique guides, tested recipes, full reference library.');
+      break;
+  }
+}
+
+function drawDimOverlay() {
+  X.fillStyle = 'rgba(0,0,0,0.55)';
+  X.fillRect(0, 0, W, H);
+}
+
+function drawPillarHighlight(col, row, w, h) {
+  // Draw a brighter rectangle over the highlighted area
+  const tl = sc(col, row, 0);
+  const br = sc(col + w, row + h, 0);
+  X.clearRect(tl.x - 5, tl.y - PX * 2, br.x - tl.x + 10, br.y - tl.y + PX * 3);
+
+  // Redraw floor in this area
+  for (let c = col; c < col + w && c < COLS; c++) {
+    for (let r = row; r < row + h && r < ROWS; r++) {
+      const ftl = sc(c, r, 0);
+      const ftr = sc(c + 1, r, 0);
+      const fbr = sc(c + 1, r + 1, 0);
+      const fbl = sc(c, r + 1, 0);
+      X.fillStyle = (c + r) % 2 === 0 ? OC.floorA : OC.floorB;
+      X.beginPath();
+      X.moveTo(ftl.x, ftl.y); X.lineTo(ftr.x, ftr.y);
+      X.lineTo(fbr.x, fbr.y); X.lineTo(fbl.x, fbl.y);
+      X.closePath(); X.fill();
+    }
+  }
+
+  // Redraw furniture in this area
+  for (const f of FURN_MAIN) {
+    if (f.col >= col && f.col < col + w && f.row >= row && f.row < row + h) {
+      drawSingleFurniture(f);
+    }
+  }
+
+  // Glow border
+  X.strokeStyle = 'rgba(201,168,76,0.6)';
+  X.lineWidth = 3;
+  X.setLineDash([8, 4]);
+  const gtl = sc(col, row, 0);
+  const gbr = sc(col + w, row + h, 0);
+  X.strokeRect(gtl.x, gtl.y, gbr.x - gtl.x, gbr.y - gtl.y);
+  X.setLineDash([]);
+}
+
+function drawPillarLabel(gx, gy, text, color) {
+  const p = sc(gx, gy, 1.8);
+  X.fillStyle = color;
+  X.font = `bold ${Math.round(PX * 0.16)}px 'Segoe UI', system-ui`;
+  X.textAlign = 'center';
+  X.fillText(text, p.x, p.y);
+  X.textAlign = 'left';
+}
+
+function drawTicketRail() {
+  // Horizontal rail above back wall
+  const y = sc(1, 0, 2.4);
+  const y2 = sc(12, 0, 2.4);
+  X.strokeStyle = '#AAA';
+  X.lineWidth = 2;
+  X.beginPath(); X.moveTo(y.x, y.y); X.lineTo(y2.x, y2.y); X.stroke();
+
+  // Hanging tickets
+  const ticketTexts = ['🔒 Lock 03', '📊 Data PR', '🏗️ Model v2', '🗺️ Map export'];
+  for (let i = 0; i < ticketTexts.length; i++) {
+    const tp = sc(2.5 + i * 2.5, 0, 2.2);
+    // Ticket card
+    X.fillStyle = '#FFF';
+    roundRect(X, tp.x - 28, tp.y, 56, 28, 4);
+    X.fill();
+    X.strokeStyle = '#DDD';
+    X.lineWidth = 1;
+    roundRect(X, tp.x - 28, tp.y, 56, 28, 4);
+    X.stroke();
+    // Clip line
+    X.strokeStyle = '#AAA';
+    X.beginPath(); X.moveTo(tp.x, tp.y - 8); X.lineTo(tp.x, tp.y); X.stroke();
+    // Text
+    X.fillStyle = '#333';
+    X.font = `${Math.round(PX * 0.09)}px 'Segoe UI'`;
+    X.textAlign = 'center';
+    X.fillText(ticketTexts[i], tp.x, tp.y + 18);
+  }
+  X.textAlign = 'left';
+}
+
+function drawMCPCables(st) {
+  // Cable from right wall to external tools
+  const wallP = sc(12, 4, 1);
+  const rhinoP = { x: wallP.x + PX * 1.5, y: wallP.y - PX * 0.8 };
+  const blenderP = { x: wallP.x + PX * 1.5, y: wallP.y + PX * 0.8 };
+  const multiprise = { x: wallP.x + PX * 0.5, y: wallP.y };
+
+  // Multiprise (power strip)
+  X.fillStyle = '#555';
+  roundRect(X, multiprise.x - 15, multiprise.y - 25, 30, 50, 6);
+  X.fill();
+  X.fillStyle = '#FFF';
+  X.font = `bold ${Math.round(PX * 0.09)}px 'Segoe UI'`;
+  X.textAlign = 'center';
+  X.fillText('MCP', multiprise.x, multiprise.y + 4);
+
+  // Cables
+  const pulse = (Math.sin(st * 3) + 1) / 2;
+  X.strokeStyle = `rgba(74,158,158,${0.5 + pulse * 0.5})`;
+  X.lineWidth = 3;
+  X.setLineDash([6, 3]);
+
+  // Wall to multiprise
+  X.beginPath(); X.moveTo(wallP.x, wallP.y); X.lineTo(multiprise.x, multiprise.y); X.stroke();
+  // Multiprise to Rhino
+  X.beginPath(); X.moveTo(multiprise.x, multiprise.y - 10); X.lineTo(rhinoP.x, rhinoP.y); X.stroke();
+  // Multiprise to Blender
+  X.beginPath(); X.moveTo(multiprise.x, multiprise.y + 10); X.lineTo(blenderP.x, blenderP.y); X.stroke();
+  X.setLineDash([]);
+
+  // Rhino icon (cube)
+  X.fillStyle = '#4A9E9E';
+  X.fillRect(rhinoP.x - 14, rhinoP.y - 14, 28, 28);
+  X.fillStyle = '#FFF';
+  X.font = `bold ${Math.round(PX * 0.1)}px 'Segoe UI'`;
+  X.fillText('Rhino', rhinoP.x, rhinoP.y + 30);
+
+  // Blender icon (circle)
+  X.fillStyle = '#E87D0D';
+  X.beginPath(); X.arc(blenderP.x, blenderP.y, 14, 0, Math.PI * 2); X.fill();
+  X.fillStyle = '#FFF';
+  X.fillText('Blender', blenderP.x, blenderP.y + 30);
+
+  X.textAlign = 'left';
+}
+
+function drawPantry(openAmount) {
+  if (openAmount <= 0) return;
+
+  // Pantry opening in back-left wall
+  const doorX = sc(0.5, 0.5, 0);
+  const doorW = PX * 2 * openAmount;
+  const doorH = PX * 2;
+
+  // Dark interior
+  X.fillStyle = '#1A1510';
+  X.fillRect(doorX.x, doorX.y - doorH, doorW, doorH);
+
+  // Four shelves
+  const shelfDefs = [
+    { label: 'SQLite', color: OC.analystBlue, icon: '🫙' },
+    { label: 'Guides', color: OC.scrollGold, icon: '📖' },
+    { label: 'Scripts', color: OC.modelerGreen, icon: '📝' },
+    { label: 'RAG', color: OC.cartoCopper, icon: '📚' },
+  ];
+
+  const shelfH = doorH / 4.5;
+  for (let i = 0; i < shelfDefs.length && openAmount > 0.3; i++) {
+    const sy = doorX.y - doorH + 10 + i * (shelfH + 4);
+    const alpha = clamp((openAmount - 0.3) / 0.5, 0, 1);
+    X.globalAlpha = alpha;
+
+    // Shelf bar
+    X.fillStyle = '#6B5335';
+    X.fillRect(doorX.x + 4, sy + shelfH - 3, doorW - 8, 3);
+
+    // Items on shelf
+    X.fillStyle = shelfDefs[i].color;
+    const itemW = (doorW - 16) / 3;
+    for (let j = 0; j < 3; j++) {
+      roundRect(X, doorX.x + 8 + j * (itemW + 2), sy, itemW - 2, shelfH - 6, 3);
+      X.fill();
+    }
+
+    // Label
+    X.fillStyle = '#FFF';
+    X.font = `bold ${Math.round(PX * 0.1)}px 'Segoe UI'`;
+    X.textAlign = 'left';
+    X.fillText(`${shelfDefs[i].icon} ${shelfDefs[i].label}`, doorX.x + doorW + 8, sy + shelfH / 2 + 4);
+  }
+  X.globalAlpha = 1;
+
+  // Door frame
+  X.strokeStyle = OC.wallBrown;
+  X.lineWidth = 3;
+  X.strokeRect(doorX.x, doorX.y - doorH, doorW, doorH);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// SECTION 16e: SCENE 6 — The Full Kitchen
+// ═══════════════════════════════════════════════════════════════
+
+let s6 = { initialized: false, fadeOut: 0, specialists: [] };
+
+function initScene6() {
+  s6 = { initialized: true, fadeOut: 0, specialists: [] };
+  claude = createCharacter({ gx: 7, gy: 5, color: OC.claudeGold, colorDk: OC.claudeGoldDk, backpackSize: 0.8 });
+  userChar = { gx: 12, gy: 5, opacity: 1 };
+
+  // All specialists at stations
+  s6.specialists = SPECIALIST_DEFS.map(def => createCharacter({
+    gx: def.station.gx, gy: def.station.gy, color: def.color, colorDk: def.colorDk,
+    backpackSize: 0.2, badge: def.color, scaleF: 0.9,
+  }));
+
+  targetCam.x = -(COLS * PX) / 2;
+  targetCam.y = -(ROWS * PX * TILT) / 2 + PX * 2;
+  targetCam.zoom = 1.0;
+}
+
+function updateScene6(dt) {
+  const st = sceneTime;
+
+  // Update specialist movement
+  for (const sp of s6.specialists) updateCharMovement(sp, dt);
+
+  // Phase 6a: Everything running (0-12s)
+  if (st < 12) {
+    // Slow zoom out
+    targetCam.zoom = lerp(1.0, 0.85, st / 12);
+
+    // Golden ambient glow pulse
+    const glowAlpha = 0.05 + Math.sin(st * 1.5) * 0.03;
+    X.fillStyle = `rgba(201,168,76,${glowAlpha})`;
+    X.fillRect(0, 0, W, H);
+
+    // Logbook glow
+    const lp = sc(8.5, 8.5, 0.75);
+    X.fillStyle = `rgba(201,168,76,${0.2 + Math.sin(st * 2) * 0.1})`;
+    X.beginPath(); X.arc(lp.x, lp.y, PX * 0.4, 0, Math.PI * 2); X.fill();
+
+    // Periodic speech bubbles
+    if (st >= 2 && Math.floor(st) % 3 === 0 && Math.floor(st * 10) % 30 === 0) {
+      const msgs = ['📊 Verified!', '🏗️ Building...', '🗺️ Mapped!', '📦 Deployed!'];
+      const idx = Math.floor(st / 3) % s6.specialists.length;
+      if (s6.specialists[idx]) {
+        addSpeechBubble(s6.specialists[idx].gx, s6.specialists[idx].gy, msgs[idx % msgs.length], 2.5);
+      }
+    }
+
+    // Flying plates periodically
+    if (Math.floor(st) % 4 === 2 && Math.floor(st * 10) % 40 === 0) {
+      addFlyingPlate(8, 5, 12, 5, 0.8);
+    }
+
+    if (st < 4) setNarration('The full kitchen running. Entryway, pass, brigade, pantry, logbook — the system alive.');
+    else if (st < 8) setNarration('Characters moving, plating, communicating.');
+    else setNarration('Not just a project — a documented process.');
+  }
+
+  // Phase 6b: Fade out (12-18s) — drawn in drawSceneOverlays()
+  else {
+    s6.fadeOut = clamp((st - 12) / 4, 0, 1);
+    setNarration('Not just architecture — the story of how the architecture was made.');
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// SECTION 16f: SCROLL — Branch diagram + Specialist
+// ═══════════════════════════════════════════════════════════════
+
+// Add 'branch' and 'specialist' scroll types to showScroll
+const _origShowScroll = showScroll;
+showScroll = function(type) {
+  if (type === 'branch') {
+    scrollContent.className = 'logbook';
+    scrollContent.innerHTML = `
+      <h2 style="color:${OC.scrollGold};margin-bottom:16px">🌿 Git Branches</h2>
+      <div style="position:relative;height:220px;margin:20px 0">
+        <canvas id="branch-canvas" width="600" height="200" style="width:100%;height:200px;border-radius:8px;background:rgba(0,0,0,0.3)"></canvas>
+      </div>
+      <p>Every branch = a design alternative. Every merge = a decision. Every dead end = documented.</p>
+    `;
+    scrollOverlay.classList.add('show');
+    // Draw branches on the sub-canvas
+    setTimeout(() => drawGitBranchDiagram(), 50);
+  } else if (type === 'specialist') {
+    scrollContent.className = 'blueprint';
+    scrollContent.innerHTML = `
+      <h2 style="color:${OC.analystBlue};margin-bottom:16px">🔍 Analyst Scroll — Focused Knowledge</h2>
+      <p>Not the full map of the kitchen. A <strong>zoomed view</strong> of one domain.</p>
+      <div style="margin:16px 0;padding:16px;background:rgba(74,122,181,0.15);border:2px solid ${OC.analystBlue};border-radius:12px">
+        <h3 style="color:${OC.analystBlue};margin-bottom:8px">📂 The Fridge — datasets/</h3>
+        <ul style="line-height:2;padding-left:20px;font-size:14px">
+          <li><code>corridor_analysis/</code> — WCI, break points, journeys</li>
+          <li><code>transit/</code> — SBB ridership, frequency, shared mobility</li>
+          <li><code>ev_charging/</code> — DIEMO enriched, reviews, national stats</li>
+          <li><code>remote_work/</code> — places, hours, WiFi, cell towers</li>
+          <li><code>healthcare/</code> — hospital corridor research</li>
+        </ul>
+        <p style="margin-top:8px;color:${OC.analystBlue};font-style:italic">Quality gates: row counts, coordinate ranges, source attribution, no nulls.</p>
+      </div>
+      <p style="margin-top:12px">The other agents didn't need this detail — but the Analyst does.</p>
+    `;
+    scrollOverlay.classList.add('show');
+  } else {
+    _origShowScroll(type);
+  }
+};
+
+function drawGitBranchDiagram() {
+  const bc = document.getElementById('branch-canvas');
+  if (!bc) return;
+  const bx = bc.getContext('2d');
+  const w = 600, h = 200;
+
+  bx.clearRect(0, 0, w, h);
+
+  // Main branch (gold line)
+  const mainY = 80;
+  bx.strokeStyle = OC.branchMain;
+  bx.lineWidth = 4;
+  bx.beginPath(); bx.moveTo(30, mainY); bx.lineTo(570, mainY); bx.stroke();
+
+  // Commits on main
+  const commits = [60, 140, 220, 340, 420, 500];
+  for (const cx of commits) {
+    bx.fillStyle = OC.branchMain;
+    bx.beginPath(); bx.arc(cx, mainY, 7, 0, Math.PI * 2); bx.fill();
+    bx.fillStyle = '#FFF';
+    bx.beginPath(); bx.arc(cx, mainY, 3, 0, Math.PI * 2); bx.fill();
+  }
+
+  // Feature branch (teal, splits at 140, merges at 340)
+  const featY = 40;
+  bx.strokeStyle = OC.branchFeature;
+  bx.lineWidth = 3;
+  bx.beginPath();
+  bx.moveTo(140, mainY); bx.lineTo(160, featY); bx.lineTo(320, featY); bx.lineTo(340, mainY);
+  bx.stroke();
+  // Feature commits
+  for (const cx of [200, 260]) {
+    bx.fillStyle = OC.branchFeature;
+    bx.beginPath(); bx.arc(cx, featY, 5, 0, Math.PI * 2); bx.fill();
+  }
+  // Merge dot (green)
+  bx.fillStyle = OC.branchMerge;
+  bx.beginPath(); bx.arc(340, mainY, 9, 0, Math.PI * 2); bx.fill();
+  bx.fillStyle = '#FFF';
+  bx.beginPath(); bx.arc(340, mainY, 4, 0, Math.PI * 2); bx.fill();
+
+  // Dead end branch (red, splits at 420, stops)
+  const deadY = 140;
+  bx.strokeStyle = OC.branchDead;
+  bx.lineWidth = 3;
+  bx.beginPath();
+  bx.moveTo(420, mainY); bx.lineTo(440, deadY); bx.lineTo(510, deadY);
+  bx.stroke();
+  // Dead end dot
+  bx.fillStyle = OC.branchDead;
+  bx.beginPath(); bx.arc(510, deadY, 6, 0, Math.PI * 2); bx.fill();
+  // X mark
+  bx.strokeStyle = '#FFF';
+  bx.lineWidth = 2;
+  bx.beginPath(); bx.moveTo(506, deadY - 4); bx.lineTo(514, deadY + 4); bx.stroke();
+  bx.beginPath(); bx.moveTo(514, deadY - 4); bx.lineTo(506, deadY + 4); bx.stroke();
+
+  // Labels
+  bx.fillStyle = OC.branchMain;
+  bx.font = 'bold 12px "Segoe UI"';
+  bx.textAlign = 'left';
+  bx.fillText('main', 30, mainY + 25);
+  bx.fillStyle = OC.branchFeature;
+  bx.fillText('feature/henna-visuals', 160, featY - 10);
+  bx.fillStyle = OC.branchDead;
+  bx.fillText('[DEAD]', 520, deadY + 4);
+  bx.fillStyle = OC.branchMerge;
+  bx.fillText('merge ✓', 350, mainY + 25);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// SECTION 17: TIMELINE UI
+// ═══════════════════════════════════════════════════════════════
+
+const timelineTrack = document.getElementById('timeline-track');
+const timelineThumb = document.getElementById('timeline-thumb');
+const timelineSegments = document.getElementById('timeline-segments');
+const timelineTimeEl = document.getElementById('timeline-time');
+
+const sceneColors = ['#4A9E9E', '#C9A84C', '#5B8FA8', '#D97A4A', '#5A9E4A', '#B87A56'];
+
+function buildTimeline() {
+  const total = getTotalDuration();
+  timelineSegments.innerHTML = '';
+
+  SCENES.forEach((scene, i) => {
+    const pct = (scene.duration / total * 100).toFixed(2);
+    const seg = document.createElement('div');
+    seg.className = 'tl-seg';
+    seg.style.width = pct + '%';
+    seg.style.background = sceneColors[i] || '#666';
+
+    // Scene label
+    const label = document.createElement('span');
+    label.className = 'tl-seg-label';
+    label.textContent = `S${i + 1}`;
+    seg.appendChild(label);
+
+    // Phase ticks
+    scene.phases.forEach(p => {
+      if (p.t === 0) return;
+      const tickPct = (p.t / scene.duration * 100).toFixed(1);
+      const tick = document.createElement('div');
+      tick.className = 'tl-phase-tick';
+      tick.style.left = tickPct + '%';
+      seg.appendChild(tick);
+    });
+
+    timelineSegments.appendChild(seg);
+  });
+}
+
+function updateTimeline() {
+  const total = getTotalDuration();
+  const gt = getGlobalTime();
+  const pct = clamp(gt / total, 0, 1);
+  timelineThumb.style.left = `calc(${pct * 100}% - 2px)`;
+  timelineTimeEl.textContent = `${formatTime(gt)} / ${formatTime(total)}`;
+
+  // Timestamp display
+  const phase = getPhaseLabel();
+  timestampEl.textContent = `Scene ${currentScene + 1} — ${phase} | st=${sceneTime.toFixed(1)} | ${formatTime(gt)}/${formatTime(total)}`;
+}
+
+// Timeline click to seek
+timelineTrack.addEventListener('click', (e) => {
+  const rect = timelineTrack.getBoundingClientRect();
+  const pct = clamp((e.clientX - rect.left) / rect.width, 0, 1);
+  const total = getTotalDuration();
+  const targetGlobal = pct * total;
+
+  // Find which scene
+  let acc = 0;
+  for (let i = 0; i < SCENES.length; i++) {
+    if (acc + SCENES[i].duration > targetGlobal) {
+      jumpToScene(i, targetGlobal - acc);
+      return;
+    }
+    acc += SCENES[i].duration;
+  }
+});
+
+function jumpToScene(idx, st2 = 0) {
+  if (idx < 0 || idx >= SCENES.length) return;
+  currentScene = idx;
+  sceneTime = st2;
+  initCurrentScene();
+}
+
+function initCurrentScene() {
+  buildCellMap(FURN_MAIN);
+  particles = [];
+  speechBubbles = [];
+  flyingPlates = [];
+  hideScroll();
+
+  switch (currentScene) {
+    case 0: initScene1(); break;
+    case 1: initScene2(); break;
+    case 2: initScene3(); break;
+    case 3: initScene4(); break;
+    case 4: initScene5(); break;
+    case 5: initScene6(); break;
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// SECTION 18: CONTROLS
+// ═══════════════════════════════════════════════════════════════
+
+const btnPlay = document.getElementById('btn-play');
+const btnPrev = document.getElementById('btn-prev');
+const btnNext = document.getElementById('btn-next');
+const btnSpeed = document.getElementById('btn-speed');
+const btnGrid = document.getElementById('btn-grid');
+
+btnPlay.addEventListener('click', () => {
+  playing = !playing;
+  btnPlay.textContent = playing ? '⏸ Pause' : '▶ Play';
+});
+
+btnPrev.addEventListener('click', () => {
+  if (currentScene > 0) jumpToScene(currentScene - 1);
+});
+
+btnNext.addEventListener('click', () => {
+  if (currentScene < SCENES.length - 1) jumpToScene(currentScene + 1);
+});
+
+const speeds = [0.5, 1, 1.5, 2];
+let speedIdx = 1;
+btnSpeed.addEventListener('click', () => {
+  speedIdx = (speedIdx + 1) % speeds.length;
+  speed = speeds[speedIdx];
+  btnSpeed.textContent = speed + 'x';
+  btnSpeed.classList.toggle('active', speed !== 1);
+});
+
+btnGrid.addEventListener('click', () => {
+  showGrid = !showGrid;
+  btnGrid.classList.toggle('active', showGrid);
+  if (!showGrid) gridInfoEl.style.display = 'none';
+});
+
+// Keyboard
+document.addEventListener('keydown', (e) => {
+  switch (e.code) {
+    case 'Space':
+      e.preventDefault();
+      playing = !playing;
+      btnPlay.textContent = playing ? '⏸ Pause' : '▶ Play';
+      break;
+    case 'ArrowLeft':
+      sceneTime = Math.max(0, sceneTime - 3);
+      break;
+    case 'ArrowRight':
+      sceneTime = Math.min(SCENES[currentScene]?.duration || 0, sceneTime + 3);
+      break;
+    case 'ArrowUp':
+      e.preventDefault();
+      if (currentScene > 0) jumpToScene(currentScene - 1);
+      break;
+    case 'ArrowDown':
+      e.preventDefault();
+      if (currentScene < SCENES.length - 1) jumpToScene(currentScene + 1);
+      break;
+    case 'KeyG':
+      showGrid = !showGrid;
+      btnGrid.classList.toggle('active', showGrid);
+      if (!showGrid) gridInfoEl.style.display = 'none';
+      break;
+  }
+});
+
+// Close scroll overlay on click
+scrollOverlay.addEventListener('click', () => hideScroll());
+
+// ═══════════════════════════════════════════════════════════════
+// SECTION 18b: POST-RENDER SCENE OVERLAYS
+// ═══════════════════════════════════════════════════════════════
+
+function drawSceneOverlays() {
+  // Scene 2: flying book (2c)
+  if (currentScene === 1 && s2.bookFlyT >= 0 && s2.bookFlyT < 1) {
+    const bt2 = s2.bookFlyT;
+    const bx = lerp(12, claude.gx + 0.5, easeOut(bt2));
+    const by = lerp(5, claude.gy + 0.2, easeOut(bt2));
+    const bz = Math.sin(bt2 * Math.PI) * 1.5;
+    const bp = sc(bx, by, bz + 0.65);
+    X.fillStyle = OC.bookRed;
+    const bsz = PX * 0.2;
+    X.fillRect(bp.x - bsz, bp.y - bsz * 1.3, bsz * 2, bsz * 2.5);
+    X.fillStyle = '#F5F0E0';
+    X.fillRect(bp.x - bsz + 3, bp.y - bsz * 1.1, bsz * 1.7, bsz * 2.1);
+  }
+
+  // Scene 3 overlays
+  if (currentScene === 2) {
+    const st = sceneTime;
+    if (st >= 10 && st < 20) drawSplitKitchens(s3.splitPhase, st);
+    if (s3.branchOverlay) drawBranchDiagramOnCanvas();
+  }
+
+  // Scene 5 overlays (all pillar rendering)
+  if (currentScene === 4) {
+    const st = sceneTime;
+
+    // Dim overlay
+    X.fillStyle = 'rgba(0,0,0,0.6)';
+    X.fillRect(0, 0, W, H);
+
+    switch (s5.pillar) {
+      case 1: // Infrastructure — ticket rail only, no text labels
+        drawPillarHighlight(1, 0, 12, 2);
+        drawTicketRail();
+        break;
+
+      case 2: // Knowledge
+        drawPillarHighlight(2, 3, 6, 4);
+        const bookGlow = 0.5 + Math.sin(st * 3) * 0.3;
+        const bp = sc(4.5, 4.5, 0.85);
+        X.fillStyle = `rgba(192,57,43,${bookGlow * 0.4})`;
+        X.beginPath(); X.arc(bp.x, bp.y, PX * 0.6, 0, Math.PI * 2); X.fill();
+        drawBox(4.15, 4.15, 0.7, 0.5, 0.12, OC.bookRed, OC.bookRed, '#8A2A1A', 0.75);
+        addSpeechBubbleStatic(4.5, 3.5, 'Materials · Construction · SIA norms', OC.bookRed);
+        break;
+
+      case 3: // Tools
+        drawPillarHighlight(9, 1, 4, 8);
+        drawMCPCables(st);
+        break;
+
+      case 4: // Pantry
+        drawPillarHighlight(0, 0, 3, 3);
+        drawPantry(s5.pantryOpen);
+        break;
+    }
+  }
+
+  // Scene 6: fade + title (6b)
+  if (currentScene === 5 && s6.fadeOut > 0) {
+    X.fillStyle = `rgba(26,26,46,${s6.fadeOut})`;
+    X.fillRect(0, 0, W, H);
+
+    if (s6.fadeOut > 0.3) {
+      const textAlpha = clamp((s6.fadeOut - 0.3) / 0.4, 0, 1);
+      X.globalAlpha = textAlpha;
+      X.fillStyle = OC.scrollGold;
+      X.font = `bold ${Math.round(PX * 0.4)}px Georgia, serif`;
+      X.textAlign = 'center';
+      X.fillText('Still on the Line', W / 2, H / 2 - PX * 0.3);
+      X.fillStyle = '#AAA';
+      X.font = `${Math.round(PX * 0.18)}px 'Segoe UI', system-ui`;
+      X.fillText('The Kitchen', W / 2, H / 2 + PX * 0.2);
+      X.globalAlpha = 1;
+      X.textAlign = 'left';
+    }
+  }
+}
+
+// Static speech bubble (not time-based, drawn every frame)
+function addSpeechBubbleStatic(gx, gy, text, borderColor) {
+  const p = sc(gx + 0.5, gy - 0.5, 1.8);
+  const fontSize = Math.max(11, Math.round(PX * 0.14));
+  X.font = `bold ${fontSize}px 'Segoe UI', system-ui`;
+  const metrics = X.measureText(text);
+  const tw = metrics.width + 24;
+  const th = fontSize + 16;
+  const bx = p.x - tw / 2;
+  const by = p.y - th;
+
+  X.fillStyle = 'rgba(255,255,255,0.95)';
+  roundRect(X, bx, by, tw, th, 10); X.fill();
+  X.strokeStyle = borderColor || '#DDD';
+  X.lineWidth = 2;
+  roundRect(X, bx, by, tw, th, 10); X.stroke();
+  // Tail
+  X.fillStyle = 'rgba(255,255,255,0.95)';
+  X.beginPath();
+  X.moveTo(p.x - 6, by + th); X.lineTo(p.x + 6, by + th); X.lineTo(p.x, by + th + 8);
+  X.closePath(); X.fill();
+  // Text
+  X.fillStyle = '#333';
+  X.textAlign = 'center';
+  X.fillText(text, p.x, by + th - 7);
+  X.textAlign = 'left';
+}
+
+// Draw branch diagram directly on main canvas (replaces HTML scroll overlay)
+function drawBranchDiagramOnCanvas() {
+  // Dark background overlay
+  X.fillStyle = 'rgba(0,0,0,0.85)';
+  X.fillRect(0, 0, W, H);
+
+  const cx = W / 2, cy = H / 2;
+  const dw = Math.min(W * 0.7, 700);
+  const dh = 280;
+  const dx = cx - dw / 2;
+  const dy = cy - dh / 2;
+
+  // Panel background
+  X.fillStyle = 'rgba(42,31,15,0.95)';
+  roundRect(X, dx - 20, dy - 60, dw + 40, dh + 100, 16);
+  X.fill();
+  X.strokeStyle = OC.scrollGold;
+  X.lineWidth = 3;
+  roundRect(X, dx - 20, dy - 60, dw + 40, dh + 100, 16);
+  X.stroke();
+
+  // Title
+  X.fillStyle = OC.scrollGold;
+  X.font = `bold ${Math.round(PX * 0.25)}px Georgia, serif`;
+  X.textAlign = 'center';
+  X.fillText('🌿 Git Branches', cx, dy - 20);
+
+  // Main branch (gold line)
+  const mainY = dy + 100;
+  X.strokeStyle = OC.branchMain;
+  X.lineWidth = 4;
+  X.beginPath(); X.moveTo(dx + 30, mainY); X.lineTo(dx + dw - 30, mainY); X.stroke();
+
+  // Commits on main
+  const commits = [0.1, 0.25, 0.4, 0.6, 0.75, 0.9].map(p => dx + dw * p);
+  for (const cx2 of commits) {
+    X.fillStyle = OC.branchMain;
+    X.beginPath(); X.arc(cx2, mainY, 8, 0, Math.PI * 2); X.fill();
+    X.fillStyle = '#FFF';
+    X.beginPath(); X.arc(cx2, mainY, 3, 0, Math.PI * 2); X.fill();
+  }
+
+  // Feature branch (teal — splits at commit 2, merges at commit 4)
+  const featY = mainY - 50;
+  X.strokeStyle = OC.branchFeature;
+  X.lineWidth = 3;
+  X.beginPath();
+  X.moveTo(commits[1], mainY);
+  X.lineTo(commits[1] + 20, featY);
+  X.lineTo(commits[3] - 20, featY);
+  X.lineTo(commits[3], mainY);
+  X.stroke();
+  // Feature commits
+  const fCommits = [commits[1] + (commits[3] - commits[1]) * 0.33, commits[1] + (commits[3] - commits[1]) * 0.66];
+  for (const fc of fCommits) {
+    X.fillStyle = OC.branchFeature;
+    X.beginPath(); X.arc(fc, featY, 6, 0, Math.PI * 2); X.fill();
+  }
+  // Merge dot (green)
+  X.fillStyle = OC.branchMerge;
+  X.beginPath(); X.arc(commits[3], mainY, 10, 0, Math.PI * 2); X.fill();
+  X.fillStyle = '#FFF';
+  X.beginPath(); X.arc(commits[3], mainY, 4, 0, Math.PI * 2); X.fill();
+
+  // Dead end (red — splits at commit 5, stops)
+  const deadY = mainY + 50;
+  X.strokeStyle = OC.branchDead;
+  X.lineWidth = 3;
+  X.beginPath();
+  X.moveTo(commits[4], mainY);
+  X.lineTo(commits[4] + 15, deadY);
+  X.lineTo(commits[4] + 80, deadY);
+  X.stroke();
+  // Dead X
+  X.fillStyle = OC.branchDead;
+  const deadX = commits[4] + 80;
+  X.beginPath(); X.arc(deadX, deadY, 7, 0, Math.PI * 2); X.fill();
+  X.strokeStyle = '#FFF'; X.lineWidth = 2;
+  X.beginPath(); X.moveTo(deadX - 4, deadY - 4); X.lineTo(deadX + 4, deadY + 4); X.stroke();
+  X.beginPath(); X.moveTo(deadX + 4, deadY - 4); X.lineTo(deadX - 4, deadY + 4); X.stroke();
+
+  // Labels
+  X.font = `bold ${Math.round(PX * 0.14)}px 'Segoe UI'`;
+  X.fillStyle = OC.branchMain;
+  X.textAlign = 'left';
+  X.fillText('main', dx + 30, mainY + 28);
+  X.fillStyle = OC.branchFeature;
+  X.fillText('feature/henna-visuals', commits[1] + 25, featY - 12);
+  X.fillStyle = OC.branchDead;
+  X.fillText('[DEAD]', deadX + 15, deadY + 5);
+  X.fillStyle = OC.branchMerge;
+  X.fillText('merge ✓', commits[3] + 15, mainY + 28);
+
+  // Bottom text
+  X.fillStyle = '#AAA';
+  X.font = `${Math.round(PX * 0.13)}px Georgia, serif`;
+  X.textAlign = 'center';
+  X.fillText('Every branch = a design alternative. Every merge = a decision.', cx, dy + dh + 20);
+
+  X.textAlign = 'left';
+}
+
+// ═══════════════════════════════════════════════════════════════
+// SECTION 19: MAIN LOOP
+// ═══════════════════════════════════════════════════════════════
+
+let lastTime = 0;
+
+function frame(now) {
+  requestAnimationFrame(frame);
+
+  const dt = Math.min((now - lastTime) / 1000, 0.05);
+  lastTime = now;
+
+  // Update time
+  if (playing) {
+    sceneTime += dt * speed;
+
+    // Scene boundary
+    const maxT = SCENES[currentScene]?.duration || 999;
+    if (sceneTime >= maxT) {
+      if (currentScene < SCENES.length - 1) {
+        currentScene++;
+        sceneTime = 0;
+        initCurrentScene();
+      } else {
+        sceneTime = maxT;
+        playing = false;
+        btnPlay.textContent = '▶ Play';
+      }
+    }
+  }
+
+  // Smooth camera
+  cam.x = lerp(cam.x, targetCam.x, 0.05);
+  cam.y = lerp(cam.y, targetCam.y, 0.05);
+  cam.zoom = lerp(cam.zoom, targetCam.zoom, 0.05);
+
+  // Update character movement
+  if (claude) updateCharMovement(claude, dt);
+
+  // ── RENDER ──
+  X.clearRect(0, 0, W, H);
+
+  // Background + outside
+  drawOutside();
+
+  // Floor
+  drawFloor();
+
+  // Walls (back parts)
+  drawWalls();
+
+  // Plants
+  drawPlants();
+
+  // Scene-specific updates (run BEFORE drawing so alpha/state is set)
+  switch (currentScene) {
+    case 0: updateScene1(dt); break;
+    case 1: updateScene2(dt); break;
+    case 2: updateScene3(dt); break;
+    case 3: updateScene4(dt); break;
+    case 4: updateScene5(dt); break;
+    case 5: updateScene6(dt); break;
+  }
+
+  // ── DEPTH-SORTED RENDER: furniture + characters interleaved by row ──
+  const kitchenAlpha = currentScene === 0 ? s1.kitchenAlpha : 1;
+  if (kitchenAlpha < 1) X.globalAlpha = kitchenAlpha;
+
+  // Build render list: furniture + characters, sorted by row (back to front)
+  const renderItems = [];
+
+  // Add furniture
+  for (const f of FURN_MAIN) {
+    renderItems.push({ type: 'furn', sortY: f.row + (f.d || 1), data: f });
+  }
+
+  // Add Claude
+  if (claude && (claude.opacity === undefined || claude.opacity > 0)) {
+    renderItems.push({ type: 'claude', sortY: claude.gy + 0.8, data: claude });
+  }
+
+  // Add user character
+  if (userChar.opacity > 0) {
+    renderItems.push({ type: 'user', sortY: userChar.gy + 0.8, data: userChar });
+  }
+
+  // Add specialist characters (Scenes 4-6)
+  const activeSpecs = currentScene === 3 ? s4.specialists : currentScene === 4 ? s5.specialists : currentScene === 5 ? s6.specialists : [];
+  for (const sp of activeSpecs) {
+    if (sp.opacity === undefined || sp.opacity > 0) {
+      renderItems.push({ type: 'claude', sortY: sp.gy + 0.8, data: sp });
+    }
+  }
+
+  // Sort back-to-front
+  renderItems.sort((a, b) => a.sortY - b.sortY);
+
+  // Draw in order
+  for (const item of renderItems) {
+    if (item.type === 'furn') {
+      if (kitchenAlpha < 1) X.globalAlpha = kitchenAlpha;
+      drawSingleFurniture(item.data);
+      X.globalAlpha = 1;
+    } else if (item.type === 'claude') {
+      X.globalAlpha = 1;
+      drawCharacter(item.data);
+    } else if (item.type === 'user') {
+      X.globalAlpha = 1;
+      drawUser(item.data.gx, item.data.gy, item.data.opacity);
+    }
+  }
+  X.globalAlpha = 1;
+
+  // Particles
+  updateAndDrawParticles(dt);
+
+  // Flying plates (above everything)
+  updateAndDrawFlyingPlates(dt);
+
+  // Speech bubbles (on top of characters)
+  updateAndDrawSpeechBubbles(dt);
+
+  // Post-render scene overlays (drawn ON TOP of kitchen + characters)
+  drawSceneOverlays();
+
+  // Debug grid overlay (on top of everything)
+  drawDebugGrid();
+
+  // Scene label
+  setSceneLabel(`Scene ${currentScene + 1}: ${SCENES[currentScene]?.name || ''}`);
+
+  // Timeline
+  updateTimeline();
+}
+
+// ── INIT ──
+buildTimeline();
+initCurrentScene();
+lastTime = performance.now();
+requestAnimationFrame(frame);
+
+</script>
+</body>
+</html>
