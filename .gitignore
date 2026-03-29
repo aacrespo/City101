@@ -71,3 +71,14 @@ CLAUDE DOWN SAVE/
 
 # Extracted geodata site files (re-extract per machine)
 geodata/sites/
+
+# Arc Lémanique model — large generated data (re-generate from scripts)
+output/arc_lemanique/*.bin
+output/arc_lemanique/*.obj
+output/arc_lemanique/buildings*.json
+output/arc_lemanique/terrain*.json
+output/arc_lemanique/infrastructure.json
+output/arc_lemanique/lake*.json
+
+# Extracted swissBUILDINGS3D (re-extract from zip)
+**/extracted_buildings/
