@@ -43,19 +43,34 @@
 | 26-03 | Cadence | Built full geodata pipeline: swisstopo extraction (terrain, LOD2 buildings, infrastructure from swissTLM3D), site-selector agent, Rhino MCP import. Fixed building triangles (TIN mesh export). Tested Morges + Vevey end-to-end. |
 | 27-03 | Nova | Comic book production: reviewed McNaught-style nurse temporal lock prompt (12 panels). Switched from Midjourney to Gemini — created v3 prompt file with natural language aspect ratios, no-bubble instructions, HOSPITAL sign fix. Designed dynamic asymmetric panel grid (inspired by reference comic) — compressed cold panels at top, expanding warm panels at bottom. InDesign A2 setup spec provided. |
 | 27-03 | Nova | Built interactive data sequence diagram for relay-lock pipeline. Landscape SVG: Architect → AI → Corridor/Healthcare datasets → Site Analysis → 5-criteria scoring → 8 decision questions → Lock types → Ranked propositions with sliders → 3 outputs (Rhino3D, Blender, Spec Sheet). Feedback loops for low scores and unclassified. PR #6 open (claude/thirsty-cray → henna/visuals). |
+| 29-03 | Nova | Built Overcooked-style kitchen animation (v3→v6). Scene 1: character enters kitchen, reads CLAUDE.md + .claude/ scrolls, turns gold, kitchen furnishes. Scene 2: pass counter, order/cook/plate loop with user character, archibase book, CAG vs RAG, logbook overlay. Grid-based tile-hop movement, A* pathfinding, top-down oblique projection. Created GRID_MAP.md coordinate reference. |
 
 ## Handoff
 
 **What was done**
-- Built interactive data sequence diagram (`output/data_sequence_diagram_v2.html`) showing the full relay-lock pipeline
-- Corrected the flow based on Henna's verbal walkthrough — Architect gives problem+region → AI → datasets → site analysis → scoring → decision tree → propositions → sliders → outputs
-- PR #6 open: `claude/thirsty-cray` → `henna/visuals`
+- Built Overcooked-style kitchen animation — `output/kitchen_animation/kitchen_animation_v6.html`
+- Scene 1 (entering kitchen, scrolls, color transition, furniture pop-in) + Scene 2 (pass, order loop, archibase book, CAG vs RAG, logbook)
+- Grid-based tile-hop movement system, A* pathfinding, top-down oblique projection
+- Created `output/kitchen_animation/GRID_MAP.md` — coordinate reference for precise edits
 
 **What's next**
-1. Merge PR #6 after review
-2. Minor fix: remove the circle behind the architect stick figure in v2
-3. Continue with presentation slides — this diagram is for Slide 4 (software architecture)
-4. Comic panels still pending (Gemini generation)
+1. **Remaining Scene 2 fixes** (from last feedback round):
+   - Scene 1 character still needs testing with grid-hop outside movement
+   - Books stacking visual needs pixel-art-style thick layers
+   - Scene 2 warm glow may need more intensity
+   - Claude position at (5,6) for logbook phase
+2. **Scene 3+ implementation** — storyboard has more scenes to build
+3. Polish: coherent cooking movement, logbook zoom-from-position animation
+
+**Watch out for**
+- The grid-hop system has a fallback for outside-the-grid movement (Scene 1 door entry) — if it breaks, characters won't move in Scene 1
+- `replace_all` edits can break Canvas `X.moveTo()` calls — always check for collateral
+- Book/index card positions reference grid (2,3) — if island layout changes, update these too
+
+**Files to look at**
+- `output/kitchen_animation/kitchen_animation_v6.html` — main animation
+- `output/kitchen_animation/GRID_MAP.md` — grid coordinate reference
+- `output/kitchen_animation/STORYBOARD.md` — full storyboard (Scenes 1-5)
 
 **Watch out for**
 - The v2 file lives in both the worktree and `output/` in main — after merge, the worktree copy is canonical
