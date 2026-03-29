@@ -67,7 +67,12 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
 .legend-title{font-family:var(--font-mono);font-size:9px;color:var(--text-muted);
   letter-spacing:1px;text-transform:uppercase;margin-bottom:6px}
 .legend-item{display:flex;align-items:center;gap:6px;margin-bottom:4px;
-  font-size:10px;color:var(--text);opacity:0.8}
+  font-size:10px;color:var(--text);opacity:0.8;cursor:pointer;transition:opacity 0.3s;
+  padding:2px 4px;border-radius:3px;border:1px solid transparent}
+.legend-item:hover{opacity:1}
+.legend-item.active{border-color:var(--gold);opacity:1}
+.legend-item.dimmed{opacity:0.25}
+.panel.active-solo{border-color:var(--gold)!important}
 .legend-icon{flex-shrink:0}
 
 /* SCRUBBER */
@@ -81,8 +86,8 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
   border-radius:2px;outline:none}
 #timeSlider::-webkit-slider-thumb{-webkit-appearance:none;width:10px;height:10px;
   border-radius:50%;background:var(--gold);cursor:pointer}
-#clock{font-family:var(--font-mono);font-size:16px;color:var(--gold);
-  min-width:42px;text-align:right}
+#clock{font-family:var(--font-mono);font-size:13px;color:var(--gold);
+  min-width:38px;text-align:right;white-space:nowrap;flex-shrink:0}
 .speed-btns{display:flex;gap:3px;margin-top:4px}
 .speed-btn{background:none;border:1px solid rgba(255,255,255,0.1);color:var(--text-muted);
   font-family:var(--font-mono);font-size:10px;padding:2px 6px;border-radius:3px;
@@ -196,10 +201,10 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
     </div>
     <div class="speed-btns">
       <button class="speed-btn" data-speed="0.5">0.5x</button>
-      <button class="speed-btn" data-speed="1">1x</button>
-      <button class="speed-btn active" data-speed="2">2x</button>
-      <button class="speed-btn" data-speed="4">4x</button>
-      <button class="speed-btn" data-speed="8">8x</button>
+      <button class="speed-btn active" data-speed="1">1x</button>
+      <button class="speed-btn" data-speed="2">2x</button>
+      <button class="speed-btn" data-speed="5">5x</button>
+      <button class="speed-btn" data-speed="10">10x</button>
     </div>
     <div class="vehicle-count" id="vehicleCount">0 active</div>
   </div>
@@ -572,11 +577,12 @@ window.addEventListener('resize', resizeCanvas);
 // ============================================================
 let simMinute = 720; // start at noon
 let playing = true;
-let speed = 2;
+let speed = 1;
 let lastFrame = 0;
-const SIM_MS_PER_MIN = 2000; // 2 seconds per simulated minute (was 16s — too slow)
-const trailMap = new Map();
-const TRAIL_LEN = 8;
+const SIM_MS_PER_MIN = 60; // 60ms per sim-minute at 1x → full 24h in ~86s
+const trailMap = new Map(); // vehicleId → [{x, y, min}]
+const TRAIL_MAX = 16;
+let activeMode = null; // null = show all, number = solo that mode
 
 // ============================================================
 // DRAWING FUNCTIONS
@@ -717,9 +723,16 @@ function spawnVehicles(minute) {
   else if (hr >= 10 && hr < 13) pharmaRate = 0.5;  // afternoon round
   else pharmaRate = 0.08;
   if (rng() < pharmaRate) {
-    // Night pharma: shorter local runs. Day: longer corridor runs.
     const dur = (hr >= 23 || hr < 5) ? 10 : 15;
-    spawn(2, galexis, hosps[Math.floor(rng()*hosps.length)], dur);
+    // Night pharma: only deliver to nearby hospitals (CHUV, EHC Morges, HRC — not full corridor to HUG)
+    let dest;
+    if (hr >= 23 || hr < 5) {
+      const nearbyIdx = [2, 3, 4]; // EHC, CHUV, HRC (near Ecublens)
+      dest = hosps[nearbyIdx[Math.floor(rng()*nearbyIdx.length)]];
+    } else {
+      dest = hosps[Math.floor(rng()*hosps.length)];
+    }
+    spawn(2, galexis, dest, dur);
   }
 
   // MODE 3: Food
@@ -738,12 +751,19 @@ function spawnVehicles(minute) {
     spawn(4, tir, hosps[Math.floor(rng()*hosps.length)], isDay ? 15 : 8);
   }
 
-  // MODE 5: Patient transfer — emergencies only at night
+  // MODE 5: Patient transfer — emergencies only at night, adjacent hospitals only
   const txRate = isDay ? 0.4 : (isDeadWindow ? 0.02 : 0.12);
   if (rng() < txRate) {
-    const src = hosps[Math.floor(rng()*hosps.length)];
+    const srcIdx = Math.floor(rng()*hosps.length);
+    const src = hosps[srcIdx];
     let dest;
-    do { dest = hosps[Math.floor(rng()*hosps.length)]; } while (dest.id === src.id && hosps.length > 1);
+    if (!isDay) {
+      // Night: only transfer to adjacent hospital
+      const adjIdx = srcIdx < hosps.length-1 ? srcIdx+1 : srcIdx-1;
+      dest = hosps[adjIdx];
+    } else {
+      do { dest = hosps[Math.floor(rng()*hosps.length)]; } while (dest.id === src.id && hosps.length > 1);
+    }
     spawn(5, src, dest, isDay ? 20 : 10);
   }
 
@@ -767,30 +787,35 @@ function spawnVehicles(minute) {
   for (let i = vehiclePool.length - 1; i >= 0; i--) {
     const v = vehiclePool[i];
     const elapsed = minute - v.startMin;
-    // Normal expiry
-    if (elapsed > v.duration) { vehiclePool.splice(i, 1); continue; }
+    // Normal expiry + hard cap at 25 min (no trip takes longer)
+    if (elapsed > v.duration || elapsed > 25) { vehiclePool.splice(i, 1); trailMap.delete(v.id); continue; }
     // Dead window: aggressively remove non-essential flows
     if (isDeadWindow) {
       // Staff commutes should NOT exist during dead window — force expire after 5 min
-      if (v.mode === 1 && elapsed > 5) { vehiclePool.splice(i, 1); continue; }
-      // Food stops completely
-      if (v.mode === 3) { vehiclePool.splice(i, 1); continue; }
-      // Waste stops
-      if (v.mode === 7 && elapsed > 3) { vehiclePool.splice(i, 1); continue; }
-      // Patient transfers wind down fast
-      if (v.mode === 5 && elapsed > 8) { vehiclePool.splice(i, 1); continue; }
+      if (v.mode === 1 && elapsed > 5) { vehiclePool.splice(i, 1); trailMap.delete(v.id); continue; }
+      if (v.mode === 3) { vehiclePool.splice(i, 1); trailMap.delete(v.id); continue; }
+      if (v.mode === 7 && elapsed > 3) { vehiclePool.splice(i, 1); trailMap.delete(v.id); continue; }
+      if (v.mode === 5 && elapsed > 8) { vehiclePool.splice(i, 1); trailMap.delete(v.id); continue; }
     }
   }
 }
 
 function renderFrame() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.globalCompositeOperation = 'lighter';
-
   spawnVehicles(simMinute);
 
-  // Draw trails then heads
+  // Clean up trails for removed vehicles
+  const activeIds = new Set(vehiclePool.map(v => v.id));
+  for (const [id] of trailMap) {
+    if (!activeIds.has(id)) trailMap.delete(id);
+  }
+
+  let visibleCount = 0;
+
+  // PASS 1: Trails (additive blending)
+  ctx.globalCompositeOperation = 'lighter';
   for (const v of vehiclePool) {
+    if (activeMode !== null && v.mode !== activeMode) continue;
     const elapsed = simMinute - v.startMin;
     const prog = Math.min(elapsed / v.duration, 1);
     const lat = v.originLat + (v.destLat - v.originLat) * prog;
@@ -798,28 +823,46 @@ function renderFrame() {
     const [sx, sy] = projectToScreen(lon, lat);
     if (sx < -50 || sx > canvas.width+50 || sy < -50 || sy > canvas.height+50) continue;
 
-    // Trail: render a few past positions
+    // Update persistent trail buffer
+    let trail = trailMap.get(v.id);
+    if (!trail) { trail = []; trailMap.set(v.id, trail); }
+    trail.push({ x: sx, y: sy, min: simMinute });
+    // Trim old points
+    while (trail.length > TRAIL_MAX) trail.shift();
+
+    // Draw trail
     const m = MODES[v.mode];
     const [r,g,b] = m.color;
-    const trailSteps = Math.min(Math.floor(elapsed * 2), 8);
-    for (let t = trailSteps; t > 0; t--) {
-      const tp = Math.max(0, prog - t * 0.015);
-      const tlat = v.originLat + (v.destLat - v.originLat) * tp;
-      const tlon = v.originLon + (v.destLon - v.originLon) * tp;
-      const [tx, ty] = projectToScreen(tlon, tlat);
-      const alpha = (1 - t/trailSteps) * 0.25;
+    for (let t = 0; t < trail.length - 1; t++) {
+      const age = trail.length - 1 - t;
+      const alpha = Math.max(0, 0.18 * (1 - age / trail.length));
       ctx.fillStyle = `rgba(${r},${g},${b},${alpha})`;
       ctx.beginPath();
-      ctx.arc(tx, ty, m.sz * 0.35, 0, Math.PI*2);
+      ctx.arc(trail[t].x, trail[t].y, m.sz * 0.35, 0, Math.PI*2);
       ctx.fill();
     }
 
-    // Head
+    // Glow pass for ambulances and Innight Medica
+    if (v.mode === 0 || v.mode === 6) {
+      ctx.fillStyle = `rgba(${r},${g},${b},0.06)`;
+      ctx.beginPath();
+      ctx.arc(sx, sy, m.sz * 3, 0, Math.PI*2);
+      ctx.fill();
+      ctx.fillStyle = `rgba(${r},${g},${b},0.12)`;
+      ctx.beginPath();
+      ctx.arc(sx, sy, m.sz * 1.5, 0, Math.PI*2);
+      ctx.fill();
+    }
+
+    // Draw vehicle head (solid, on top of trail)
+    ctx.globalCompositeOperation = 'source-over';
     drawShape(sx, sy, v.mode, m.sz);
+    ctx.globalCompositeOperation = 'lighter';
+
+    visibleCount++;
   }
 
-  ctx.globalCompositeOperation = 'source-over';
-  document.getElementById('vehicleCount').textContent = vehiclePool.length + ' active';
+  document.getElementById('vehicleCount').textContent = visibleCount + ' active';
 }
 
 // ============================================================
@@ -856,8 +899,81 @@ function updateTimeUI() {
     stEl.classList.remove('visible');
   }
 
+  // Dynamic sidebar stats
+  updateSidebarStats();
   // Mini-strip update
   updateMiniStrips();
+}
+
+function updateSidebarStats() {
+  const hr = simMinute / 60;
+  const isDay = hr >= 6 && hr < 22;
+  const isDeadWindow = simMinute >= 90 && simMinute < 300;
+  const isShiftChange = [420,900,1380].some(pk => Math.abs(simMinute - pk) < 30 || Math.abs(simMinute - pk + 1440) < 30);
+
+  // Panel 01: Emergency
+  const emStat = document.querySelector('[data-layer="emergency"] .panel-stat');
+  const emSub = document.querySelector('[data-layer="emergency"] .panel-sublabel');
+  if (isDeadWindow) {
+    emStat.textContent = '5 ERs'; emStat.style.color = '#c45d4a';
+    emSub.textContent = 'thinnest coverage'; emSub.style.color = '#c45d4a';
+  } else if (!isDay) {
+    emStat.textContent = '5 ERs'; emStat.style.color = '#c45d4a';
+    emSub.textContent = 'reduced crews'; emSub.style.color = '';
+  } else {
+    emStat.textContent = '5 ERs'; emStat.style.color = '';
+    emSub.textContent = 'full coverage'; emSub.style.color = '';
+  }
+
+  // Panel 02: Staff
+  const stStat = document.querySelector('[data-layer="staff"] .panel-stat');
+  const stSub = document.querySelector('[data-layer="staff"] .panel-sublabel');
+  const staffActive = vehiclePool.filter(v => v.mode === 1).length;
+  if (isDeadWindow) {
+    stStat.textContent = '0 transit'; stStat.style.color = '#c45d4a';
+    stSub.textContent = 'car only · dead window'; stSub.style.color = '#c45d4a';
+  } else if (isShiftChange) {
+    const shiftHr = Math.round(hr) % 24;
+    stStat.textContent = 'shift change'; stStat.style.color = '#5b8fa8';
+    stSub.textContent = String(shiftHr).padStart(2,'0') + ':00 · ' + staffActive + ' in transit'; stSub.style.color = '';
+  } else {
+    stStat.textContent = staffActive > 0 ? staffActive + ' moving' : '31,430'; stStat.style.color = '';
+    stSub.textContent = 'healthcare workers'; stSub.style.color = '';
+  }
+
+  // Panel 03: Supply
+  const suStat = document.querySelector('[data-layer="supply"] .panel-stat');
+  const suSub = document.querySelector('[data-layer="supply"] .panel-sublabel');
+  const supplyActive = vehiclePool.filter(v => [2,3,4,6].includes(v.mode)).length;
+  if (isDeadWindow) {
+    suStat.textContent = 'road only'; suStat.style.color = '#c45d4a';
+    suSub.textContent = supplyActive + ' vehicles · no transit'; suSub.style.color = '#c45d4a';
+  } else if (hr >= 23 || hr < 4.25) {
+    suStat.textContent = 'night crew'; suStat.style.color = '#8b6cc1';
+    suSub.textContent = 'galexis 13-16 · ' + supplyActive + ' active'; suSub.style.color = '';
+  } else {
+    suStat.textContent = '3 depots'; suStat.style.color = '';
+    suSub.textContent = 'pharma + blood + food · ' + supplyActive; suSub.style.color = '';
+  }
+
+  // Panel 04: Access
+  const acStat = document.querySelector('[data-layer="access"] .panel-stat');
+  const acSub = document.querySelector('[data-layer="access"] .panel-sublabel');
+  if (isDeadWindow) {
+    acStat.textContent = 'emergency'; acStat.style.color = '#c45d4a';
+    acSub.textContent = 'only'; acSub.style.color = '#c45d4a';
+  } else if (!isDay) {
+    acStat.textContent = 'reduced'; acStat.style.color = '#9a9690';
+    acSub.textContent = 'night operations'; acSub.style.color = '';
+  } else {
+    acStat.textContent = '24/7'; acStat.style.color = '';
+    acSub.textContent = 'continuous ops'; acSub.style.color = '';
+  }
+
+  // Panel border tint during dead window
+  document.querySelectorAll('.panel').forEach(p => {
+    p.style.borderColor = isDeadWindow ? 'rgba(196,93,74,0.25)' : 'rgba(255,255,255,0.04)';
+  });
 }
 
 // ============================================================
@@ -913,7 +1029,14 @@ function animate(ts) {
 
   if (playing) {
     simMinute += (dt / SIM_MS_PER_MIN) * speed;
-    if (simMinute >= 1440) simMinute -= 1440;
+    if (simMinute >= 1440) {
+      simMinute -= 1440;
+      // Seamless loop: adjust all surviving vehicles' startMin to stay valid
+      for (const v of vehiclePool) {
+        v.startMin -= 1440;
+      }
+      lastSpawnMinute = -1; // reset so spawning continues
+    }
     updateTimeUI();
   }
 
@@ -965,9 +1088,22 @@ playBtn.addEventListener('click', () => {
   playBtn.innerHTML = playing ? '&#9646;&#9646;' : '&#9654;';
 });
 
-document.getElementById('timeSlider').addEventListener('input', e => {
-  simMinute = parseFloat(e.target.value);
+const timeSlider = document.getElementById('timeSlider');
+timeSlider.addEventListener('input', e => {
+  const newMin = parseFloat(e.target.value);
+  // If big jump (>30 min), clear vehicle pool to avoid stale vehicles
+  if (Math.abs(newMin - simMinute) > 30) {
+    vehiclePool.length = 0;
+    lastSpawnMinute = -1;
+    trailMap.clear();
+  }
+  simMinute = newMin;
+  playing = false;
+  playBtn.innerHTML = '&#9654;';
   updateTimeUI();
+});
+timeSlider.addEventListener('change', () => {
+  // Resume after scrub if desired — or leave paused
 });
 
 document.querySelectorAll('.speed-btn').forEach(btn => {
@@ -984,7 +1120,7 @@ document.addEventListener('keydown', e => {
   if (e.code === 'ArrowRight') { simMinute = (simMinute + 15) % 1440; updateTimeUI(); }
   if (e.code === 'ArrowLeft') { simMinute = (simMinute - 15 + 1440) % 1440; updateTimeUI(); }
   if (e.key >= '1' && e.key <= '5') {
-    const speeds = [0.5, 1, 2, 4, 8];
+    const speeds = [0.5, 1, 2, 5, 10];
     speed = speeds[parseInt(e.key)-1];
     document.querySelectorAll('.speed-btn').forEach(b => {
       b.classList.toggle('active', parseFloat(b.dataset.speed) === speed);
@@ -992,13 +1128,54 @@ document.addEventListener('keydown', e => {
   }
 });
 
-// Panel hover highlights
-document.querySelectorAll('.panel').forEach(panel => {
-  panel.addEventListener('mouseenter', () => {
-    panel.style.borderColor = 'rgba(255,255,255,0.15)';
+// Legend click-to-solo
+const PANEL_MODES = { emergency: [0], staff: [1], supply: [2,3,4,6], access: [5,7] };
+
+function updateLegendVisuals() {
+  document.querySelectorAll('.legend-item').forEach(item => {
+    const mode = parseInt(item.querySelector('.legend-icon').dataset.mode);
+    if (activeMode === null) {
+      item.classList.remove('active', 'dimmed');
+    } else if (mode === activeMode) {
+      item.classList.add('active'); item.classList.remove('dimmed');
+    } else {
+      item.classList.add('dimmed'); item.classList.remove('active');
+    }
   });
-  panel.addEventListener('mouseleave', () => {
-    panel.style.borderColor = 'rgba(255,255,255,0.04)';
+  document.querySelectorAll('.panel').forEach(p => {
+    const layer = p.dataset.layer;
+    const modes = PANEL_MODES[layer] || [];
+    if (activeMode === null || modes.includes(activeMode)) {
+      p.classList.remove('active-solo');
+      if (activeMode !== null && modes.includes(activeMode)) p.classList.add('active-solo');
+    } else {
+      p.classList.remove('active-solo');
+    }
+  });
+}
+
+document.querySelectorAll('.legend-item').forEach(item => {
+  item.addEventListener('click', () => {
+    const mode = parseInt(item.querySelector('.legend-icon').dataset.mode);
+    activeMode = (activeMode === mode) ? null : mode;
+    trailMap.clear(); // reset trails on mode change
+    updateLegendVisuals();
+  });
+});
+
+document.querySelectorAll('.panel').forEach(panel => {
+  const layer = panel.dataset.layer;
+  const modes = PANEL_MODES[layer];
+  if (!modes) return;
+  panel.addEventListener('click', () => {
+    // Solo first mode of this panel, or deselect
+    if (activeMode !== null && modes.includes(activeMode)) {
+      activeMode = null;
+    } else {
+      activeMode = modes[0];
+    }
+    trailMap.clear();
+    updateLegendVisuals();
   });
 });
 </script>

@@ -40,6 +40,11 @@ output/tmp/
 *.tif
 *.tiff
 *.zip
+*.mp4
+*.mov
+*.avi
+*.gif
+*.rhl
 
 # swissBUILDINGS3D extracted DXFs (can be >100MB, keep .dxf.zip instead)
 output/city101_hub/context/*swissbuildings3d.dxf
