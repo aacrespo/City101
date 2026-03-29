@@ -44,38 +44,35 @@
 | 27-03 | Nova | Comic book production: reviewed McNaught-style nurse temporal lock prompt (12 panels). Switched from Midjourney to Gemini — created v3 prompt file with natural language aspect ratios, no-bubble instructions, HOSPITAL sign fix. Designed dynamic asymmetric panel grid (inspired by reference comic) — compressed cold panels at top, expanding warm panels at bottom. InDesign A2 setup spec provided. |
 | 27-03 | Nova | Built interactive data sequence diagram for relay-lock pipeline. Landscape SVG: Architect → AI → Corridor/Healthcare datasets → Site Analysis → 5-criteria scoring → 8 decision questions → Lock types → Ranked propositions with sliders → 3 outputs (Rhino3D, Blender, Spec Sheet). Feedback loops for low scores and unclassified. PR #6 open (claude/thirsty-cray → henna/visuals). |
 | 29-03 | Nova | Built Overcooked-style kitchen animation (v3→v6). Scene 1: character enters kitchen, reads CLAUDE.md + .claude/ scrolls, turns gold, kitchen furnishes. Scene 2: pass counter, order/cook/plate loop with user character, archibase book, CAG vs RAG, logbook overlay. Grid-based tile-hop movement, A* pathfinding, top-down oblique projection. Created GRID_MAP.md coordinate reference. |
+| 29-03 | Nova | Built Arc Lémanique 3D model in Rhino via MCP. Full pipeline: swissALTI3D terrain (10.5M vertices, 25m res, 83×79km), swissBUILDINGS3D buildings (110k with convex hull footprints, >20m), Lake Léman surface, 9 relay-lock node spheres (design system colors). Two iterations: V1 (50m terrain, bbox buildings) → V2 (20m→25m terrain, hull footprints, extended coverage). Checkpoints saved to Midterm help/. |
 
 ## Handoff
 
 **What was done**
-- Built Overcooked-style kitchen animation — `output/kitchen_animation/kitchen_animation_v6.html`
-- Scene 1 (entering kitchen, scrolls, color transition, furniture pop-in) + Scene 2 (pass, order loop, archibase book, CAG vs RAG, logbook)
-- Grid-based tile-hop movement system, A* pathfinding, top-down oblique projection
-- Created `output/kitchen_animation/GRID_MAP.md` — coordinate reference for precise edits
+- Built full Arc Lémanique 3D corridor model in Rhino via Rhino MCP
+- **Terrain**: 10.5M vertex mesh from swissALTI3D, 25m resolution, 83×79 km coverage
+- **Lake**: Mesh surface at z=373m from City101_LakeLeman.gpkg
+- **Buildings**: 109,855 convex hull extrusions from swissBUILDINGS3D (>20m tall)
+- **Nodes**: 11 spheres at 9 relay-lock sites (Nyon+Genolier split, Rennaz+Villeneuve split), design system colors (Gold/Copper/Teal)
+- Processing scripts saved in `output/arc_lemanique/`
+- Checkpoint .3dm files saved in `Midterm help/`
 
 **What's next**
-1. **Remaining Scene 2 fixes** (from last feedback round):
-   - Scene 1 character still needs testing with grid-hop outside movement
-   - Books stacking visual needs pixel-art-style thick layers
-   - Scene 2 warm glow may need more intensity
-   - Claude position at (5,6) for logbook phase
-2. **Scene 3+ implementation** — storyboard has more scenes to build
-3. Polish: coherent cooking movement, logbook zoom-from-position animation
+1. **Save the Rhino file** — Ctrl+S (MCP can't save files this large)
+2. **Set display mode** — Arctic mode + background #0c0c14 manually in Rhino
+3. **Camera angles** for presentation slides 7-10
+4. **Midterm presentation** — Monday March 30
+5. If more/fewer buildings needed: re-filter from `buildings_hull_15m.json` (490k buildings available)
 
 **Watch out for**
-- The grid-hop system has a fallback for outside-the-grid movement (Scene 1 door entry) — if it breaks, characters won't move in Scene 1
-- `replace_all` edits can break Canvas `X.moveTo()` calls — always check for collateral
-- Book/index card positions reference grid (2,3) — if island layout changes, update these too
+- Rhino MCP times out on save with the 10.5M vertex mesh — always save manually
+- The model origin is at LV95 (2485000, 1090000) — full VRT extent, not the original corridor bbox
+- `buildings_hull_15m.json` is 100 MB — all 490k buildings with hull footprints, filter to any threshold
+- Extracted GDB at `Swisstopo/extracted_buildings/` is 8.9 GB — gitignored, can delete after midterm
 
 **Files to look at**
-- `output/kitchen_animation/kitchen_animation_v6.html` — main animation
-- `output/kitchen_animation/GRID_MAP.md` — grid coordinate reference
-- `output/kitchen_animation/STORYBOARD.md` — full storyboard (Scenes 1-5)
-
-**Watch out for**
-- The v2 file lives in both the worktree and `output/` in main — after merge, the worktree copy is canonical
-- The 3 feedback loop labels (score < 3.0, unclassified, slider change) now have step assignments but test they hide/show correctly
-
-**Files to look at**
-- `output/data_sequence_diagram_v2.html` — the landscape diagram (use this)
-- `output/data_sequence_diagram.html` — v1 vertical version (superseded)
+- `output/arc_lemanique/process_data.py` — terrain + lake processing script
+- `output/arc_lemanique/process_buildings.py` — building extraction script
+- `output/arc_lemanique/nodes_full.json` — 9 node coordinates (model space)
+- `Midterm help/STATUS.md` — full status with all data files documented
+- `Midterm help/arc_lemanique_v2_terrain_lake.3dm` — latest checkpoint (terrain+lake only, 202 MB)

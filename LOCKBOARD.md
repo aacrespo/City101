@@ -1,5 +1,5 @@
 # Lockboard
-**Updated**: 2026-03-27
+**Updated**: 2026-03-29
 
 **Friday March 27 (screen test with Alex) / Monday March 30 (midterm presentation)**
 
@@ -37,7 +37,7 @@
 ## Henna — Tasks
 
 ### Modeling
-- [ ] **Finish corridor model** — verify geometry works in QGIS → Rhino pipeline (ask Claude to verify)
+- [x] **Arc Lémanique corridor model** — DONE. 10.5M vertex terrain, 110k buildings, lake, 9 nodes. In Rhino, needs manual save.
 - [ ] **Model 9 écluse types** (without site)
 - [ ] **Model Crissier-Busigny node** (with site) — Henna's 1 of 2
 - [ ] **Model Nyon-Genolier node** (with site) — Henna's 2 of 2
