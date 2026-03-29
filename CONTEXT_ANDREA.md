@@ -23,41 +23,31 @@
 
 ## Handoff
 
-**What was done (March 26, audit + infrastructure session):**
-- Full repo audit: 20 commands, 11 agents, 16 workflows, 11 tools, 14 knowledge docs — all cross-referenced
-- Token optimization: `/modeler` no longer loads 1,336-line workflow (~1,200 tokens saved), `/pdf` refactored to tool (370→20 lines), MEMORY.md trimmed
-- Workflow v3 created: Ruflo patterns (health-check pings, coordination log, weighted authority, team cap, lead-never-builds)
-- `/pm` command created for phase planning + topology design, integrated with `/brain-dump`
-- IBOIS meeting brief prepared for March 27
-- Rhino.Inside added to app tooling landscape
-- v0 "before" scripts generated: Crissier-Bussigny (visibility lock) + Nyon-Genolier (vertical connector)
-- DeepSeek researched → parked for app phase (not useful for current modeling/session work)
-- Auto-dream evaluated → skipped (curated memory system is better)
-- Orphan audit: fixed CLAUDE.md phantom ref, added apply_design_system.py to map workflow, point-cloud-protocol referenced from modeler
-- new-dataset-integration workflow: parked (not archived)
+**What was done (March 29, roadmap design session):**
+- Built project roadmap visualization for Slide 11 (Vision) — 6 iterations (v1→v6)
+- Designed for 3×2 TV wall in presentation room: 18px thick timeline covers horizontal bezel
+- Final v6: 8 nodes, dot-anchored cards with stems, solid→dashed line transition
+  - Gold (accomplished): 01 Corridor + Circuit, 02 Knowledge System, 03 Orchestration + First Locks
+  - Copper (in progress): 04 Terrain Integration, 05 Scaling + Infrastructure (bridge node with gradient)
+  - Teal (planned): 06 Knowledge Expansion, 07 Supply Chain + Impact, 08 RelayLock Configurator (diamond)
+- SVG line icons next to card titles (not inside dots — bezel would split them)
+- Cards respect 3 screen column boundaries (seams at 33% and 66%)
+- Added .mp4, .mov, .avi, .gif, .rhl to .gitignore
 
 **What's next:**
-1. **IBOIS meeting** (March 27) — brief at `output/ibois_meeting_brief_2026-03-27.md`
-2. **Screen test with Alex** (March 27) — rehearsal
-3. **Embedding pipeline overnight** — 2,204 lost entries + YouTube tutorials with Gemini
-4. **Run v0 scripts in Rhino** — quick 5-second runs for before/after screenshots
-5. **Production sprint** — models (Rennaz Lock 07, before/after comparison), presentation slides, animation iteration
-
-**Post-midterm direction (locked March 26, don't change for presentation):**
-The 4-layer knowledge architecture (L1 SQLite / L2 Markdown / L3 Code / L4 Vector DB) generalizes beyond construction. Each "base" applies the same pattern to a different domain: archibase (construction), rhinobase (Rhino modeling), blenderbase (Blender), iboisbase (timber craft from IBOIS tools). L3 scripts bridge domains — they read constraints from archibase and execute via rhinobase. Full plan + prompts at `state/pm/rhinobase-iboisbase/`.
+1. **Midterm presentation** (Monday March 30) — slides finalized
+2. **Test roadmap on actual TV wall** — may need pixel adjustments for bezel width
+3. **Review all slides** for coherence
 
 **Watch out for:**
-- `agent-team-modeling-v2.md` is superseded by v3 — modeler command and feedback memory already updated
-- `/pm` is new and untested — first real use will be the midterm production sprint
-- v0 scripts have approximate SITE_ORIGIN (no terrain survey for Lock 04/05) — fine for presentation, not for real modeling
+- Roadmap v6 text is concise — may want to expand for different presentation contexts
+- Bridge node 05 has copper→teal gradient — if it looks odd on projector, simplify to one color
+- `output/roadmap/` has all 6 versions — v6 is current
 
 **Key files this session:**
-- `workflows/agent-team-modeling-v3.md` — current team modeling workflow
-- `.claude/commands/pm.md` — project manager command
-- `tools/export/md_to_html.py` — PDF export tool
-- `output/ibois_meeting_brief_2026-03-27.md` — IBOIS talking points
-- `output/city101_hub/rhino_scripts/lock_04_nyon_genolier_vertical_v0.py`
-- `output/city101_hub/rhino_scripts/lock_05_crissier_bussigny_visibility_v0.py`
+- `output/roadmap/roadmap_v6.html` — current roadmap (8 nodes, TV wall layout)
+- `output/roadmap/roadmap_v1.html` through `v5.html` — earlier iterations
+- `.claude/launch.json` — preview server config for roadmap
 
 ## Data verification gaps
 - **Night worker counts unsourced** — 4,600 / 1,680 / 1,500 / 400 / 300 / 730 are load-bearing claims with no CSV source. Need: OFS employment data, hospital annual reports, or field visit interviews.
@@ -92,3 +82,4 @@ The 4-layer knowledge architecture (L1 SQLite / L2 Markdown / L3 Code / L4 Vecto
 | 24-03 | Cairn Code | Cost sheet v2 finalized (1200 CHF budget). Email to Alex sent. Meeting notes: rehearsal Friday March 27, presentation guidance. Pushed 14 commits, resolved merge conflict with Henna's changes. Organized untracked files. Full LOCKBOARD rewrite with midterm task split + presentation structure (11 slides). |
 | 25-03 | Cairn Code | Late night session (02:00–03:15). RCP deep dive: found AIaaS (70+ models, embeddings), discovered DSI's VSI for VMs vs HaaS bare metal. Both emails rewritten + humanized. Humanizer skill installed. README pushed. Brain dump + AI landscape scan in Claude's Corner. Dates corrected (Fri 27 screen test, Mon 30 midterm). |
 | 26-03 | Cairn Code | Full repo audit + infrastructure session. Token optimization (modeler -1200 tokens, pdf refactored, memory trimmed). Workflow v3 (Ruflo patterns). /pm command. IBOIS brief. v0 before-scripts. Cross-reference audit. DeepSeek researched → parked. Auto-dream → skipped. Rhino.Inside added to tooling landscape. |
+| 29-03 | Cairn Code | Roadmap visualization for midterm Slide 11. 6 iterations (v1→v6) designed for 3×2 TV wall. 8 final nodes: merged orchestration+locks, merged scaling+infrastructure, added terrain integration + supply chain. RelayLock Configurator as endpoint node. SVG icons, solid→dashed line, screen-seam-aware layout. |
