@@ -22,3 +22,4 @@
 - Sunday 01:09
 - Sunday 01:09
 - Sunday 01:09
+- Sunday 01:12 [break] session saved — roadmap v6 nearly final (8 nodes, 3×2 TV wall layout)
